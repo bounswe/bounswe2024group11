@@ -1,0 +1,11 @@
+name: To-Do Issue Template
+about: Use this issue template for plain to-do issues.
+title: 
+description: |\n
+····🧱 Description\n
+····\n
+····i.e. Users should be able to recover when they forgot their passwords,\n
+····\n
+····💎 Acceptance Criteria
+····\n
+···· - [ ] i.e. The login page has a forgot password link under the primary button with a neutral-5 text color.
