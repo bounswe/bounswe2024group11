@@ -1,1 +1,11 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Simple To-Do
+    url: https://github.com/bounswe/bounswe2024group11/issues/new?template=simple-todo-issue.md
+    about: A simple job description for yourself or a mate.
+  - name: Bug Report
+    url: https://github.com/bounswe/bounswe2024group11/issues/new?template=bug-report-issue.md
+    about: Bugs and unexpected behavior on the repository.
+  - name: Feature Request
+    url: https://github.com/bounswe/bounswe2024group11/issues/new?template=feature-request-issue.md
+    about: A specific feature or improvement requests.
