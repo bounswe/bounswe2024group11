@@ -1,3 +1,8 @@
+---
+name: Bug report
+about: Create a todo issue
+---
+
 # 🧱 Description
 
 <!--- Provide a general summary of the job -->

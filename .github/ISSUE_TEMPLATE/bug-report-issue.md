@@ -1,6 +1,14 @@
+---
+name: Bug report
+about: Create a bug report issue
+---
+
 # 🧱 Description
 
 <!--- Provide a general summary of the bug -->
+
+<!-- Please be sure to add at least 1 reviewer -->
+#### To be reviewed by: @username
 
 ## 🛣️ Reproduction
 
