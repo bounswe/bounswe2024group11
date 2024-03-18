@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Simple Todo
 about: Create a todo issue
 ---
 
