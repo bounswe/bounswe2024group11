@@ -7,5 +7,4 @@
 <!--- The items should express desired status.  -->
 <!--- e.g. "The button gets darker when pressed." -->
 
-- [ ] Task 1
-- [ ] Task 2
+- [ ] Task is done
