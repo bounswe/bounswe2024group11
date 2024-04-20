@@ -10,11 +10,11 @@ import {
 } from "react-router-dom";
 import img from "../public/zenith-logo.svg";
 
-interface NumberButtonProps {
+type NumberButtonProps = {
   digit: number,
 }
 
-const Buttons = function (props: NumberButtonProps) {
+const Buttons = ({ digit }: NumberButtonProps) => {
   return (
     <Flex
       mih={50}
@@ -23,31 +23,31 @@ const Buttons = function (props: NumberButtonProps) {
       align="flex-start"
       direction="column"
       wrap="wrap">
-      {(props.digit != -1 && <Button
+      {(digit != -1 && <Button
         component="a"
         href="/"
       >
         Home
       </Button>)}
-      {(props.digit != 0 && <Button
+      {(digit != 0 && <Button
         component="a"
         href="/userprofile/1"
       >
         User Profile for User 1
       </Button>)}
-      {(props.digit != 1 && <Button
+      {(digit != 1 && <Button
         component="a"
         href="/register"
       >
         Register
       </Button>)}
-      {(props.digit != 2 && <Button
+      {(digit != 2 && <Button
         component="a"
         href="/login"
       >
         Login
       </Button>)}
-      {(props.digit != 3 && <Button
+      {(digit != 3 && <Button
         component="a"
         href="/feed"
       >
@@ -61,9 +61,8 @@ const router = createBrowserRouter([
     path: "/",
     element:
       <Container>
-        <img src={img} alt="Zenith Logo" />
         <Outlet />
-        <Buttons digit={11}></Buttons>
+        <Buttons digit={-2}></Buttons>
       </Container>,
     children: [
       {
@@ -100,6 +99,9 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <MantineProvider theme={theme}>
+      <Container>
+        <img src={img} alt="Zenith Logo" />
+      </Container>
       <RouterProvider router={router} />
     </MantineProvider>
   );
