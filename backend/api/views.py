@@ -19,7 +19,7 @@ def addUser(request):
 @api_view(['PUT'])
 def updateUser(request, pk):
     item = User.objects.get(id=pk)
-    serializer = UserSerializer(instance=item, data=request.data)
+    serializer = UserSerializer(instance=item, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
