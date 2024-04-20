@@ -15,3 +15,11 @@ def addUser(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+@api_view(['PUT'])
+def updateUser(request, pk):
+    item = User.objects.get(id=pk)
+    serializer = UserSerializer(instance=item, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
