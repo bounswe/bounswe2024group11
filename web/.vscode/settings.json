@@ -1,0 +1,5 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.rulers": [120]
+}
