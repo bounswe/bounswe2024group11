@@ -10,8 +10,8 @@ class TestSetUp(APITestCase):
         self.delete_user_url = reverse('delete_user', kwargs={'pk': 1})
 
         self.user_data = {
-            'email': Faker().email(),
             'username': Faker().user_name(),
+            'email': Faker().email(),
             'name': Faker().first_name(),
             "surname": Faker().last_name(),
         }
