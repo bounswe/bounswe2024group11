@@ -39,3 +39,10 @@ class TestView(TestSetUp):
         self.assertEqual(response.data['email'], self.user_data['email'])
         self.assertEqual(response.data['name'], self.user_data['name'])
         self.assertEqual(response.data['surname'], self.user_data['surname'])
+
+    def test_delete_user(self):
+        response = self.client.post(self.add_user_url, self.user_data, format='json')
+        self.delete_user_url = reverse('delete_user', kwargs={'pk': response.data['id']})
+        response = self.client.delete(self.delete_user_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["res"], "Object deleted!")
