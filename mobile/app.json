@@ -1,4 +1,30 @@
 {
-  "name": "mobile",
-  "displayName": "mobile"
+  "expo": {
+    "name": "Zenith",
+    "slug": "Zenith",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/zenith-logo.svg",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/zenith-logo.svg",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/zenith-logo.svg"
+    }
+  }
 }
