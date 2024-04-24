@@ -13,6 +13,9 @@ WORKDIR $DockerHOME
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1  
 
+# install dependencies for mysqlclient
+RUN apt-get update && apt-get install -y pkg-config python3-dev default-libmysqlclient-dev build-essential
+
 # install dependencies  
 RUN pip install --upgrade pip  
 
@@ -21,6 +24,6 @@ COPY . $DockerHOME
 # run this command to install all dependencies  
 RUN pip install --no-cache-dir -r requirements.txt  
 # port where the Django app runs  
-EXPOSE 8000  
+EXPOSE 8000
 # start server  
 CMD python manage.py runserver
