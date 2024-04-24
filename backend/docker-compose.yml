@@ -1,4 +1,6 @@
-version: '3.7'
+# version is deprecated after docker 25.X
+# version: '3.7'
+
 
 services:
     app:
