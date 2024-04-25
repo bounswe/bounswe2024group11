@@ -1,4 +1,11 @@
-import { Container, MantineProvider, Button, Flex, Input } from "@mantine/core";
+import {
+  Container,
+  MantineProvider,
+  Button,
+  Flex,
+  Input,
+  useMantineTheme,
+} from "@mantine/core";
 import "@mantine/core/styles.css";
 import React from "react";
 import * as ReactDOM from "react-dom/client";
