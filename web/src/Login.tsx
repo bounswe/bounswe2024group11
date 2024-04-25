@@ -12,8 +12,8 @@ import { href } from "./router";
 export const Login = () => {
   const submit = useSubmit();
   return (
-    <Container>
-      <div className="flex flex-col items-center justify-center min-h-12 gap-4">
+    <Container className="flex flex-col items-center">
+      {/* <div className="flex flex-col items-center justify-center min-h-12 gap-4">
         <div className="flex flex-col">
           <Flex justify="center" align="flex-start" direction="column">
             <img src="./zenith-logo.svg" alt="Zenith Logo" />
@@ -35,10 +35,11 @@ export const Login = () => {
             placeholder="password"
             required
           />
-          <Container>
-            <input type="checkbox" name="Keep me logged in" />
-            <Link to="/">Forgot Password</Link>
-          </Container>
+
+          <label htmlFor="logged in">Keep me logged in</label>
+          <input type="checkbox" name="logged in" />
+
+          <Link to="/">Forgot Password</Link>
 
           <Button
             to={href({ path: "/" })}
@@ -57,6 +58,9 @@ export const Login = () => {
         >
           Register
         </Button>
+      </div> */}
+      <div className="flex flex-col items-center justify-center min-h-12 gap-4 w-80 bg-red-100">
+        wip
       </div>
     </Container>
   );
