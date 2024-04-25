@@ -2,12 +2,12 @@ import React from "react";
 
 import { View, Text } from "react-native-ui-lib";
 
-const Signup = () => {
+const Home = () => {
     return (
         <View flex center>
-            <Text>Signup</Text>
+            <Text>Home</Text>
         </View>
     )
 };
 
-export default Signup;
+export default Home;
