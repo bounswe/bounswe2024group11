@@ -13,4 +13,4 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <RouterProvider router={router} />
     </MantineProvider>
   </React.StrictMode>
-
+);
