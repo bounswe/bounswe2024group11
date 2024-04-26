@@ -45,6 +45,7 @@ export const Login = () => {
               required
               label="Email Address"
               name="login"
+              aria-label="Email Address"
             />
             <TextInput
               className="placeholder-slate-200"
@@ -53,6 +54,7 @@ export const Login = () => {
               required
               label="Password"
               name="password"
+              aria-label="Password"
             />
           </div>
 
@@ -72,6 +74,7 @@ export const Login = () => {
               type="submit"
               fullWidth
               color="blue"
+              aria-label="Log In"
             >
               Log In
             </Button>
@@ -80,6 +83,7 @@ export const Login = () => {
               component={Link}
               fullWidth
               color="blue"
+              aria-label="Register"
             >
               Register
             </Button>
