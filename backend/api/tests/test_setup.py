@@ -4,16 +4,20 @@ from faker import Faker
 
 class TestSetUp(APITestCase):
     def setUp(self):
-        self.get_users_url = reverse('get_users')
-        self.add_user_url = reverse('add_user')
-        self.update_user_url = reverse('update_user', kwargs={'pk': 1})
-        self.delete_user_url = reverse('delete_user', kwargs={'pk': 1})
+        self.register_url = reverse('signup')
+        self.login_url = reverse('login')
 
-        self.user_data = {
+
+        self.user_data1 = {
             'username': Faker().user_name(),
             'email': Faker().email(),
-            'name': Faker().first_name(),
-            "surname": Faker().last_name(),
+            'password': Faker().password(),
+        }
+        
+        self.user_data2 = {
+            'username': Faker().user_name(),
+            'email': Faker().email(),
+            'password': Faker().password(),
         }
 
         return super().setUp()
