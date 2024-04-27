@@ -5,5 +5,7 @@ urlpatterns = [
     # path('test_token', views.test_token, name="test_token"),
     path('signup', views.register, name="signup"),
     path('login', views.login, name="login"),
+    path('search/', views.search_wikidata, name='search_wikidata')
+
 
 ]

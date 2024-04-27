@@ -7,6 +7,8 @@ from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 import requests
+import json
+from django.http import JsonResponse
 @api_view(['POST'])
 def register(request):
     serializer = UserSerializer(data=request.data)
@@ -33,35 +35,31 @@ def login(request):
 #def test_token(request):
 #    return Response({"res":"Token is valid!"})
 
-
-
 def search_wikidata(request):
-    if request.method == 'POST':
-        keyword = request.POST.get('keyword')
-        
-        # Construct SPARQL query
-        sparql_query = """
-        SELECT ?item ?itemLabel ?description ?image
-        WHERE {
-            ?item ?label "%s"@en.
-            OPTIONAL { ?item schema:description ?description. FILTER(LANG(?description) = "en") }
-            OPTIONAL { ?item wdt:P18 ?image }
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-        }
-        LIMIT 10
-        """ % keyword
+    # Assuming the keyword is obtained from the form submission
+    keyword = request.POST.get('keyword')
 
-        # Send SPARQL query to Wikidata
-        response = requests.get('https://query.wikidata.org/sparql', params={'query': sparql_query, 'format': 'json'})
-        
-        if response.status_code == 200:
-            # Process the response
-            data = response.json()
-            results = data['results']['bindings']
-            
-            return render(request, 'search_results.html', {'results': results})
-        else:
-            # Handle error
-            return render(request, 'error.html', {'message': 'Error occurred while fetching data from Wikidata.'})
+    # Construct SPARQL query with user's keyword
+    sparql_query = """
+    SELECT ?item ?itemLabel
+    WHERE {
+        ?item ?label "%s"@en.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+    }
+    LIMIT 10
+    """ % keyword
+
+    # Send SPARQL query to Wikidata
+    response = requests.get('https://query.wikidata.org/sparql', params={'query': sparql_query, 'format': 'json'})
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse JSON response
+        data = response.json()
+
+        # Return JSON response directly
+        return JsonResponse(data)
     else:
-        return render(request, 'search_form.html')
+        # Handle error and return JSON response
+        error_message = {'error': 'Error occurred while fetching data from Wikidata.'}
+        return JsonResponse(error_message, status=500)

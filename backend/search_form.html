@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+</head>
+<body>
+    <h1>Search Page</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="keyword">Enter Keyword:</label>
+        <input type="text" id="keyword" name="keyword">
+        <button type="submit">Search</button>
+    </form>
+    
+    {% if search_results %}
+        <h2>Search Results:</h2>
+        <ul>
+            {% for result in search_results %}
+                <li>{{ result }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
