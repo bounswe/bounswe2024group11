@@ -1,47 +1,19 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { version } from "react";
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Provider as PaperProvider } from "react-native-paper";
 
-import Signup from './screens/Signup';
+import Home from "./screens/Home";
+import Login from "./screens/Login";
+import UserProvider from "./context/UserContext";
 
-function App(): React.JSX.Element {
+export default function App() {
   return (
-    <Signup />
+    <UserProvider>
+      <PaperProvider theme={{version: 2}}>
+        <Home />
+      </PaperProvider>
+    </UserProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
-export default App;

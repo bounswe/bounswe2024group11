@@ -1,13 +1,14 @@
 import React from "react";
 
 import { View, Text } from "react-native-ui-lib";
+import { styles } from "../components/Styles";
 
-const Signup = () => {
+function Profile() {
     return (
         <View flex center>
-            <Text>Signup</Text>
+            <Text>Profile</Text>
         </View>
     )
 };
 
-export default Signup;
+export default Profile;
