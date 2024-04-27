@@ -22,7 +22,7 @@ const ProfileHeader = ({
   const { user, setUser } = useUser();
   const handleLogOut = () => {
     setUser({ isLogged: false });
-    navigation.navigate("Login");
+    navigation.navigate("Auth");
   };
 
   return (

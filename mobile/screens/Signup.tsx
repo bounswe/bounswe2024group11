@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { Provider as PaperProvider } from "react-native-paper";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
@@ -14,21 +14,29 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Login from "./Login";
+import { RootStackParamList } from "../components/Types";
 
-const Signup = () => {
+type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
+
+const Signup = ({
+  navigation,
+  toggle,
+}: {
+  navigation: SignupNavigationProp;
+  toggle: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { height } = useWindowDimensions();
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onSignupPress = () => {
-    console.warn(fullname, username);
+    navigation.navigate("Home");
   };
   const onLoginPress = () => {
-    console.warn(email, password);
+    toggle(true);
   };
-  
+
   return (
     <ScrollView style={styles.wrapper}>
       <View style={styles.root}>

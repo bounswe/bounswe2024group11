@@ -16,7 +16,7 @@ type FeedNavigationProp = MaterialBottomTabNavigationProp<
 
 const FeedHeader = ({ navigation }: { navigation: FeedNavigationProp }) => {
   const goToLogin = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Auth");
   };
 
   const { user, setUser } = useUser();

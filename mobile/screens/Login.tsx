@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 import {
   View,
@@ -17,9 +17,15 @@ import CustomButton from "../components/CustomButton";
 
 import { useUser } from "../context/UserContext";
 
-type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
+type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
-const Login = ({ navigation }: { navigation: LoginNavigationProp }) => {
+const Login = ({
+  navigation,
+  toggle,
+}: {
+  navigation: LoginNavigationProp;
+  toggle: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { height } = useWindowDimensions();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +35,7 @@ const Login = ({ navigation }: { navigation: LoginNavigationProp }) => {
     navigation.navigate("Home");
   };
   const onSignupPress = () => {
-    navigation.navigate("Home");
+    toggle(false);
   };
 
   return (

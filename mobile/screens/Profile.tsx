@@ -36,7 +36,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
           >
             <Text style={{ padding: 10 }}>Log in to view your profile</Text>
             <Button
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.navigate("Auth")}
               style={styles.headerButton}
               labelStyle={{ color: "white" }}
             >

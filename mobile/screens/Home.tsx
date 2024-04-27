@@ -3,8 +3,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Login from "./Login";
 import BottomTab from "../components/BottomTab";
+import Auth from "./Auth";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +17,13 @@ function Home() {
           component={BottomTab}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="Auth"
+          component={Auth}
+          options={{
+            title: "Authentication",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
