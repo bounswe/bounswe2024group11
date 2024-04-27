@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import CustomInput from "../components/CustomInput";
-import CustomButton from "../components/CustomButton";
 
 import {
   View,
@@ -11,15 +9,27 @@ import {
   ScrollView,
 } from "react-native";
 
-const Login = () => {
+import { StackNavigationProp } from "@react-navigation/stack";
+
+import { RootStackParamList } from "../components/Types";
+import CustomInput from "../components/CustomInput";
+import CustomButton from "../components/CustomButton";
+
+import { useUser } from "../context/UserContext";
+
+type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
+
+const Login = ({ navigation }: { navigation: LoginNavigationProp }) => {
   const { height } = useWindowDimensions();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useUser();
   const onLoginPress = () => {
-    console.warn(username);
+    setUser({ isLogged: true });
+    navigation.navigate("Home");
   };
   const onSignupPress = () => {
-    console.warn(password);
+    navigation.navigate("Home");
   };
 
   return (
@@ -27,7 +37,7 @@ const Login = () => {
       <View style={styles.root}>
         <View style={styles.imgDiv}>
           <Image
-            source={require("../assets/Zenith.png")}
+            source={require("../assets/zenith-logo.png")}
             style={[styles.logo, { height: height * 0.2 }]}
             resizeMode="contain"
           />
@@ -41,7 +51,7 @@ const Login = () => {
           value={username}
           setValue={setUsername}
           secure={false}
-          image={require("../assets/try.png")}
+          image="account"
         />
 
         <CustomInput
@@ -49,7 +59,7 @@ const Login = () => {
           value={password}
           setValue={setPassword}
           secure={true}
-          image={require("../assets/try.png")}
+          image="lock"
         />
 
         <CustomButton text="Login" onPress={onLoginPress} bgColor="#454545" />
