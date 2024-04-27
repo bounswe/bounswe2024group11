@@ -9,6 +9,7 @@ import { Link, Form, useSubmit } from "react-router-dom";
 import { href } from "./router";
 import { button, buttonInnerRing } from "./components/Button";
 import { useState } from "react";
+import { Checkmark } from "./components/Checkmark";
 
 export const Login = () => {
   const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
@@ -27,7 +28,8 @@ export const Login = () => {
               Login to your Zenith account
             </h1>
             <p className="text-center text-slate-500">
-              Ready to continue your comic adventure?{" "}
+              Ready to continue your comic adventure? Log in to your Zenith
+              account.
             </p>
           </div>
         </div>
@@ -56,11 +58,15 @@ export const Login = () => {
 
           <div className="flex items-center justify-between">
             <Checkbox
+              icon={Checkmark}
               color="gray"
               classNames={{
-                label: "text-slate-600 pl-0",
-                body: "gap-2 flex items-center",
-                input: "text-primary accent-slate-400 border-slate-300",
+                root: "cursor-pointer",
+                label: "text-slate-600 pl-2 cursor-pointer",
+                body: "flex items-center",
+                input:
+                  "text-primary accent-slate-400 border-slate-300 h-4 w-4 cursor-pointer",
+                inner: "h-4 w-4",
               }}
               checked={isKeepMeLoggedIn}
               onChange={(event) =>
