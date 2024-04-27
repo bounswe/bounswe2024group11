@@ -26,11 +26,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   container: {
-    width: "90%",
+    width: 200,
     borderRadius: 8,
     alignItems: "center",
     padding: 10,
-    margin: 10,
+    marginVertical: 5,
   },
 });
 

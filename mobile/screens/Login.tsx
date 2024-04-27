@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 
 import {
   View,
@@ -16,6 +16,7 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 
 import { useUser } from "../context/UserContext";
+import { Checkbox, PaperProvider } from "react-native-paper";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -27,13 +28,20 @@ const Login = ({
   toggle: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { height } = useWindowDimensions();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [remember, setRemember] = useState(false);
+  const [secure, setSecure] = useState(true);
+
   const { setUser } = useUser();
+
   const onLoginPress = () => {
     setUser({ isLogged: true });
     navigation.navigate("Home");
   };
+
   const onSignupPress = () => {
     toggle(false);
   };
@@ -68,8 +76,22 @@ const Login = ({
           image="lock"
         />
 
+        <View>
+          <Checkbox.Item
+            label="Remember me"
+            status={remember ? "checked" : "unchecked"}
+            onPress={() => setRemember(!remember)}
+            rippleColor={"#50C7E9"}
+            color="#20ADD0"
+          />
+        </View>
+
         <CustomButton text="Login" onPress={onLoginPress} bgColor="#454545" />
-        <CustomButton text="SignUp" onPress={onSignupPress} bgColor="#20ADD0" />
+        <CustomButton
+          text="Register"
+          onPress={onSignupPress}
+          bgColor="#20ADD0"
+        />
       </View>
     </ScrollView>
   );
@@ -83,6 +105,7 @@ const styles = StyleSheet.create({
   root: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   h1: {
     fontWeight: "bold",
@@ -93,8 +116,7 @@ const styles = StyleSheet.create({
     //backgroundColor: "red",
     display: "flex",
     alignItems: "center",
-    paddingTop: 60,
-    paddingBottom: 30,
+    paddingVertical: 20,
   },
   logo: {
     width: 200, //yüzde ile yazınca olmuyor, yüzde ile yazarsam rootun içini silmem lazım)
