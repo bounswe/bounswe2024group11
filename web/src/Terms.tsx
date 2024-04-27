@@ -6,7 +6,7 @@ export const Terms = () => {
   return (
     <Container className="py-20">
       <div className="flex flex-col gap-4 text-slate-700">
-        <h1 className="text-4xl font-bold text-slate-950">
+        <h1 className="text-4xl font-bold text-slate-950 font-display">
           Zenith Terms and Conditions
         </h1>
         <p className="text-slate-600">

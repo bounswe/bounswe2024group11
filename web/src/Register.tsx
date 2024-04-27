@@ -2,6 +2,7 @@ import { TextInput, Container, Button, useMantineTheme } from "@mantine/core";
 import { Link, Form, useSubmit } from "react-router-dom";
 import { href } from "./router";
 import { button, buttonInnerRing } from "./components/Button";
+import { useState } from "react";
 
 export const Register = () => {
   return (
