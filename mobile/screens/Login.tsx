@@ -15,15 +15,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../components/Types";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
+import { saveData } from "../components/Storage"
 import { styles } from "../components/Styles";
 
 import { DEFAULT_USER, useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
-import Storage from 'react-native-storage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import storage, { compareToken, saveToken, removeToken } from "../components/storageBullshit"
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -38,14 +35,20 @@ const Login = ({
   const [password, setPassword] = useState("");
 
   const [remember, setRemember] = useState(false);
-  const [secure, setSecure] = useState(true);
 
   const { user, setUser } = useUser();
   const theme = useTheme();
 
   const onLoginPress = () => {
     setUser(DEFAULT_USER);
-    saveToken({ user: DEFAULT_USER });
+    if (remember) {
+      saveData({
+        key: "login",
+        data: DEFAULT_USER,
+        expires: true,
+      });
+      console.log("Data saved", DEFAULT_USER);
+    }
     navigation.navigate("Home");
   };
 
@@ -102,7 +105,7 @@ const Login = ({
             onPress={() => console.log("Forgot Password")}
             rippleColor={"rgba(255, 255, 255, 0.32)"}
             labelStyle={{
-              fontFamily: "Inter",
+              fontFamily: "sans-serif",
               fontSize: 12,
               color: theme.colors.neutral[7],
             }}

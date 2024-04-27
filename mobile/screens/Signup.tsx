@@ -33,7 +33,7 @@ const Signup = ({
   const [password, setPassword] = useState("");
 
   const onSignupPress = () => {
-    toggle(true);
+
   };
 
   const onLoginPress = () => {

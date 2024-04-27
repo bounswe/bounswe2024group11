@@ -2,8 +2,13 @@ import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { User } from '../context/UserContext';
 
+type StorageProp = {
+  key: string,
+  data: any,
+  expires: boolean
+}
 
-export const storage = new Storage({
+const storage = new Storage({
   // maximum capacity, default 1000 key-ids
   size: 1000,
 
@@ -27,16 +32,44 @@ export const storage = new Storage({
 });
 
 
-export const saveToken = (props: { user: User }) => {
+export const saveData = (props: StorageProp) => {
+  const { key, data, expires } = props;
   // do i need to clear first?
   // storage.clearMapForKey('loginState');
   // I always use same key because i only want 1 user to log in or log out.
   storage.save({
-    key: 'loginState',
-    data: 'aAadasfdwa',  // gonna be written "user.data"
-    expires: 1000 * 3600  // remove expiration???
-  })
+    key: key,
+    data: data,
+    expires: expires ? 1000 * 3600 : null
+  });
 }
+
+export const loadData = async (key: string, validate: (data: any, props: any) => Promise<boolean>,
+  validateProps: any): Promise<any> => {
+  let data = null;
+  await storage.load({
+    key: key,
+    autoSync: true,
+    syncInBackground: true,
+    syncParams: {
+      extraFetchOptions: {
+        // blahblah
+      },
+      someFlag: true
+    }
+  })
+    .then(datum => {
+      if (validate(datum, validateProps)) {
+        data = datum;
+      }
+    })
+    .catch(err => {
+      console.log(err.message);
+    });
+
+  return data;
+}
+
 
 export const compareToken = async (onMatch: (user: User) => void, user: User) => { // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
   let comparedToken = false;
@@ -83,13 +116,13 @@ export const compareToken = async (onMatch: (user: User) => void, user: User) =>
       }
     });
 
-  console.warn(comparedToken);
+  console.log(comparedToken);
 
   return comparedToken;
 }
 
-export const removeToken = () => {
-  storage.clearMapForKey('loginState');
+export const removeData = async (key: string) => {
+  await storage.clearMapForKey(key);
 }
 
 export default storage;

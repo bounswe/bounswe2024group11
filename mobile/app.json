@@ -1,5 +1,15 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/inter/Inter_500Medium.ttf"
+          ]
+        }
+      ]
+    ],
     "name": "Zenith",
     "slug": "Zenith",
     "version": "1.0.0",
