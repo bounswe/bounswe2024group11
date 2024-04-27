@@ -1,6 +1,7 @@
 import { TextInput, Container, Button, useMantineTheme } from "@mantine/core";
 import { Link, Form, useSubmit } from "react-router-dom";
 import { href } from "./router";
+import { button, buttonInnerRing } from "./components/Button";
 
 export const Login = () => {
   return (
@@ -26,10 +27,6 @@ export const Login = () => {
         <Form className="w-full flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <TextInput
-              classNames={{
-                label: "text-sm font-medium",
-                input: "focus:ring-slate-900",
-              }}
               placeholder="johndoe@example.com"
               id="Email"
               required
@@ -37,6 +34,7 @@ export const Login = () => {
               name="login"
               aria-label="Email Address"
             />
+
             <TextInput
               className="placeholder-slate-200"
               placeholder="••••••••"
@@ -54,29 +52,21 @@ export const Login = () => {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <Button
-              classNames={{
-                root: "",
-              }}
-              to={href({ path: "/" })}
-              component={Link}
-              type="submit"
-              fullWidth
-              color="blue"
-              aria-label="Log In"
+          <div className="flex flex-col gap-2">
+            <button
+              className={button({ intent: "secondary" })}
+              onSubmit={() => {}}
             >
-              Log In
-            </Button>
-            <Button
-              to={href({ path: "/register" })}
-              component={Link}
-              fullWidth
-              color="blue"
-              aria-label="Register"
+              <div className={buttonInnerRing({ intent: "secondary" })} />
+              <span>Log In</span>
+            </button>
+
+            <a
+              className={button({ intent: "tertiary" })}
+              href={href({ path: "/register" })}
             >
-              Register
-            </Button>
+              <span className="text-slate-900">Register</span>
+            </a>
           </div>
         </Form>
       </div>

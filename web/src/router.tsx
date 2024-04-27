@@ -3,7 +3,8 @@ import { App } from "./App";
 
 import { Link } from "react-router-dom";
 import { Login } from "./Login";
-import { Register } from "./register";
+import { Register } from "./Register";
+import { Terms } from "./Terms";
 
 const homeLoader = makeLoader(async ({ request }) => {
   const search = new URL(request.url).searchParams;
@@ -28,5 +29,9 @@ export const { router, href } = typesafeBrowserRouter([
   {
     path: "/register",
     Component: Register,
+  },
+  {
+    path: "/terms",
+    Component: Terms,
   },
 ]);
