@@ -8,15 +8,16 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
+import { Button, Checkbox, Divider, PaperProvider } from "react-native-paper";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import { RootStackParamList } from "../components/Types";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
+import { styles } from "../components/Styles";
 
 import { DEFAULT_USER, useUser } from "../context/UserContext";
-import { Checkbox, PaperProvider } from "react-native-paper";
 import { useTheme } from "../context/ThemeContext";
 
 import Storage from 'react-native-storage';
@@ -33,8 +34,6 @@ const Login = ({
   navigation: LoginNavigationProp;
   toggle: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { height } = useWindowDimensions();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -57,18 +56,20 @@ const Login = ({
 
 
   return (
-    <ScrollView style={styles.wrapper}>
-      <View style={styles.root}>
+    <ScrollView style={styles.authWrapper}>
+      <View style={styles.authRoot}>
         <View style={styles.imgDiv}>
           <Image
-            source={require("../assets/zenith-logo.png")}
-            style={[styles.logo, { height: height * 0.2 }]}
+            source={require("../assets/zenith-logo-login.png")}
+            style={styles.logo}
+            resizeMethod="scale"
             resizeMode="contain"
           />
           <Text style={styles.h1}> Login to your Zenith Account </Text>
           <Text> Ready to continue your comic adventure? </Text>
-          <Text> Login now! </Text>
         </View>
+
+        <Divider style={styles.divider} />
 
         <CustomInput
           placeholder="Username"
@@ -86,55 +87,45 @@ const Login = ({
           image="lock"
         />
 
-        <View>
+        <View style={styles.checkboxContainer}>
           <Checkbox.Item
             label="Remember me"
+            labelStyle={{ fontSize: 14, color: theme.colors.neutral[7] }}
             status={remember ? "checked" : "unchecked"}
             onPress={() => setRemember(!remember)}
+            style={styles.checkbox}
             rippleColor={theme.colors.cyan[0]}
             color={theme.colors.cyan[2]}
           />
+          <Button
+            mode="text"
+            onPress={() => console.log("Forgot Password")}
+            rippleColor={"rgba(255, 255, 255, 0.32)"}
+            labelStyle={{
+              fontFamily: "Inter",
+              fontSize: 12,
+              color: theme.colors.neutral[7],
+            }}
+          >
+            Forgot Password?
+          </Button>
         </View>
 
-        <CustomButton text="Login" onPress={onLoginPress} bgColor="#454545" />
+        <CustomButton
+          text="Login"
+          onPress={onLoginPress}
+          bgColor={theme.colors.neutral[9]}
+          textColor={theme.colors.neutral[0]}
+        />
         <CustomButton
           text="Register"
           onPress={onSignupPress}
-          bgColor="#20ADD0"
+          bgColor={theme.colors.neutral[0]}
+          textColor={theme.colors.neutral[7]}
         />
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 20,
-    maxWidth: 600,
-  },
-  root: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  h1: {
-    fontWeight: "bold",
-    fontSize: 24,
-    marginBottom: 16,
-  },
-  imgDiv: {
-    display: "flex",
-    alignItems: "center",
-    paddingVertical: 20,
-  },
-  logo: {
-    width: 200, //yüzde ile yazınca olmuyor, yüzde ile yazarsam rootun içini silmem lazım)
-    maxWidth: 400,
-    maxHeight: 400,
-    marginBottom: 30,
-  },
-});
-
-//image altındaki boş alan silinmiyor.
 
 export default Login;

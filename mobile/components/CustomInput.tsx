@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { Button, Icon } from "react-native-paper";
 
+import { useTheme } from "../context/ThemeContext";
+
 type CustomInputTypes = {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
@@ -19,11 +21,20 @@ type CustomInputTypes = {
 const CustomInput = (props: CustomInputTypes) => {
   const { value, setValue, placeholder, secure, image } = props;
 
+  const theme = useTheme();
+
   return (
     <View style={styles.main}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            borderColor: theme.colors.neutral[2],
+          },
+        ]}
+      >
         <View style={styles.icon}>
-          <Icon source={image} size={20} />
+          <Icon source={image} size={20} color={theme.colors.neutral[5]} />
         </View>
         <TextInput
           value={value}
@@ -39,6 +50,7 @@ const CustomInput = (props: CustomInputTypes) => {
 
 const styles = StyleSheet.create({
   main: {
+    flex: 1,
     display: "flex",
     alignItems: "center",
   },
@@ -49,15 +61,15 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   container: {
+    flex: 1,
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
-    width: 200,
+    width: "100%",
     height: 40,
-    borderColor: "grey",
     borderWidth: 1,
     borderRadius: 5,
-    marginVertical: 10,
+    marginVertical: 5,
   },
 });
 

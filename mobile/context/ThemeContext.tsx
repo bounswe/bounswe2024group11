@@ -9,16 +9,16 @@ type Theme = {
 const DEFAULT_THEME: Theme = {
   colors: {
     neutral: [
+      "#FFFFFF",
+      "#F6F8FA",
+      "#E2E4EA",
       "#CCD0D6",
-      "#090D15",
-      "#121823",
       "#858C99",
       "#515867",
-      "#1F232E",
       "#303540",
-      "#E2E4EA",
-      "#F6F8FA",
-      "#FFFFFF",
+      "#1F232E",
+      "#121823",
+      "#090D15",
     ],
     cyan: ["#E7FBFF", "#B6F1FF", "#00BCEE", "#0089B1", "#004667"],
     orange: ["#FFF3EA", "#FFD8BE", "#FF7300", "#D14B00", "#772F00"],
