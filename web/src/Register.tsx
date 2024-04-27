@@ -1,8 +1,7 @@
 import { TextInput, Container, Button, useMantineTheme } from "@mantine/core";
-import { Link, Form, useSubmit } from "react-router-dom";
-import { href } from "./router";
+import { Link, Form } from "react-router-dom";
 
-export const Login = () => {
+export const Register = () => {
   return (
     <Container className="flex flex-col items-center py-20">
       <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
@@ -18,7 +17,7 @@ export const Login = () => {
               Login to your Zenith account
             </h1>
             <p className="text-center text-slate-500">
-              Ready to continue your comic adventure?{" "}
+              Ready to continue your comic adventure?
             </p>
           </div>
         </div>
