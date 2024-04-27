@@ -2,35 +2,38 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from user.models import User
 from .serializer import UserSerializer
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 import requests
-
-@api_view(['GET'])
-def getUsers(request):
-    items = User.objects.all()
-    serializer = UserSerializer(items, many=True)
-    return Response(serializer.data)
-
 @api_view(['POST'])
-def addUser(request):
+def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-    return Response(serializer.data)
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        token = Token.objects.create(user=user)
+        return Response({"token": token.key, "user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
-def updateUser(request, pk):
-    item = User.objects.get(id=pk)
-    serializer = UserSerializer(instance=item, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+@api_view(['POST'])
+def login(request):
+    user = get_object_or_404(User, username=request.data['username'])
+    if not user.check_password(request.data['password']):
+        return Response({"res":"password does not match."}, status=status.HTTP_404_NOT_FOUND)
+    token, created = Token.objects.get_or_create(user=user)
+    serializer = UserSerializer(instance=user)
+    return Response({"token": token.key, "user": serializer.data})
 
-@api_view(['DELETE'])
-def deleteUser(request, pk):
-    item = User.objects.get(id=pk)
-    item.delete()
-    return Response({"res":"Object deleted!"})
+
+#@api_view(['GET'])
+#def test_token(request):
+#    return Response({"res":"Token is valid!"})
+
+
 
 def search_wikidata(request):
     if request.method == 'POST':
