@@ -43,4 +43,3 @@ def login(request):
 #@api_view(['GET'])
 #def test_token(request):
 #    return Response({"res":"Token is valid!"})
-
