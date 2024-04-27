@@ -7,13 +7,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Login from "./Login";
 import Signup from "./Signup";
 import { RootStackParamList } from "../components/Types";
+import { styles } from "../components/Styles";
 
 type AuthNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
 const Auth = ({ navigation }: { navigation: AuthNavigationProp }) => {
   const [login, setLogin] = useState(true);
   return (
-    <View>
+    <View style={styles.container}>
       {login ? (
         <Login navigation={navigation} toggle={setLogin} />
       ) : (

@@ -5,17 +5,18 @@ type CustomButtonTypes = {
   text: string;
   onPress: () => void;
   bgColor: string;
+  textColor: string;
 };
 
 const CustomButton = (props: CustomButtonTypes) => {
-  const { text, onPress, bgColor } = props;
+  const { text, onPress, bgColor, textColor } = props;
 
   return (
     <Pressable
       onPress={onPress}
       style={[styles.container, { backgroundColor: bgColor }]}
     >
-      <Text style={styles.text}>{text}</Text>
+      <Text style={[styles.text, { color: textColor }]}>{text}</Text>
     </Pressable>
   );
 };
@@ -26,7 +27,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   container: {
-    width: 200,
+    flex: 1,
+    width: "100%",
     borderRadius: 8,
     alignItems: "center",
     padding: 10,

@@ -1,12 +1,13 @@
 import React from "react";
 
 import { View } from "react-native";
-import { Button, Icon } from "react-native-paper";
+import { Button, FAB, Icon } from "react-native-paper";
 
 import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
 
 import { styles } from "./Styles";
 import { RootStackParamList } from "./Types";
+import { useTheme } from "../context/ThemeContext";
 
 type FeedNavigationProp = MaterialBottomTabNavigationProp<
   RootStackParamList,
@@ -20,18 +21,19 @@ const CreatePostButton = ({
 }) => {
   const handleCreatePost = () => {};
 
+  const theme = useTheme();
+
   return (
-    <View>
-      <Button
-        mode="elevated"
+    <View style={styles.createPostButton}>
+      <FAB
+        icon="plus"
+        style={{
+          backgroundColor: theme.colors.neutral[9],
+        }}
+        rippleColor={theme.colors.neutral[7]}
+        color={theme.colors.neutral[0]}
         onPress={handleCreatePost}
-        style={styles.createPostButton}
-        buttonColor="#1F232E"
-        rippleColor="#1F232E"
-        textColor="white"
-      >
-        <Icon source="plus" size={20} color="white" />
-      </Button>
+      />
     </View>
   );
 };

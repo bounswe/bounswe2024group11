@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
+import { useTheme } from "../context/ThemeContext";
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   icon: {
     transform: [{ translateY: -2 }, { translateX: -2 }],
   },
@@ -32,8 +37,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     right: 20,
-    borderRadius: 50,
-    width: 50,
+    borderRadius: 30,
+    width: 60,
     height: 60,
     justifyContent: "center",
     alignItems: "center",
@@ -67,6 +72,43 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: "white",
   },
+  authWrapper: {
+    flex: 1,
+    maxWidth: 600,
+  },
+  authRoot: {
+    flex: 1,
+    display: "flex",
+    alignItems: "stretch",
+    justifyContent: "space-between",
+    padding: 24,
+  },
+  h1: {
+    fontWeight: "bold",
+    fontSize: 24,
+    marginBottom: 12,
+  },
+  imgDiv: {
+    display: "flex",
+    alignItems: "center",
+  },
+  logo: {
+    width: 96,
+    maxWidth: 128,
+    height: 96,
+    maxHeight: 128,
+    marginBottom: 24,
+  },
+  divider: {
+    marginVertical: 24,
+  },
+  checkboxContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  checkbox: { height: 40 },
 });
 
 export { styles };
