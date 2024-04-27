@@ -4,6 +4,15 @@ const config: Config = {
   // important: true,
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
+    ringWidth: {
+      DEFAULT: "1px",
+      0: "0px",
+      1: "1px",
+      2: "2px",
+      3: "3px",
+      4: "4px",
+      8: "8px",
+    },
     backgroundImage: {
       "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       "gradient-conic":
