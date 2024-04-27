@@ -31,7 +31,7 @@ const Signup = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onSignupPress = () => {
-    navigation.navigate("Home");
+    toggle(true);
   };
   const onLoginPress = () => {
     toggle(true);

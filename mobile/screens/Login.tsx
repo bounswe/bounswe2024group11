@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
 
 import {
   View,
@@ -18,6 +18,11 @@ import CustomButton from "../components/CustomButton";
 import { DEFAULT_USER, useUser } from "../context/UserContext";
 import { Checkbox, PaperProvider } from "react-native-paper";
 import { useTheme } from "../context/ThemeContext";
+
+import Storage from 'react-native-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import storage, { compareToken, saveToken, removeToken } from "../components/storageBullshit"
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -41,12 +46,15 @@ const Login = ({
 
   const onLoginPress = () => {
     setUser(DEFAULT_USER);
+    saveToken({ user: DEFAULT_USER });
     navigation.navigate("Home");
   };
 
   const onSignupPress = () => {
     toggle(false);
   };
+
+
 
   return (
     <ScrollView style={styles.wrapper}>
