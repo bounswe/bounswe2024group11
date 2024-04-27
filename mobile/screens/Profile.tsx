@@ -21,7 +21,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
     <View style={{ flex: 1 }}>
       <ProfileHeader navigation={navigation} />
       <View style={{ flex: 1 }}>
-        {user && user.isLogged ? (
+        {user ? (
           <View style={styles.center}>
             <Text>Profile</Text>
           </View>

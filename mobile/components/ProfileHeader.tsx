@@ -21,7 +21,7 @@ const ProfileHeader = ({
 }) => {
   const { user, setUser } = useUser();
   const handleLogOut = () => {
-    setUser({ isLogged: false });
+    setUser(null);
     navigation.navigate("Auth");
   };
 
@@ -42,7 +42,7 @@ const ProfileHeader = ({
       <Appbar.Content
         title={
           <View style={styles.headerRight}>
-            {user.isLogged && (
+            {user && (
               <Button
                 mode="contained"
                 onPress={handleLogOut}

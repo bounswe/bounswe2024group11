@@ -37,7 +37,7 @@ const FeedHeader = ({ navigation }: { navigation: FeedNavigationProp }) => {
       <Appbar.Content
         title={
           <View style={styles.headerRight}>
-            {!user.isLogged && (
+            {!user && (
               <Button
                 mode="contained"
                 onPress={goToLogin}

@@ -15,8 +15,9 @@ import { RootStackParamList } from "../components/Types";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 
-import { useUser } from "../context/UserContext";
+import { DEFAULT_USER, useUser } from "../context/UserContext";
 import { Checkbox, PaperProvider } from "react-native-paper";
+import { useTheme } from "../context/ThemeContext";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -35,10 +36,11 @@ const Login = ({
   const [remember, setRemember] = useState(false);
   const [secure, setSecure] = useState(true);
 
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
+  const theme = useTheme();
 
   const onLoginPress = () => {
-    setUser({ isLogged: true });
+    setUser(DEFAULT_USER);
     navigation.navigate("Home");
   };
 
@@ -81,8 +83,8 @@ const Login = ({
             label="Remember me"
             status={remember ? "checked" : "unchecked"}
             onPress={() => setRemember(!remember)}
-            rippleColor={"#50C7E9"}
-            color="#20ADD0"
+            rippleColor={theme.colors.cyan[0]}
+            color={theme.colors.cyan[2]}
           />
         </View>
 
@@ -113,7 +115,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   imgDiv: {
-    //backgroundColor: "red",
     display: "flex",
     alignItems: "center",
     paddingVertical: 20,

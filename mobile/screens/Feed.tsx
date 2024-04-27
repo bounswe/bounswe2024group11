@@ -25,7 +25,7 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
       <View style={styles.center}>
         <Text>Feed</Text>
       </View>
-      {user && user.isLogged && <CreatePostButton navigation={navigation} />}
+      {user && <CreatePostButton navigation={navigation} />}
     </View>
   );
 }

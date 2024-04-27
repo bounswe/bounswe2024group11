@@ -8,31 +8,43 @@ import React, {
   ReactNode,
 } from "react";
 
+type User = {
+  id: number;
+  username: string;
+  email: string;
+  lastLogin: string | null;
+  dateJoined: string;
+};
+
+export const DEFAULT_USER: User = {
+  id: 0,
+  username: "mobile_test_user",
+  email: "mobile_test_user@test.com",
+  lastLogin: "0101010",
+  dateJoined: "0101010",
+};
+
 type UserContextType = {
-  user: { [key: string]: any };
-  setUser: Dispatch<SetStateAction<{ [key: string]: any }>>;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
 };
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+const UserContext = createContext<UserContextType | null>(null);
 
-function useUser(): UserContextType {
+export const UserProvider = (props: { children: ReactNode }): ReactElement => {
+  const [user, setUser] = useState<User | null>(null);
+
+  return <UserContext.Provider value={{ user, setUser }} {...props} />;
+};
+
+export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
+
   if (!context) {
-    throw new Error("useUser must be used within an UserProvider");
+    throw new Error("useUser must be used within a UserProvider");
   }
+
   return context;
-}
-
-const UserProvider = (props: { children: ReactNode }): ReactElement => {
-  const [user, setUser] = useState<{ [key: string]: any }>({
-    isLogged: false,
-    username: "",
-    email: "",
-    token: "",
-  });
-
-  return <UserContext.Provider {...props} value={{ user, setUser }} />;
 };
 
-export { useUser };
 export default UserProvider;
