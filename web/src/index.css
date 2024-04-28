@@ -3,9 +3,33 @@
 @tailwind utilities;
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+  button,
+  select {
+    text-transform: none;
+  }
+  body {
+    font-smooth: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    margin: 0;
+  }
   body,
   p {
     letter-spacing: -0.01em;
+    text-wrap: balance;
   }
   h1,
   h2,

@@ -1,6 +1,14 @@
-import type { MantineThemeOverride } from "@mantine/core";
+import { Button, Input, type MantineThemeOverride } from "@mantine/core";
 
 export const theme: MantineThemeOverride = {
+  components: {
+    Input: Input.extend({
+      classNames: {
+        input:
+          "transition-all duration-300 border border-slate-200 ring-transparent hover:border-slate-300 ring-0 focus:border-slate-700 focus:ring-3 focus:ring-slate-100 placeholder-slate-400",
+      },
+    }),
+  },
   primaryColor: "cyan",
   colors: {
     cyan: [

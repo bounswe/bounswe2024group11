@@ -3,8 +3,10 @@ import { App } from "./App";
 
 import { Link } from "react-router-dom";
 import { Login } from "./Login";
+import { Register } from "./Register";
+import { Terms } from "./Terms";
 
-const pokeLoader = makeLoader(async ({ request }) => {
+const homeLoader = makeLoader(async ({ request }) => {
   const search = new URL(request.url).searchParams;
   const res = await fetch(
     `https://pokeapi.co/api/v2/pokemon/${search.get("search")}`
@@ -12,20 +14,24 @@ const pokeLoader = makeLoader(async ({ request }) => {
   return { pokemon: await res.json().catch(() => null) };
 });
 
-export type PokeLoader = typeof pokeLoader;
+export type HomeLoader = typeof homeLoader;
 
 export const { router, href } = typesafeBrowserRouter([
   {
     path: "/",
     Component: App,
-    loader: pokeLoader,
+    loader: homeLoader,
   },
   {
     path: "/login",
-    element: <Login />,
+    Component: Login,
   },
   {
     path: "/register",
-    element: <Link to="/login">Log In</Link>,
+    Component: Register,
+  },
+  {
+    path: "/terms",
+    Component: Terms,
   },
 ]);
