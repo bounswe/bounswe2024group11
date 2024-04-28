@@ -1,0 +1,49 @@
+# version is deprecated after docker 25.X
+# version: '3.7'
+
+
+services:
+    db:
+        image: mysql:8.0
+        volumes:
+            - db_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: mydatabase
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+    
+    backend:
+        build:
+            context: ./backend
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./backend:/home/app/backend
+        command: >
+            sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+        env_file: ./backend/.env
+        restart: "on-failure"
+        depends_on:
+            - db
+    
+    web:
+        build:
+            context: ./web
+        ports:
+            - "5173:5173"
+        volumes:
+            - ./web:/home/app/web
+        command: >
+            sh -c "npm install &&
+            npm run build &&
+            serve -s dist -l 5173"
+        restart: "on-failure"
+        depends_on:
+            - backend
+
+volumes:
+    db_data:
