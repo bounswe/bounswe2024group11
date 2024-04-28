@@ -109,7 +109,7 @@ const Login = ({
             onPress={() => console.log("Forgot Password")}
             rippleColor={"rgba(255, 255, 255, 0.32)"}
             labelStyle={{
-              fontFamily: "Inter",
+              fontFamily: "sans-serif",
               fontSize: 12,
               color: theme.colors.neutral[7],
             }}

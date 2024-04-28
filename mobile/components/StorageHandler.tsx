@@ -3,8 +3,42 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-export const getUser = (props: { token: string, endpoint: string }) => {
-  const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`);
+export const getUser = async (props: { token: string, endpoint: string }) => {
+  const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`,
+    {
+      method: "GET",
+      headers: {
+        'Authorization': `Bearer ${props.token}`
+      },
+    }
+  );
+
+  return fetch(getUserRequest)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch(error => {
+      // console.error('Error fetching data:', error);
+      return null;
+    });
+
+}
+
+export const getSearch = async (props: { query: string, endpoint: string }) => {
+  const formData = new FormData();
+  formData.append('query', props.query);
+  const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
   return fetch(getUserRequest)
     .then((response) => {
@@ -23,10 +57,13 @@ export const getUser = (props: { token: string, endpoint: string }) => {
 
 }
 
-export const postUser = (props: { username: string, password: string, endpoint: string }) => {
+export const postUser = async (props: { username: string, password: string, endpoint: string }) => {
+  const formData = new FormData();
+  formData.append('username', props.username);
+  formData.append('password', props.password);
   const postUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`, {
     method: "POST",
-    body: `{"username": "${props.username}", "password": "${props.password}"}`,
+    body: formData,
   });
 
   return fetch(postUserRequest) //return olarak en son return mu donuyor
@@ -34,11 +71,12 @@ export const postUser = (props: { username: string, password: string, endpoint: 
       if (response.status === 200) {
         return response.json();
       } else {
+        console.log(response.status);
         throw new Error("Something went wrong on API server!");
       }
     })
     .then((data) => {
-      saveToken(data.token);
+      saveToken({ token: data.token });
       return data.user
     })
     .catch((error) => {
