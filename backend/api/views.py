@@ -43,22 +43,39 @@ def search(request):
         keyword = request.data["keyword"]
         print(keyword)
         # Construct SPARQL query
-        sparql_query = """
-        SELECT DISTINCT ?comic ?comicLabel ?author ?publicationDate ?description ?image WHERE {
-          ?comic wdt:P31/wdt:P279* wd:Q1004;
-                 rdfs:label ?comicLabel;
-                 wdt:P50 ?author;
-                 wdt:P577 ?publicationDate;
-                 wdt:P18 ?image;
-                 schema:description ?description.
-          FILTER (lang(?comicLabel) = 'en' && contains(?comicLabel, "%s"))
+        comic_query = """
+        SELECT DISTINCT ?comic ?comicLabel ?description WHERE {
+          ?comic wdt:P31 wd:Q1004;
+                rdfs:label ?comicLabel;
+                schema:description ?description.
+                
+          
+          FILTER (lang(?comicLabel) = 'en' && regex(?comicLabel, "%s", "i"))
         }
-        LIMIT 30
+        LIMIT 3
+        """ % keyword
+
+        # Construct SPARQL query for comic characters
+        character_query = """
+        SELECT DISTINCT ?character ?characterLabel ?description WHERE {
+        ?character rdfs:label ?characterLabel;
+                    schema:description ?description;
+                    wdt:P31/wdt:P279* wd:Q1114461.
+        
+        FILTER (lang(?description) = 'en' && regex(?characterLabel, "%s", "i"))
+        }
+        LIMIT 10
+
         """ % keyword
 
         # Parameters for the API call
-        params = {
-            'query': sparql_query,
+        comic_params = {
+            'query': comic_query,
+            'format': 'json'  # Response format
+        }
+        
+        character_params = {
+            'query': character_query,
             'format': 'json'  # Response format
         }
 
@@ -66,29 +83,29 @@ def search(request):
         url = 'https://query.wikidata.org/sparql'
 
         # Make the API call
-        response = requests.get(url, params=params)
-
+        comic_response = requests.get(url, params=comic_params)
+        character_response = requests.get(url, params=character_params)
+        
         # Check if the request was successful
-        if response.status_code == 200:
+        if comic_response.status_code == 200 and character_response.status_code== 200:
             # Parse JSON response
-            data = response.json()
-            results = []
-            bindings = data['results']['bindings']
-            print(bindings)
-            if bindings:
-                for item in bindings:
-                    comic_info = {
-                        'label': item['comicLabel']['value']
-                        #'author': item['author']['value'],
-                        #'publication_date': item['publicationDate']['value'],
-                        #'description': item['description']['value'],
-                        #'image': item['image']['value']
-                    }
-                    results.append(comic_info)
-            else:
-                results.append("No comics found.")
-            return JsonResponse({'keyword': keyword, 'results': results})
+            comic_data = comic_response.json()
+            character_data = character_response.json()
+
+            #print(comic_response.json())
+            #print(character_response.json())
+           
+
+            comic_results = [{'type': 'comic', 'label': item['comicLabel']['value'], 'description': item['description']['value']} for item in comic_data['results']['bindings']]
+            character_results = [{'type': 'character', 'label': item['characterLabel']['value'], 'description': item['description']['value']} for item in character_data['results']['bindings']]
+
+            combined_results = comic_results + character_results
+            
+            print(combined_results)
+            
+            
+            return Response({'keyword': keyword, 'results': combined_results})
         else:
-            return JsonResponse({'error': 'Failed to retrieve data from Wikidata.'}, status=500)
+            return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=500)
     else:
-        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+        return Response({'error': 'Invalid request method. Only GET method is allowed.'}, status=405)
