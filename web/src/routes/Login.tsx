@@ -23,7 +23,7 @@ import type { loginLoader } from "./Login.data";
 export const Login = () => {
 	const submit = useSubmit();
 	const a = useLoaderData<typeof loginLoader>();
-
+	const b = useFormAction();
 	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
 	return (
 		<Container className="flex flex-col items-center py-20">
@@ -55,11 +55,11 @@ export const Login = () => {
 						<TextInput
 							placeholder="johndoe@example.com"
 							id="Email"
-							type="email"
+							type="username"
 							required
 							label="Email Address"
-							name="login"
-							aria-label="Email Address"
+							name="username"
+							aria-label="username"
 						/>
 
 						<TextInput
