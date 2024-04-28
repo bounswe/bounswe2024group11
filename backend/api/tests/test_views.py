@@ -7,7 +7,7 @@ class TestView(TestSetUp):
     def test_register_user(self):
         response = self.client.post(self.register_url, self.user_data1, format='json')
         print(response.data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['user']['username'], self.user_data1['username'])
         self.assertEqual(response.data['user']['email'], self.user_data1['email'])
         self.assertTrue('token' in response.data)
@@ -22,7 +22,7 @@ class TestView(TestSetUp):
     def test_false_login_user(self):
         response = self.client.post(self.login_url, self.user_data1, format='json')
         print(response.data)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
 
     def test_login_user(self):
         self.client.post(self.register_url, self.user_data1, format='json')
@@ -32,5 +32,7 @@ class TestView(TestSetUp):
         self.assertEqual(response.data['user']['username'], self.user_data1['username'])
         self.assertEqual(response.data['user']['email'], self.user_data1['email'])
         self.assertTrue('token' in response.data)
+
+    
 
         
