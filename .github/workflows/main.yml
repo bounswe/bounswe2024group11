@@ -23,7 +23,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/ci_cd_zenith
           chmod 600 ~/.ssh/ci_cd_zenith
-          cat >>~/.ssh/ci_cd_zenith <<END
+          cat >>~/.ssh/config <<END
           Host target
             HostName $SSH_HOST
             User $SSH_USER
@@ -31,7 +31,6 @@ jobs:
             LogLevel ERROR
             StrictHostKeyChecking no
           END
-          echo $SSH_HOST
       - name: Run deploy
         run: |
-          ssh target "cd bounswe2024group11/ && docker-compose down && git pull && docker-compose build && docker-compose up -d --force-recreate"
+          ssh target "cd bounswe2024group11/backend/ && docker-compose down && git pull && docker-compose build && docker-compose up -d --force-recreate"
