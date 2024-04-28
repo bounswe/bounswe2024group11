@@ -20,7 +20,7 @@ export const Login = () => {
 	console.log(c?.error);
 	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
 	return (
-		<Container className="flex flex-col items-center py-20">
+		<Container className="flex flex-col items-center md:py-20 py-12">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
 				<div className="flex flex-col items-center gap-2">
 					<img
@@ -76,7 +76,7 @@ export const Login = () => {
 								label: "text-slate-600 pl-2 cursor-pointer",
 								body: "flex items-center",
 								input:
-									"text-primary accent-slate-400 border-slate-300 h-4 w-4 cursor-pointer",
+									"text-primary accent-slate-400 border-slate-300 h-4 w-4 cursor-pointer hover:ring-slate-200 ring-1 hover:ring-3 ring-transparent duration-300 transition-all",
 								inner: "h-4 w-4",
 							}}
 							checked={isKeepMeLoggedIn}
@@ -87,7 +87,7 @@ export const Login = () => {
 							aria-label="Keep me logged in"
 						/>
 						<Link
-							className="underline text-sm text-slate-600 hover:text-slate-950 font-medium transition-colors"
+							className="underline text-sm text-slate-500 hover:text-slate-950 font-medium transition-colors"
 							to="/"
 						>
 							Forgot Password

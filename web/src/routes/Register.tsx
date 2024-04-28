@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export const Register = () => {
 	return (
-		<Container className="flex flex-col items-center py-20">
+		<Container className="flex flex-col items-center md:py-20 py-12">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
 				<div className="flex flex-col items-center gap-2">
 					<img

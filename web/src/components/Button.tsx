@@ -2,6 +2,7 @@ import { cva } from "class-variance-authority";
 
 export const buttonInnerRing = cva(
 	[
+		"gradient-mask",
 		"absolute",
 		"inset-[1px]",
 		"width-full",
@@ -18,7 +19,7 @@ export const buttonInnerRing = cva(
 					"group-hover:border-cyan-500",
 					"group-active:border-cyan-600",
 				],
-				secondary: ["border-white/15"],
+				secondary: ["border-white/25"],
 				tertiary: ["border-white/50"],
 				destructive: ["border-red-400"],
 			},
