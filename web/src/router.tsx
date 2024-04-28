@@ -1,37 +1,32 @@
-import { makeLoader, typesafeBrowserRouter } from "react-router-typesafe";
-import { App } from "./App";
-
-import { Link } from "react-router-dom";
-import { Login } from "./Login";
-import { Register } from "./Register";
-import { Terms } from "./Terms";
-
-const homeLoader = makeLoader(async ({ request }) => {
-  const search = new URL(request.url).searchParams;
-  const res = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${search.get("search")}`
-  );
-  return { pokemon: await res.json().catch(() => null) };
-});
-
-export type HomeLoader = typeof homeLoader;
+import { typesafeBrowserRouter } from "react-router-typesafe";
+import { Home } from "./routes/Home";
+import { Login } from "./routes/Login";
+import { Register } from "./routes/Register";
+import { Terms } from "./routes/Terms";
+import { homeLoader } from "./routes/Home.data";
+import { loginAction, loginLoader } from "./routes/Login.data";
+import { registerAction, registerLoader } from "./routes/Register.data";
 
 export const { router, href } = typesafeBrowserRouter([
-  {
-    path: "/",
-    Component: App,
-    loader: homeLoader,
-  },
-  {
-    path: "/login",
-    Component: Login,
-  },
-  {
-    path: "/register",
-    Component: Register,
-  },
-  {
-    path: "/terms",
-    Component: Terms,
-  },
+	{
+		path: "/",
+		Component: Home,
+		loader: homeLoader,
+	},
+	{
+		path: "/login",
+		Component: Login,
+		loader: loginLoader,
+		action: loginAction,
+	},
+	{
+		path: "/register",
+		Component: Register,
+		loader: registerLoader,
+		action: registerAction,
+	},
+	{
+		path: "/terms",
+		Component: Terms,
+	},
 ]);
