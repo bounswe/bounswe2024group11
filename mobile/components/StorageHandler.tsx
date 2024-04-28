@@ -1,7 +1,52 @@
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { User } from '../context/UserContext';
 
+
+
+export const getUser = (props: { token: string, endpoint: string }) => {
+  const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`);
+
+  return fetch(getUserRequest)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      return null;
+    });
+
+}
+
+export const postUser = (props: { username: string, password: string, endpoint: string }) => {
+  const postUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`, {
+    method: "POST",
+    body: `{"username": "${props.username}", "password": "${props.password}"}`,
+  });
+
+  return fetch(postUserRequest) //return olarak en son return mu donuyor
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        throw new Error("Something went wrong on API server!");
+      }
+    })
+    .then((data) => {
+      saveToken(data.token);
+      return data.user
+    })
+    .catch((error) => {
+      console.log("bullshit 46");
+      console.error(error);
+    });
+
+}
 
 export const storage = new Storage({
   // maximum capacity, default 1000 key-ids
@@ -27,20 +72,20 @@ export const storage = new Storage({
 });
 
 
-export const saveToken = (props: { user: User }) => {
+export const saveToken = (props: { token: string }) => { //TRY CATCH KOY CHATGPT'DE VAR??????????????????????????????????????????????
   // do i need to clear first?
   // storage.clearMapForKey('loginState');
   // I always use same key because i only want 1 user to log in or log out.
+  const token = props.token
   storage.save({
     key: 'loginState',
-    data: 'aAadasfdwa',  // gonna be written "user.data"
-    expires: 1000 * 3600  // remove expiration???
+    data: token,
   })
 }
+//normalde DEFAULT_USER'ı hiçbir yerde kullanmıyorum ama bilgileri gerekirse diye koydum.
+export const compareToken = () => { // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
 
-export const compareToken = async (onMatch: (user: User) => void, user: User) => { // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
-  let comparedToken = false;
-  await storage.load({
+  return storage.load({
     key: 'loginState',
     autoSync: true, // autoSync (default: true) means if data is not found or has expired, then invoke the corresponding sync method
 
@@ -60,17 +105,6 @@ export const compareToken = async (onMatch: (user: User) => void, user: User) =>
       someFlag: true
     }
   })
-    .then(datum => {
-      //data is found
-      let isTokenMatched = true; //compare datum with backend, let mi olcak?
-      if (isTokenMatched) {
-        onMatch(user);
-        comparedToken = true;
-      }
-      else {
-        console.warn("token does not match with backend or expired")
-      }
-    })
     .catch(err => {
       console.warn(err.message);
       switch (err.name) {
@@ -82,10 +116,6 @@ export const compareToken = async (onMatch: (user: User) => void, user: User) =>
           break;
       }
     });
-
-  console.warn(comparedToken);
-
-  return comparedToken;
 }
 
 export const removeToken = () => {
