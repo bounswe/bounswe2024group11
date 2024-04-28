@@ -1,22 +1,14 @@
-import {
-	TextInput,
-	Container,
-	Button,
-	useMantineTheme,
-	Checkbox,
-} from "@mantine/core";
-import { Link, Form, useSubmit, useFormAction } from "react-router-dom";
+import { TextInput, Container, Checkbox } from "@mantine/core";
+import { Link, Form } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
-import { makeLoader, typesafeBrowserRouter } from "react-router-typesafe";
+import { useActionData } from "react-router-typesafe";
 import { useState } from "react";
-import { useLoaderData, redirect, useActionData } from "react-router-typesafe";
 import { Checkmark } from "../components/Checkmark";
-import type { loginAction, loginLoader } from "./Login.data";
+import type { loginAction } from "./Login.data";
 
 export const Login = () => {
 	const c = useActionData<typeof loginAction>();
-	console.log(c);
 	console.log(c?.error);
 	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
 	return (
