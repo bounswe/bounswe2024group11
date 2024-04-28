@@ -3,16 +3,16 @@
 
 
 services:
-    app:
+    backend:
         build:
-            context: .
+            context: ./backend
         ports:
             - "8000:8000"
         volumes:
-            - .:/home/app/webapp
+            - ./backend:/home/app/webapp
         command: >
             sh -c "python manage.py makemigrations &&
             python manage.py migrate &&
             python manage.py runserver 0.0.0.0:8000"
-        env_file: .env
+        env_file: ./backend/.env
         restart: "on-failure"
