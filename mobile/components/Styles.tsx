@@ -72,6 +72,9 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: "white",
   },
+  searchButton: {
+
+  },
   authWrapper: {
     flex: 1,
     maxWidth: 600,
