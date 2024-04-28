@@ -5,7 +5,27 @@ from .serializer import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
+@swagger_auto_schema(
+    method='post',
+    operation_description="Register a user with a unique username, a unique email and a password.",
+    operation_summary="register a user",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'username': openapi.Schema(type=openapi.TYPE_STRING),
+            'email': openapi.Schema(type=openapi.TYPE_STRING),
+            'password': openapi.Schema(type=openapi.TYPE_STRING)    
+        },
+        required=['username', 'email', 'password']
+    ),    responses={
+        201: "Created",
+        400: "Missing required fields or nonunique username/email"
+    },
+    operation_id='signup',
+)
 @api_view(['POST'])
 def register(request):
     required_fields = ['username', 'password', 'email']
@@ -20,8 +40,30 @@ def register(request):
         user.save()
         token = Token.objects.create(user=user)
         return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@swagger_auto_schema(
+    method='post',
+    operation_description="Login with a username and a password.",
+    operation_summary="login",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'username': openapi.Schema(type=openapi.TYPE_STRING),
+            'password': openapi.Schema(type=openapi.TYPE_STRING)    
+        },
+        required=['username', 'password']
+    ),
+
+    responses={
+        200: "Success",
+        400: "Missing required fields",
+        401: "Unauthorized, wrong username or password"
+    },
+    operation_id='login'
+)
 @api_view(['POST'])
 def login(request):
     required_fields = ['username', 'password']
