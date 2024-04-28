@@ -10,16 +10,17 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(
     method='post',
-    operation_description="Register a user with a unique username, a unique email and a password.",
+    operation_description="Register a user with a unique username, a unique email, a password and full name.",
     operation_summary="register a user",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
             'username': openapi.Schema(type=openapi.TYPE_STRING),
             'email': openapi.Schema(type=openapi.TYPE_STRING),
-            'password': openapi.Schema(type=openapi.TYPE_STRING)    
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+            'fullname': openapi.Schema(type=openapi.TYPE_STRING) 
         },
-        required=['username', 'email', 'password']
+        required=['username', 'email', 'password', 'fullname']
     ),    responses={
         201: "Created",
         400: "Missing required fields or nonunique username/email"
@@ -28,7 +29,7 @@ from drf_yasg import openapi
 )
 @api_view(['POST'])
 def register(request):
-    required_fields = ['username', 'password', 'email']
+    required_fields = ['username', 'password', 'email', 'fullname']
     if not all([field in request.data for field in required_fields]):
         return Response({"res":"Please provide all required fields."}, status=status.HTTP_400_BAD_REQUEST)
     
