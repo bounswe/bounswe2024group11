@@ -25,7 +25,11 @@ export const Register = () => {
 					</div>
 				</div>
 				<hr className="border-slate-100" />
-				<Form className="w-full flex flex-col gap-6">
+				<Form
+					className="w-full flex flex-col gap-6"
+					method="POST"
+					action="/login"
+				>
 					<div className="flex flex-col gap-3">
 						<TextInput
 							placeholder="John Doe"
@@ -33,7 +37,7 @@ export const Register = () => {
 							type="text"
 							required
 							label="Full Name"
-							name="login"
+							name="fullname"
 							aria-label="Full Name"
 						/>
 
@@ -43,7 +47,7 @@ export const Register = () => {
 							type="email"
 							required
 							label="Email Address"
-							name="login"
+							name="email"
 							aria-label="Email Address"
 						/>
 
@@ -53,7 +57,7 @@ export const Register = () => {
 							type="text"
 							required
 							label="Username"
-							name="login"
+							name="username"
 							aria-label="User name"
 						/>
 

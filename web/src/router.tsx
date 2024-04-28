@@ -5,6 +5,7 @@ import { Register } from "./routes/Register";
 import { Terms } from "./routes/Terms";
 import { homeLoader } from "./routes/Home.data";
 import { loginAction, loginLoader } from "./routes/Login.data";
+import { registerAction, registerLoader } from "./routes/Register.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -21,8 +22,8 @@ export const { router, href } = typesafeBrowserRouter([
 	{
 		path: "/register",
 		Component: Register,
-		loader: homeLoader,
-		action: loginAction,
+		loader: registerLoader,
+		action: registerAction,
 	},
 	{
 		path: "/terms",

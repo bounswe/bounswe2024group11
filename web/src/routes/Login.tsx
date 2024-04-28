@@ -53,11 +53,11 @@ export const Login = () => {
 				>
 					<div className="flex flex-col gap-3">
 						<TextInput
-							placeholder="johndoe@example.com"
-							id="Email"
+							placeholder="johndoe"
+							id="username"
 							type="username"
 							required
-							label="Email Address"
+							label="Username"
 							name="username"
 							aria-label="username"
 						/>
