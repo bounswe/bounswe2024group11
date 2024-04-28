@@ -35,31 +35,60 @@ def login(request):
 #def test_token(request):
 #    return Response({"res":"Token is valid!"})
 
-def search_wikidata(request):
-    # Assuming the keyword is obtained from the form submission
-    keyword = request.POST.get('keyword')
+@api_view(["POST"])
+def search(request):
+    #this part should be changed because we should use post to get keyword.
+    if request.method == 'POST':
+        #keyword = request.POST.get(request.data.get("keyword"), '')
+        keyword = request.data["keyword"]
+        print(keyword)
+        # Construct SPARQL query
+        sparql_query = """
+        SELECT DISTINCT ?comic ?comicLabel ?author ?publicationDate ?description ?image WHERE {
+          ?comic wdt:P31/wdt:P279* wd:Q1004;
+                 rdfs:label ?comicLabel;
+                 wdt:P50 ?author;
+                 wdt:P577 ?publicationDate;
+                 wdt:P18 ?image;
+                 schema:description ?description.
+          FILTER (lang(?comicLabel) = 'en' && contains(?comicLabel, "%s"))
+        }
+        LIMIT 30
+        """ % keyword
 
-    # Construct SPARQL query with user's keyword
-    sparql_query = """
-    SELECT ?item ?itemLabel
-    WHERE {
-        ?item ?label "%s"@en.
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-    }
-    LIMIT 10
-    """ % keyword
+        # Parameters for the API call
+        params = {
+            'query': sparql_query,
+            'format': 'json'  # Response format
+        }
 
-    # Send SPARQL query to Wikidata
-    response = requests.get('https://query.wikidata.org/sparql', params={'query': sparql_query, 'format': 'json'})
+        # API endpoint
+        url = 'https://query.wikidata.org/sparql'
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Parse JSON response
-        data = response.json()
+        # Make the API call
+        response = requests.get(url, params=params)
 
-        # Return JSON response directly
-        return JsonResponse(data)
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Parse JSON response
+            data = response.json()
+            results = []
+            bindings = data['results']['bindings']
+            print(bindings)
+            if bindings:
+                for item in bindings:
+                    comic_info = {
+                        'label': item['comicLabel']['value']
+                        #'author': item['author']['value'],
+                        #'publication_date': item['publicationDate']['value'],
+                        #'description': item['description']['value'],
+                        #'image': item['image']['value']
+                    }
+                    results.append(comic_info)
+            else:
+                results.append("No comics found.")
+            return JsonResponse({'keyword': keyword, 'results': results})
+        else:
+            return JsonResponse({'error': 'Failed to retrieve data from Wikidata.'}, status=500)
     else:
-        # Handle error and return JSON response
-        error_message = {'error': 'Error occurred while fetching data from Wikidata.'}
-        return JsonResponse(error_message, status=500)
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
