@@ -3,6 +3,16 @@
 
 
 services:
+    db:
+        image: mysql:8.0
+        volumes:
+            - db_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: mydatabase
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
     backend:
         build:
             context: ./backend
@@ -16,3 +26,8 @@ services:
             python manage.py runserver 0.0.0.0:8000"
         env_file: ./backend/.env
         restart: "on-failure"
+        depends_on:
+            - db
+
+volumes:
+    db_data:
