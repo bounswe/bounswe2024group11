@@ -44,27 +44,49 @@ def search(request):
         print(keyword)
         # Construct SPARQL query
         comic_query = """
-        SELECT DISTINCT ?comic ?comicLabel ?description WHERE {
-          ?comic wdt:P31 wd:Q1004;
+        SELECT DISTINCT ?item ?comic ?comicLabel ?description ?image ?author ?publicationDate  WHERE {
+          ?comic wdt:P31/wdt:P279* wd:Q1004.
+          OPTIONAL{
+            ?comic wdt:P50 ?author;
+                wdt:P577 ?publicationDate;
                 rdfs:label ?comicLabel;
-                schema:description ?description.
                 
+                schema:description ?description;
+                
+                wdt:P18 ?image.
           
-          FILTER (lang(?comicLabel) = 'en' && regex(?comicLabel, "%s", "i"))
+          }
+          
+
+          FILTER (lang(?comicLabel) = 'en' && lang(?description)= "en" && regex(?comicLabel, "%s", "i"))
         }
         LIMIT 3
         """ % keyword
 
         # Construct SPARQL query for comic characters
         character_query = """
-        SELECT DISTINCT ?character ?characterLabel ?description WHERE {
+        SELECT DISTINCT ?character ?characterLabel ?description ?image 
+        ?genderLabel ?occupationLabel ?dateOfBirth ?dateOfDeath ?nationalityLabel
+        WHERE {
         ?character rdfs:label ?characterLabel;
                     schema:description ?description;
-                    wdt:P31/wdt:P279* wd:Q1114461.
+                    wdt:P31/wdt:P279* wd:Q1114461;
+                    wdt:P18 ?image.
+       OPTIONAL {
+            ?comic wdt:P674 ?characterEntity.
+            ?characterEntity rdfs:label ?characterLabel;
+                            schema:description ?description;
+                            wdt:P21 ?gender;
+                            wdt:P106 ?occupation;
+                            wdt:P569 ?dateOfBirth;
+                            wdt:P570 ?dateOfDeath;
+                            wdt:P27 ?nationality.
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }} 
+    
         
-        FILTER (lang(?description) = 'en' && regex(?characterLabel, "%s", "i"))
-        }
-        LIMIT 10
+        FILTER (lang(?description) = 'en' && lang(?characterLabel) = 'en' && regex(?characterLabel, "%s", "i"))}
+        
+        LIMIT 20
 
         """ % keyword
 
@@ -96,8 +118,20 @@ def search(request):
             #print(character_response.json())
            
 
-            comic_results = [{'type': 'comic', 'label': item['comicLabel']['value'], 'description': item['description']['value']} for item in comic_data['results']['bindings']]
-            character_results = [{'type': 'character', 'label': item['characterLabel']['value'], 'description': item['description']['value']} for item in character_data['results']['bindings']]
+            comic_results = [{'type': 'comic', 
+                              'label': item['comicLabel']['value'], 
+                              'description': item['description']['value'],
+                              'image': item['image']['value'],
+                              'publicationDate': item['publicationDate']['value'], 
+                              'author': item['author']['value']} for item in comic_data['results']['bindings']]
+            character_results = [{'type': 'character', 
+                                'label': item['characterLabel']['value'], 
+                                'description': item['description']['value'], 
+                                'image': item['image']['value']
+                                
+
+                                
+                                } for item in character_data['results']['bindings']]
 
             combined_results = comic_results + character_results
             
