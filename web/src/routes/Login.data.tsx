@@ -4,24 +4,22 @@ const BACKEND_URL = "http://159.65.125.158";
 const PORT = "8000";
 
 export const loginAction = async ({ request }: { request: Request }) => {
-	const formdata = await request.formData();
-	const username = formdata.get("username");
-	const password = formdata.get("password");
-	console.log(JSON.stringify({ username, password }));
+	const formData = await request.formData();
+
 	const response = await fetch(`${BACKEND_URL}:${PORT}/user/login`, {
 		method: "POST",
 		mode: "no-cors", // no-cors, *cors, same-origin
 		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
+			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ username, password }),
+		body: formData,
 	});
-	console.log(response.body);
-	return null;
+	const resJson = await response.json();
+	console.log(resJson);
+	return resJson;
 };
 
 export const loginLoader = makeLoader(() => {
-	console.log("loginLoader");
 	if (localStorage.getItem("zenith_app_token")) {
 		return redirect("/");
 	}

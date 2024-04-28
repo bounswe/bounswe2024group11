@@ -5,25 +5,19 @@ import {
 	useMantineTheme,
 	Checkbox,
 } from "@mantine/core";
-import {
-	Link,
-	Form,
-	useSubmit,
-	useFormAction,
-	useActionData,
-} from "react-router-dom";
+import { Link, Form, useSubmit, useFormAction } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import { makeLoader, typesafeBrowserRouter } from "react-router-typesafe";
 import { useState } from "react";
-import { useLoaderData, redirect } from "react-router-typesafe";
+import { useLoaderData, redirect, useActionData } from "react-router-typesafe";
 import { Checkmark } from "../components/Checkmark";
-import type { loginLoader } from "./Login.data";
+import type { loginAction, loginLoader } from "./Login.data";
 
 export const Login = () => {
-	const submit = useSubmit();
-	const a = useLoaderData<typeof loginLoader>();
-	const b = useFormAction();
+	const c = useActionData<typeof loginAction>();
+	console.log(c);
+	console.log(c?.error);
 	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
 	return (
 		<Container className="flex flex-col items-center py-20">
@@ -118,6 +112,7 @@ export const Login = () => {
 						</a>
 					</div>
 				</Form>
+				{c?.error ? <div>An error occurred</div> : null}
 			</div>
 		</Container>
 	);
