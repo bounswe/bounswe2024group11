@@ -1,7 +1,7 @@
 # base image  
 FROM python:3.12-slim-bullseye
 # setup environment variable  
-ENV DockerHOME=/home/app/webapp  
+ENV DockerHOME=/home/app/backend  
 
 # set work directory  
 RUN mkdir -p $DockerHOME  
