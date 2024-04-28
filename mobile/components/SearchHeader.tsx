@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 
-import { Appbar, Searchbar } from "react-native-paper";
+import { View } from "react-native";
+import { Appbar, IconButton, Searchbar } from "react-native-paper";
 
 import { styles } from "./Styles";
+import { getSearch } from "./StorageHandler";
 
-const SearchHeader = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const onChangeSearch = (query: string) => {
-    setSearchQuery(query);
-    // search for content
-    console.log("Searching for content...");
-    console.log(query);
-  };
-
+const SearchHeader = (props: {
+  onChangeText: (query: string) => void, value: string,
+  onSearch: () => void
+}) => {
   return (
     <Appbar.Header style={styles.appBar}>
       <Appbar.Content
         title={
-          <Searchbar
-            placeholder="Search for content..."
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-            style={styles.searchBar}
-          />
+          <View style={styles.container}>
+            <Searchbar
+              placeholder="Search for content..."
+              onChangeText={props.onChangeText}
+              onClearIconPress={() => props.onChangeText("")}
+              onIconPress={props.onSearch}
+              value={props.value}
+              style={styles.searchBar}
+            />
+          </View>
         }
       />
     </Appbar.Header>

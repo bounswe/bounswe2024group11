@@ -6,20 +6,27 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomTab from "../components/BottomTab";
 import Auth from "./Auth";
 import { DEFAULT_USER, User, useUser } from "../context/UserContext";
-import { compareToken } from "../components/storageBullshit";
+import { compareToken, getUser } from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
 function Home() {
   const { user, setUser } = useUser();
-  const stayLoggedIn = async (user: User) => {
-    const comparedToken = await compareToken(setUser, user);
-    if (comparedToken) {
-    }
-  }
+
   useEffect(() => {
-    stayLoggedIn(DEFAULT_USER);
+    compareToken()
+      .then(token => {
+        return getUser({ token: token, endpoint: "user/validate" });
+      })
+      .then(user => {
+        setUser(user);
+      })
+      .catch(error => {
+        console.log("home 25");
+        console.error(error);
+      });
   }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">

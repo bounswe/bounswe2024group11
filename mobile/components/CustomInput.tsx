@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
+    flex: 1,
     paddingLeft: 5,
   },
   icon: {
