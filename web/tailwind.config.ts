@@ -1,13 +1,34 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ["index.html", "./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  // important: true,
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
+    ringWidth: {
+      DEFAULT: "1px",
+      0: "0px",
+      1: "1px",
+      2: "2px",
+      3: "3px",
+      4: "4px",
+      8: "8px",
+    },
     backgroundImage: {
       "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       "gradient-conic":
         "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       "gradient-to-r": "linear-gradient(to right, var(--tw-gradient-stops))",
+      "gradient-to-br":
+        "linear-gradient(to bottom right, var(--tw-gradient-stops))",
+      "gradient-to-b": "linear-gradient(to bottom, var(--tw-gradient-stops))",
+      "gradient-to-bl":
+        "linear-gradient(to bottom left, var(--tw-gradient-stops))",
+      "gradient-to-l": "linear-gradient(to left, var(--tw-gradient-stops))",
+      "gradient-to-tl":
+        "linear-gradient(to top left, var(--tw-gradient-stops))",
+      "gradient-to-t": "linear-gradient(to top, var(--tw-gradient-stops))",
+      "gradient-to-tr":
+        "linear-gradient(to top right, var(--tw-gradient-stops))",
     },
     container: {
       center: true,
