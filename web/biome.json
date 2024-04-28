@@ -6,18 +6,12 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"recommended": true
 		}
 	},
 	"files": {
-		"include": [
-			"src/**/*.ts",
-			"src/**/*.tsx"
-		],
-		"ignore": [
-			"node_modules",
-			"dist"
-		],
+		"include": ["src/**/*.ts", "src/**/*.tsx"],
+		"ignore": ["node_modules", "dist"],
 		"ignoreUnknown": true
 	}
 }
