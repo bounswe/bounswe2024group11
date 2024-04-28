@@ -23,7 +23,7 @@ import { useTheme } from "../context/ThemeContext";
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import storage, { compareToken, saveToken, removeToken, postUser } from "../components/StorageHandler"
+import storage, { compareToken, saveToken, removeToken, postUser, imgonnakillmyself } from "../components/StorageHandler"
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -44,15 +44,20 @@ const Login = ({
   const theme = useTheme();
 
   const onLoginPress = () => {
+
     postUser({ username: username, password: password, endpoint: "user/login" })
-      .then(user => {
-        setUser(user);
+      .then(data => {
+        if (remember) {
+          saveToken({ token: data.token });
+        }
+        setUser(data.user);
         navigation.navigate("Home");
       })
       .catch(error => {
         console.log("login 53");
         console.error(error);
       });
+
   };
 
 

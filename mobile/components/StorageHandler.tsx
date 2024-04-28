@@ -1,5 +1,6 @@
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEFAULT_USER } from '../context/UserContext';
 
 
 
@@ -57,6 +58,11 @@ export const getSearch = async (props: { query: string, endpoint: string }) => {
 
 }
 
+export const imgonnakillmyself = () => {
+  saveToken({ token: "aaaa" });
+}
+
+
 export const postUser = async (props: { username: string, password: string, endpoint: string }) => {
   const formData = new FormData();
   formData.append('username', props.username);
@@ -66,7 +72,7 @@ export const postUser = async (props: { username: string, password: string, endp
     body: formData,
   });
 
-  return fetch(postUserRequest) //return olarak en son return mu donuyor
+  return fetch(postUserRequest)
     .then((response) => {
       if (response.status === 200) {
         return response.json();
@@ -76,8 +82,7 @@ export const postUser = async (props: { username: string, password: string, endp
       }
     })
     .then((data) => {
-      saveToken({ token: data.token });
-      return data.user
+      return data
     })
     .catch((error) => {
       console.log("bullshit 46");
@@ -110,9 +115,8 @@ export const storage = new Storage({
 });
 
 
-export const saveToken = (props: { token: string }) => { //TRY CATCH KOY CHATGPT'DE VAR??????????????????????????????????????????????
-  // do i need to clear first?
-  // storage.clearMapForKey('loginState');
+export const saveToken = (props: { token: string }) => {
+
   // I always use same key because i only want 1 user to log in or log out.
   const token = props.token
   storage.save({
@@ -120,8 +124,7 @@ export const saveToken = (props: { token: string }) => { //TRY CATCH KOY CHATGPT
     data: token,
   })
 }
-//normalde DEFAULT_USER'ı hiçbir yerde kullanmıyorum ama bilgileri gerekirse diye koydum.
-export const compareToken = () => { // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
+export const compareToken = () => {
 
   return storage.load({
     key: 'loginState',
