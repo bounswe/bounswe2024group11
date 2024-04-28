@@ -59,9 +59,8 @@ export const loadData = async (key: string, validate: (data: any, props: any) =>
     }
   })
     .then(datum => {
-      if (validate(datum, validateProps)) {
-        data = datum;
-      }
+      console.log('datumm', datum);
+      data = datum;
     })
     .catch(err => {
       console.log(err.message);
@@ -121,8 +120,8 @@ export const compareToken = async (onMatch: (user: User) => void, user: User) =>
   return comparedToken;
 }
 
-export const removeData = async (key: string) => {
-  await storage.clearMapForKey(key);
+export const removeData = (key: string) => {
+  storage.clearMapForKey(key);
 }
 
 export default storage;

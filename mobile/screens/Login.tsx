@@ -44,10 +44,10 @@ const Login = ({
     if (remember) {
       saveData({
         key: "login",
-        data: DEFAULT_USER,
+        data: 'some token',
         expires: true,
       });
-      console.log("Data saved", DEFAULT_USER);
+      // console.log("Data saved", DEFAULT_USER);
     }
     navigation.navigate("Home");
   };

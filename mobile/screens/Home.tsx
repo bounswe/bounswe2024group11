@@ -23,11 +23,10 @@ function Home() {
     return data && name == data.username;
   }
 
-  const checkUser = () => {
+  const checkUser = async () => {
     let data = loadData("login", validateUser, 'mobile_test_user');
-    if (data) {
-      console.log('datamiz', data);
-      setUser(data);
+    if (await data == 'some token') {
+      setUser(DEFAULT_USER);
     }
   }
 
