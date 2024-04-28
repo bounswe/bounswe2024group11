@@ -43,6 +43,7 @@ export const button = cva(
 		"relative",
 		"group",
 		"transition-all",
+		"duration-300",
 	],
 	{
 		variants: {
@@ -57,7 +58,7 @@ export const button = cva(
 					"ring-offset-1",
 					"ring-cyan-50",
 					"active:bg-cyan-700",
-					"active:ring-2",
+					"active:ring-3",
 					"active:ring-cyan-200",
 				],
 				secondary: [

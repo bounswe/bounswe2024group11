@@ -1,22 +1,22 @@
 import { makeLoader, redirect } from "react-router-typesafe";
 
-const BACKEND_URL = "http://159.65.125.158";
-const PORT = "8000";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const loginAction = async ({ request }: { request: Request }) => {
 	const formData = await request.formData();
-
-	const response = await fetch(`${BACKEND_URL}:${PORT}/user/login`, {
+	const response = await fetch(`${BACKEND_URL}/user/login`, {
 		method: "POST",
-		mode: "no-cors", // no-cors, *cors, same-origin
+		// mode: "no-cors",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		body: formData,
+	}).catch((err) => {
+		return {
+			error: "An error occurred",
+		} as const;
 	});
-	const resJson = await response.json();
-	console.log(resJson);
-	return resJson;
+	return response;
 };
 
 export const loginLoader = makeLoader(() => {
