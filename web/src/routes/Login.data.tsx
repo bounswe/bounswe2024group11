@@ -6,6 +6,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
 	const formData = await request.formData();
 	const response = await fetch(`${BACKEND_URL}/user/login`, {
 		method: "POST",
+		mode: "no-cors",
 		headers: {
 			"Content-Type": "application/json",
 		},
