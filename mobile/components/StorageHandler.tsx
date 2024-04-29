@@ -2,7 +2,12 @@ import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEFAULT_USER } from '../context/UserContext';
 
-
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super('Invalid credentials');
+    this.name = "InvalidCredentialsError";
+  }
+}
 
 export const getUser = async (props: { token: string, endpoint: string }) => {
   const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`,
@@ -16,10 +21,11 @@ export const getUser = async (props: { token: string, endpoint: string }) => {
 
   return fetch(getUserRequest)
     .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new InvalidCredentialsError();
       }
-      return response.json();
     })
     .then((data) => {
       return data;
@@ -63,10 +69,11 @@ export const imgonnakillmyself = () => {
 }
 
 
-export const postUser = async (props: { username: string, password: string, endpoint: string }) => {
+export const postUser = async (props: { body: { [key: string]: string }, endpoint: string }) => {
   const formData = new FormData();
-  formData.append('username', props.username);
-  formData.append('password', props.password);
+  for (const key in props.body) {
+    formData.append(key, props.body[key]);
+  }
   const postUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`, {
     method: "POST",
     body: formData,
@@ -74,19 +81,14 @@ export const postUser = async (props: { username: string, password: string, endp
 
   return fetch(postUserRequest)
     .then((response) => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        console.log(response.status);
-        throw new Error("Something went wrong on API server!");
+      switch (response.status) {
+        case 200:
+          return response.json();
+        case 401:
+          throw new InvalidCredentialsError();
+        default:
+          throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    })
-    .then((data) => {
-      return data
-    })
-    .catch((error) => {
-      console.log("bullshit 46");
-      console.error(error);
     });
 
 }
