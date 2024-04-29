@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import CustomInput from "../components/CustomInput";
-import CustomButton from "../components/CustomButton";
+import React, { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
 
 import {
   View,
@@ -10,38 +8,86 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
+import { Button, Checkbox, Divider, PaperProvider } from "react-native-paper";
 
-const Login = () => {
-  const { height } = useWindowDimensions();
+import { StackNavigationProp } from "@react-navigation/stack";
+
+import { RootStackParamList } from "../components/Types";
+import CustomInput from "../components/CustomInput";
+import CustomButton from "../components/CustomButton";
+import { styles } from "../components/Styles";
+
+import { useUser } from "../context/UserContext";
+import { useTheme } from "../context/ThemeContext";
+
+import { saveToken, postUser, InvalidCredentialsError } from "../components/StorageHandler"
+
+type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
+
+const Login = ({
+  navigation,
+  toggle,
+}: {
+  navigation: LoginNavigationProp;
+  toggle: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [remember, setRemember] = useState(false);
+  const [invalid, setInvalid] = useState(false);
+
+  const { user, setUser } = useUser();
+  const theme = useTheme();
+
   const onLoginPress = () => {
-    console.warn(username);
-  };
-  const onSignupPress = () => {
-    console.warn(password);
+
+    postUser({ body: { username: username, password: password }, endpoint: "user/login" })
+      .then(data => {
+        if (remember) {
+          saveToken({ token: data.token });
+        }
+        setUser(data.user);
+        navigation.navigate("Home");
+      })
+      .catch(error => {
+        console.error(error);
+        if (error instanceof InvalidCredentialsError) {
+          setInvalid(true);
+        }
+      });
+
   };
 
+
+  const onSignupPress = () => {
+    toggle(false);
+  };
+
+
+
   return (
-    <ScrollView style={styles.wrapper}>
-      <View style={styles.root}>
+    <ScrollView style={styles.authWrapper}>
+      <View style={styles.authRoot}>
         <View style={styles.imgDiv}>
           <Image
-            source={require("../assets/Zenith.png")}
-            style={[styles.logo, { height: height * 0.2 }]}
+            source={require("../assets/zenith-logo-login.png")}
+            style={styles.logo}
+            resizeMethod="scale"
             resizeMode="contain"
           />
           <Text style={styles.h1}> Login to your Zenith Account </Text>
           <Text> Ready to continue your comic adventure? </Text>
-          <Text> Login now! </Text>
         </View>
+
+        <Divider style={styles.divider} />
 
         <CustomInput
           placeholder="Username"
           value={username}
           setValue={setUsername}
           secure={false}
-          image={require("../assets/try.png")}
+          image="account"
         />
 
         <CustomInput
@@ -49,45 +95,51 @@ const Login = () => {
           value={password}
           setValue={setPassword}
           secure={true}
-          image={require("../assets/try.png")}
+          image="lock"
         />
 
-        <CustomButton text="Login" onPress={onLoginPress} bgColor="#454545" />
-        <CustomButton text="SignUp" onPress={onSignupPress} bgColor="#20ADD0" />
+        <View style={styles.checkboxContainer}>
+          <Checkbox.Item
+            label="Remember me"
+            labelStyle={{ fontSize: 14, color: theme.colors.neutral[7] }}
+            status={remember ? "checked" : "unchecked"}
+            onPress={() => setRemember(!remember)}
+            style={styles.checkbox}
+            rippleColor={theme.colors.cyan[0]}
+            color={theme.colors.cyan[2]}
+          />
+          <Button
+            mode="text"
+            onPress={() => console.log("Forgot Password")}
+            rippleColor={"rgba(255, 255, 255, 0.32)"}
+            labelStyle={{
+              fontFamily: "sans-serif",
+              fontSize: 12,
+              color: theme.colors.neutral[7],
+            }}
+          >
+            Forgot Password?
+          </Button>
+        </View>
+
+        {invalid && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>Invalid username or password</Text>)}
+
+        <CustomButton
+          text="Login"
+          onPress={onLoginPress}
+          bgColor={theme.colors.neutral[9]}
+          textColor={theme.colors.neutral[0]}
+        />
+        <CustomButton
+          text="Register"
+          onPress={onSignupPress}
+          bgColor={theme.colors.neutral[0]}
+          textColor={theme.colors.neutral[7]}
+        />
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 20,
-    maxWidth: 600,
-  },
-  root: {
-    display: "flex",
-    alignItems: "center",
-  },
-  h1: {
-    fontWeight: "bold",
-    fontSize: 24,
-    marginBottom: 16,
-  },
-  imgDiv: {
-    //backgroundColor: "red",
-    display: "flex",
-    alignItems: "center",
-    paddingTop: 60,
-    paddingBottom: 30,
-  },
-  logo: {
-    width: 200, //yüzde ile yazınca olmuyor, yüzde ile yazarsam rootun içini silmem lazım)
-    maxWidth: 400,
-    maxHeight: 400,
-    marginBottom: 30,
-  },
-});
-
-//image altındaki boş alan silinmiyor.
 
 export default Login;
