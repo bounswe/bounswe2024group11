@@ -3,6 +3,8 @@ import { Link, Form, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import { useState } from "react";
+import { inlineLink } from "../components/InlineLink";
+import { imageLink } from "../components/ImageLink";
 
 export const Register = () => {
 	return (
@@ -11,7 +13,10 @@ export const Register = () => {
 				<div className="flex flex-col items-center gap-2">
 					<Link
 						to={href({ path: "/" })}
-						className="flex flex-row items-center gap-2"
+						className={imageLink({
+							rounded: true,
+							className: "flex flex-row items-center gap-2",
+						})}
 					>
 						<img
 							src="./img/zenith-login-logo.webp"
@@ -96,10 +101,7 @@ export const Register = () => {
 
 						<p className="text-sm text-slate-400 text-center">
 							By clicking Register, you agree to accept Zenit's{" "}
-							<a
-								className="underline underline-offset-2 text-slate-900"
-								href={href({ path: "/terms" })}
-							>
+							<a className={inlineLink()} href={href({ path: "/terms" })}>
 								Terms and Conditions
 							</a>
 						</p>

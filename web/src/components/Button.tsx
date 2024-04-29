@@ -44,6 +44,9 @@ export const button = cva(
 		"group",
 		"transition-all",
 		"duration-300",
+		"focus-visible:ring-slate-300",
+		"focus-visible:ring-3",
+		"focus-visible:outline-none",
 	],
 	{
 		variants: {

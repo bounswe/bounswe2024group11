@@ -1,6 +1,6 @@
 import { makeLoader, redirect } from "react-router-typesafe";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = "http://164.90.189.150:8000";
 
 export const loginAction = async ({ request }: { request: Request }) => {
 	const formData = await request.formData();
