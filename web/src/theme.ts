@@ -5,7 +5,7 @@ export const theme: MantineThemeOverride = {
 		Input: Input.extend({
 			classNames: {
 				input:
-					"transition-all duration-100 border border-slate-200 ring-transparent hover:border-slate-300 ring-0 focus:border-slate-700 focus:ring-3 focus:ring-slate-100 placeholder-slate-400",
+					"transition-all focus-visible:ring-3 focus-visible:ring-slate-300 duration-100 border border-slate-200 ring-transparent hover:border-slate-300 ring-0 focus:border-slate-700 focus:ring-3 focus:ring-slate-100 placeholder-slate-400",
 			},
 		}),
 	},
