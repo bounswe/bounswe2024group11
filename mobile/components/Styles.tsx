@@ -122,8 +122,28 @@ const styles = StyleSheet.create({
   },
   searchResultsContainer: {
     flex: 1,
+    flexDirection: "column",
+  },
+  infoBoxContainer: {
+    flex: 1,
+    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "stretch",
+    borderWidth: 0.5,
+    borderColor: "black",
+    borderRadius: 5,
+    paddingHorizontal: 12,
+    marginHorizontal: 24,
+    marginVertical: 12,
+  },
+  infoBoxTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingVertical: 8,
+  },
+  infoBoxText: {
+    fontSize: 14,
+    marginVertical: 8,
   },
 });
 

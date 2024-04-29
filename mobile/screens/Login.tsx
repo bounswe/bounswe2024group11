@@ -14,7 +14,13 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import { Button, Checkbox, Divider, PaperProvider } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Checkbox,
+  Divider,
+  PaperProvider,
+} from "react-native-paper";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -47,10 +53,16 @@ const Login = ({
   const [remember, setRemember] = useState(false);
   const [invalid, setInvalid] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [panic, setPanic] = useState(false);
+
   const { user, setUser } = useUser();
   const theme = useTheme();
 
   const onLoginPress = () => {
+    setLoading(true);
+    setInvalid(false);
+    setPanic(false);
     postUser({
       body: { username: username, password: password },
       endpoint: "user/login",
@@ -66,8 +78,11 @@ const Login = ({
         if (error instanceof InvalidCredentialsError) {
           setInvalid(true);
         } else {
-          console.log(error);
+          setPanic(true);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -136,6 +151,11 @@ const Login = ({
             Invalid username or password
           </Text>
         )}
+        {panic && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>
+            Something went wrong
+          </Text>
+        )}
 
         <CustomButton
           text="Login"
@@ -148,6 +168,12 @@ const Login = ({
           onPress={onSignupPress}
           bgColor={theme.colors.neutral[0]}
           textColor={theme.colors.neutral[7]}
+        />
+        <ActivityIndicator
+          style={{ marginTop: 24 }}
+          animating={loading}
+          color={theme.colors.cyan[3]}
+          size="large"
         />
       </View>
     </ScrollView>

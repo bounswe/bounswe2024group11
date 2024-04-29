@@ -18,6 +18,13 @@ export class NonuniquenessError extends Error {
   }
 }
 
+export class NotFoundError extends Error {
+  constructor() {
+    super("Not found");
+    this.name = "NotFoundError";
+  }
+}
+
 export const getUser = async (props: { token: string; endpoint: string }) => {
   const getUserRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "GET",
@@ -52,20 +59,19 @@ export const getSearch = async (props: {
     body: formData,
   });
 
-  return fetch(getSearchRequest)
-    .then((response) => {
-      if (!response.ok) {
+  return fetch(getSearchRequest).then((response) => {
+    switch (response.status) {
+      case 200:
+      case 201:
+        return response.json();
+      case 400:
+        throw new NotFoundError();
+      case 401:
+        throw new InvalidCredentialsError();
+      default:
         throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-      return null;
-    });
+    }
+  });
 };
 
 export const postUser = async (props: {
@@ -132,38 +138,26 @@ export const saveToken = (props: { token: string }) => {
 export const compareToken = async () => {
   // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
 
-  return storage
-    .load({
-      key: "loginState",
-      autoSync: true, // autoSync (default: true) means if data is not found or has expired, then invoke the corresponding sync method
+  return storage.load({
+    key: "loginState",
+    autoSync: true, // autoSync (default: true) means if data is not found or has expired, then invoke the corresponding sync method
 
-      // syncInBackground (default: true) means if data expired,
-      // return the outdated data first while invoking the sync method.
-      // If syncInBackground is set to false, and there is expired data,
-      // it will wait for the new data and return only after the sync completed.
-      // DUNNO HOW TO USE EXACTLY
-      syncInBackground: true,
+    // syncInBackground (default: true) means if data expired,
+    // return the outdated data first while invoking the sync method.
+    // If syncInBackground is set to false, and there is expired data,
+    // it will wait for the new data and return only after the sync completed.
+    // DUNNO HOW TO USE EXACTLY
+    syncInBackground: true,
 
-      // you can pass extra params to the sync method
-      // see sync example below
-      syncParams: {
-        extraFetchOptions: {
-          // blahblah
-        },
-        someFlag: true,
+    // you can pass extra params to the sync method
+    // see sync example below
+    syncParams: {
+      extraFetchOptions: {
+        // blahblah
       },
-    })
-    .catch((err) => {
-      console.warn(err.message);
-      switch (err.name) {
-        case "NotFoundError":
-          console.warn("token could not have been found");
-          break;
-        case "ExpiredError":
-          console.warn("token is expired");
-          break;
-      }
-    });
+      someFlag: true,
+    },
+  });
 };
 
 export const removeToken = () => {
