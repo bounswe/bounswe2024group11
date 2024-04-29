@@ -1,0 +1,17 @@
+meta {
+  name: search
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}:{{port}}/user/search/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "keyword":"born in New Jersey"
+  }
+}

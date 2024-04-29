@@ -12,12 +12,14 @@ class TestSetUp(APITestCase):
             'username': Faker().user_name(),
             'email': Faker().email(),
             'password': Faker().password(),
+            'fullname': Faker().name(),
         }
         
         self.user_data2 = {
             'username': Faker().user_name(),
             'email': Faker().email(),
             'password': Faker().password(),
+            'fullname': Faker().name(),
         }
 
         return super().setUp()
