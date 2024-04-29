@@ -7,44 +7,38 @@ import { RiArrowDropDownLine, RiSearch2Line } from "@remixicon/react";
 import { useActionData } from "react-router-typesafe";
 import type { homeAction } from "./Home.data";
 
+/* 
+{
+	keyword: "born in new york"
+}
+*/
 const CATEGORIES = [
-	"Universe",
-	"Place of Birth",
-	"Comics",
-	"Culture",
-	"Occupation",
-	"Nationality",
-	"Season",
-	"Country",
-	"Language",
-	"City",
-	"Continent",
-	"Century",
-	"Decade",
-	"Character Creator",
-	"Publication Date",
-	"Art Style",
-	"Genre",
-	"Awards",
-	"Comic Series",
-	"Publisher",
-	"Comic Events",
-	"Influences",
-	"Film Adaptations",
-	"Video Game Adaptations",
-	"Merchandising",
-	"Crossover Events",
-	"Character Alignment",
-	"Character Abilities",
-	"Team Affiliations",
-	"Narrative Technique",
-	"Artistic Influences",
-	"Character",
-	"Comic Book Series",
-	"Comic Book Character",
-	"Comic Book Issue",
-	"Comic Book Publisher",
+	"born in",
+	"from universe",
+	"from the comics",
+	"has superpower",
 ];
+/*
+{
+	keyword: "born in new jersey",
+	results: [
+		{
+			type: "character",
+			label: "Spider-Man",
+			description: "fictional superhero appearing in American comic books published by Marvel Comics",
+			place: "Queens",
+			siteLinks: 120
+		}, 
+		{
+			type: "character",
+			label: "Spider-Man",
+			description: "fictional superhero appearing in American comic books published by Marvel Comics",
+			place: "Queens",
+			siteLinks: 120
+		}, 
+	]
+}
+*/
 
 export const Home = () => {
 	const submit = useSubmit();

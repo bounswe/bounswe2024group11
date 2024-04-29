@@ -1,13 +1,12 @@
 import { makeLoader } from "react-router-typesafe";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.BACKEND_URL;
 
 export const homeAction = async ({ request }: { request: Request }) => {
 	console.log("homeAction");
 	const formData = await request.formData();
 	const response = await fetch(`${BACKEND_URL}/user/search`, {
 		method: "POST",
-		mode: "no-cors",
 		headers: {
 			"Content-Type": "application/json",
 		},

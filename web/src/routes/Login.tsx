@@ -7,9 +7,9 @@ import { useState } from "react";
 import { Checkmark } from "../components/Checkmark";
 import type { loginAction } from "./Login.data";
 
+const BACKEND_URL = import.meta.env.BACKEND_URL;
+
 export const Login = () => {
-	const c = useActionData<typeof loginAction>();
-	console.log(c?.error);
 	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
 	return (
 		<Container className="flex flex-col items-center md:py-20 py-12">
@@ -41,6 +41,36 @@ export const Login = () => {
 					className="w-full flex flex-col gap-6"
 					method="POST"
 					action="/login"
+					onSubmit={async (formEvent) => {
+						formEvent.preventDefault(); // Prevent the default form submission behavior
+						const formData = new FormData();
+						formData.append("username", formEvent.currentTarget.username.value);
+						formData.append("password", formEvent.currentTarget.password.value);
+						console.log(formData.get("username"));
+						console.log(formData.get("password"));
+						console.log("Form data:", formData);
+						console.log("Backend URL:", BACKEND_URL);
+						try {
+							const response = await fetch("http://127.0.0.1:8000/user/login", {
+								method: "POST",
+								body: formData, // Sending the form data
+								headers: {
+									Accept: "application/json",
+								},
+							});
+
+							if (response.ok) {
+								const result = await response.json(); // Handle the response data as JSON
+								console.log("Success:", result);
+								// Perform actions based on success, e.g., redirect or display a success message
+							} else {
+								throw new Error("Network response was not ok.");
+							}
+						} catch (error) {
+							console.error("Error during form submission:", error);
+							// Handle errors, e.g., display an error message to the user
+						}
+					}}
 				>
 					<div className="flex flex-col gap-3">
 						<TextInput
@@ -92,11 +122,7 @@ export const Login = () => {
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<button
-							type="submit"
-							className={button({ intent: "secondary" })}
-							onSubmit={() => {}}
-						>
+						<button type="submit" className={button({ intent: "secondary" })}>
 							<div className={buttonInnerRing({ intent: "secondary" })} />
 							<span>Log In</span>
 						</button>

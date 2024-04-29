@@ -1,12 +1,12 @@
 import { makeLoader, redirect } from "react-router-typesafe";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.BACKEND_URL;
 
 export const loginAction = async ({ request }: { request: Request }) => {
 	const formData = await request.formData();
+	console.log(BACKEND_URL);
 	const response = await fetch(`${BACKEND_URL}/user/login`, {
 		method: "POST",
-		mode: "no-cors",
 		headers: {
 			"Content-Type": "application/json",
 		},
