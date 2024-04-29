@@ -4,10 +4,12 @@ import { Form, Link, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import { RiArrowDropDownLine, RiSearch2Line } from "@remixicon/react";
+import { useActionData } from "react-router-typesafe";
+import type { homeAction } from "./Home.data";
 
 const CATEGORIES = [
-	"Place of Birth",
 	"Universe",
+	"Place of Birth",
 	"Comics",
 	"Culture",
 	"Occupation",
@@ -46,6 +48,7 @@ const CATEGORIES = [
 
 export const Home = () => {
 	const submit = useSubmit();
+	const a = useActionData<typeof homeAction>();
 	return (
 		<div className="relative">
 			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
@@ -88,7 +91,6 @@ export const Home = () => {
 											rightSection={<RiArrowDropDownLine size={20} />}
 											rightSectionPointerEvents="none"
 											searchable
-											// limit={5}
 											nothingFoundMessage="No categories"
 											aria-keyshortcuts="ArrowDown ArrowUp"
 										/>
