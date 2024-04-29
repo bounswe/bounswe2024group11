@@ -1,44 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { View, Text } from "react-native";
 
-import { Appbar, Searchbar } from "react-native-paper";
+import SearchHeader from "../components/SearchHeader";
 import { styles } from "../components/Styles";
+import { getSearch } from "../components/StorageHandler";
 
 function Search() {
-    return (
-        <View>
-            <SearchHeader />
-            <Text>Search</Text>
-        </View>
-    )
-};
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
-const SearchHeader = () => {
-    const [searchQuery, setSearchQuery] = React.useState('');
+  const onChangeText = (query: string) => {
+    setSearchQuery(query);
+  };
 
-     const onChangeSearch = (query: string) => {
-        setSearchQuery(query);
-        // search for content
-        console.log("Searching for content...");
-        console.log(query);
-    };
+  const onSearch = () => {
+    getSearch({ query: searchQuery, endpoint: "user/search" })
+      .then((results) => {
+        setSearchResults(results);
+      })
+  }
 
-    return (
-    <Appbar.Header style={ styles.appBar }>
-        <Appbar.Content title={
-            <Searchbar 
-                placeholder="Search for content..."
-                onChangeText={onChangeSearch}
-                value={searchQuery}
-                style={{
-                    width: "90%",
-                    height: 40,
-                    margin: 10,
-                    backgroundColor: "white"
-                }} />
-        } />
-    </Appbar.Header>
-)};
+
+  return (
+    <View style={{ flex: 1 }}>
+      <SearchHeader onChangeText={onChangeText} value={searchQuery} onSearch={onSearch} />
+      <View style={styles.center}>
+        <Text>{searchResults}</Text>
+      </View>
+    </View>
+  );
+}
 
 export default Search;
