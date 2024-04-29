@@ -15,15 +15,15 @@ function Home() {
 
   useEffect(() => {
     compareToken()
-      .then(token => {
+      .then((token) => {
+        throw new Error("Not implemented home validation");
         return getUser({ token: token, endpoint: "user/validate" });
       })
-      .then(user => {
+      .then((user) => {
         setUser(user);
       })
-      .catch(error => {
-        console.log("home 25");
-        console.error(error);
+      .catch((error) => {
+        console.log(error);
       });
   }, []);
 
