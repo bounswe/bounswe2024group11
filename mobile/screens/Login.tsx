@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 
 import {
   View,
@@ -20,7 +26,11 @@ import { styles } from "../components/Styles";
 import { useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
-import { saveToken, postUser, InvalidCredentialsError } from "../components/StorageHandler"
+import {
+  saveToken,
+  postUser,
+  InvalidCredentialsError,
+} from "../components/StorageHandler";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -41,30 +51,29 @@ const Login = ({
   const theme = useTheme();
 
   const onLoginPress = () => {
-
-    postUser({ body: { username: username, password: password }, endpoint: "user/login" })
-      .then(data => {
+    postUser({
+      body: { username: username, password: password },
+      endpoint: "user/login",
+    })
+      .then((data) => {
         if (remember) {
           saveToken({ token: data.token });
         }
         setUser(data.user);
         navigation.navigate("Home");
       })
-      .catch(error => {
-        console.error(error);
+      .catch((error) => {
         if (error instanceof InvalidCredentialsError) {
           setInvalid(true);
+        } else {
+          console.log(error);
         }
       });
-
   };
-
 
   const onSignupPress = () => {
     toggle(false);
   };
-
-
 
   return (
     <ScrollView style={styles.authWrapper}>
@@ -123,7 +132,10 @@ const Login = ({
         </View>
 
         {invalid && (
-          <Text style={[styles.error, { color: theme.colors.red[4] }]}>Invalid username or password</Text>)}
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>
+            Invalid username or password
+          </Text>
+        )}
 
         <CustomButton
           text="Login"
