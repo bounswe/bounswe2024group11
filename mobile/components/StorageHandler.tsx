@@ -2,6 +2,8 @@ import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEFAULT_USER } from '../context/UserContext';
 
+const URL = "http://164.90.189.150:8000";
+
 export class InvalidCredentialsError extends Error {
   constructor() {
     super('Invalid credentials');
@@ -9,8 +11,15 @@ export class InvalidCredentialsError extends Error {
   }
 }
 
+export class NonuniquenessError extends Error {
+  constructor() {
+    super('Nonuniqueness or missing required fields');
+    this.name = "NonuniquenessError";
+  }
+}
+
 export const getUser = async (props: { token: string, endpoint: string }) => {
-  const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`,
+  const getUserRequest = new Request(`${URL}/${props.endpoint}`,
     {
       method: "GET",
       headers: {
@@ -33,7 +42,7 @@ export const getUser = async (props: { token: string, endpoint: string }) => {
 export const getSearch = async (props: { query: string, endpoint: string }) => {
   const formData = new FormData();
   formData.append('query', props.query);
-  const getUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`,
+  const getUserRequest = new Request(`${URL}/${props.endpoint}`,
     {
       method: "POST",
       body: formData,
@@ -64,7 +73,7 @@ export const postUser = async (props: { body: { [key: string]: string }, endpoin
     formData.append(key, props.body[key]);
   }
 
-  const postUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`, {
+  const postUserRequest = new Request(`${URL}/${props.endpoint}`, {
     method: "POST",
     body: formData,
   });
@@ -74,6 +83,10 @@ export const postUser = async (props: { body: { [key: string]: string }, endpoin
       switch (response.status) {
         case 200:
           return response.json();
+        case 201:
+          return response.json();
+        case 400:
+          throw new NonuniquenessError();
         case 401:
           throw new InvalidCredentialsError();
         default:
