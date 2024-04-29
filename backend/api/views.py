@@ -94,10 +94,19 @@ my_dict = {
   
 }
 
-@api_view(["GET"])
+
+
+@api_view(["POST"])
 def search(request):
+    required_fields = ['keyword']
+    if not all([field in request.data for field in required_fields]):
+        return Response({"res":"Please provide a keyword."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        keyword = request.data.get("keyword").lower()
+    except:
+        return Response({"res":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
     #this part should be changed because we should use post to get keyword.
-    if request.method == 'GET':
+    if request.method == 'POST':
         #keyword = request.POST.get(request.data.get("keyword"), '')
         keyword = request.data["keyword"].lower()
        
