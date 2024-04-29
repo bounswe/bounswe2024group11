@@ -100,10 +100,12 @@ def search(request):
     if request.method == 'GET':
         #keyword = request.POST.get(request.data.get("keyword"), '')
         keyword = request.data["keyword"].lower()
-        print(my_dict[keyword])
-        print(keyword)
+       
         # Construct SPARQL query
-        qid = my_dict[keyword]
+        try:
+            qid = my_dict[keyword]
+        except:
+            return(Response({'error': 'Wrong dictionary format.'}, status=400))
     
 
         birtOfPlace_query = """
@@ -134,7 +136,6 @@ def search(request):
         ORDER BY DESC(?sitelinks)
         """ %qid
 
-        print(my_dict[keyword])
         # Construct SPARQL query for comic characters
         
 
@@ -150,18 +151,20 @@ def search(request):
         url = 'https://query.wikidata.org/sparql'
 
         # Make the API call
-        birtOfPlace_response = requests.get(url, params=birtOfPlace_query_params)
+        try:
+            birtOfPlace_response = requests.get(url, params=birtOfPlace_query_params)
+        except:
+            return(Response({'error': 'Wrong query format.'}, status=400))
+
         #character_response = requests.get(url, params=character_params)
         
         # Check if the request was successful
         if birtOfPlace_response.status_code == 200 :
-            print("ceyda")
+            
             # Parse JSON response
             birth_data = birtOfPlace_response.json()
             #character_data = character_response.json()
 
-            #print(comic_response.json())
-            #print(character_response.json())
            
 
             birth_of_results = [{'type': 'character', 
@@ -176,11 +179,11 @@ def search(request):
 
             combined_results = birth_of_results
             
-            print(combined_results)
+            #print(combined_results)
             
             
             return Response({'keyword': keyword, 'results': combined_results})
         else:
-            return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=500)
+            return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
     else:
         return Response({'error': 'Invalid request method. Only GET method is allowed.'}, status=405)
