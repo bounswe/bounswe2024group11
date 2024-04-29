@@ -1,0 +1,22 @@
+meta {
+  name: login
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}:{{port}}/user/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "username17",
+    "password": "pass17"
+  }
+}
+
+body:text {
+  {"username":"a","password":"b"}
+}
