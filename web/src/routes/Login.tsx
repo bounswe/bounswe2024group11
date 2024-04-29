@@ -77,7 +77,7 @@ export const Login = () => {
 								label: "text-slate-600 pl-2 cursor-pointer",
 								body: "flex items-center",
 								input:
-									"text-primary accent-slate-400 border-slate-300 h-4 w-4 cursor-pointer hover:ring-slate-200 ring-1 hover:ring-3 ring-transparent duration-300 transition-all",
+									"text-primary accent-slate-400 border-slate-300 h-4 w-4 cursor-pointer hover:ring-slate-200 ring-1 hover:ring-3 focus-visible:ring-slate-300 focus-visible:ring-3 focus-visible:outline-none ring-transparent duration-300 transition-all",
 								inner: "h-4 w-4",
 							}}
 							checked={isKeepMeLoggedIn}
@@ -88,7 +88,10 @@ export const Login = () => {
 							aria-label="Keep me logged in"
 						/>
 						<Link
-							className="underline text-sm text-slate-500 hover:text-slate-950 font-medium transition-colors"
+							className={imageLink({
+								className:
+									"underline text-sm text-slate-500 hover:text-slate-950 font-medium transition-colors",
+							})}
 							to="/"
 						>
 							Forgot Password
