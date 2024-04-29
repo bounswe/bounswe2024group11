@@ -17,13 +17,10 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { styles } from "../components/Styles";
 
-import { DEFAULT_USER, useUser } from "../context/UserContext";
+import { useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
-import Storage from 'react-native-storage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import storage, { compareToken, saveToken, removeToken, postUser } from "../components/StorageHandler"
+import { saveToken, postUser, InvalidCredentialsError } from "../components/StorageHandler"
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -38,21 +35,28 @@ const Login = ({
   const [password, setPassword] = useState("");
 
   const [remember, setRemember] = useState(false);
-  const [secure, setSecure] = useState(true);
+  const [invalid, setInvalid] = useState(false);
 
   const { user, setUser } = useUser();
   const theme = useTheme();
 
   const onLoginPress = () => {
-    postUser({ username: username, password: password, endpoint: "user/login" })
-      .then(user => {
-        setUser(user);
+
+    postUser({ body: { username: username, password: password }, endpoint: "user/login" })
+      .then(data => {
+        if (remember) {
+          saveToken({ token: data.token });
+        }
+        setUser(data.user);
         navigation.navigate("Home");
       })
       .catch(error => {
-        console.log("login 53");
         console.error(error);
+        if (error instanceof InvalidCredentialsError) {
+          setInvalid(true);
+        }
       });
+
   };
 
 
@@ -117,6 +121,9 @@ const Login = ({
             Forgot Password?
           </Button>
         </View>
+
+        {invalid && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>Invalid username or password</Text>)}
 
         <CustomButton
           text="Login"

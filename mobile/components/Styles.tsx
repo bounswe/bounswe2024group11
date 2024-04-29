@@ -112,6 +112,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   checkbox: { height: 40 },
+  error: {
+    textAlign: "center",
+    marginBottom: 12,
+  },
 });
 
 export { styles };
