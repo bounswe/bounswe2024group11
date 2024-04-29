@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import {
   View,
@@ -46,8 +46,6 @@ const Signup = ({
 
   const onSignupPress = () => {
     setLoading(true);
-    setInvalid(false);
-    setPanic(false);
     postUser({
       body: {
         fullname: fullname,
@@ -75,6 +73,11 @@ const Signup = ({
         setLoading(false);
       });
   };
+
+  useEffect(() => {
+    setInvalid(false);
+    setPanic(false);
+  }, [fullname, email, username, password]);
 
   const onLoginPress = () => {
     toggle(true);

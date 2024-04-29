@@ -61,8 +61,6 @@ const Login = ({
 
   const onLoginPress = () => {
     setLoading(true);
-    setInvalid(false);
-    setPanic(false);
     postUser({
       body: { username: username, password: password },
       endpoint: "user/login",
@@ -72,6 +70,7 @@ const Login = ({
           saveToken({ token: data.token });
         }
         setUser(data.user);
+        console.log(data.user);
         navigation.navigate("Home");
       })
       .catch((error) => {
@@ -85,6 +84,11 @@ const Login = ({
         setLoading(false);
       });
   };
+
+  useEffect(() => {
+    setInvalid(false);
+    setPanic(false);
+  }, [username, password]);
 
   const onSignupPress = () => {
     toggle(false);

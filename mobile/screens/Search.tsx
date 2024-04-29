@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { View, Text, ScrollView } from "react-native";
 
@@ -12,6 +12,7 @@ import { useTheme } from "../context/ThemeContext";
 
 const searchList = [
   { label: "Birth Place", value: "born in" },
+  { label: "Occupation", value: "occupation" },
   { label: "Universe", value: "universe" },
   { label: "Country", value: "country" },
   { label: "Language", value: "language" },
@@ -59,12 +60,15 @@ function Search() {
     setSearchQuery(query);
   };
 
+  useEffect(() => {
+    setPanic(false);
+    setNoResults(false);
+  }, [searchQuery]);
+
   const onSearch = (
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     setLoading(true);
-    setPanic(false);
-    setNoResults(false);
     const query = dropdownValue
       ? `${dropdownValue} ${searchQuery}`
       : searchQuery;
@@ -138,45 +142,6 @@ function Search() {
         </Text>
       )}
       <ScrollView style={styles.searchResultsContainer}>
-        {/* <InfoBox
-          info={{
-            type: "character",
-            label: "Spider-Man",
-            description: "fictional character in the Marvel Comics universe.",
-            place: "Queens",
-            siteLinks: "120",
-          }}
-        />
-        <InfoBox
-          info={{
-            type: "character",
-            label: "Batman",
-            description:
-              "fictional superhero appearing in American comic books published by DC Comics.",
-            place: "Gotham City",
-            siteLinks: "72",
-          }}
-        />
-        <InfoBox
-          info={{
-            type: "character",
-            label: "Superman",
-            description:
-              "fictional superhero appearing in American comic books published by DC Comics.",
-            place: "Metropolis",
-            siteLinks: "73",
-          }}
-        />
-        <InfoBox
-          info={{
-            type: "character",
-            label: "Wonder Woman",
-            description:
-              "fictional superhero appearing in American comic books published by DC Comics.",
-            place: "Themyscira",
-            siteLinks: "50",
-          }}
-        /> */}
         {searchResults.length != 0 &&
           searchResults.map((result, index) => (
             <InfoBox key={index} info={result} />
