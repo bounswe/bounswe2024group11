@@ -95,7 +95,24 @@ my_dict = {
 }
 
 
+@swagger_auto_schema(
+    method='post',
+    operation_description="wikidata semantic search api.",
+    operation_summary="wikidata api",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'keyword': openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=['keyword']
+    ),
 
+    responses={
+        200: "Success",
+        400: "Missing required fields",
+    },
+    operation_id='wikidata_search'
+)
 @api_view(["POST"])
 def search(request):
     required_fields = ['keyword']
@@ -114,7 +131,7 @@ def search(request):
         try:
             qid = my_dict[keyword]
         except:
-            return(Response({'error': 'Wrong dictionary format.'}, status=400))
+            return(Response({'error': 'wrong keyword value.'}, status=400))
     
 
         birtOfPlace_query = """
@@ -194,5 +211,5 @@ def search(request):
             return Response({'keyword': keyword, 'results': combined_results})
         else:
             return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
-    else:
-        return Response({'error': 'Invalid request method. Only GET method is allowed.'}, status=405)
+    #else:
+    #    return Response({'error': 'Invalid request method. Only GET method is allowed.'}, status=405)
