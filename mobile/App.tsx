@@ -1,19 +1,25 @@
-import React, { version } from "react";
+import React from "react";
 
+import { View } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 
 import Home from "./screens/Home";
-import Login from "./screens/Login";
 import UserProvider from "./context/UserContext";
+import ThemeProvider from "./context/ThemeContext";
+import { styles } from "./components/Styles";
+
+
 
 export default function App() {
   return (
-    <UserProvider>
-      <PaperProvider theme={{version: 2}}>
-        <Home />
-      </PaperProvider>
-    </UserProvider>
+    <ThemeProvider>
+      <UserProvider>
+        <PaperProvider theme={{ version: 2 }}>
+          <View style={styles.container}>
+            <Home />
+          </View>
+        </PaperProvider>
+      </UserProvider>
+    </ThemeProvider>
   );
 }
-
-
