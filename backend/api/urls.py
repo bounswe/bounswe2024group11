@@ -20,5 +20,5 @@ urlpatterns = [
     path('signup', views.register, name="signup"),
     path('login', views.login, name="login"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-
+    path('search/', views.search, name="search"),
 ]
