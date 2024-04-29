@@ -21,16 +21,18 @@ class CustomUserManager(UserManager):
 
 class User(AbstractBaseUser):
     username = models.CharField(max_length=100, blank=True, default="", unique=True)
+    fullname= models.CharField(max_length=100, blank=True, default="")
     email = models.EmailField(blank=True, default="", unique=True)
     password = models.CharField(max_length=100, blank=True, default="")
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
 
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'password']
+    REQUIRED_FIELDS = ['email', 'password', 'fullname']
 
     class Meta:
         verbose_name = 'user'
