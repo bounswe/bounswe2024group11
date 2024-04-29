@@ -17,5 +17,8 @@ export const imageLink = cva(
 				false: "",
 			},
 		},
+		defaultVariants: {
+			rounded: false,
+		},
 	},
 );

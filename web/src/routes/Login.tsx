@@ -6,6 +6,7 @@ import { useActionData } from "react-router-typesafe";
 import { useState } from "react";
 import { Checkmark } from "../components/Checkmark";
 import type { loginAction } from "./Login.data";
+import { imageLink } from "../components/ImageLink";
 
 export const Login = () => {
 	const c = useActionData<typeof loginAction>();
@@ -17,7 +18,10 @@ export const Login = () => {
 				<div className="flex flex-col items-center gap-2">
 					<Link
 						to={href({ path: "/" })}
-						className="flex flex-row items-center gap-2"
+						className={imageLink({
+							rounded: true,
+							className: "flex flex-row items-center gap-2",
+						})}
 					>
 						<img
 							src="./img/zenith-login-logo.webp"

@@ -33,7 +33,6 @@ export const buttonInnerRing = cva(
 export const button = cva(
 	[
 		"font-medium",
-		"rounded-sm",
 		"text-white",
 		"text-center",
 		"flex",

@@ -6,6 +6,7 @@ import { button, buttonInnerRing } from "../components/Button";
 import { RiArrowDropDownLine, RiSearch2Line } from "@remixicon/react";
 import { useActionData } from "react-router-typesafe";
 import type { homeAction } from "./Home.data";
+import { imageLink } from "../components/ImageLink";
 
 const CATEGORIES = [
 	"Universe",
@@ -57,7 +58,10 @@ export const Home = () => {
 						<div className="w-full flex flex-row items-center gap-4 justify-between">
 							<Link
 								to={href({ path: "/" })}
-								className="flex flex-row items-center gap-2 min-w-24"
+								className={imageLink({
+									className:
+										"flex flex-row items-center gap-2 min-w-24 rounded-3 py-1 pr-3 pl-1",
+								})}
 							>
 								<img
 									src="./zenith-logo.svg"
