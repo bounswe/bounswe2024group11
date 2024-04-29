@@ -30,7 +30,7 @@ export const { router, href } = typesafeBrowserRouter([
 		path: "/terms",
 		Component: Terms,
 	},
-		{
+	{
 		path: "/feed",
 		Component: Feed,
 	},
