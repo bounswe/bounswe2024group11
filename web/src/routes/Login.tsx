@@ -1,5 +1,5 @@
-import { TextInput, Container, Checkbox } from "@mantine/core";
-import { Link, Form } from "react-router-dom";
+import { TextInput, Container, Checkbox, Dialog } from "@mantine/core";
+import { Link, Form, redirect } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import { useActionData } from "react-router-typesafe";
@@ -7,11 +7,11 @@ import { useState } from "react";
 import { Checkmark } from "../components/Checkmark";
 import type { loginAction } from "./Login.data";
 import { imageLink } from "../components/ImageLink";
-
-const BACKEND_URL = import.meta.env.BACKEND_URL;
+import { RiErrorWarningLine } from "@remixicon/react";
 
 export const Login = () => {
-	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
+	const actionData = useActionData<typeof loginAction>();
+	const isAuthError = actionData && "error" in actionData;
 	return (
 		<Container className="flex flex-col items-center md:py-20 py-12">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
@@ -45,36 +45,6 @@ export const Login = () => {
 					className="w-full flex flex-col gap-6"
 					method="POST"
 					action="/login"
-					onSubmit={async (formEvent) => {
-						formEvent.preventDefault(); // Prevent the default form submission behavior
-						const formData = new FormData();
-						formData.append("username", formEvent.currentTarget.username.value);
-						formData.append("password", formEvent.currentTarget.password.value);
-						console.log(formData.get("username"));
-						console.log(formData.get("password"));
-						console.log("Form data:", formData);
-						console.log("Backend URL:", BACKEND_URL);
-						try {
-							const response = await fetch("http://127.0.0.1:8000/user/login", {
-								method: "POST",
-								body: formData, // Sending the form data
-								headers: {
-									Accept: "application/json",
-								},
-							});
-
-							if (response.ok) {
-								const result = await response.json(); // Handle the response data as JSON
-								console.log("Success:", result);
-								// Perform actions based on success, e.g., redirect or display a success message
-							} else {
-								throw new Error("Network response was not ok.");
-							}
-						} catch (error) {
-							console.error("Error during form submission:", error);
-							// Handle errors, e.g., display an error message to the user
-						}
-					}}
 				>
 					<div className="flex flex-col gap-3">
 						<TextInput
@@ -85,6 +55,11 @@ export const Login = () => {
 							label="Username"
 							name="username"
 							aria-label="username"
+							error={isAuthError}
+							aria-errormessage="Invalid username"
+							classNames={{
+								error: "text-red-800 border-red-800",
+							}}
 						/>
 
 						<TextInput
@@ -95,6 +70,8 @@ export const Login = () => {
 							label="Password"
 							name="password"
 							aria-label="Password"
+							error={isAuthError}
+							aria-errormessage="Invalid password"
 						/>
 					</div>
 
@@ -102,6 +79,7 @@ export const Login = () => {
 						<Checkbox
 							icon={Checkmark}
 							color="gray"
+							name="keep"
 							classNames={{
 								root: "cursor-pointer",
 								label: "text-slate-600 pl-2 cursor-pointer",
@@ -110,10 +88,6 @@ export const Login = () => {
 									"text-primary accent-slate-400 border-slate-300 h-4 w-4 cursor-pointer hover:ring-slate-200 ring-1 hover:ring-3 focus-visible:ring-slate-300 focus-visible:ring-3 focus-visible:outline-none ring-transparent duration-300 transition-all",
 								inner: "h-4 w-4",
 							}}
-							checked={isKeepMeLoggedIn}
-							onChange={(event) =>
-								setIsKeepMeLoggedIn(event.currentTarget.checked)
-							}
 							label="Keep me logged in"
 							aria-label="Keep me logged in"
 						/>
@@ -143,6 +117,27 @@ export const Login = () => {
 					</div>
 				</Form>
 			</div>
+			<Dialog
+				opened={isAuthError || false}
+				position={{
+					bottom: "40px",
+					right: "40px",
+				}}
+				title="Login Error"
+				className="shadow-card border-red-100 border rounded-2"
+			>
+				<div className="flex flex-col gap-1">
+					<div className="flex gap-2 items-center">
+						<RiErrorWarningLine size={20} className="text-red-800" />
+						<h2 className="text-md font-medium  text-red-800">
+							Invalid Credentials
+						</h2>
+					</div>
+					<p className="text-sm text-slate-500 text-pretty">
+						Please check your username & password and try again.
+					</p>
+				</div>
+			</Dialog>
 		</Container>
 	);
 };

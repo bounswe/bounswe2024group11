@@ -18,7 +18,7 @@ export const { router, href } = typesafeBrowserRouter([
 		path: "/login",
 		Component: Login,
 		loader: loginLoader,
-		// action: loginAction,
+		action: loginAction,
 	},
 	{
 		path: "/register",

@@ -1,25 +1,12 @@
 import { makeLoader } from "react-router-typesafe";
 
-const BACKEND_URL = import.meta.env.BACKEND_URL;
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const homeAction = async ({ request }: { request: Request }) => {
-	console.log("homeAction");
-	const formData = await request.formData();
-	const response = await fetch(`${BACKEND_URL}/user/search`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: formData,
-	}).catch((err) => {
-		return {
-			error: "An error occurred",
-		} as const;
-	});
-	return response;
+	console.log("Home Action");
 };
 
 export const homeLoader = makeLoader(async ({ request }) => {
-	console.log("homeLoader");
+	console.log("Home Loader");
 	return null;
 });

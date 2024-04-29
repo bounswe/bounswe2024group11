@@ -5,8 +5,12 @@ import { button, buttonInnerRing } from "../components/Button";
 import { useState } from "react";
 import { inlineLink } from "../components/InlineLink";
 import { imageLink } from "../components/ImageLink";
+import { useActionData } from "react-router-typesafe";
+import type { registerAction } from "./Register.data";
 
 export const Register = () => {
+	const actionData = useActionData<typeof registerAction>();
+	const isAuthError = actionData && "error" in actionData;
 	return (
 		<Container className="flex flex-col items-center md:py-20 py-12">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
@@ -38,7 +42,7 @@ export const Register = () => {
 				<Form
 					className="w-full flex flex-col gap-6"
 					method="POST"
-					action="/login"
+					action="/register"
 				>
 					<div className="flex flex-col gap-3">
 						<TextInput
