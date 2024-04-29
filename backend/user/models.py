@@ -20,9 +20,9 @@ class CustomUserManager(UserManager):
     
 
 class User(AbstractBaseUser):
-    username = models.CharField(max_length=100, blank=True, default="", unique=True)
-    email = models.EmailField(blank=True, default="", unique=True)
-    password = models.CharField(max_length=100, blank=True, default="")
+    username = models.CharField(max_length=100, default="", unique=True)
+    email = models.EmailField(default="", unique=True)
+    password = models.CharField(max_length=100, default="")
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
 
