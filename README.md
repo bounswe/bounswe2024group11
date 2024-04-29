@@ -9,11 +9,67 @@ It's suggested to check the [Wiki](https://github.com/bounswe/bounswe2024group11
 
 ## ⏳ Project Status
 
-Requirements + Project Planning
+✅ Requirements + Project Planning
+
+✅ Software Design & UI/UX Design
+
+⏸️ Implementation
 
 ## 🌴 Project Structure
 
-> TBD
+> TBA
+
+## Build & Run the Application
+
+You can follow this guide to run the whole application using Docker conainers.
+
+Alternatively, if you want to run the backend, web, and mobile applications separately (i.e. without Docker), refer to their own READMEs.
+- [Backend](https://github.com/bounswe/bounswe2024group11/blob/main/backend/README.md)
+- [Web](https://github.com/bounswe/bounswe2024group11/blob/main/web/README.md)
+- [Mobile](https://github.com/bounswe/bounswe2024group11/blob/main/mobile/README.md)
+
+### Prerequisites
+
+- Docker
+  
+### Steps
+
+- Clone the repository and change directory
+
+```bash
+git clone
+
+cd ./bounswe2024group11
+```
+
+- Create a `.env` file in the `./backend` and `./frontend` directories
+
+```bash
+cp backend/.env.example backend/.env
+cp web/.env.example web/.env
+```
+
+- Enter the values for the environment variables in the `.env` file.
+
+You can take the credentials for the test/deployment environment by contacting with the contributors of this repo.
+Or you can use your credentials for development purposes.
+
+
+- Install Docker and Docker Compose
+
+    - [Docker](https://docs.docker.com/get-docker/)
+    - [Docker Compose](https://docs.docker.com/compose/install/)
+
+- Run the application
+
+```bash
+cd ..
+# if your containers are already running, first stop them
+docker-compose down
+
+docker-compose build
+docker-compose up
+```
 
 ## 📜 License
 
