@@ -18,6 +18,9 @@ import { styles } from "../components/Styles";
 import { useTheme } from "../context/ThemeContext";
 import { Divider } from "react-native-paper";
 
+import { saveToken, postUser, InvalidCredentialsError, NonuniquenessError } from "../components/StorageHandler"
+
+
 type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
 const Signup = ({
@@ -32,8 +35,19 @@ const Signup = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [invalid, setInvalid] = useState(false);
+
   const onSignupPress = () => {
-    toggle(true);
+    postUser({ body: { fullname: fullname, email: email, username: username, password: password }, endpoint: "user/signup" })
+      .then(data => {
+        toggle(true);
+      })
+      .catch(error => {
+        console.error(error);
+        if (error instanceof NonuniquenessError) {
+          setInvalid(true);
+        }
+      });
   };
 
   const onLoginPress = () => {
@@ -90,6 +104,9 @@ const Signup = ({
           image="lock"
         />
         <View style={styles.checkboxContainer}></View>
+        {invalid && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}> Already existing username/email or missing fields.</Text>)}
+
         <CustomButton
           text="Register"
           onPress={onSignupPress}

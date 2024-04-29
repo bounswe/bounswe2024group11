@@ -11,6 +11,13 @@ export class InvalidCredentialsError extends Error {
   }
 }
 
+export class NonuniquenessError extends Error {
+  constructor() {
+    super("Nonuniqueness or missing required fields");
+    this.name = "NonuniquenessError";
+  }
+}
+
 export const getUser = async (props: { token: string; endpoint: string }) => {
   const getUserRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "GET",
@@ -78,7 +85,10 @@ export const postUser = async (props: {
   return fetch(postUserRequest).then((response) => {
     switch (response.status) {
       case 200:
+      case 201:
         return response.json();
+      case 400:
+        throw new NonuniquenessError();
       case 401:
         throw new InvalidCredentialsError();
       default:
