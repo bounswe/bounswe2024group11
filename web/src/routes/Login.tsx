@@ -1,34 +1,31 @@
-import {
-	TextInput,
-	Container,
-	Button,
-	useMantineTheme,
-	Checkbox,
-} from "@mantine/core";
-import { Link, Form, useSubmit, useFormAction } from "react-router-dom";
+import { TextInput, Container, Checkbox } from "@mantine/core";
+import { Link, Form } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
-import { makeLoader, typesafeBrowserRouter } from "react-router-typesafe";
+import { useActionData } from "react-router-typesafe";
 import { useState } from "react";
-import { useLoaderData, redirect, useActionData } from "react-router-typesafe";
 import { Checkmark } from "../components/Checkmark";
-import type { loginAction, loginLoader } from "./Login.data";
+import type { loginAction } from "./Login.data";
 
 export const Login = () => {
 	const c = useActionData<typeof loginAction>();
-	console.log(c);
 	console.log(c?.error);
 	const [isKeepMeLoggedIn, setIsKeepMeLoggedIn] = useState(true);
 	return (
 		<Container className="flex flex-col items-center md:py-20 py-12">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
 				<div className="flex flex-col items-center gap-2">
-					<img
-						src="./img/zenith-login-logo.webp"
-						alt="Zenith Logo"
-						width={80}
-						height={80}
-					/>
+					<Link
+						to={href({ path: "/" })}
+						className="flex flex-row items-center gap-2"
+					>
+						<img
+							src="./img/zenith-login-logo.webp"
+							alt="Zenith Logo"
+							width={80}
+							height={80}
+						/>
+					</Link>
 					<div className="flex flex-col items-center gap-1">
 						<h1 className="text-2xl font-medium font-display text-slate-950">
 							Login to your Zenith account
@@ -112,7 +109,6 @@ export const Login = () => {
 						</a>
 					</div>
 				</Form>
-				{c?.error ? <div>An error occurred</div> : null}
 			</div>
 		</Container>
 	);

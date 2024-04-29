@@ -9,12 +9,17 @@ export const Register = () => {
 		<Container className="flex flex-col items-center md:py-20 py-12">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
 				<div className="flex flex-col items-center gap-2">
-					<img
-						src="./img/zenith-login-logo.webp"
-						alt="Zenith Logo"
-						width={80}
-						height={80}
-					/>
+					<Link
+						to={href({ path: "/" })}
+						className="flex flex-row items-center gap-2"
+					>
+						<img
+							src="./img/zenith-login-logo.webp"
+							alt="Zenith Logo"
+							width={80}
+							height={80}
+						/>
+					</Link>
 					<div className="flex flex-col items-center gap-1">
 						<h1 className="text-2xl font-medium font-display text-slate-950">
 							Create a new Zenith account
