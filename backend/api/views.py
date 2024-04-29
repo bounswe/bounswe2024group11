@@ -4,7 +4,8 @@ from user.models import User
 from .serializer import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404 
+import requests
 
 @api_view(['POST'])
 def register(request):
@@ -53,51 +54,39 @@ def search(request):
         print(keyword)
         # Construct SPARQL query
         comic_query = """
-        SELECT DISTINCT ?item ?comic ?comicLabel ?description ?image ?author ?publicationDate  WHERE {
-          ?comic wdt:P31/wdt:P279* wd:Q1004.
+        SELECT DISTINCT ?item ?itemLabel ?comic ?comicLabel ?description ?image ?author  WHERE {
+          ?comic wdt:P31/wdt:P279* wd:Q1004;
+                 wdt:P50 ?author;
+                 schema:description ?description;
+                 rdfs:label ?comicLabel.
+
+          ?item wdt:P31/wdt:P279* wd:Q1004;
+                rdfs:label ?itemLabel.
           OPTIONAL{
-            ?comic wdt:P50 ?author;
-                wdt:P577 ?publicationDate;
-                rdfs:label ?comicLabel;
-                
-                schema:description ?description;
-                
-                wdt:P18 ?image.
+            ?comic wdt:P18 ?image.
           
           }
-          
-
           FILTER (lang(?comicLabel) = 'en' && lang(?description)= "en" && regex(?comicLabel, "%s", "i"))
         }
-        LIMIT 3
-        """ % keyword
+        LIMIT 5
+        """ %keyword
 
         # Construct SPARQL query for comic characters
         character_query = """
-        SELECT DISTINCT ?character ?characterLabel ?description ?image 
-        ?genderLabel ?occupationLabel ?dateOfBirth ?dateOfDeath ?nationalityLabel
+        SELECT DISTINCT ?item ?itemLabel ?description ?image 
         WHERE {
-        ?character rdfs:label ?characterLabel;
-                    schema:description ?description;
-                    wdt:P31/wdt:P279* wd:Q1114461;
-                    wdt:P18 ?image.
-       OPTIONAL {
-            ?comic wdt:P674 ?characterEntity.
-            ?characterEntity rdfs:label ?characterLabel;
-                            schema:description ?description;
-                            wdt:P21 ?gender;
-                            wdt:P106 ?occupation;
-                            wdt:P569 ?dateOfBirth;
-                            wdt:P570 ?dateOfDeath;
-                            wdt:P27 ?nationality.
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }} 
-    
-        
-        FILTER (lang(?description) = 'en' && lang(?characterLabel) = 'en' && regex(?characterLabel, "%s", "i"))}
-        
-        LIMIT 20
+        ?item wdt:P31/wdt:P279* wd:Q1114461;
+              
+              schema:description ?description;
+              rdfs:label ?itemLabel.
+              OPTIONAL{
+                ?item wdt:P18 ?image
+              }
+              FILTER (lang(?itemLabel) = 'en' && lang(?description)= "en" && regex(?itemLabel, "%s", "i"))
+            }
+        LIMIT 5
 
-        """ % keyword
+        """% keyword
 
         # Parameters for the API call
         comic_params = {
@@ -129,14 +118,15 @@ def search(request):
 
             comic_results = [{'type': 'comic', 
                               'label': item['comicLabel']['value'], 
-                              'description': item['description']['value'],
-                              'image': item['image']['value'],
-                              'publicationDate': item['publicationDate']['value'], 
-                              'author': item['author']['value']} for item in comic_data['results']['bindings']]
+                              'item': item['itemLabel']['value'],
+
+                              'description': item.get('description', {}).get('value', 'No image available'),
+                              'image': item.get('image', {}).get('value', 'No image available'), 
+                              'author': item.get('author', {}).get('value', 'No image available')} for item in comic_data['results']['bindings']]
             character_results = [{'type': 'character', 
-                                'label': item['characterLabel']['value'], 
+                                'label': item['itemLabel']['value'], 
                                 'description': item['description']['value'], 
-                                'image': item['image']['value']
+                                 'image' : item.get('image', {}).get('value', 'No image available')
                                 
 
                                 
