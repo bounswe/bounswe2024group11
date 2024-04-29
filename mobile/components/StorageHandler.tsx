@@ -26,13 +26,6 @@ export const getUser = async (props: { token: string, endpoint: string }) => {
       } else {
         throw new InvalidCredentialsError();
       }
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch(error => {
-      // console.error('Error fetching data:', error);
-      return null;
     });
 
 }
@@ -64,16 +57,13 @@ export const getSearch = async (props: { query: string, endpoint: string }) => {
 
 }
 
-export const imgonnakillmyself = () => {
-  saveToken({ token: "aaaa" });
-}
-
 
 export const postUser = async (props: { body: { [key: string]: string }, endpoint: string }) => {
   const formData = new FormData();
   for (const key in props.body) {
     formData.append(key, props.body[key]);
   }
+
   const postUserRequest = new Request(`http://159.65.125.158:8000/${props.endpoint}`, {
     method: "POST",
     body: formData,
@@ -118,7 +108,6 @@ export const storage = new Storage({
 
 
 export const saveToken = (props: { token: string }) => {
-
   // I always use same key because i only want 1 user to log in or log out.
   const token = props.token
   storage.save({
@@ -126,7 +115,8 @@ export const saveToken = (props: { token: string }) => {
     data: token,
   })
 }
-export const compareToken = () => {
+//normalde DEFAULT_USER'ı hiçbir yerde kullanmıyorum ama bilgileri gerekirse diye koydum.
+export const compareToken = async () => { // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
 
   return storage.load({
     key: 'loginState',

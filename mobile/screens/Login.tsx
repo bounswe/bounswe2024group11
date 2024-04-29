@@ -17,13 +17,10 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { styles } from "../components/Styles";
 
-import { DEFAULT_USER, useUser } from "../context/UserContext";
+import { useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
-import Storage from 'react-native-storage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import storage, { compareToken, saveToken, removeToken, postUser, imgonnakillmyself, InvalidCredentialsError } from "../components/StorageHandler"
+import { saveToken, postUser, InvalidCredentialsError } from "../components/StorageHandler"
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
