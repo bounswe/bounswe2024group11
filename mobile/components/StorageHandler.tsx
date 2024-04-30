@@ -1,6 +1,6 @@
 import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DEFAULT_USER } from "../context/UserContext";
+import { User } from "../context/UserContext";
 
 const URI = "http://164.90.189.150:8000";
 
@@ -22,6 +22,13 @@ export class NotFoundError extends Error {
   constructor() {
     super("Not found");
     this.name = "NotFoundError";
+  }
+}
+
+export class NotSavedError extends Error {
+  constructor() {
+    super("Not saved");
+    this.name = "NotSavedError";
   }
 }
 
@@ -126,7 +133,7 @@ export const storage = new Storage({
   },
 });
 
-export const saveToken = (props: { token: string }) => {
+export const saveToken = (props: { token: User }) => {
   // I always use same key because i only want 1 user to log in or log out.
   const token = props.token;
   storage.save({
@@ -138,30 +145,36 @@ export const saveToken = (props: { token: string }) => {
 export const compareToken = async () => {
   // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
 
-  return storage.load({
-    key: "loginState",
-    autoSync: true, // autoSync (default: true) means if data is not found or has expired, then invoke the corresponding sync method
+  return storage
+    .load({
+      key: "loginState",
+      autoSync: true, // autoSync (default: true) means if data is not found or has expired, then invoke the corresponding sync method
 
-    // syncInBackground (default: true) means if data expired,
-    // return the outdated data first while invoking the sync method.
-    // If syncInBackground is set to false, and there is expired data,
-    // it will wait for the new data and return only after the sync completed.
-    // DUNNO HOW TO USE EXACTLY
-    syncInBackground: true,
+      // syncInBackground (default: true) means if data expired,
+      // return the outdated data first while invoking the sync method.
+      // If syncInBackground is set to false, and there is expired data,
+      // it will wait for the new data and return only after the sync completed.
+      // DUNNO HOW TO USE EXACTLY
+      syncInBackground: true,
 
-    // you can pass extra params to the sync method
-    // see sync example below
-    syncParams: {
-      extraFetchOptions: {
-        // blahblah
+      // you can pass extra params to the sync method
+      // see sync example below
+      syncParams: {
+        extraFetchOptions: {
+          // blahblah
+        },
+        someFlag: true,
       },
-      someFlag: true,
-    },
-  });
+    })
+    .catch((error) => {
+      if (error.name === "NotFoundError") {
+        throw new NotSavedError();
+      }
+    });
 };
 
 export const removeToken = () => {
-  storage.clearMapForKey("loginState");
+  storage.remove({ key: "loginState" });
 };
 
 export default storage;

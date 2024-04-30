@@ -67,7 +67,7 @@ const Login = ({
     })
       .then((data) => {
         if (remember) {
-          saveToken({ token: data.token });
+          saveToken({ token: data.user });
         }
         setUser(data.user);
         console.log(data.user);
