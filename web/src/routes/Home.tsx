@@ -16,6 +16,8 @@ import type { homeAction, homeLoader } from "./Home.data";
 import { imageLink } from "../components/ImageLink";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import InfoBox from "../components/InfoBox";
+import type { InfoBoxProps } from "../components/InfoBox";
 
 const CATEGORIES = [
 	"born in",
@@ -24,12 +26,24 @@ const CATEGORIES = [
 	"has superpower",
 ];
 
+const StripBG = () => {
+	return Array.from({ length: 20 }).map((_, i) => {
+		return (
+			<div key={`Strip ${i + 1}`}>
+				<div className="h-8 bg-slate-50" />
+				<div className="h-12" />
+			</div>
+		);
+	});
+};
+
 export const Home = () => {
 	const submit = useSubmit();
 	const user = useLoaderData<typeof homeLoader>();
-	const results = useActionData<typeof homeAction>();
-	console.log(results);
-	console.log(user);
+	const actionData = useActionData<typeof homeAction>();
+	const validResults =
+		actionData && "results" in actionData && actionData.results;
+	console.log("action data", actionData);
 	return (
 		<div className="relative">
 			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
@@ -114,18 +128,16 @@ export const Home = () => {
 										}}
 									>
 										<Menu.Target>
-											<a
-												// biome-ignore lint/a11y/useValidAnchor: <explanation>
-												href="#"
+											<div
 												className={imageLink({
 													rounded: true,
-													className: "ml-auto",
+													className: "ml-auto cursor-pointer",
 												})}
 											>
 												<div className="rounded-full bg-cyan-100 hover:ring hover:ring-cyan-200 transition-all duration-500 active:ring-cyan-900 text-cyan-900 h-10 w-10 flex items-center justify-center ">
 													{user?.username[0] || "Z"}
 												</div>
-											</a>
+											</div>
 										</Menu.Target>
 
 										<Menu.Dropdown className="p-2">
@@ -205,14 +217,25 @@ export const Home = () => {
 				</Container>
 			</div>
 			<div>
-				{Array.from({ length: 20 }).map((_, i) => {
-					return (
-						<div key={`Strip ${i + 1}`}>
-							<div className="h-8 bg-slate-50" />
-							<div className="h-12" />
+				{validResults && (
+					<Container className="flex flex-col gap-4 py-8">
+						<div className="flex gap-1 justify-between">
+							<h1 className="font-regular text-lg">
+								{actionData.results.length} results found for&nbsp;
+								<span className="font-medium">"{actionData.keyword}"</span>
+							</h1>
+							<p className="font-regular text-slate-500 text-sm">
+								Sorted by popularity.
+							</p>
 						</div>
-					);
-				})}
+						<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+							{actionData.results.map((result: InfoBoxProps) => {
+								return <InfoBox key={result.label} {...result} />;
+							})}
+						</div>
+					</Container>
+				)}
+				<StripBG />
 			</div>
 		</div>
 	);
