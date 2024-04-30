@@ -2,7 +2,7 @@ import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "../context/UserContext";
 
-const URI = "http://164.90.189.150:8000";
+const URI = "http://159.65.125.158:8000";
 
 export class InvalidCredentialsError extends Error {
   constructor() {

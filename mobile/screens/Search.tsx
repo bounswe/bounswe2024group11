@@ -24,6 +24,7 @@ function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [panic, setPanic] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [hatakodu, setHatakodu] = useState("");
 
   const onChangeText = (query: string) => {
     setSearchQuery(query);
@@ -52,6 +53,8 @@ function Search() {
         setSearchResults(response.results);
       })
       .catch((error) => {
+        console.error(error);
+        setHatakodu(error);
         if (error instanceof NotFoundError) {
           setNoResults(true);
         } else {
@@ -95,7 +98,7 @@ function Search() {
             },
           ]}
         >
-          Something went wrong
+          Something went wrong {hatakodu}
         </Text>
       )}
       {noResults && (
