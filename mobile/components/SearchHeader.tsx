@@ -7,9 +7,12 @@ import { styles } from "./Styles";
 import { getSearch } from "./StorageHandler";
 
 const SearchHeader = (props: {
-  onChangeText: (query: string) => void, value: string,
-  onSearch: () => void
+  onChangeText: (query: string) => void;
+  value: string;
+  onSearch: (setLoading: React.Dispatch<React.SetStateAction<boolean>>) => void;
 }) => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <Appbar.Header style={styles.appBar}>
       <Appbar.Content
@@ -19,9 +22,12 @@ const SearchHeader = (props: {
               placeholder="Search for content..."
               onChangeText={props.onChangeText}
               onClearIconPress={() => props.onChangeText("")}
-              onIconPress={props.onSearch}
+              onIconPress={() => {
+                props.onSearch(setLoading);
+              }}
               value={props.value}
               style={styles.searchBar}
+              loading={loading}
             />
           </View>
         }

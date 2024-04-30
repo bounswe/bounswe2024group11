@@ -4,6 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: "flex",
     backgroundColor: "white",
   },
   icon: {
@@ -67,14 +68,11 @@ const styles = StyleSheet.create({
     height: 40,
   },
   searchBar: {
-    width: "90%",
     height: 40,
     margin: 10,
     backgroundColor: "white",
   },
-  searchButton: {
-
-  },
+  searchButton: {},
   authWrapper: {
     flex: 1,
     maxWidth: 600,
@@ -115,6 +113,37 @@ const styles = StyleSheet.create({
   error: {
     textAlign: "center",
     marginBottom: 12,
+  },
+  dropDownMenu: {
+    alignItems: "stretch",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    justifyContent: "flex-start",
+  },
+  searchResultsContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  infoBoxContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "stretch",
+    borderWidth: 0.5,
+    borderColor: "black",
+    borderRadius: 5,
+    paddingHorizontal: 12,
+    marginHorizontal: 24,
+    marginVertical: 12,
+  },
+  infoBoxTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingVertical: 8,
+  },
+  infoBoxText: {
+    fontSize: 14,
+    marginVertical: 8,
   },
 });
 
