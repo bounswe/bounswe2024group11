@@ -21,10 +21,26 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/zenith-logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tenacke.Zenith"
     },
     "web": {
       "favicon": "./assets/zenith-logo.png"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "52befeee-3d71-491e-afe4-66c31f2c710c"
+      }
     }
   }
 }

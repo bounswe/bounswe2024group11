@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 
 import {
   View,
@@ -8,7 +14,13 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import { Button, Checkbox, Divider, PaperProvider } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Checkbox,
+  Divider,
+  PaperProvider,
+} from "react-native-paper";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -20,7 +32,11 @@ import { styles } from "../components/Styles";
 import { useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
-import { saveToken, postUser, InvalidCredentialsError } from "../components/StorageHandler"
+import {
+  saveToken,
+  postUser,
+  InvalidCredentialsError,
+} from "../components/StorageHandler";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -37,34 +53,46 @@ const Login = ({
   const [remember, setRemember] = useState(false);
   const [invalid, setInvalid] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [panic, setPanic] = useState(false);
+
   const { user, setUser } = useUser();
   const theme = useTheme();
 
   const onLoginPress = () => {
-
-    postUser({ body: { username: username, password: password }, endpoint: "user/login" })
-      .then(data => {
+    setLoading(true);
+    postUser({
+      body: { username: username, password: password },
+      endpoint: "user/login",
+    })
+      .then((data) => {
         if (remember) {
-          saveToken({ token: data.token });
+          saveToken({ token: data.user });
         }
         setUser(data.user);
+        console.log(data.user);
         navigation.navigate("Home");
       })
-      .catch(error => {
-        console.error(error);
+      .catch((error) => {
         if (error instanceof InvalidCredentialsError) {
           setInvalid(true);
+        } else {
+          setPanic(true);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
   };
 
+  useEffect(() => {
+    setInvalid(false);
+    setPanic(false);
+  }, [username, password]);
 
   const onSignupPress = () => {
     toggle(false);
   };
-
-
 
   return (
     <ScrollView style={styles.authWrapper}>
@@ -123,7 +151,15 @@ const Login = ({
         </View>
 
         {invalid && (
-          <Text style={[styles.error, { color: theme.colors.red[4] }]}>Invalid username or password</Text>)}
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>
+            Invalid username or password
+          </Text>
+        )}
+        {panic && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>
+            Something went wrong
+          </Text>
+        )}
 
         <CustomButton
           text="Login"
@@ -136,6 +172,12 @@ const Login = ({
           onPress={onSignupPress}
           bgColor={theme.colors.neutral[0]}
           textColor={theme.colors.neutral[7]}
+        />
+        <ActivityIndicator
+          style={{ marginTop: 24 }}
+          animating={loading}
+          color={theme.colors.cyan[3]}
+          size="large"
         />
       </View>
     </ScrollView>

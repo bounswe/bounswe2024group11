@@ -33,7 +33,6 @@ export const buttonInnerRing = cva(
 export const button = cva(
 	[
 		"font-medium",
-		"rounded-sm",
 		"text-white",
 		"text-center",
 		"flex",
@@ -44,6 +43,9 @@ export const button = cva(
 		"group",
 		"transition-all",
 		"duration-300",
+		"focus-visible:ring-slate-300",
+		"focus-visible:ring-3",
+		"focus-visible:outline-none",
 	],
 	{
 		variants: {

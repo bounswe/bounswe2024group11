@@ -32,7 +32,7 @@ import requests
 def register(request):
     required_fields = ['username', 'password', 'email', 'fullname']
     if not all([field in request.data for field in required_fields]):
-        return Response({"res":"Please provide all required fields."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Please provide all required fields."}, status=status.HTTP_400_BAD_REQUEST)
     
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
@@ -70,15 +70,15 @@ def register(request):
 def login(request):
     required_fields = ['username', 'password']
     if not all([field in request.data for field in required_fields]):
-        return Response({"res":"Please provide both username and password."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Please provide both username and password."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         user = User.objects.get(username=request.data['username'])
     except User.DoesNotExist:
-        return Response({"res": "Username not found."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"error": "Username not found."}, status=status.HTTP_401_UNAUTHORIZED)
 
     if not user.check_password(request.data['password']):
-        return Response({"res":"password does not match."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"error":"password does not match."}, status=status.HTTP_401_UNAUTHORIZED)
     token, created = Token.objects.get_or_create(user=user)
     serializer = UserSerializer(instance=user)
     return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_200_OK)
@@ -86,7 +86,7 @@ def login(request):
 
 #@api_view(['GET'])
 #def test_token(request):
-#    return Response({"res":"Token is valid!"})
+#    return Response({"error":"Token is valid!"})
 my_dict = {
     "born in new york": "Q60",
     "born in new jersey": "Q1408",
@@ -118,11 +118,11 @@ my_dict = {
 def search(request):
     required_fields = ['keyword']
     if not all([field in request.data for field in required_fields]):
-        return Response({"res":"Please provide a keyword."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Please provide a keyword."}, status=status.HTTP_400_BAD_REQUEST)
     try:
         keyword = request.data.get("keyword").lower()
     except:
-        return Response({"res":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
     #this part should be changed because we should use post to get keyword.
     if request.method == 'POST':
         #keyword = request.POST.get(request.data.get("keyword"), '')
