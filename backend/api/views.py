@@ -11,16 +11,17 @@ import requests
 
 @swagger_auto_schema(
     method='post',
-    operation_description="Register a user with a unique username, a unique email and a password.",
+    operation_description="Register a user with a unique username, a unique email, a password and full name.",
     operation_summary="register a user",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
             'username': openapi.Schema(type=openapi.TYPE_STRING),
             'email': openapi.Schema(type=openapi.TYPE_STRING),
-            'password': openapi.Schema(type=openapi.TYPE_STRING)    
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+            'fullname': openapi.Schema(type=openapi.TYPE_STRING) 
         },
-        required=['username', 'email', 'password']
+        required=['username', 'email', 'password', 'fullname']
     ),    responses={
         201: "Created",
         400: "Missing required fields or nonunique username/email"
@@ -29,7 +30,7 @@ import requests
 )
 @api_view(['POST'])
 def register(request):
-    required_fields = ['username', 'password', 'email']
+    required_fields = ['username', 'password', 'email', 'fullname']
     if not all([field in request.data for field in required_fields]):
         return Response({"res":"Please provide all required fields."}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -94,16 +95,44 @@ my_dict = {
   
 }
 
-@api_view(["GET"])
+
+@swagger_auto_schema(
+    method='post',
+    operation_description="wikidata semantic search api.",
+    operation_summary="wikidata api",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'keyword': openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=['keyword']
+    ),
+
+    responses={
+        200: "Success",
+        400: "Missing required fields",
+    },
+    operation_id='wikidata_search'
+)
+@api_view(["POST"])
 def search(request):
+    required_fields = ['keyword']
+    if not all([field in request.data for field in required_fields]):
+        return Response({"res":"Please provide a keyword."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        keyword = request.data.get("keyword").lower()
+    except:
+        return Response({"res":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
     #this part should be changed because we should use post to get keyword.
-    if request.method == 'GET':
+    if request.method == 'POST':
         #keyword = request.POST.get(request.data.get("keyword"), '')
         keyword = request.data["keyword"].lower()
-        print(my_dict[keyword])
-        print(keyword)
+       
         # Construct SPARQL query
-        qid = my_dict[keyword]
+        try:
+            qid = my_dict[keyword]
+        except:
+            return(Response({'error': 'wrong keyword value.'}, status=400))
     
 
         birtOfPlace_query = """
@@ -134,7 +163,6 @@ def search(request):
         ORDER BY DESC(?sitelinks)
         """ %qid
 
-        print(my_dict[keyword])
         # Construct SPARQL query for comic characters
         
 
@@ -150,18 +178,20 @@ def search(request):
         url = 'https://query.wikidata.org/sparql'
 
         # Make the API call
-        birtOfPlace_response = requests.get(url, params=birtOfPlace_query_params)
+        try:
+            birtOfPlace_response = requests.get(url, params=birtOfPlace_query_params)
+        except:
+            return(Response({'error': 'Wrong query format.'}, status=400))
+
         #character_response = requests.get(url, params=character_params)
         
         # Check if the request was successful
         if birtOfPlace_response.status_code == 200 :
-            print("ceyda")
+            
             # Parse JSON response
             birth_data = birtOfPlace_response.json()
             #character_data = character_response.json()
 
-            #print(comic_response.json())
-            #print(character_response.json())
            
 
             birth_of_results = [{'type': 'character', 
@@ -176,11 +206,11 @@ def search(request):
 
             combined_results = birth_of_results
             
-            print(combined_results)
+            #print(combined_results)
             
             
             return Response({'keyword': keyword, 'results': combined_results})
         else:
-            return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=500)
-    else:
-        return Response({'error': 'Invalid request method. Only GET method is allowed.'}, status=405)
+            return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
+    #else:
+    #    return Response({'error': 'Invalid request method. Only GET method is allowed.'}, status=405)
