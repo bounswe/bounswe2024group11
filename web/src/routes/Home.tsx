@@ -110,6 +110,7 @@ export const Home = () => {
 										position="bottom-end"
 										classNames={{
 											item: "text-slate-700 hover:text-slate-900",
+											dropdown: "shadow-card",
 										}}
 									>
 										<Menu.Target>
@@ -121,7 +122,7 @@ export const Home = () => {
 													className: "ml-auto",
 												})}
 											>
-												<div className="rounded-full bg-cyan-200 text-cyan-900 h-10 w-10 flex items-center justify-center ">
+												<div className="rounded-full bg-cyan-100 hover:ring hover:ring-cyan-200 transition-all duration-500 active:ring-cyan-900 text-cyan-900 h-10 w-10 flex items-center justify-center ">
 													{user?.username[0] || "Z"}
 												</div>
 											</a>
@@ -129,10 +130,9 @@ export const Home = () => {
 
 										<Menu.Dropdown className="p-2">
 											<Menu.Label className="text-slate-400 text-xs">
-												Hello {user.username}
+												{user.username}
 											</Menu.Label>
 											<Menu.Divider className="border-slate-100" />
-
 											<Menu.Item
 												leftSection={
 													<RiSettings2Line
@@ -154,10 +154,12 @@ export const Home = () => {
 											>
 												Bookmarks
 											</Menu.Item>
+											<Menu.Divider className="border-slate-100" />
 											<Menu.Item
+												className="hover:text-red-700 hover:bg-red-50"
 												leftSection={
 													<RiLogoutCircleLine
-														className="text-slate-700"
+														className="text-inherit"
 														size={20}
 													/>
 												}
@@ -171,6 +173,10 @@ export const Home = () => {
 											>
 												Log Out
 											</Menu.Item>
+											<Menu.Divider className="border-slate-100" />
+											<Menu.Label className="text-slate-400 text-xs">
+												Zenith ©2024
+											</Menu.Label>
 										</Menu.Dropdown>
 									</Menu>
 								) : (
