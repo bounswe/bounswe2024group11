@@ -31,7 +31,6 @@ export const registerAction = async ({
 		}
 	}
 	const responseJson = await response.json();
-	console.log(responseJson);
 	if (responseJson && "token" in responseJson) {
 		return redirect(href({ path: "/login" }));
 	}

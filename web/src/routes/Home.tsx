@@ -1,6 +1,6 @@
 import { Container, TextInput, Select, Fieldset, Menu } from "@mantine/core";
 import "@mantine/core/styles.css";
-import { Form, Link, useSubmit } from "react-router-dom";
+import { Form, Link, redirect, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import {
@@ -27,6 +27,8 @@ const CATEGORIES = [
 export const Home = () => {
 	const submit = useSubmit();
 	const user = useLoaderData<typeof homeLoader>();
+	const results = useActionData<typeof homeAction>();
+	console.log(results);
 	console.log(user);
 	return (
 		<div className="relative">
@@ -51,13 +53,12 @@ export const Home = () => {
 									Zenith
 								</p>
 							</Link>
-							<div className="flex-1 max-w-lg">
+							<div className="max-w-xl flex-1">
 								<Form
 									className="flex gap-2"
 									method="POST"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
-											console.log("enter");
 											e.preventDefault();
 											submit(e.currentTarget);
 										}
@@ -68,6 +69,7 @@ export const Home = () => {
 											className="max-w-72"
 											placeholder="Category"
 											defaultValue="Universe"
+											name="category"
 											aria-label="Select a category"
 											id="pick"
 											data={CATEGORIES}
@@ -79,6 +81,7 @@ export const Home = () => {
 										/>
 										<TextInput
 											className="w-full"
+											name="query"
 											placeholder="Search "
 											aria-label="Search"
 											id="search"
@@ -101,7 +104,14 @@ export const Home = () => {
 
 							<div className="items-center gap-2 hidden md:flex">
 								{user ? (
-									<Menu shadow="md" width={200} position="bottom-end">
+									<Menu
+										shadow="md"
+										width={200}
+										position="bottom-end"
+										classNames={{
+											item: "text-slate-700 hover:text-slate-900",
+										}}
+									>
 										<Menu.Target>
 											<a
 												// biome-ignore lint/a11y/useValidAnchor: <explanation>

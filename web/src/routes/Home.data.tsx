@@ -5,8 +5,10 @@ const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const homeAction = async ({ request }: { request: Request }) => {
 	console.log("Home Action");
+	const queryData = await request.formData();
+	const query = queryData.get("query");
 	const formData = new FormData();
-	formData.append("keyword", "born in New Jersey");
+	formData.append("keyword", `born in ${query}`);
 	const response = await fetch(`${VITE_BACKEND_URL}/user/search/`, {
 		method: "POST",
 		headers: {
