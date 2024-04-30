@@ -128,7 +128,8 @@ export const Home = () => {
 										}}
 									>
 										<Menu.Target>
-											<div
+											<button
+												type="button"
 												className={imageLink({
 													rounded: true,
 													className: "ml-auto cursor-pointer",
@@ -137,7 +138,7 @@ export const Home = () => {
 												<div className="rounded-full bg-cyan-100 hover:ring hover:ring-cyan-200 transition-all duration-500 active:ring-cyan-900 text-cyan-900 h-10 w-10 flex items-center justify-center ">
 													{user?.username[0] || "Z"}
 												</div>
-											</div>
+											</button>
 										</Menu.Target>
 
 										<Menu.Dropdown className="p-2">
