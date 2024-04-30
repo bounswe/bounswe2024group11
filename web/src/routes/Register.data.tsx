@@ -1,15 +1,19 @@
 import { href } from "../router";
-import type { RegisterSuccess } from "../schema/user";
+import type { LoginSuccess, RegisterSuccess } from "../schema/user";
 import { makeLoader, redirect } from "react-router-typesafe";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const registerAction = async ({ request }: { request: Request }) => {
+export const registerAction = async ({
+	request,
+}: { request: Request }): Promise<
+	LoginSuccess | { error: string } | Response
+> => {
 	console.log("Register Action");
 	const formData = await request.formData();
 	const response = await fetch(`${VITE_BACKEND_URL}/user/signup`, {
 		method: "POST",
-		body: formData, // Sending the form data
+		body: formData,
 		headers: {
 			Accept: "application/json",
 		},
@@ -29,7 +33,7 @@ export const registerAction = async ({ request }: { request: Request }) => {
 	const responseJson = await response.json();
 	console.log(responseJson);
 	if (responseJson && "token" in responseJson) {
-		await redirect(href({ path: "/login" }));
+		return redirect(href({ path: "/login" }));
 	}
 	return responseJson as RegisterSuccess;
 };

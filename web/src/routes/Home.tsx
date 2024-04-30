@@ -1,12 +1,21 @@
-import { Container, TextInput, Select, Fieldset } from "@mantine/core";
+import { Container, TextInput, Select, Fieldset, Menu } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { Form, Link, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
-import { RiArrowDropDownLine, RiSearch2Line } from "@remixicon/react";
-import { useActionData } from "react-router-typesafe";
-import type { homeAction } from "./Home.data";
+import {
+	RiArrowDropDownLine,
+	RiBookmark2Line,
+	RiLogoutBoxRLine,
+	RiLogoutCircleLine,
+	RiSearch2Line,
+	RiSettings2Line,
+} from "@remixicon/react";
+import { useActionData, useLoaderData } from "react-router-typesafe";
+import type { homeAction, homeLoader } from "./Home.data";
 import { imageLink } from "../components/ImageLink";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const CATEGORIES = [
 	"born in",
@@ -17,7 +26,8 @@ const CATEGORIES = [
 
 export const Home = () => {
 	const submit = useSubmit();
-	const a = useActionData<typeof homeAction>();
+	const user = useLoaderData<typeof homeLoader>();
+	console.log(user);
 	return (
 		<div className="relative">
 			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
@@ -44,6 +54,7 @@ export const Home = () => {
 							<div className="flex-1 max-w-lg">
 								<Form
 									className="flex gap-2"
+									method="POST"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											console.log("enter");
@@ -87,21 +98,91 @@ export const Home = () => {
 									</button>
 								</Form>
 							</div>
-							<div className="items-center gap-2 hidden md:flex">
-								<a
-									className={button({ intent: "tertiary" })}
-									href={href({ path: "/login" })}
-								>
-									<span className="text-slate-900">Log In</span>
-								</a>
-								<a
-									className={button({ intent: "secondary" })}
-									href={href({ path: "/register" })}
-								>
-									<span className={buttonInnerRing({ intent: "secondary" })} />
 
-									<span>Register</span>
-								</a>
+							<div className="items-center gap-2 hidden md:flex">
+								{user ? (
+									<Menu shadow="md" width={200} position="bottom-end">
+										<Menu.Target>
+											<a
+												// biome-ignore lint/a11y/useValidAnchor: <explanation>
+												href="#"
+												className={imageLink({
+													rounded: true,
+													className: "ml-auto",
+												})}
+											>
+												<div className="rounded-full bg-cyan-200 text-cyan-900 h-10 w-10 flex items-center justify-center ">
+													{user?.username[0] || "Z"}
+												</div>
+											</a>
+										</Menu.Target>
+
+										<Menu.Dropdown className="p-2">
+											<Menu.Label className="text-slate-400 text-xs">
+												Hello {user.username}
+											</Menu.Label>
+											<Menu.Divider className="border-slate-100" />
+
+											<Menu.Item
+												leftSection={
+													<RiSettings2Line
+														className="text-slate-700"
+														size={20}
+													/>
+												}
+											>
+												Profile Settings
+											</Menu.Item>
+
+											<Menu.Item
+												leftSection={
+													<RiBookmark2Line
+														className="text-slate-700"
+														size={20}
+													/>
+												}
+											>
+												Bookmarks
+											</Menu.Item>
+											<Menu.Item
+												leftSection={
+													<RiLogoutCircleLine
+														className="text-slate-700"
+														size={20}
+													/>
+												}
+												onClick={() => {
+													localStorage.removeItem("zenith_app_user");
+													localStorage.removeItem("zenith_app_token");
+													sessionStorage.removeItem("zenith_app_user");
+													sessionStorage.removeItem("zenith_app_token");
+													window.location.reload();
+												}}
+											>
+												Log Out
+											</Menu.Item>
+										</Menu.Dropdown>
+									</Menu>
+								) : (
+									<>
+										<a
+											className={button({ intent: "tertiary" })}
+											href={href({ path: "/login" })}
+										>
+											<span className="text-slate-900">Log In</span>
+										</a>
+										<a
+											className={button({ intent: "secondary" })}
+											href={href({ path: "/register" })}
+										>
+											<span
+												className={buttonInnerRing({ intent: "secondary" })}
+											/>
+
+											<span>Register</span>
+										</a>
+									</>
+								)}
 							</div>
 						</div>
 					</header>

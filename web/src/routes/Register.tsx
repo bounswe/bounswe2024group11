@@ -1,4 +1,10 @@
-import { TextInput, Container, Button, useMantineTheme } from "@mantine/core";
+import {
+	TextInput,
+	Container,
+	Button,
+	useMantineTheme,
+	Dialog,
+} from "@mantine/core";
 import { Link, Form, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
@@ -7,6 +13,7 @@ import { inlineLink } from "../components/InlineLink";
 import { imageLink } from "../components/ImageLink";
 import { useActionData } from "react-router-typesafe";
 import type { registerAction } from "./Register.data";
+import { RiErrorWarningLine } from "@remixicon/react";
 
 export const Register = () => {
 	const actionData = useActionData<typeof registerAction>();
@@ -87,11 +94,7 @@ export const Register = () => {
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<button
-							type="submit"
-							className={button({ intent: "secondary" })}
-							onSubmit={() => {}}
-						>
+						<button type="submit" className={button({ intent: "secondary" })}>
 							<div className={buttonInnerRing({ intent: "secondary" })} />
 							<span>Register</span>
 						</button>
@@ -103,8 +106,8 @@ export const Register = () => {
 							<span className="text-slate-900">Log In</span>
 						</a>
 
-						<p className="text-sm text-slate-400 text-center">
-							By clicking Register, you agree to accept Zenit's{" "}
+						<p className="text-sm text-slate-400 text-center text-balance">
+							By clicking Register, you agree to accept Zenith's{" "}
 							<a className={inlineLink()} href={href({ path: "/terms" })}>
 								Terms and Conditions
 							</a>
@@ -112,6 +115,27 @@ export const Register = () => {
 					</div>
 				</Form>
 			</div>
+			<Dialog
+				opened={isAuthError || false}
+				position={{
+					bottom: "40px",
+					right: "40px",
+				}}
+				title="Login Error"
+				className="shadow-card border-red-100 border rounded-2"
+			>
+				<div className="flex flex-col gap-1">
+					<div className="flex gap-2 items-center">
+						<RiErrorWarningLine size={20} className="text-red-800" />
+						<h2 className="text-md font-medium  text-red-800">
+							Unable to Register
+						</h2>
+					</div>
+					<p className="text-sm text-slate-500 text-pretty">
+						Please try with a different email or username.
+					</p>
+				</div>
+			</Dialog>
 		</Container>
 	);
 };

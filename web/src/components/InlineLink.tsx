@@ -9,4 +9,5 @@ export const inlineLink = cva([
 	"ring-transparent",
 	"focus-visible:ring-offset-4",
 	"focus-visible:ring-2",
+	"hover:underline",
 ]);

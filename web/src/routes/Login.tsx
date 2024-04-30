@@ -3,11 +3,12 @@ import { Link, Form, redirect } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import { useActionData } from "react-router-typesafe";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Checkmark } from "../components/Checkmark";
 import type { loginAction } from "./Login.data";
 import { imageLink } from "../components/ImageLink";
 import { RiErrorWarningLine } from "@remixicon/react";
+import { UserContext } from "../context/UserContext";
 
 export const Login = () => {
 	const actionData = useActionData<typeof loginAction>();
