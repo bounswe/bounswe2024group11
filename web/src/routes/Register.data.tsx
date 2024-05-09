@@ -1,22 +1,40 @@
-import { makeLoader } from "react-router-typesafe";
+import { href } from "../router";
+import type { LoginSuccess, RegisterSuccess } from "../schema/user";
+import { makeLoader, redirect } from "react-router-typesafe";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const registerAction = async ({ request }: { request: Request }) => {
+export const registerAction = async ({
+	request,
+}: { request: Request }): Promise<
+	LoginSuccess | { error: string } | Response
+> => {
+	console.log("Register Action");
 	const formData = await request.formData();
-	const response = await fetch(`${BACKEND_URL}/user/signup`, {
+	const response = await fetch(`${VITE_BACKEND_URL}/user/signup`, {
 		method: "POST",
-		mode: "no-cors",
-		headers: {
-			"Content-Type": "application/json",
-		},
 		body: formData,
-	}).catch((err) => {
-		return {
-			error: "An error occurred",
-		} as const;
+		headers: {
+			Accept: "application/json",
+		},
 	});
-	return response;
+	if (!response.ok) {
+		switch (response.status) {
+			case 400:
+				return {
+					error: "Invalid request",
+				};
+			default:
+				return {
+					error: "Unknown error",
+				};
+		}
+	}
+	const responseJson = await response.json();
+	if (responseJson && "token" in responseJson) {
+		return redirect(href({ path: "/login" }));
+	}
+	return responseJson as RegisterSuccess;
 };
 
 export const registerLoader = makeLoader(async ({ request }) => {

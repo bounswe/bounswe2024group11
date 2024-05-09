@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import {
   View,
@@ -16,7 +16,14 @@ import CustomButton from "../components/CustomButton";
 import { RootStackParamList } from "../components/Types";
 import { styles } from "../components/Styles";
 import { useTheme } from "../context/ThemeContext";
-import { Divider } from "react-native-paper";
+import { ActivityIndicator, Divider } from "react-native-paper";
+
+import {
+  saveToken,
+  postUser,
+  InvalidCredentialsError,
+  NonuniquenessError,
+} from "../components/StorageHandler";
 
 type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -31,10 +38,46 @@ const Signup = ({
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [panic, setPanic] = useState(false);
+
+  const [invalid, setInvalid] = useState(false);
 
   const onSignupPress = () => {
-    toggle(true);
+    setLoading(true);
+    postUser({
+      body: {
+        fullname: fullname,
+        email: email,
+        username: username,
+        password: password,
+      },
+      endpoint: "user/signup",
+    })
+      .then((data) => {
+        setSuccess(true);
+        setTimeout(() => {
+          toggle(true);
+          setSuccess(false);
+        }, 1500);
+      })
+      .catch((error) => {
+        if (error instanceof NonuniquenessError) {
+          setInvalid(true);
+        } else {
+          setPanic(true);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
+
+  useEffect(() => {
+    setInvalid(false);
+    setPanic(false);
+  }, [fullname, email, username, password]);
 
   const onLoginPress = () => {
     toggle(true);
@@ -90,6 +133,25 @@ const Signup = ({
           image="lock"
         />
         <View style={styles.checkboxContainer}></View>
+        {invalid && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>
+            {" "}
+            Invalid email or existing username or missing fields.
+          </Text>
+        )}
+        {panic && (
+          <Text style={[styles.error, { color: theme.colors.red[4] }]}>
+            {" "}
+            Something went wrong. Please try again.
+          </Text>
+        )}
+        {success && (
+          <Text style={[styles.error, { color: theme.colors.green[4] }]}>
+            {" "}
+            Signup successful. Redirecting to login page.
+          </Text>
+        )}
+
         <CustomButton
           text="Register"
           onPress={onSignupPress}
@@ -101,6 +163,12 @@ const Signup = ({
           onPress={onLoginPress}
           bgColor={theme.colors.neutral[0]}
           textColor={theme.colors.neutral[7]}
+        />
+        <ActivityIndicator
+          style={{ marginTop: 24 }}
+          animating={loading}
+          color={theme.colors.cyan[3]}
+          size="large"
         />
       </View>
     </ScrollView>
