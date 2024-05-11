@@ -3,7 +3,7 @@ import {
 	Container,
 	Button,
 	useMantineTheme,
-	Dialog,
+	Notification,
 } from "@mantine/core";
 import { Link, Form, useSubmit } from "react-router-dom";
 import { href } from "../router";
@@ -115,27 +115,25 @@ export const Register = () => {
 					</div>
 				</Form>
 			</div>
-			<Dialog
-				opened={isAuthError || false}
-				position={{
-					bottom: "40px",
-					right: "40px",
-				}}
-				title="Login Error"
-				className="shadow-card border-red-100 border rounded-2"
-			>
-				<div className="flex flex-col gap-1">
-					<div className="flex gap-2 items-center">
-						<RiErrorWarningLine size={20} className="text-red-800" />
-						<h2 className="text-md font-medium  text-red-800">
-							Unable to Register
-						</h2>
+			{isAuthError && (
+				<Notification
+					style={{ position: "fixed", bottom: "40px", right: "40px" }}
+					title="Login Error"
+					className="shadow-card border-red-100 border rounded-2"
+				>
+					<div className="flex flex-col gap-1">
+						<div className="flex gap-2 items-center">
+							<RiErrorWarningLine size={20} className="text-red-800" />
+							<h2 className="text-md font-medium  text-red-800">
+								Unable to Register
+							</h2>
+						</div>
+						<p className="text-sm text-slate-500 text-pretty">
+							Please try with a different email or username.
+						</p>
 					</div>
-					<p className="text-sm text-slate-500 text-pretty">
-						Please try with a different email or username.
-					</p>
-				</div>
-			</Dialog>
+				</Notification>
+			)}
 		</Container>
 	);
 };

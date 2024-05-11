@@ -1,4 +1,4 @@
-import { TextInput, Container, Checkbox, Dialog } from "@mantine/core";
+import { TextInput, Container, Checkbox, Notification } from "@mantine/core";
 import { Link, Form, redirect } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
@@ -118,27 +118,25 @@ export const Login = () => {
 					</div>
 				</Form>
 			</div>
-			<Dialog
-				opened={isAuthError || false}
-				position={{
-					bottom: "40px",
-					right: "40px",
-				}}
-				title="Login Error"
-				className="shadow-card border-red-100 border rounded-2"
-			>
-				<div className="flex flex-col gap-1">
-					<div className="flex gap-2 items-center">
-						<RiErrorWarningLine size={20} className="text-red-800" />
-						<h2 className="text-md font-medium  text-red-800">
-							Invalid Credentials
-						</h2>
+			{isAuthError && (
+				<Notification
+					style={{ position: "fixed", bottom: "40px", right: "40px" }}
+					title="Login Error"
+					className="shadow-card border-red-100 border rounded-2"
+				>
+					<div className="flex flex-col gap-1">
+						<div className="flex gap-2 items-center">
+							<RiErrorWarningLine size={20} className="text-red-800" />
+							<h2 className="text-md font-medium  text-red-800">
+								Invalid Credentials
+							</h2>
+						</div>
+						<p className="text-sm text-slate-500 text-pretty">
+							Please check your username & password and try again.
+						</p>
 					</div>
-					<p className="text-sm text-slate-500 text-pretty">
-						Please check your username & password and try again.
-					</p>
-				</div>
-			</Dialog>
+				</Notification>
+			)}
 		</Container>
 	);
 };
