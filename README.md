@@ -16,8 +16,8 @@ It's suggested to check the [Wiki](https://github.com/bounswe/bounswe2024group11
 ⏸️ Implementation
 
 ## 🌴 Project Structure
-
-> Structure of the Web Part
+>Structure of the Web Part
+```
 ├── web
 ├── public
 |   ├──zenith-logo.png
@@ -49,7 +49,7 @@ It's suggested to check the [Wiki](https://github.com/bounswe/bounswe2024group11
 |   ├── router.tsx
 |   ├── theme.ts
 │   └── vite-env.d.ts
-
+```
 ## Build & Run the Application
 
 You can follow this guide to run the whole application using Docker conainers.
