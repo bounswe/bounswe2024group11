@@ -17,7 +17,38 @@ It's suggested to check the [Wiki](https://github.com/bounswe/bounswe2024group11
 
 ## 🌴 Project Structure
 
-> TBA
+> Structure of the Web Part
+├── web
+├── public
+|   ├──zenith-logo.png
+|   ├──zenith-logo.svg
+├── src
+│   ├── components
+│   │   ├── Button.tsx
+│   │   ├── Checkmark.tsx
+|   |   ├── ImageLink.tsx
+|   |   ├── InfoBox.tsx
+│   │   └── InlineLink.tsx
+|   ├── context
+│   |   └── UserContext.tsx
+│   ├── lib
+│   │   └── storage.ts
+|   ├── routes
+|   |   ├── Home.data.tsx
+|   |   ├── Home.tsx
+|   |   ├── Login.data.tsx
+|   |   ├── Login.tsx
+|   |   ├── Register.data.tsx
+|   |   ├── Register.tsx
+|   |   └── Terms.tsx
+|   ├── schema
+|   |   ├── search.ts
+|   |   └── user.ts
+|   ├── index.css
+|   ├── main.tsx
+|   ├── router.tsx
+|   ├── theme.ts
+│   └── vite-env.d.ts
 
 ## Build & Run the Application
 
