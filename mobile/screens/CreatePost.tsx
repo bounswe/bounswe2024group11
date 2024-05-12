@@ -16,15 +16,21 @@ import { request } from "../components/StorageHandler";
 
 type CreatePostNavigationProp = StackNavigationProp<RootStackParamList, "Post">;
 
+const DEFAULT_SUGGESTIONS = [
+  { qid: "1", label_description: "tag1" },
+  { qid: "2", label_description: "tag2" },
+  { qid: "3", label_description: "tag3" },
+  { qid: "4", label_description: "tag4" },
+  { qid: "5", label_description: "tag5" },
+];
+
 function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
-  const [suggestions, setSuggestions] = useState([
-    { qid: "Devin", label_description: "Devin the dude" },
-    { qid: "Dan", label_description: "Dan the duke" },
-    { qid: "Dominic", label_description: "Dominic the dupe" },
-  ]); // [{key: string, value: string}]
+  const [suggestions, setSuggestions] = useState<
+    Array<{ qid: string; label_description: string }>
+  >([]); // Array<{qid: string, label_description: string}>
   const [tag, setTag] = useState("");
   const [qid, setQid] = useState("");
   const [loading, setLoading] = useState(false);
@@ -125,28 +131,30 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
           secure={false}
           image="tag"
         />
-        <FlatList
-          data={suggestions}
-          renderItem={({ item }) => (
-            <View
-              style={[
-                styles.suggestionItem,
-                {
-                  backgroundColor: theme.colors.neutral[1],
-                },
-              ]}
-            >
-              <Text
-                onPress={handleTagSuggestion(item)}
-                style={{ color: theme.colors.neutral[7] }}
+        {suggestions.length > 0 && (
+          <FlatList
+            data={suggestions}
+            renderItem={({ item }) => (
+              <View
+                style={[
+                  styles.suggestionItem,
+                  {
+                    backgroundColor: theme.colors.neutral[1],
+                  },
+                ]}
               >
-                {item.label_description}
-              </Text>
-            </View>
-          )}
-          keyExtractor={(item) => item.qid}
-          scrollEnabled={false}
-        />
+                <Text
+                  onPress={handleTagSuggestion(item)}
+                  style={{ color: theme.colors.neutral[7] }}
+                >
+                  {item.label_description}
+                </Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.qid}
+            scrollEnabled={false}
+          />
+        )}
         <ActivityIndicator
           style={{ marginVertical: 8 }}
           animating={suggestLoading}
