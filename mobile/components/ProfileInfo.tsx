@@ -8,23 +8,28 @@ import { Divider } from "react-native-paper";
 import { User, useUser } from "../context/UserContext";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "./CustomButton";
-const theme = useTheme();
 
 const ProfileInfo = (props: {user: User}) => {
   const theme = useTheme();
   const { user } = props;
   const [following, setFollowing] = useState(true);
 
-  // const onFollowPress = () => {
-  //   setFollowing(false);
-  // };
+  const onFollowPress = () => {
+    setFollowing(false);
+  };
 
-  // const onUnfollowPress = () => {
-  //   setFollowing(true);
-  // }
+  const onUnfollowPress = () => {
+    setFollowing(true);
+  }
 
   return (
-    <View>
+    <View style={[
+      styles.center,
+      {
+        flexDirection : "column", 
+        flex : 1
+      },
+    ]}>
       <Image
         source={require("../assets/zenith-logo-login.png")}
         style={styles.logo}
@@ -74,25 +79,23 @@ const ProfileInfo = (props: {user: User}) => {
         </View>
       </View>
 
-      <View>
+      <View style={styles.profileInfoBox}>
         {following ?
         
         (<CustomButton
           text="Follow"
-          // onPress={onFollowPress}
-          onPress={() => null}
+          onPress={onFollowPress}
           bgColor={theme.colors.neutral[9]}
-          textColor={theme.colors.neutral[0]}
+          textColor={theme.colors.neutral[2]}
         />) 
         
         : 
         
         (<CustomButton
           text="Unfollow"
-          // onPress={onUnfollowPress}
-          onPress={() => null}
-          bgColor={theme.colors.neutral[9]}
-          textColor={theme.colors.neutral[0]}
+          onPress={onUnfollowPress}
+          bgColor={theme.colors.neutral[2]}
+          textColor={theme.colors.neutral[9]}
         />)
 
         }

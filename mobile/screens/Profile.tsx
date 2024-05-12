@@ -38,8 +38,6 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
       <View style={styles.container}>
         {user ? (
 
-          
-
           <View
           style={[
             styles.center,
@@ -48,7 +46,10 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               flex : 1
             },
           ]}>
+
             <ProfileInfo user={user}/>
+            
+            
             <Divider style={styles.divider}/>   
 
             <Image
