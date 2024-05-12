@@ -4,7 +4,7 @@ from user.models import User
 from django.urls import reverse
 
 class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, on_update=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     text = models.TextField()
     image_src = models.URLField(blank=True, null=True)
@@ -20,14 +20,14 @@ class Post(models.Model):
         return reverse('post_detail', args=[str(self.id)])
     
 class Like(models.Model):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE, on_update=models.CASCADE)
+    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
     
     def __str__(self):
         return f"{self.user} likes {self.post}"
     
 class Bookmark(models.Model):
-    user = models.ForeignKey(User, related_name='bookmarks', on_delete=models.CASCADE, on_update=models.CASCADE)
+    user = models.ForeignKey(User, related_name='bookmarks', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='bookmarks', on_delete=models.CASCADE)
     
     def __str__(self):
