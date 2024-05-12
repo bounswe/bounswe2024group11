@@ -5,12 +5,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import BottomTab from "../components/BottomTab";
 import Auth from "./Auth";
+import Post from "./Post";
+import CreatePost from "./CreatePost";
 import { DEFAULT_USER, User, useUser } from "../context/UserContext";
-import {
-  NotSavedError,
-  compareToken,
-  getUser,
-} from "../components/StorageHandler";
+import { NotSavedError, compareToken } from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
@@ -49,6 +47,20 @@ function Home() {
           component={Auth}
           options={{
             title: "Authentication",
+          }}
+        />
+        <Stack.Screen
+          name="Post"
+          component={Post}
+          options={{
+            title: "Post",
+          }}
+        />
+        <Stack.Screen
+          name="CreatePost"
+          component={CreatePost}
+          options={{
+            title: "Create Post",
           }}
         />
       </Stack.Navigator>
