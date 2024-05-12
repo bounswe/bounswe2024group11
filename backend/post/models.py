@@ -7,7 +7,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, on_update=models.CASCADE)
     title = models.CharField(max_length=100)
     text = models.TextField()
-    image_src = models.URLField()
+    image_src = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     like_count = models.IntegerField(default=0)
