@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import { create } from "react-test-renderer";
+import CreatePostButton from "./CreatePostButton";
 
 const styles = StyleSheet.create({
   container: {
@@ -70,7 +72,6 @@ const styles = StyleSheet.create({
   searchBar: {
     height: 40,
     margin: 10,
-    backgroundColor: "white",
   },
   searchButton: {},
   authWrapper: {
@@ -144,6 +145,26 @@ const styles = StyleSheet.create({
   infoBoxText: {
     fontSize: 14,
     marginVertical: 8,
+  },
+  createPostWrapper: {
+    flex: 1,
+    display: "flex",
+    backgroundColor: "white",
+  },
+  createPostContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    flexDirection: "column",
+    padding: 24,
+  },
+  suggestionItem: {
+    flex: 1,
+    paddingVertical: 4,
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: "#d3d3d3",
+    marginVertical: 4,
   },
 });
 

@@ -4,4 +4,6 @@ export type RootStackParamList = {
   Feed: undefined;
   Search: undefined;
   Profile: undefined;
+  Post: undefined;
+  CreatePost: undefined;
 };

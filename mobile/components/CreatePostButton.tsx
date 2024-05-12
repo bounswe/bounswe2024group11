@@ -19,7 +19,9 @@ const CreatePostButton = ({
 }: {
   navigation: FeedNavigationProp;
 }) => {
-  const handleCreatePost = () => {};
+  const handleCreatePost = () => {
+    navigation.navigate("CreatePost");
+  };
 
   const theme = useTheme();
 
