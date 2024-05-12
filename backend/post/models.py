@@ -26,3 +26,9 @@ class Like(models.Model):
     def __str__(self):
         return f"{self.user} likes {self.post}"
     
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, related_name='bookmarks', on_delete=models.CASCADE, on_update=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='bookmarks', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.user} bookmarks {self.post}"
