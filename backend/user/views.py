@@ -1,3 +1,5 @@
+from requests import request
+import requests
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import User
@@ -6,6 +8,8 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from . import queries
+from . import wikidata_methods
 
 # Create your views here.
 @swagger_auto_schema(
@@ -92,3 +96,91 @@ def test_token(request):
         return Response({"user": UserSerializer(token.user).data}, status=status.HTTP_200_OK)
     except Token.DoesNotExist:
         return Response({"error":"Token not found."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@swagger_auto_schema(
+    method='get',
+    operation_description="wikidata semantic search api.",
+    operation_summary="wikidata api",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'keyword': openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=['keyword']
+    ),
+
+    responses={
+        200: "Success",
+        400: "Missing required fields",
+    },
+    operation_id='wikidata_search'
+)
+@api_view(["GET"])
+def wikidata_suggestions(request):
+    required_fields = ['keyword']
+    if not all([field in request.data for field in required_fields]):
+        return Response({"error":"Please provide a keyword."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        keyword = request.data["keyword"].lower().strip().split(" ")
+        keyword = "%20".join(keyword)
+    except:
+        return Response({"error":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
+    url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&limit=20&search={keyword}&type=item&uselang=en"
+    try:
+        response = requests.get(url)
+    except:
+        return(Response({'error': 'wrong keyword value.'}, status=400))
+    if response.status_code == 200:
+        # Parse JSON response
+        data = response.json()
+    
+        # Extract required information from the response
+        entities = []
+        for item in data.get("search", []):
+            # Check if label is a dictionary or a string
+            if isinstance(item.get("label"), dict):
+                label = item["label"]["value"]
+            else:
+                label = item.get("label", "")
+            
+            if isinstance(item.get("description"), dict):
+                description = item["description"]["value"]
+            else:
+                description = item.get("description", "")
+            
+            # Concatenate label and description with a separator
+            label_description = f"{label}: {description}"
+            entity_info = {
+                "qid": item.get("id", ""),
+                "label_description": label_description
+            }
+            entities.append(entity_info)
+
+
+        return Response(entities, status=status.HTTP_200_OK)
+    else:
+        # Handle error
+        return Response({'error': 'Failed to fetch data from Wikidata API'}, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    method="get",
+    operation_description="Search for related posts",
+    operation_summary="User enters a key. This endpoint executes a Wikidata Query. Using these results, it searches for related posts in the database.",
+    responses={
+        200: "Success",
+        400: "Missing required fields"
+    },
+    operation_id='search'
+)
+@api_view(["GET"])
+def post_search(request):
+    required_fields = ["qid", "category"]
+    if not all([field in request.data for field in required_fields]):
+        return Response({"error": "Please provide qid and category."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.data["category"] == "born in":
+        return wikidata_methods.birth_of_place_wikidata(request)
+
+    # if request.data["category"] == "enemy of":
+    #     return wikidata_methods.enemy_of_wikidata(request)
