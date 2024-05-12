@@ -34,7 +34,8 @@ export const Profile = () => {
 		post: 41,
 		followers: 100,
 		following: 5432,
-		picUrl: "https://www.google.com",
+		picUrl:
+			"https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1715520071~exp=1715520671~hmac=ffad0c38a66747334e85982464792aa4d255f65fa0de3d902ec01499171cffd5",
 	};
 	const actionData = useActionData<typeof loginAction>();
 	const isAuthError = actionData && "error" in actionData;
@@ -82,9 +83,18 @@ export const Profile = () => {
 													className: "ml-auto cursor-pointer",
 												})}
 											>
-												<div className="rounded-full bg-cyan-100 hover:ring hover:ring-cyan-200 transition-all duration-500 active:ring-cyan-900 text-cyan-900 h-10 w-10 flex items-center justify-center ">
-													{user?.username[0] || "Z"}
-												</div>
+												{user.picUrl ? (
+													<img
+														src={user.picUrl}
+														alt="User Icon"
+														width={32}
+														height={32}
+													/>
+												) : (
+													<div className="w-20 h-20 rounded-full bg-cyan-100 text-cyan-900 flex items-center justify-center ">
+														{user?.fullname[0] || "Z"}
+													</div>
+												)}
 											</button>
 										</Menu.Target>
 
@@ -148,9 +158,13 @@ export const Profile = () => {
 			<div>
 				<Container className="flex flex-col max-width:480px max-w-md items-center md:py-8 p-8 gap-6 border-2 border-slate-200 rounded-8">
 					<Box>
-						<div className="w-20 h-20 rounded-full bg-cyan-100 text-cyan-900 flex items-center justify-center ">
-							{user?.fullname[0] || "Z"}
-						</div>
+						{user.picUrl ? (
+							<img src={user.picUrl} alt="User Icon" width={80} height={80} />
+						) : (
+							<div className="w-20 h-20 rounded-full bg-cyan-100 text-cyan-900 flex items-center justify-center ">
+								{user?.fullname[0] || "Z"}
+							</div>
+						)}
 					</Box>
 					<div className="flex flex-col items-center gap-3 w-full">
 						<div className="flex flex-col items-center gap-1">
