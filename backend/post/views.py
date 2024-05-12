@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import requests
+from django.contrib.auth.decorators import login_required
 
 @swagger_auto_schema(
     method='post',
@@ -29,6 +30,7 @@ import requests
     operation_id='signup',
 )
 @api_view(['POST'])
+@login_required(login_url='login')
 def create_post(request):
     required_fields = ['title', 'text', 'author']
     if not all([field in request.data for field in required_fields]):
