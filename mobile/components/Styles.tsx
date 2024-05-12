@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import { postUser } from "./StorageHandler";
 
 const styles = StyleSheet.create({
   container: {
@@ -144,6 +145,66 @@ const styles = StyleSheet.create({
   infoBoxText: {
     fontSize: 14,
     marginVertical: 8,
+  },
+  postUserDiv: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  postUserContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingVertical: 8,
+  },
+  postTitle: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  postBottom: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  border:{
+      shadowColor: 'grey',  // Color of the shadow
+      shadowOffset: { width: 0, height: 4 },  // X and Y offset of the shadow
+      shadowOpacity: 0.3,  // Opacity of the shadow
+      shadowRadius: 2,  // Blur radius of the shadow
+      elevation: 2,  // For Android shadow effect
+      borderWidth: 0.1,
+      borderColor: '#F2F2F2',
+      borderRadius: 4,
+      padding: 12,
+      margin: 8
+
+  },
+  postContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  postContentText: {
+    paddingBottom: 12,
+    paddingTop: 16
+  },
+  postContentImg: {
+    minWidth: 250 , 
+    minHeight: 150,
+  },
+  postUserImg: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
   },
 });
 
