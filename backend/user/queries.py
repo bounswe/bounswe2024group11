@@ -33,8 +33,67 @@ SELECT DISTINCT ?enemy ?enemyLabel (SUM(?sitelink) AS ?sitelinks)
         wd:Q79037 wdt:P7047 ?enemy.
 
         ?enemy wikibase:sitelinks ?sitelink.
+        
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
         }
         GROUP BY ?enemy ?enemyLabel
+        ORDER BY DESC(?sitelinks)
+"""
+#occupation query gets an input occupation and output the characters with this occupation.
+occupation = """
+SELECT DISTINCT ?item ?itemLabel (SUM(?sitelink) AS ?sitelinks)
+        WHERE {
+        
+        ?item wdt:P31 wd:Q1114461;
+                    wdt:P106 wd:%s;
+                    rdfs:label ?itemLabel.
+
+        ?item wikibase:sitelinks ?sitelink.
+        FILTER(LANG(?itemLabel) ="en").
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        
+        }
+        GROUP BY ?item ?itemLabel
+        ORDER BY DESC(?sitelinks)
+"""
+
+present_in_work = """
+SELECT DISTINCT ?item ?itemLabel (SUM(?sitelink) AS ?sitelinks)
+        WHERE {
+        
+        ?item wdt:P31 wd:Q1114461;
+                    wdt:P1441 wd:%s.
+
+        ?item wikibase:sitelinks ?sitelink.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }
+        GROUP BY ?item ?itemLabel
+        ORDER BY DESC(?sitelinks)
+"""
+
+educated_at = """
+SELECT DISTINCT ?item ?itemLabel (SUM(?sitelink) AS ?sitelinks)
+        WHERE {
+        
+        ?item wdt:P31 wd:Q1114461;
+                    wdt:P69 wd:%s.
+
+        ?item wikibase:sitelinks ?sitelink.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }
+        GROUP BY ?item ?itemLabel
+        ORDER BY DESC(?sitelinks)
+"""
+memberOf = """
+SELECT DISTINCT ?item ?itemLabel(SUM(?sitelink) AS ?sitelinks)
+        WHERE {
+        
+        ?item wdt:P31 wd:Q1114461;
+                    wdt:P463 wd:%s.
+
+        ?item wikibase:sitelinks ?sitelink.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }
+        GROUP BY ?item ?itemLabel
         ORDER BY DESC(?sitelinks)
 """
