@@ -25,3 +25,16 @@ WHERE {
 }
 ORDER BY DESC(?sitelinks)
 """
+
+enemy_of_query = """
+SELECT DISTINCT ?enemy ?enemyLabel (SUM(?sitelink) AS ?sitelinks)
+        WHERE {
+        # Replace "INPUT_ENTITY_QID" with the QID of the input entity
+        wd:Q79037 wdt:P7047 ?enemy.
+
+        ?enemy wikibase:sitelinks ?sitelink.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }
+        GROUP BY ?enemy ?enemyLabel
+        ORDER BY DESC(?sitelinks)
+"""

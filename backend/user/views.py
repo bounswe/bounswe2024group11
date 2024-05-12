@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from . import queries
+from . import wikidata_methods
 
 # Create your views here.
 @swagger_auto_schema(
@@ -141,7 +142,7 @@ def wikidata_suggestions(request):
             # Concatenate label and description with a separator
             label_description = f"{label}: {description}"
             entity_info = {
-                "id": item.get("id", ""),
+                "qid": item.get("id", ""),
                 "label_description": label_description
             }
             entities.append(entity_info)
@@ -167,48 +168,9 @@ def post_search(request):
     required_fields = ["qid", "category"]
     if not all([field in request.data for field in required_fields]):
         return Response({"error": "Please provide qid and category."}, status=status.HTTP_400_BAD_REQUEST)
-    qid = request.data["qid"]
-    category = request.data["category"]
-    birthOfPlace_query_formatted = queries.birthOfPlace_query%qid
-    birthOfPlace_query_params = {
-            'query': birthOfPlace_query_formatted,
-            'format': 'json'  # Response format
-    }
-    # API endpoint
-    url = 'https://query.wikidata.org/sparql'
-
-    # Make the API call
-    try:
-        birthOfPlace_response = requests.get(url, params=birthOfPlace_query_params)
-    except:
-        return(Response({'error': 'Wrong query format.'}, status=400))
-
-    #character_response = requests.get(url, params=character_params)
     
-    # Check if the request was successful
-    if birthOfPlace_response.status_code == 200 :
-        
-        # Parse JSON response
-        birth_data = birthOfPlace_response.json()
-        #character_data = character_response.json()
+    if request.data["category"] == "born in":
+        return wikidata_methods.birth_of_place_wikidata(request)
 
-        
-
-        birth_of_results = [{'type': 'character', 
-                            'label': item['itemLabel']['value'], 
-                            'description': item['itemDescription']['value'],
-                            'place': item.get('placeOfBirthLabel',{}).get('value','Unknown'),
-                            'siteLinks': item.get('sitelinks',{}).get('value','Unknown'),
-
-
-                            } for item in birth_data['results']['bindings']]
-        
-
-        combined_results = birth_of_results
-        
-        #print(combined_results)
-        
-        
-        return Response({'keyword': qid, 'results': combined_results})
-    else:
-        return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
+    # if request.data["category"] == "enemy of":
+    #     return wikidata_methods.enemy_of_wikidata(request)
