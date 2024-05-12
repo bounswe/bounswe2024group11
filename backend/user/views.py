@@ -10,6 +10,8 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from . import queries
 from . import wikidata_methods
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 
 # Create your views here.
 @swagger_auto_schema(
@@ -118,14 +120,16 @@ def test_token(request):
 )
 @api_view(["GET"])
 def wikidata_suggestions(request):
-    required_fields = ['keyword']
-    if not all([field in request.data for field in required_fields]):
+    keyword = request.GET.get("keyword", None)    
+    if not keyword:
         return Response({"error":"Please provide a keyword."}, status=status.HTTP_400_BAD_REQUEST)
-    try:
-        keyword = request.data["keyword"].lower().strip().split(" ")
-        keyword = "%20".join(keyword)
-    except:
-        return Response({"error":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
+    keyword = keyword.lower().strip().split(" ")
+    keyword = "%20".join(keyword)
+    # try:
+    #     keyword = request.data["keyword"].lower().strip().split(" ")
+    #     keyword = "%20".join(keyword)
+    # except:
+    #     return Response({"error":"Please provide a valid keyword."}, status=status.HTTP_400_BAD_REQUEST)
     url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&limit=20&search={keyword}&type=item&uselang=en"
     try:
         response = requests.get(url)
@@ -175,11 +179,12 @@ def wikidata_suggestions(request):
 )
 @api_view(["GET"])
 def post_search(request):
-    required_fields = ["qid", "category"]
-    if not all([field in request.data for field in required_fields]):
+    qid = request.GET.get("qid", None)
+    category = request.GET.get("category", None)
+    if not qid or not category:
         return Response({"error": "Please provide qid and category."}, status=status.HTTP_400_BAD_REQUEST)
     
-    if request.data["category"] == "born in":
+    if category == "born in":
         return wikidata_methods.birth_of_place_wikidata(request)
 
     # if request.data["category"] == "enemy of":

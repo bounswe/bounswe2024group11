@@ -5,14 +5,12 @@ meta {
 }
 
 get {
-  url: {{base_url}}:{{port}}/api/v1/users/post-search
+  url: {{base_url}}:{{port}}/api/v1/users/post-search?qid=Q1546&category=born in
   body: json
   auth: none
 }
 
-body:json {
-  {
-    "qid":"Q1546",
-    "category":"born in"
-  }
+query {
+  qid: Q1546
+  category: born in
 }
