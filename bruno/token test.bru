@@ -6,6 +6,12 @@ meta {
 
 post {
   url: {{base_url}}:{{port}}/api/v1/users/test_token
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "token":"ed720ec4fb70bcd62ae90c48dc20b5bb589e88db"
+  }
 }
