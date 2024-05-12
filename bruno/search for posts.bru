@@ -1,0 +1,11 @@
+meta {
+  name: search for posts
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/v1/users/wikidata-suggestions
+  body: none
+  auth: none
+}
