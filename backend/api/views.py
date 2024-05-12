@@ -1,13 +1,24 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from user.models import User
-from .serializer import UserSerializer
+from .serializer import UserSerializer, ProfileSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+
+from rest_framework.permissions import IsAuthenticated
+from profiles.models import Profile
+
 import requests
+
+
+
+
+
+
+
 
 @swagger_auto_schema(
     method='post',
@@ -82,6 +93,31 @@ def login(request):
     token, created = Token.objects.get_or_create(user=user)
     serializer = UserSerializer(instance=user)
     return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_200_OK)
+
+
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile_retrieve(request, username):
+    try:
+        user = User.objects.get(username=username)
+        profile = Profile.objects.get(user=user)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Profile.DoesNotExist:
+        return Response({"error": "Profile not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+# views.py
+
+
 
 
 #@api_view(['GET'])

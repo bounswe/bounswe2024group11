@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'user',
     'drf_yasg',
     'corsheaders',
+    'profiles'
 ]
 
 AUTH_USER_MODEL = 'user.User'
