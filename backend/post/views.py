@@ -1,14 +1,40 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-# from user.models import User
-# from .serializer import UserSerializer
+from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework.authtoken.models import Token
+from rest_framework import permissions
+from .models import Post, Like, Bookmark
+from .serializers import PostSerializer, LikeSerializer, BookmarkSerializer
+from user.models import User
+
+# from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-import requests
+# import requests
 from django.contrib.auth.decorators import login_required
+
+class PostListAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        data = {
+            'author': request.author.id,
+            'title': request.data.get('title'),
+            'text': request.data.get('text'),
+            'image': request.data.get('image', None)
+        }
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
     method='post',
