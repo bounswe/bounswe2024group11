@@ -17,21 +17,50 @@ from django.contrib.auth.decorators import login_required
 class PostListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
+    # @swagger_auto_schema(
+    #     method='get',
+    #     operation_description="Get a list of all posts.",
+    #     operation_summary="get post list",
+    #     responses={
+    #         200: "OK"
+    #     },
+    #     operation_id='post_list',
+    # )
+    # @api_view(['GET'])
     def get(self, request, *args, **kwargs):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    # @swagger_auto_schema(
+    #     method='post',
+    #     operation_description="Create a new post with a title, a content, and an image.",
+    #     operation_summary="create a post",
+    #     request_body=openapi.Schema(
+    #         type=openapi.TYPE_OBJECT,
+    #         properties={
+    #             'title': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'text': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'image': openapi.Schema(type=openapi.TYPE_STRING),
+    #         },
+    #         required=['title', 'text']
+    #     ),
+    #     responses={
+    #         201: "Created",
+    #         400: "Missing required fields"
+    #     },
+    #     operation_id='create_post',
+    # )
+    # @api_view(['POST'])
     def post(self, request, *args, **kwargs):
         data = {
-            'author': request.author.id,
             'title': request.data.get('title'),
             'text': request.data.get('text'),
             'image': request.data.get('image', None)
         }
         serializer = PostSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
