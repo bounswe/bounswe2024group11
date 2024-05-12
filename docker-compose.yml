@@ -45,5 +45,14 @@ services:
         depends_on:
             - backend
 
+    nginx:
+        image: nginx:1.25.5-alpine
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+        ports:
+            - "80:80"
+        depends_on:
+            - web
+
 volumes:
     db_data:
