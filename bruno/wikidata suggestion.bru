@@ -1,0 +1,17 @@
+meta {
+  name: wikidata suggestion
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/v1/users/wikidata-suggestions
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "keyword":"new york"
+  }
+}
