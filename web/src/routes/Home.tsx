@@ -18,6 +18,7 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import InfoBox from "../components/InfoBox";
 import type { InfoBoxProps } from "../components/InfoBox";
+import Post from "../components/Post";
 
 const CATEGORIES = [
 	"born in",
@@ -218,7 +219,7 @@ export const Home = () => {
 				</Container>
 			</div>
 			<div>
-				{validResults && (
+				{validResults ? (
 					<Container className="flex flex-col gap-4 py-8">
 						<div className="flex gap-1 justify-between">
 							<h1 className="font-regular text-lg">
@@ -234,6 +235,24 @@ export const Home = () => {
 								return <InfoBox key={result.label} {...result} />;
 							})}
 						</div>
+					</Container>
+				) : (
+					<Container>
+						<h1>Feed</h1>
+						<Post
+							author={1}
+							id={0}
+							bookmarkcount={31}
+							likecount={41}
+							title={"A new beginning"}
+							text={
+								"Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something."
+							}
+							image={
+								"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp"
+							}
+							tag={"space"}
+						/>
 					</Container>
 				)}
 				<StripBG />
