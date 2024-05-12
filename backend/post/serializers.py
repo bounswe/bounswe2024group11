@@ -8,15 +8,15 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class LikeSerializer(serializers.ModelSerializer):
-    # author = serializers.ReadOnlyField(source='user.username')
-    # post = serializers.ReadOnlyField(source='post.title')
+    author = serializers.ReadOnlyField(source='user.username')
+    post = serializers.ReadOnlyField(source='post.title')
     class Meta:
         model = Like
         fields = '__all__'
 
 class BookmarkSerializer(serializers.ModelSerializer):
-    # author = serializers.ReadOnlyField(source='user.username')
-    # post = serializers.ReadOnlyField(source='post.title')
+    author = serializers.ReadOnlyField(source='user.username')
+    post = serializers.ReadOnlyField(source='post.title')
     class Meta:
         model = Bookmark
         fields = '__all__'
