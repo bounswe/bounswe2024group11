@@ -10,6 +10,7 @@ import CreatePostButton from "../components/CreatePostButton";
 import { RootStackParamList } from "../components/Types";
 import { useUser } from "../context/UserContext";
 import { styles } from "../components/Styles";
+import { isNewBackTitleImplementation } from "react-native-screens";
 
 type FeedNavigationProp = MaterialBottomTabNavigationProp<
   RootStackParamList,
@@ -18,6 +19,12 @@ type FeedNavigationProp = MaterialBottomTabNavigationProp<
 
 function Feed({ navigation }: { navigation: FeedNavigationProp }) {
   const { user, setUser } = useUser();
+
+  const onClick = () => {
+    console.log("Post clicked");
+
+    navigation.navigate("Post");
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>

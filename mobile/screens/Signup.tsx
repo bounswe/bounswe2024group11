@@ -20,9 +20,9 @@ import { ActivityIndicator, Divider } from "react-native-paper";
 
 import {
   saveToken,
-  postUser,
   InvalidCredentialsError,
   NonuniquenessError,
+  request,
 } from "../components/StorageHandler";
 
 type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
@@ -46,11 +46,12 @@ const Signup = ({
 
   const onSignupPress = () => {
     setLoading(true);
-    postUser({
+    request({
+      method: "POST",
       body: {
-        fullname: fullname,
-        email: email,
-        username: username,
+        fullname: fullname.trim(),
+        email: email.trim(),
+        username: username.trim(),
         password: password,
       },
       endpoint: "user/signup",

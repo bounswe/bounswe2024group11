@@ -4,6 +4,13 @@ import { User } from "../context/UserContext";
 
 const URI = "http://159.65.125.158:8000";
 
+type RequestProps = {
+  method: "GET" | "POST";
+  endpoint: string;
+  body: { [key: string]: string };
+  token?: string;
+};
+
 export class InvalidCredentialsError extends Error {
   constructor() {
     super("Invalid credentials");
@@ -32,76 +39,23 @@ export class NotSavedError extends Error {
   }
 }
 
-export const getUser = async (props: { token: string; endpoint: string }) => {
-  const getUserRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${props.token}`,
-    },
-  });
-
-  return fetch(getUserRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 401:
-        throw new InvalidCredentialsError();
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  });
-};
-
-export const getSearch = async (props: {
-  body: { [key: string]: string };
-  endpoint: string;
-}) => {
+export const request = async (props: RequestProps) => {
   const formData = new FormData();
   for (const key in props.body) {
     formData.append(key, props.body[key]);
   }
-  const getSearchRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "POST",
+  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: props.method,
     body: formData,
+    headers: props.token ? { Authorization: `token ${props.token}` } : {},
   });
-
-  return fetch(getSearchRequest).then((response) => {
+  return fetch(getRequest).then((response) => {
     switch (response.status) {
       case 200:
       case 201:
         return response.json();
       case 400:
         throw new NotFoundError();
-      case 401:
-        throw new InvalidCredentialsError();
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  });
-};
-
-export const postUser = async (props: {
-  body: { [key: string]: string };
-  endpoint: string;
-}) => {
-  const formData = new FormData();
-  for (const key in props.body) {
-    formData.append(key, props.body[key]);
-  }
-
-  const postUserRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  return fetch(postUserRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 400:
-        throw new NonuniquenessError();
       case 401:
         throw new InvalidCredentialsError();
       default:
