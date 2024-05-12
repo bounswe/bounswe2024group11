@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -16,9 +16,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    # path('test_token', views.test_token, name="test_token"),
-    path('signup', views.register, name="signup"),
-    path('login', views.login, name="login"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('search/', views.search, name="search"),
+    path('users/', include('user.urls')),
 ]
