@@ -1,0 +1,18 @@
+meta {
+  name: enemy of - search for posts
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/v1/users/post-search
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "qid": "Q79037",
+    "category": "enemy of"
+  }
+}

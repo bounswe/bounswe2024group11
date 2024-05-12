@@ -1,0 +1,18 @@
+meta {
+  name: born in - search for posts
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/v1/users/post-search
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "qid": "Q1546",
+    "category": "born in"
+  }
+}

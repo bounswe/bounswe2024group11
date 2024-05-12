@@ -172,5 +172,5 @@ def post_search(request):
     if request.data["category"] == "born in":
         return wikidata_methods.birth_of_place_wikidata(request)
 
-    # if request.data["category"] == "enemy of":
-    #     return wikidata_methods.enemy_of_wikidata(request)
+    if request.data["category"] == "enemy of":
+        return wikidata_methods.enemy_of_wikidata(request)

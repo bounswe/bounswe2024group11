@@ -6,7 +6,6 @@ from . import queries
 
 def birth_of_place_wikidata(request):
     qid = request.data["qid"]
-    category = request.data["category"]
     birthOfPlace_query_formatted = queries.birthOfPlace_query%qid
     birthOfPlace_query_params = {
             'query': birthOfPlace_query_formatted,
@@ -33,6 +32,7 @@ def birth_of_place_wikidata(request):
         
 
         birth_of_results = [{'type': 'character', 
+                             'qid': item['item']['value'].split('/')[-1],
                             'label': item['itemLabel']['value'], 
                             'description': item['itemDescription']['value'],
                             'place': item.get('placeOfBirthLabel',{}).get('value','Unknown'),
@@ -52,3 +52,47 @@ def birth_of_place_wikidata(request):
         return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
     
 
+def enemy_of_wikidata(request):
+    qid = request.data["qid"]
+    enemy_of_query_formatted = queries.enemy_of_query%qid
+    enemy_of_query_params = {
+            'query': enemy_of_query_formatted,
+            'format': 'json'  # Response format
+    }
+    # API endpoint
+    url = 'https://query.wikidata.org/sparql'
+
+    # Make the API call
+
+    try:
+        enemy_of_response = requests.get(url, params=enemy_of_query_params)
+    except:
+        return(Response({'error': 'Wrong query format.'}, status=400))
+    
+    # Check if the request was successful
+    if enemy_of_response.status_code == 200 :
+        
+        # Parse JSON response
+        enemy_data = enemy_of_response.json()
+        print(enemy_data)
+        #character_data = character_response.json()
+
+        
+
+        enemy_of_results = [{'type': 'character', 
+                             'qid': item['enemy']['value'].split('/')[-1],
+                            'label': item['enemyLabel']['value'], 
+                            'siteLinks': item.get('sitelinks',{}).get('value','Unknown'),
+
+
+                            } for item in enemy_data['results']['bindings']]
+        
+
+        combined_results = enemy_of_results
+        
+        #print(combined_results)
+        
+        
+        return Response({'keyword': qid, 'results': combined_results})
+    else:
+        return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
