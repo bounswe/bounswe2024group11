@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import ProfileHeader from "./ProfileHeader";
 
 const styles = StyleSheet.create({
   container: {
@@ -145,6 +146,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: 8,
   },
+  profileHeader: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  profileSubHeader: {
+    fontSize: 12,
+    color: "grey",
+  },
+  profileInfoBox: {
+    display: 'flex',
+    flexDirection: "row"
+  },
+  profileChildBox: {
+    borderRightWidth: 1,
+    borderRightColor: "grey",
+    paddingHorizontal: 20,
+    paddingVertical: 10, 
+  }
 });
 
 export { styles };
