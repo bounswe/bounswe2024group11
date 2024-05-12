@@ -86,6 +86,16 @@ def login(request):
     serializer = UserSerializer(instance=user)
     return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def test_token(request):
+    required_fields = ['token']
+    if not all([field in request.data for field in required_fields]):
+        return Response({"error":"Please provide a token."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        token = Token.objects.get(key=request.data['token'])
+        return Response({"user": UserSerializer(token.user).data}, status=status.HTTP_200_OK)
+    except Token.DoesNotExist:
+        return Response({"error":"Token not found."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(
