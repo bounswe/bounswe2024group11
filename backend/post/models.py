@@ -18,3 +18,11 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])
+    
+class Like(models.Model):
+    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE, on_update=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.user} likes {self.post}"
+    
