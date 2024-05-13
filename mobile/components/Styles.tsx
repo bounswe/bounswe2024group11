@@ -1,6 +1,4 @@
 import { StyleSheet } from "react-native";
-import { useTheme } from "../context/ThemeContext";
-import ProfileHeader from "./ProfileHeader";
 
 const styles = StyleSheet.create({
   container: {
@@ -71,7 +69,6 @@ const styles = StyleSheet.create({
   searchBar: {
     height: 40,
     margin: 10,
-    backgroundColor: "white",
   },
   searchButton: {},
   authWrapper: {
@@ -155,15 +152,94 @@ const styles = StyleSheet.create({
     color: "grey",
   },
   profileInfoBox: {
-    display: 'flex',
-    flexDirection: "row"
+    display: "flex",
+    flexDirection: "row",
   },
   profileChildBox: {
     borderRightWidth: 1,
     borderRightColor: "grey",
     paddingHorizontal: 20,
-    paddingVertical: 10, 
-  }
+    paddingVertical: 10,
+  },
+  postUserDiv: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  postUserContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingVertical: 8,
+  },
+  postTitle: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  postBottom: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  border: {
+    shadowColor: "grey", // Color of the shadow
+    shadowOffset: { width: 0, height: 4 }, // X and Y offset of the shadow
+    shadowOpacity: 0.3, // Opacity of the shadow
+    shadowRadius: 2, // Blur radius of the shadow
+    elevation: 2, // For Android shadow effect
+    borderWidth: 0.1,
+    borderColor: "#F2F2F2",
+    borderRadius: 4,
+    padding: 12,
+    margin: 8,
+  },
+  postContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  postContentText: {
+    paddingBottom: 12,
+    paddingTop: 16,
+  },
+  postContentImg: {
+    minWidth: 250,
+    minHeight: 150,
+  },
+  postUserImg: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
+  },
+  createPostWrapper: {
+    flex: 1,
+    display: "flex",
+    backgroundColor: "white",
+  },
+  createPostContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    flexDirection: "column",
+    padding: 24,
+  },
+  suggestionItem: {
+    flex: 1,
+    paddingVertical: 4,
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: "#d3d3d3",
+    marginVertical: 4,
+  },
 });
 
 export { styles };

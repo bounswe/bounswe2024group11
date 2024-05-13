@@ -34,8 +34,8 @@ import { useTheme } from "../context/ThemeContext";
 
 import {
   saveToken,
-  postUser,
   InvalidCredentialsError,
+  request,
 } from "../components/StorageHandler";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
@@ -61,8 +61,9 @@ const Login = ({
 
   const onLoginPress = () => {
     setLoading(true);
-    postUser({
-      body: { username: username, password: password },
+    request({
+      method: "POST",
+      body: { username: username.trim(), password: password },
       endpoint: "user/login",
     })
       .then((data) => {

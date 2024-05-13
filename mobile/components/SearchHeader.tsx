@@ -4,7 +4,6 @@ import { View } from "react-native";
 import { Appbar, IconButton, Searchbar } from "react-native-paper";
 
 import { styles } from "./Styles";
-import { getSearch } from "./StorageHandler";
 
 const SearchHeader = (props: {
   onChangeText: (query: string) => void;

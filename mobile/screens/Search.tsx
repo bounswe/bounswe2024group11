@@ -7,7 +7,7 @@ import Dropdown from "react-native-paper-dropdown";
 import SearchHeader from "../components/SearchHeader";
 import InfoBox from "../components/InfoBox";
 import { styles } from "../components/Styles";
-import { NotFoundError, getSearch } from "../components/StorageHandler";
+import { NotFoundError, request } from "../components/StorageHandler";
 import { useTheme } from "../context/ThemeContext";
 
 const searchList = [
@@ -40,10 +40,11 @@ function Search() {
   ) => {
     setLoading(true);
     const query = dropdownValue
-      ? `${dropdownValue} ${searchQuery}`
+      ? `${dropdownValue} ${searchQuery.trim()}`
       : searchQuery;
     setSearchResults([]);
-    getSearch({
+    request({
+      method: "POST",
       body: {
         keyword: query,
       },
