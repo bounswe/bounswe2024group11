@@ -7,7 +7,7 @@ import Dropdown from "react-native-paper-dropdown";
 import SearchHeader from "../components/SearchHeader";
 import InfoBox from "../components/InfoBox";
 import { styles } from "../components/Styles";
-import { NotFoundError, request } from "../components/StorageHandler";
+import { BadRequestError, post } from "../components/StorageHandler";
 import { useTheme } from "../context/ThemeContext";
 
 const searchList = [
@@ -43,9 +43,8 @@ function Search() {
       ? `${dropdownValue} ${searchQuery.trim()}`
       : searchQuery;
     setSearchResults([]);
-    request({
-      method: "POST",
-      body: {
+    post({
+      data: {
         keyword: query,
       },
       endpoint: "user/search/",
@@ -56,7 +55,7 @@ function Search() {
       .catch((error) => {
         console.error(error);
         setHatakodu(error);
-        if (error instanceof NotFoundError) {
+        if (error instanceof BadRequestError) {
           setNoResults(true);
         } else {
           setPanic(true);

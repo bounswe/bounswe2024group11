@@ -12,7 +12,7 @@ import { useTheme } from "../context/ThemeContext";
 import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { request } from "../components/StorageHandler";
+import { post, get } from "../components/StorageHandler";
 
 type CreatePostNavigationProp = StackNavigationProp<RootStackParamList, "Post">;
 
@@ -43,10 +43,9 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
       console.log("Please select a tag using suggestions");
     }
     setLoading(true);
-    request({
-      method: "POST",
+    post({
       endpoint: "api/v1/posts/create",
-      body: {
+      data: {
         title,
         content,
         image,
@@ -80,10 +79,9 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
 
   const fetchSuggestions = () => {
     if (tag.length > 0) {
-      request({
-        method: "GET",
+      get({
         endpoint: "api/v1/users/fetch-suggestions",
-        body: { keyword: tag },
+        data: { keyword: tag },
       })
         .then((response) => {
           setSuggestions(response.results);
