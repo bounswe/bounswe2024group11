@@ -73,26 +73,28 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   const handleTagChange = (tag: string) => {
     setTag(tag);
     setQid("");
-    setSuggestLoading(true);
     fetchSuggestions();
   };
 
   const fetchSuggestions = () => {
-    if (tag.length > 0) {
-      get({
-        endpoint: "api/v1/users/fetch-suggestions",
-        data: { keyword: tag },
-      })
-        .then((response) => {
-          setSuggestions(response.results);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setSuggestLoading(false);
-        });
+    if (tag.trim().length === 0) {
+      setSuggestions([]);
+      return;
     }
+    setSuggestLoading(true);
+    get({
+      endpoint: "api/v1/users/wikidata-suggestions",
+      data: { keyword: tag.trim() },
+    })
+      .then((response) => {
+        setSuggestions(response.results);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setSuggestLoading(false);
+      });
   };
 
   return (

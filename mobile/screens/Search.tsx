@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, FlatList } from "react-native";
 
 import Dropdown from "react-native-paper-dropdown";
 
 import SearchHeader from "../components/SearchHeader";
 import InfoBox from "../components/InfoBox";
 import { styles } from "../components/Styles";
-import { BadRequestError, post } from "../components/StorageHandler";
+import { BadRequestError, post, get } from "../components/StorageHandler";
 import { useTheme } from "../context/ThemeContext";
 
-const searchList = [
+const categoryList = [
   { label: "born in", value: "born in" },
   { label: "from universe", value: "from universe" },
   { label: "from the comics", value: "from the comics" },
@@ -19,15 +19,51 @@ const searchList = [
 
 function Search() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [dropdownValue, setDropdownValue] = useState(searchList[0].value);
+  const [dropdownValue, setDropdownValue] = useState(categoryList[0].value);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [panic, setPanic] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const [hatakodu, setHatakodu] = useState("");
+  const [suggestions, setSuggestions] = useState<
+    Array<{ qid: string; label_description: string }>
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const [qid, setQid] = useState("");
 
   const onChangeText = (query: string) => {
     setSearchQuery(query);
+    setQid("");
+    fetchSuggestions();
+  };
+
+  const handleTagSuggestion =
+    (item: { qid: string; label_description: string }) => () => {
+      setSearchQuery(item.label_description);
+      setQid(item.qid);
+    };
+
+  const fetchSuggestions = () => {
+    if (searchQuery.trim().length === 0) {
+      setSuggestions([]);
+      return;
+    }
+    setLoading(true);
+    get({
+      endpoint: "api/v1/users/wikidata-suggestions",
+      data: {
+        keyword: searchQuery.trim(),
+      },
+    })
+      .then((response) => {
+        setSuggestions(response.results);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -35,17 +71,13 @@ function Search() {
     setNoResults(false);
   }, [searchQuery]);
 
-  const onSearch = (
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
+  const onSearch = () => {
     setLoading(true);
-    const query = dropdownValue
-      ? `${dropdownValue} ${searchQuery.trim()}`
-      : searchQuery;
     setSearchResults([]);
     post({
       data: {
-        keyword: query,
+        keyword: searchQuery.trim(),
+        category: dropdownValue,
       },
       endpoint: "user/search/",
     })
@@ -74,7 +106,34 @@ function Search() {
         onChangeText={onChangeText}
         value={searchQuery}
         onSearch={onSearch}
+        loading={loading}
       />
+      {suggestions.length > 0 && (
+        <View style={styles.searchSuggestionsContainer}>
+          <FlatList
+            data={suggestions}
+            renderItem={({ item }) => (
+              <View
+                style={[
+                  styles.suggestionItem,
+                  {
+                    backgroundColor: theme.colors.neutral[1],
+                  },
+                ]}
+              >
+                <Text
+                  onPress={handleTagSuggestion(item)}
+                  style={{ color: theme.colors.neutral[7] }}
+                >
+                  {item.label_description}
+                </Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.qid}
+            scrollEnabled={false}
+          />
+        </View>
+      )}
       <View style={styles.dropDownMenu}>
         <Dropdown
           label="Category"
@@ -84,7 +143,7 @@ function Search() {
           visible={dropdownVisible}
           showDropDown={() => setDropdownVisible(true)}
           onDismiss={() => setDropdownVisible(false)}
-          list={searchList}
+          list={categoryList}
           dropDownContainerMaxHeight={240}
           dropDownItemSelectedTextStyle={{ color: theme.colors.cyan[3] }}
         />
