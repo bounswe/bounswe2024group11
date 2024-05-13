@@ -77,7 +77,7 @@ function Search() {
     post({
       data: {
         keyword: searchQuery.trim(),
-        category: dropdownValue,
+        category: qid,
       },
       endpoint: "user/search/",
     })

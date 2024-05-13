@@ -5,16 +5,16 @@ meta {
 }
 
 post {
-  url: {{base_url}}:{{port}}/user/signup
+  url: {{base_url}}:{{port}}/api/v1/users/signup
   body: json
   auth: none
 }
 
 body:json {
   {
-    "username": "username1",
-    "email": "user1@email.com",
-    "password": "pass1",
-    "fullname":"Username1"
+    "username": "username3",
+    "email": "user3@email.com",
+    "password": "pass3",
+    "fullname":"Username3"
   }
 }

@@ -54,6 +54,23 @@ cp web/.env.example web/.env
 You can take the credentials for the test/deployment environment by contacting with the contributors of this repo.
 Or you can use your credentials for development purposes.
 
+- If you want to build this application in your local environment, you don't need to change the default `.env` values after copying them from `.env.example` files.
+
+- If you want to deploy this application to another host machine other than your local environment, you need to update the `.env` file under `./web` directory and the `settings.py` file under `./backend/config` directory.
+
+For `./web/.env` file:
+```bash 
+VITE_BACKEND_URL=<IP_OF_HOST_MACHINE>:8000
+```
+For `./backend/config/setting.py` file:
+```bash
+...
+CORS_ALLOWED_ORIGINS=[
+...,
+"http://<IP_OF_HOST_MACHINE>:5173",
+"https://<IP_OF_HOST_MACHINE>:5173",
+]
+```
 
 - Install Docker and Docker Compose
 

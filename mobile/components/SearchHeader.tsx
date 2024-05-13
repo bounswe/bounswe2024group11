@@ -20,7 +20,9 @@ const SearchHeader = (props: {
               placeholder="Search for content..."
               onChangeText={props.onChangeText}
               onClearIconPress={() => props.onChangeText("")}
-              onIconPress={props.onSearch}
+              onIconPress={() => {
+                props.onSearch();
+              }}
               value={props.value}
               style={styles.searchBar}
               loading={props.loading}

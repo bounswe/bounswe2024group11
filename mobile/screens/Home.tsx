@@ -8,7 +8,7 @@ import Auth from "./Auth";
 import Post from "./Post";
 import CreatePost from "./CreatePost";
 import { DEFAULT_USER, User, useUser } from "../context/UserContext";
-import { NotSavedError, compareToken } from "../components/StorageHandler";
+import { BadRequestError, compareToken } from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
@@ -27,7 +27,7 @@ function Home() {
         setUser(user);
       })
       .catch((error) => {
-        if (error instanceof NotSavedError) {
+        if (error instanceof BadRequestError) {
         } else {
           console.log(error);
         }
