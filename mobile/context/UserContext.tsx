@@ -12,16 +12,18 @@ export type User = {
   id: number;
   username: string;
   email: string;
-  lastLogin: string | null;
-  dateJoined: string;
+  last_login: string | null;
+  date_joined: string;
+  fullname: string;
 };
 
 export const DEFAULT_USER: User = {
   id: 0,
   username: "mobile_test_user",
   email: "mobile_test_user@test.com",
-  lastLogin: "0101010",
-  dateJoined: "0101010",
+  last_login: "0101010",
+  date_joined: "0101010",
+  fullname: "10101",
 };
 
 type UserContextType = {
