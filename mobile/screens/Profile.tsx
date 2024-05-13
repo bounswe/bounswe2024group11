@@ -1,13 +1,10 @@
 import React from "react";
 
 import { View, Text } from "react-native";
-import { Button, Divider } from "react-native-paper";
+import { Button } from "react-native-paper";
 
-import {
-  StyleSheet,
-  Image,
-  ImageSourcePropType,
-} from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { StyleSheet, Image, ImageSourcePropType } from "react-native";
 
 import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
 
@@ -15,9 +12,9 @@ import { RootStackParamList } from "../components/Types";
 import ProfileHeader from "../components/ProfileHeader";
 import { useUser } from "../context/UserContext";
 import { styles } from "../components/Styles";
-import { ScrollView } from "react-native-gesture-handler";
+import { useTheme } from "../context/ThemeContext";
 
-import ProfileInfo from "../components/ProfileInfo"
+import ProfileInfo from "../components/ProfileInfo";
 import CustomOutput from "../components/CustomOutput";
 
 type ProfileNavigationProp = MaterialBottomTabNavigationProp<
@@ -27,60 +24,53 @@ type ProfileNavigationProp = MaterialBottomTabNavigationProp<
 
 function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
   const { user } = useUser();
+  const theme = useTheme();
   return (
-    <ScrollView style={[
-      styles.container,
-      {
-        flexDirection : "column",
-      }
-      ]}>
+    <ScrollView
+      style={[
+        styles.container,
+        {
+          flexDirection: "column",
+        },
+      ]}
+    >
       <ProfileHeader navigation={navigation} />
       <View style={styles.container}>
         {user ? (
-
           <View
-          style={[
-            styles.center,
-            {
-              flexDirection : "column", 
-              flex : 1
-            },
-          ]}>
-
-            <ProfileInfo user={user}/>
-            
-            
-            <Divider style={styles.divider}/>   
-
+            style={[
+              styles.center,
+              {
+                flexDirection: "column",
+                flex: 1,
+              },
+            ]}
+          >
+            <ProfileInfo user={user} />
+            {/* <Divider style={styles.divider}/>   
             <Image
               source={require("../assets/zenith-logo-login.png")}
               style={styles.logo}
               resizeMethod="scale"
               resizeMode="contain"
             />
-
             <Divider style={styles.divider}/>   
-
             <CustomOutput
               field_name="Full Name"
               value={user.fullname}
               image="account"
             />
-
             <CustomOutput
               field_name="E-mail"
               value={user.email}
               image="email"
             />
-
             <CustomOutput
               field_name="User Name"
               value={user.username}
               image="heart"
-            />
-            
+            />          
             <Divider style={styles.divider}/>
-            
             <View
             style={[
               styles.center,
@@ -90,7 +80,6 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
                 paddingHorizontal: 10       
               },
             ]}>
-
               <View>
                 <Text>
                   Posts
@@ -116,12 +105,8 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
                 </Text>
               </View>
             </View>
-            
+            */}
           </View>
-          
-          
-          
-          
         ) : (
           <View
             style={[
@@ -131,11 +116,11 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               },
             ]}
           >
-          <Text style={{ padding: 10 }}>Log in to view your profile</Text>
+            <Text style={{ padding: 10 }}>Log in to view your profile</Text>
             <Button
               onPress={() => navigation.navigate("Auth")}
               style={styles.headerButton}
-              labelStyle={{ color: "white" }}
+              labelStyle={{ color: theme.colors.neutral[0] }}
             >
               Log in
             </Button>
