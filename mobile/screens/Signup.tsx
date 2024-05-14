@@ -1,13 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -18,12 +11,7 @@ import { styles } from "../components/Styles";
 import { useTheme } from "../context/ThemeContext";
 import { ActivityIndicator, Divider } from "react-native-paper";
 
-import {
-  saveToken,
-  postUser,
-  InvalidCredentialsError,
-  NonuniquenessError,
-} from "../components/StorageHandler";
+import { saveToken, post } from "../components/StorageHandler";
 
 type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -46,11 +34,11 @@ const Signup = ({
 
   const onSignupPress = () => {
     setLoading(true);
-    postUser({
-      body: {
-        fullname: fullname,
-        email: email,
-        username: username,
+    post({
+      data: {
+        fullname: fullname.trim(),
+        email: email.trim(),
+        username: username.trim(),
         password: password,
       },
       endpoint: "user/signup",
@@ -63,7 +51,7 @@ const Signup = ({
         }, 1500);
       })
       .catch((error) => {
-        if (error instanceof NonuniquenessError) {
+        if (error) {
           setInvalid(true);
         } else {
           setPanic(true);

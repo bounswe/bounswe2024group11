@@ -1,25 +1,11 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 import {
   ActivityIndicator,
   Button,
   Checkbox,
   Divider,
-  PaperProvider,
 } from "react-native-paper";
 
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -34,8 +20,8 @@ import { useTheme } from "../context/ThemeContext";
 
 import {
   saveToken,
-  postUser,
-  InvalidCredentialsError,
+  UnauthorizedError,
+  post,
 } from "../components/StorageHandler";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
@@ -61,8 +47,8 @@ const Login = ({
 
   const onLoginPress = () => {
     setLoading(true);
-    postUser({
-      body: { username: username, password: password },
+    post({
+      data: { username: username.trim(), password: password },
       endpoint: "user/login",
     })
       .then((data) => {
@@ -74,7 +60,7 @@ const Login = ({
         navigation.navigate("Home");
       })
       .catch((error) => {
-        if (error instanceof InvalidCredentialsError) {
+        if (error instanceof UnauthorizedError) {
           setInvalid(true);
         } else {
           setPanic(true);

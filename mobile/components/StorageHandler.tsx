@@ -2,108 +2,68 @@ import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "../context/UserContext";
 
-const URI = "http://159.65.125.158:8000";
+const URI = "http://164.90.189.150:8000/api/v1";
 
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super("Invalid credentials");
-    this.name = "InvalidCredentialsError";
+type RequestProps = {
+  endpoint: string;
+  data: { [key: string]: string };
+  token?: string;
+};
+
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BadRequestError";
   }
 }
 
-export class NonuniquenessError extends Error {
-  constructor() {
-    super("Nonuniqueness or missing required fields");
-    this.name = "NonuniquenessError";
+export class UnauthorizedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UnauthorizedError";
   }
 }
 
-export class NotFoundError extends Error {
-  constructor() {
-    super("Not found");
-    this.name = "NotFoundError";
+export const post = async (props: RequestProps) => {
+  const formData = new FormData();
+  for (const key in props.data) {
+    formData.append(key, props.data[key]);
   }
-}
+  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: "POST",
+    body: formData,
+    headers: props.token ? { Authorization: `token ${props.token}` } : {},
+  });
+  return fetch(getRequest).then((response) => {
+    switch (response.status) {
+      case 200:
+      case 201:
+        return response.json();
+      case 400:
+        throw new BadRequestError("Bad request!");
+      case 401:
+        throw new UnauthorizedError("Unauthorized!");
+      default:
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  });
+};
 
-export class NotSavedError extends Error {
-  constructor() {
-    super("Not saved");
-    this.name = "NotSavedError";
-  }
-}
-
-export const getUser = async (props: { token: string; endpoint: string }) => {
-  const getUserRequest = new Request(`${URI}/${props.endpoint}`, {
+export const get = async (props: RequestProps) => {
+  const query = new URLSearchParams(props.data).toString();
+  const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${props.token}`,
-    },
+    headers: props.token ? { Authorization: `token ${props.token}` } : {},
   });
-
-  return fetch(getUserRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 401:
-        throw new InvalidCredentialsError();
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  });
-};
-
-export const getSearch = async (props: {
-  body: { [key: string]: string };
-  endpoint: string;
-}) => {
-  const formData = new FormData();
-  for (const key in props.body) {
-    formData.append(key, props.body[key]);
-  }
-  const getSearchRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  return fetch(getSearchRequest).then((response) => {
+  return fetch(getRequest).then((response) => {
     switch (response.status) {
       case 200:
       case 201:
         return response.json();
       case 400:
-        throw new NotFoundError();
+        throw new BadRequestError("Bad request!");
       case 401:
-        throw new InvalidCredentialsError();
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  });
-};
-
-export const postUser = async (props: {
-  body: { [key: string]: string };
-  endpoint: string;
-}) => {
-  const formData = new FormData();
-  for (const key in props.body) {
-    formData.append(key, props.body[key]);
-  }
-
-  const postUserRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  return fetch(postUserRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 400:
-        throw new NonuniquenessError();
-      case 401:
-        throw new InvalidCredentialsError();
+        throw new UnauthorizedError("Unauthorized access!");
       default:
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -168,7 +128,7 @@ export const compareToken = async () => {
     })
     .catch((error) => {
       if (error.name === "NotFoundError") {
-        throw new NotSavedError();
+        throw new UnauthorizedError("Not found");
       }
     });
 };

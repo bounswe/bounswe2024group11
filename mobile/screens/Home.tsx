@@ -5,13 +5,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import BottomTab from "../components/BottomTab";
 import Auth from "./Auth";
-import { DEFAULT_USER, User, useUser } from "../context/UserContext";
-import {
-  NotSavedError,
-  compareToken,
-  getUser,
-} from "../components/StorageHandler";
 import Post from "./Post";
+import CreatePost from "./CreatePost";
+import { useUser } from "../context/UserContext";
+import { BadRequestError, compareToken } from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
@@ -30,7 +27,7 @@ function Home() {
         setUser(user);
       })
       .catch((error) => {
-        if (error instanceof NotSavedError) {
+        if (error instanceof BadRequestError) {
         } else {
           console.log(error);
         }
@@ -65,11 +62,18 @@ function Home() {
               imgsource: "https://defaultimage.com/post.jpg",
               likes: 0,
               bookmarked: false,
-              isLiked: false
-            }
+              isLiked: false,
+            },
           }}
           options={{
             title: "Post",
+          }}
+        />
+        <Stack.Screen
+          name="CreatePost"
+          component={CreatePost}
+          options={{
+            title: "Create Post",
           }}
         />
       </Stack.Navigator>
