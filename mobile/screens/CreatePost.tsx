@@ -12,7 +12,7 @@ import { useTheme } from "../context/ThemeContext";
 import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { request } from "../components/StorageHandler";
+import { post, get } from "../components/StorageHandler";
 
 type CreatePostNavigationProp = StackNavigationProp<RootStackParamList, "Post">;
 
@@ -43,10 +43,9 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
       console.log("Please select a tag using suggestions");
     }
     setLoading(true);
-    request({
-      method: "POST",
-      endpoint: "api/v1/posts/create",
-      body: {
+    post({
+      endpoint: "posts/create",
+      data: {
         title,
         content,
         image,
@@ -66,35 +65,38 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   };
 
   const handleTagSuggestion =
-    (tag: { qid: string; label_description: string }) => () => {
-      setQid(tag.qid);
-      setTag(tag.label_description);
+    (item: { qid: string; label_description: string }) => () => {
+      setQid(item.qid);
+      // this should be changed
+      setTag(item.label_description.split(":")[0]);
+      setSuggestions([]);
     };
 
   const handleTagChange = (tag: string) => {
     setTag(tag);
     setQid("");
-    setSuggestLoading(true);
-    fetchSuggestions();
+    fetchSuggestions(tag);
   };
 
-  const fetchSuggestions = () => {
-    if (tag.length > 0) {
-      request({
-        method: "GET",
-        endpoint: "api/v1/users/fetch-suggestions",
-        body: { keyword: tag },
-      })
-        .then((response) => {
-          setSuggestions(response.results);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setSuggestLoading(false);
-        });
+  const fetchSuggestions = (tag: string) => {
+    if (tag.trim().length === 0) {
+      setSuggestions([]);
+      return;
     }
+    setSuggestLoading(true);
+    get({
+      endpoint: "users/wikidata-suggestions",
+      data: { keyword: tag.trim() },
+    })
+      .then((data) => {
+        setSuggestions([...data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setSuggestLoading(false);
+      });
   };
 
   return (
@@ -131,30 +133,29 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
           secure={false}
           image="tag"
         />
-        {suggestions.length > 0 && (
-          <FlatList
-            data={suggestions}
-            renderItem={({ item }) => (
-              <View
-                style={[
-                  styles.suggestionItem,
-                  {
-                    backgroundColor: theme.colors.neutral[1],
-                  },
-                ]}
+        <FlatList
+          data={suggestions}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.suggestionItem,
+                {
+                  backgroundColor: theme.colors.neutral[1],
+                },
+              ]}
+            >
+              <Text
+                onPress={handleTagSuggestion(item)}
+                style={{ color: theme.colors.neutral[7] }}
               >
-                <Text
-                  onPress={handleTagSuggestion(item)}
-                  style={{ color: theme.colors.neutral[7] }}
-                >
-                  {item.label_description}
-                </Text>
-              </View>
-            )}
-            keyExtractor={(item) => item.qid}
-            scrollEnabled={false}
-          />
-        )}
+                {item.label_description}
+              </Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.qid}
+          scrollEnabled={false}
+        />
+
         <ActivityIndicator
           style={{ marginVertical: 8 }}
           animating={suggestLoading}

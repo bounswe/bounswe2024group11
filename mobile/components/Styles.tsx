@@ -240,6 +240,13 @@ const styles = StyleSheet.create({
     borderColor: "#d3d3d3",
     marginVertical: 4,
   },
+  searchSuggestionsContainer: {
+    marginHorizontal: 24,
+    height: "auto",
+  },
+  searchSuggestion: {
+    backgroundColor: "red",
+  },
 });
 
 export { styles };
