@@ -9,6 +9,8 @@ import { registerAction, registerLoader } from "./routes/Register.data";
 import { Container } from "@mantine/core";
 import { Form, Link } from "react-router-dom";
 import { imageLink } from "./components/ImageLink";
+import { Profile } from "./routes/Profile";
+import { profileAction, profileLoader } from "./routes/Profile.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -28,6 +30,12 @@ export const { router, href } = typesafeBrowserRouter([
 		Component: Register,
 		loader: registerLoader,
 		action: registerAction,
+	},
+	{
+		path: "/profile",
+		Component: Profile,
+		loader: profileLoader,
+		action: profileAction,
 	},
 	{
 		path: "/terms",
