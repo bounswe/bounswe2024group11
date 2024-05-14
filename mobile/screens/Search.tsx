@@ -29,34 +29,34 @@ function Search() {
     Array<{ qid: string; label_description: string }>
   >([]);
   const [loading, setLoading] = useState(false);
-  const [qid, setQid] = useState("");
 
   const onChangeText = (query: string) => {
     setSearchQuery(query);
-    setQid("");
-    fetchSuggestions();
+    fetchSuggestions(query);
   };
 
   const handleTagSuggestion =
     (item: { qid: string; label_description: string }) => () => {
-      setSearchQuery(item.label_description);
-      setQid(item.qid);
+      // this should be changed
+      setSearchQuery(item.label_description.split(":")[0]);
+      setSuggestions([]);
+      onSearch(item.qid);
     };
 
-  const fetchSuggestions = () => {
-    if (searchQuery.trim().length === 0) {
+  const fetchSuggestions = (query: string) => {
+    if (query.trim().length === 0) {
       setSuggestions([]);
       return;
     }
     setLoading(true);
     get({
-      endpoint: "api/v1/users/wikidata-suggestions",
+      endpoint: "users/wikidata-suggestions",
       data: {
-        keyword: searchQuery.trim(),
+        keyword: query.trim(),
       },
     })
-      .then((response) => {
-        setSuggestions(response.results);
+      .then((data) => {
+        setSuggestions([...data]);
       })
       .catch((error) => {
         console.error(error);
@@ -71,13 +71,13 @@ function Search() {
     setNoResults(false);
   }, [searchQuery]);
 
-  const onSearch = () => {
+  const onSearch = (qid: string) => {
     setLoading(true);
     setSearchResults([]);
     post({
       data: {
-        keyword: searchQuery.trim(),
-        category: qid,
+        keyword: qid,
+        category: dropdownValue,
       },
       endpoint: "user/search/",
     })
@@ -105,35 +105,34 @@ function Search() {
       <SearchHeader
         onChangeText={onChangeText}
         value={searchQuery}
-        onSearch={onSearch}
         loading={loading}
       />
-      {suggestions.length > 0 && (
-        <View style={styles.searchSuggestionsContainer}>
-          <FlatList
-            data={suggestions}
-            renderItem={({ item }) => (
-              <View
-                style={[
-                  styles.suggestionItem,
-                  {
-                    backgroundColor: theme.colors.neutral[1],
-                  },
-                ]}
+
+      <View style={styles.searchSuggestionsContainer}>
+        <FlatList
+          data={suggestions}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.suggestionItem,
+                {
+                  backgroundColor: theme.colors.neutral[1],
+                },
+              ]}
+            >
+              <Text
+                onPress={handleTagSuggestion(item)}
+                style={{ color: theme.colors.neutral[7] }}
               >
-                <Text
-                  onPress={handleTagSuggestion(item)}
-                  style={{ color: theme.colors.neutral[7] }}
-                >
-                  {item.label_description}
-                </Text>
-              </View>
-            )}
-            keyExtractor={(item) => item.qid}
-            scrollEnabled={false}
-          />
-        </View>
-      )}
+                {item.label_description}
+              </Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.qid}
+          scrollEnabled={false}
+        />
+      </View>
+
       <View style={styles.dropDownMenu}>
         <Dropdown
           label="Category"
@@ -157,7 +156,7 @@ function Search() {
             },
           ]}
         >
-          Something went wrong {hatakodu}
+          Something went wrong
         </Text>
       )}
       {noResults && (

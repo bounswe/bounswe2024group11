@@ -8,7 +8,6 @@ import { styles } from "./Styles";
 const SearchHeader = (props: {
   onChangeText: (query: string) => void;
   value: string;
-  onSearch: () => void;
   loading: boolean;
 }) => {
   return (
@@ -20,9 +19,6 @@ const SearchHeader = (props: {
               placeholder="Search for content..."
               onChangeText={props.onChangeText}
               onClearIconPress={() => props.onChangeText("")}
-              onIconPress={() => {
-                props.onSearch();
-              }}
               value={props.value}
               style={styles.searchBar}
               loading={props.loading}
