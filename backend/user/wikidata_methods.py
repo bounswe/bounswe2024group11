@@ -5,8 +5,10 @@ from rest_framework import status
 from . import queries
 
 def birth_of_place_wikidata(request):
-    qid = request.data["qid"]
-    category = request.data["category"]
+    qid = request.GET.get('qid', None)
+    category = request.GET.get('category', None)
+    # qid = request.data["qid"]
+    # category = request.data["category"]
     birthOfPlace_query_formatted = queries.birthOfPlace_query%qid
     birthOfPlace_query_params = {
             'query': birthOfPlace_query_formatted,

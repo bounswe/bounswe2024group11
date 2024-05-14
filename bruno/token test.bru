@@ -1,0 +1,17 @@
+meta {
+  name: token test
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/api/v1/users/test_token
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "token":"492a401a3cd5d18d974f9f4c3a16234e3b85851a"
+  }
+}
