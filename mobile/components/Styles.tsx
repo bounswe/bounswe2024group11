@@ -243,7 +243,6 @@ const styles = StyleSheet.create({
   searchSuggestionsContainer: {
     marginHorizontal: 24,
     height: "auto",
-    backgroundColor: "blue",
   },
   searchSuggestion: {
     backgroundColor: "red",
