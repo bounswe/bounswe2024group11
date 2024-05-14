@@ -5,10 +5,8 @@ export type RootStackParamList = {
   Post: { props: PostProps };
   Search: undefined;
   Profile: undefined;
-  Post: undefined;
   CreatePost: undefined;
 };
-
 
 interface PostProps {
   authorNS: string;
