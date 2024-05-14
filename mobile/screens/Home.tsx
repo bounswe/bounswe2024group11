@@ -11,6 +11,7 @@ import {
   compareToken,
   getUser,
 } from "../components/StorageHandler";
+import Post from "./Post";
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,26 @@ function Home() {
           component={Auth}
           options={{
             title: "Authentication",
+          }}
+        />
+        <Stack.Screen
+          name="Post"
+          component={Post as any} //as any
+          initialParams={{
+            props: {
+              authorNS: "Default Name",
+              authorImg: "https://defaultimage.com/default.jpg",
+              authorUsername: "@defaultuser",
+              title: "Default Title",
+              content: "Default content here...",
+              imgsource: "https://defaultimage.com/post.jpg",
+              likes: 0,
+              bookmarked: false,
+              isLiked: false
+            }
+          }}
+          options={{
+            title: "Post",
           }}
         />
       </Stack.Navigator>

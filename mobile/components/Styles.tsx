@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { postUser } from "./StorageHandler";
+import { white } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -183,8 +184,11 @@ const styles = StyleSheet.create({
       borderColor: '#F2F2F2',
       borderRadius: 4,
       padding: 12,
-      margin: 8
-
+      margin: 8,
+  },
+  border2:{
+    padding: 12,
+    margin: 8
   },
   postContent: {
     display: "flex",
@@ -200,6 +204,10 @@ const styles = StyleSheet.create({
   postContentImg: {
     minWidth: 250 , 
     minHeight: 150,
+  },
+  postContentImg2: {
+    minWidth: 250 , 
+    minHeight: 200,
   },
   postUserImg: {
     width: 30,

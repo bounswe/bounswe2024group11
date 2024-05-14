@@ -5,6 +5,8 @@ import { styles } from "./Styles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon } from "react-native-paper";
 
+
+
 type PostProps = {
     authorNS: string;
     authorImg: string;
@@ -17,7 +19,9 @@ type PostProps = {
     onClickFunction: () => void;
 };
 
-function Post({ props }: { props: PostProps }) {
+
+
+function Post(props: PostProps) {
     const { title, content, imgsource, likes,authorNS,authorImg,authorUsername, bookmarked, onClickFunction } = props;
 
     return (
@@ -37,7 +41,7 @@ function Post({ props }: { props: PostProps }) {
 
             <View style={styles.postContent}>
                 <Image style={styles.postContentImg} source={{uri: imgsource}} />
-                <Text style={styles.postContentText} > {content} </Text>
+                <Text style={styles.postContentText} > {content.substring(0,20)} </Text>
             </View>
 
             <View style={styles.postBottom}>
@@ -45,7 +49,7 @@ function Post({ props }: { props: PostProps }) {
                     <Text> {likes} <Icon source="heart" size={16}></Icon> </Text>
                 </View>
                 <View>
-                    <Text> {bookmarked ?  <Icon source="bookmark" size={16}></Icon> : <Icon source="unbookmark" size={16}></Icon>} </Text>
+                    <Text> {bookmarked ?  <Icon source="bookmark" size={16}></Icon> : <Icon source="bookmark" size={16}></Icon>} </Text>
                 </View>
 
             </View>
