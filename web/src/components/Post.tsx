@@ -1,6 +1,19 @@
-import { RiContactsBook2Line } from "@remixicon/react";
+import {
+	RiBook2Line,
+	RiBookmark2Line,
+	RiContactsBook2Line,
+	RiDeleteBin2Line,
+	RiDeleteBin6Line,
+	RiEditLine,
+	RiHeart3Line,
+	RiSettings2Line,
+} from "@remixicon/react";
+import { Menu } from "@mantine/core";
 import { List } from "postcss/lib/list";
 import React from "react";
+import { Link } from "react-router-dom";
+import { button, button2, buttonInnerRing } from "../components/Button";
+import { imageLink } from "./ImageLink";
 
 export type PostProps = {
 	id: number;
@@ -36,18 +49,57 @@ const Post = ({
 	};
 	return (
 		<div className="flex max-w-md flex-col gap-3 justify-between items-center  px-5 py-3 rounded-3 border-slate-200 border-2 ">
-			<div className="flex flex-row gap-3 w-full">
-				<img
-					src={user.picUrl}
-					alt="User"
-					width={40}
-					height={40}
-					className="rounded-full"
-				/>
-				<div className="w-full flex flex-col gap-1 items-stretch justify-between">
-					<h1 className="text-slate-950">{user.fullname}</h1>
-					<h1 className="text-slate-500">{user.username}</h1>
+			<div className="flex flex-row w-full justify-between items-center">
+				<div className="flex flex-row gap-3 w-full">
+					<img
+						src={user.picUrl}
+						alt="User"
+						width={40}
+						height={40}
+						className="rounded-full"
+					/>
+					<div className="w-full flex flex-col gap-1 items-stretch justify-between">
+						<Link to="/profile" className="text-slate-950">
+							{user.fullname}
+						</Link>
+						<h1 className="text-slate-500">{user.username}</h1>
+					</div>
 				</div>
+				<Menu position="right-start">
+					<Menu.Target>
+						<button
+							type="button"
+							style={{ height: 32, width: 32 }}
+							className={button2({
+								intent: "edit",
+								icon: "none",
+								size: "medium",
+							})}
+						>
+							...
+						</button>
+					</Menu.Target>
+					<Menu.Dropdown className="p-2">
+						<Menu.Item
+							leftSection={<RiEditLine className="text-slate-700" size={20} />}
+						>
+							Edit
+						</Menu.Item>
+
+						<Menu.Item
+							color="red"
+							leftSection={
+								<RiDeleteBin6Line
+									color="red"
+									className="text-slate-700"
+									size={20}
+								/>
+							}
+						>
+							Delete Post
+						</Menu.Item>
+					</Menu.Dropdown>
+				</Menu>
 			</div>
 			<h1 className="text-slate-950 text-xl">{title}</h1>
 			<div className="flex gap-4 flex-col text-slate-500">
@@ -59,11 +111,29 @@ const Post = ({
 				<p>{`${text} #${tag}`}</p>
 			</div>
 			<div className="flex flex-row justify-between w-full">
-				<div className="flex flex-row justify-between gap-1">
-					<img src="./heart.svg" alt="Link Icon" width={20} height={20} />
+				<div className="flex flex-row justify-between gap-1 items-center">
+					<button
+						type="button"
+						className={button2({
+							intent: "edit",
+							icon: "none",
+							size: "xsmall",
+						})}
+					>
+						<RiHeart3Line size={20} color="slate" />
+					</button>
 					<div className="text-slate-500">{likecount}</div>
 				</div>
-				<img src="./bookmark.svg" alt="Link Icon" width={20} height={20} />
+				<button
+					type="button"
+					className={button2({
+						intent: "edit",
+						icon: "none",
+						size: "xsmall",
+					})}
+				>
+					<RiBook2Line size={20} color="slate" />
+				</button>
 			</div>
 		</div>
 	);
