@@ -17,7 +17,7 @@ type PostProps = {
   onClickFunction: () => void;
 };
 
-function Post({ props }: { props: PostProps }) {
+function Post(props: PostProps) {
   const {
     title,
     content,
@@ -46,7 +46,7 @@ function Post({ props }: { props: PostProps }) {
 
       <View style={styles.postContent}>
         <Image style={styles.postContentImg} source={{ uri: imgsource }} />
-        <Text style={styles.postContentText}> {content} </Text>
+        <Text style={styles.postContentText}> {content.substring(0, 20)} </Text>
       </View>
 
       <View style={styles.postBottom}>
@@ -62,7 +62,7 @@ function Post({ props }: { props: PostProps }) {
             {bookmarked ? (
               <Icon source="bookmark" size={16}></Icon>
             ) : (
-              <Icon source="unbookmark" size={16}></Icon>
+              <Icon source="bookmark" size={16}></Icon>
             )}{" "}
           </Text>
         </View>

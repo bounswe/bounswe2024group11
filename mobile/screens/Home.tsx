@@ -7,7 +7,7 @@ import BottomTab from "../components/BottomTab";
 import Auth from "./Auth";
 import Post from "./Post";
 import CreatePost from "./CreatePost";
-import { DEFAULT_USER, User, useUser } from "../context/UserContext";
+import { useUser } from "../context/UserContext";
 import { BadRequestError, compareToken } from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
@@ -51,7 +51,20 @@ function Home() {
         />
         <Stack.Screen
           name="Post"
-          component={Post}
+          component={Post as any} //as any
+          initialParams={{
+            props: {
+              authorNS: "Default Name",
+              authorImg: "https://defaultimage.com/default.jpg",
+              authorUsername: "@defaultuser",
+              title: "Default Title",
+              content: "Default content here...",
+              imgsource: "https://defaultimage.com/post.jpg",
+              likes: 0,
+              bookmarked: false,
+              isLiked: false,
+            },
+          }}
           options={{
             title: "Post",
           }}

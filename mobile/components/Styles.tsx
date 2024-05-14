@@ -200,6 +200,10 @@ const styles = StyleSheet.create({
     padding: 12,
     margin: 8,
   },
+  border2: {
+    padding: 12,
+    margin: 8,
+  },
   postContent: {
     display: "flex",
     flexDirection: "column",
@@ -214,6 +218,10 @@ const styles = StyleSheet.create({
   postContentImg: {
     minWidth: 250,
     minHeight: 150,
+  },
+  postContentImg2: {
+    minWidth: 250,
+    minHeight: 200,
   },
   postUserImg: {
     width: 30,

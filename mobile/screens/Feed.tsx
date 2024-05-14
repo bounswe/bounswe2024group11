@@ -20,17 +20,38 @@ type FeedNavigationProp = MaterialBottomTabNavigationProp<
 function Feed({ navigation }: { navigation: FeedNavigationProp }) {
   const { user, setUser } = useUser();
 
-  const onClick = () => {
-    console.log("Post clicked");
-
-    navigation.navigate("Post");
-  };
-
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <FeedHeader navigation={navigation} />
-      <View style={styles.center}>
-        <Post props={{authorImg: 'https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg', likes: 5, authorNS: "Arda Vural", authorUsername: "arda_vural", title: "ARDA HAS BECOME A HERO", content: "AA s  s  a dsfkpsdfnsd vjsdnvdsjvsj vsjdvfnsdlnvsd vnksd vldjsvnsdjl",bookmarked: true, imgsource: 'https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg', onClickFunction: () => console.log("arda") }} />
+      <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch" }}>
+        <Post
+          authorImg="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg"
+          bookmarked={false}
+          likes={5}
+          authorNS="Arda Vural"
+          authorUsername="arda_vural"
+          title="ARDA HAS BECOME A HERO"
+          content="AA s  s  a dsfkpsdfnsd vjsdnvdsjvsj vsjdvfnsdlnvsd vnksd vldjsvnsdjl"
+          imgsource="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg"
+          onClickFunction={() =>
+            navigation.navigate("Post", {
+              props: {
+                authorImg:
+                  "https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg",
+                bookmarked: false,
+                likes: 5,
+                authorNS: "Arda Vural",
+                authorUsername: "arda_vural",
+                title: "ARDA HAS BECOME A HERO",
+                content:
+                  "AA s  s  a dsfkpsdfnsd vjsdnvdsjvsj vsjdvfnsdlnvsd vnksd vldjsvnsdjl",
+                imgsource:
+                  "https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg",
+                isLiked: false,
+              },
+            })
+          }
+        />
       </View>
       {user && <CreatePostButton navigation={navigation} />}
     </View>
