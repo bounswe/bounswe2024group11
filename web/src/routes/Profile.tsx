@@ -8,12 +8,15 @@ import {
 	Textarea,
 } from "@mantine/core";
 import {
+	RiUser3Line,
 	RiArrowDropDownLine,
 	RiBookmark2Line,
 	RiLogoutBoxRLine,
 	RiLogoutCircleLine,
 	RiSearch2Line,
 	RiSettings2Line,
+	RiMailLine,
+	RiLink,
 } from "@remixicon/react";
 import { Link, Form, redirect, useLoaderData } from "react-router-dom";
 import { href } from "../router";
@@ -214,12 +217,7 @@ export const Profile = () => {
 						<div className="flex flex-col border-slate-200 border-2 rounded-3">
 							<div className="flex flex-row items-center justify-stretch w-full gap-6 p-4">
 								<div className="w-40 flex flex-row items-center pr-6 border-r-slate-200 border-r-2 gap-1">
-									<img
-										src="./user-icon.svg"
-										alt="User Icon"
-										width={20}
-										height={20}
-									/>
+									<RiUser3Line size={20} />
 									<h1 className="text-base font-medium font-display text-slate-950">
 										Full Name
 									</h1>
@@ -240,12 +238,7 @@ export const Profile = () => {
 							<hr />
 							<div className="w-full flex flex-row items-center justify-stretch gap-6 p-4">
 								<div className="w-40 flex flex-row items-center pr-6 border-r-slate-200 border-r-2 gap-1">
-									<img
-										src="./mail-line.svg"
-										alt="Email Icon"
-										width={20}
-										height={20}
-									/>
+									<RiMailLine size={20} />
 									<h1 className="text-base font-medium font-display text-slate-950">
 										Email
 									</h1>
@@ -266,12 +259,7 @@ export const Profile = () => {
 							<hr />
 							<div className="flex flex-row items-center justify-stretch w-full gap-6 p-4">
 								<div className="w-40 flex flex-row items-center pr-6 border-r-slate-200 border-r-2 gap-1">
-									<img
-										src="./user-icon.svg"
-										alt="User Icon"
-										width={20}
-										height={20}
-									/>
+									<RiUser3Line size={20} />
 									<h1 className="text-base font-medium font-display text-slate-950">
 										Username
 									</h1>
@@ -292,12 +280,7 @@ export const Profile = () => {
 							<hr />
 							<div className="flex flex-row items-center justify-stretch w-full gap-6 p-4">
 								<div className="w-40 flex flex-row items-center pr-6 border-r-slate-200 border-r-2 gap-1">
-									<img
-										src="./image-link.svg"
-										alt="Link Icon"
-										width={20}
-										height={20}
-									/>
+									<RiLink size={20} />
 									<h1 className="text-base font-medium font-display text-slate-950">
 										Prof. Picture
 									</h1>
