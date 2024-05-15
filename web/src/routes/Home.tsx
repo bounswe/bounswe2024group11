@@ -342,7 +342,11 @@ export const Home = () => {
 						<button
 							type="button"
 							onClick={open}
-							className={button({ intent: "secondary", position: "fixed" })}
+							className={button({
+								intent: "secondary",
+								position: "fixed",
+								className: "bottom-8 right-12",
+							})}
 						>
 							<img
 								src="./add-fill.svg"
