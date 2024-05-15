@@ -8,6 +8,9 @@ from .models import Post, Like, Bookmark, Follow
 from .serializers import *
 from .permissions import IsOwnerOrReadOnly
 from . import wikidata_helpers
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -86,8 +89,6 @@ class SearchPostView(ListAPIView):
     queryset = Post.objects.all()
     serializer_class = SearchPostSerializer
     permission_classes = [permissions.AllowAny]
-
-    # permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         qid = request.query_params.get('qid').upper()
