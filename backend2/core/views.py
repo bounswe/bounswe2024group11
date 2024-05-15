@@ -56,11 +56,27 @@ class UserRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GetWikidataSuggestionsView(APIView):
+class WikidataSuggestionsView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        query = request.query_params.get('query')
-        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={query}&language=en&format=json'
-        response = requests.get(url)
-        return Response(response.json())
+        keyword = request.query_params.get('keyword')
+        if not keyword:
+            return Response({'res': 'Keyword parameter "keyword" is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={keyword}&language=en&format=json'
+            response = requests.get(url)
+            if response.status_code == 200:
+                data = response.json()
+                suggestions = [{
+                    'qid': item['id'],
+                    'label': item['label'],
+                    'description': item['description']
+                } for item in data['search']]
+                
+                # Return the extracted fields in the response
+                return Response(suggestions)
+            else:
+                return Response({'res': 'Error while fetching data from Wikidata.'}, status=response.status_code)
+        except Exception as e:
+            return Response({'res': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
