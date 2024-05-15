@@ -1,4 +1,5 @@
-from django.contrib.auth.models import UserManager, AbstractBaseUser
+from typing import Any
+from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 
@@ -16,10 +17,19 @@ class CustomUserManager(UserManager):
         return user
 
     def create_user(self, username=None, email=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(username, email, password, **extra_fields)
+    
+    def create_superuser(self, username=None, email=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
         return self._create_user(username, email, password, **extra_fields)
     
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     username = models.CharField(max_length=100, default="", unique=True)
     fullname= models.CharField(max_length=100, default="")
     email = models.EmailField(default="", unique=True)
