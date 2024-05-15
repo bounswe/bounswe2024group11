@@ -10,6 +10,7 @@ from .permissions import IsOwnerOrReadOnly
 from . import wikidata_helpers
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from swagger_docs.wikidata_swagger import *
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -63,6 +64,7 @@ class UserRegistrationView(APIView):
 class WikidataSuggestionsView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(operation_path='/api/suggestions/', **wikidata_suggestions_swagger)
     def get(self, request):
         keyword = request.query_params.get('keyword')
         if not keyword:
@@ -90,6 +92,7 @@ class SearchPostView(ListAPIView):
     serializer_class = SearchPostSerializer
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(**search_post_swagger)
     def get(self, request):
         qid = request.query_params.get('qid').upper()
         category = request.query_params.get('category')
@@ -112,21 +115,15 @@ class SearchPostView(ListAPIView):
             
             # Extract QIDs from the result_data
             qids = [entry['qid'] for entry in result_data.data['results']]
-            print("qids",qids)
             # Call the SearchPostView's get method with QIDs as query parameters
             # return result_data
             queryset = self.get_queryset()
-            print(request.query_params)
             # search_query = request.query_params.getlist('keyword') 
             search_query = [qid.upper() for qid in qids]
-            print("search query", search_query)
             
             if search_query:
-                print("int")
                 queryset = queryset.filter(qid__in=search_query)
-                print("queryset", queryset)
             queryset = queryset.filter(qid__in=search_query)
-            print("queryset", queryset)
 
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
