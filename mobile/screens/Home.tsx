@@ -8,12 +8,7 @@ import Auth from "./Auth";
 import Post from "./Post";
 import CreatePost from "./CreatePost";
 import { useUser } from "../context/UserContext";
-import {
-  BadRequestError,
-  UnauthorizedError,
-  compareData,
-  removeData,
-} from "../components/StorageHandler";
+import { UnauthorizedError, compareData } from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
