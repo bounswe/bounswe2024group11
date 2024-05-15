@@ -1,3 +1,4 @@
+import requests
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -53,3 +54,13 @@ class UserRegistrationView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetWikidataSuggestionsView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        query = request.query_params.get('query')
+        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={query}&language=en&format=json'
+        response = requests.get(url)
+        return Response(response.json())
