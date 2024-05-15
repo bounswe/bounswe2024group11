@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, Image } from "react-native";
-import { Button } from "react-native-paper";
 
 import { styles } from "./Styles";
 import { useTheme } from "../context/ThemeContext";
-import { Divider } from "react-native-paper";
 import { User, useUser } from "../context/UserContext";
-import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "./CustomButton";
 
-const ProfileInfo = (props: { user: User }) => {
+const ProfileInfo = (props: { profileUser: User }) => {
   const theme = useTheme();
-  const { user } = props;
+  const { profileUser } = props;
   const [following, setFollowing] = useState(true);
-
+  const { user } = useUser();
   const onFollowPress = () => {
     setFollowing(false);
   };
@@ -25,11 +22,12 @@ const ProfileInfo = (props: { user: User }) => {
   return (
     <View
       style={[
-        styles.center,
         {
           flexDirection: "column",
           flex: 1,
           padding: 24,
+
+          alignItems: "center",
         },
       ]}
     >
@@ -41,8 +39,8 @@ const ProfileInfo = (props: { user: User }) => {
       />
 
       <View>
-        <Text style={styles.profileHeader}>{user.fullname}</Text>
-        <Text style={styles.profileSubHeader}>@{user.username}</Text>
+        <Text style={styles.profileHeader}>{profileUser.fullname}</Text>
+        <Text style={styles.profileSubHeader}>@{profileUser.username}</Text>
       </View>
 
       <View style={styles.profileInfoBox}>
@@ -52,7 +50,7 @@ const ProfileInfo = (props: { user: User }) => {
               fontWeight: "bold",
             }}
           >
-            {user.id}
+            {profileUser.id}
           </Text>
           <Text>Posts</Text>
         </View>
@@ -62,7 +60,7 @@ const ProfileInfo = (props: { user: User }) => {
               fontWeight: "bold",
             }}
           >
-            {user.id}
+            {profileUser.id}
           </Text>
           <Text>Followers</Text>
         </View>
@@ -72,29 +70,30 @@ const ProfileInfo = (props: { user: User }) => {
               fontWeight: "bold",
             }}
           >
-            {user.id}
+            {profileUser.id}
           </Text>
           <Text>Following</Text>
         </View>
       </View>
-
-      <View style={styles.profileInfoBox}>
-        {following ? (
-          <CustomButton
-            text="Follow"
-            onPress={onFollowPress}
-            bgColor={theme.colors.neutral[9]}
-            textColor={theme.colors.neutral[2]}
-          />
-        ) : (
-          <CustomButton
-            text="Unfollow"
-            onPress={onUnfollowPress}
-            bgColor={theme.colors.neutral[2]}
-            textColor={theme.colors.neutral[9]}
-          />
-        )}
-      </View>
+      {user && user.user.id !== profileUser.id && (
+        <View style={styles.profileInfoBox}>
+          {following ? (
+            <CustomButton
+              text="Follow"
+              onPress={onFollowPress}
+              bgColor={theme.colors.neutral[9]}
+              textColor={theme.colors.neutral[2]}
+            />
+          ) : (
+            <CustomButton
+              text="Unfollow"
+              onPress={onUnfollowPress}
+              bgColor={theme.colors.neutral[2]}
+              textColor={theme.colors.neutral[9]}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };

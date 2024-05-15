@@ -11,7 +11,7 @@ import { styles } from "../components/Styles";
 import { useTheme } from "../context/ThemeContext";
 import { ActivityIndicator, Divider } from "react-native-paper";
 
-import { saveToken, post } from "../components/StorageHandler";
+import { post } from "../components/StorageHandler";
 
 type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
 
@@ -41,7 +41,7 @@ const Signup = ({
         username: username.trim(),
         password: password,
       },
-      endpoint: "user/signup",
+      endpoint: "users/signup",
     })
       .then((data) => {
         setSuccess(true);

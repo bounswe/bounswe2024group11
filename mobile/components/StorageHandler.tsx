@@ -1,6 +1,6 @@
 import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User } from "../context/UserContext";
+import { UserType } from "../context/UserContext";
 
 const URI = "http://164.90.189.150:8000/api/v1";
 
@@ -32,7 +32,7 @@ export const post = async (props: RequestProps) => {
   const getRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "POST",
     body: formData,
-    headers: props.token ? { Authorization: `token ${props.token}` } : {},
+    headers: props.token ? { Authorization: `Bearer: ${props.token}` } : {},
   });
   return fetch(getRequest).then((response) => {
     switch (response.status) {
@@ -53,7 +53,7 @@ export const get = async (props: RequestProps) => {
   const query = new URLSearchParams(props.data).toString();
   const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
     method: "GET",
-    headers: props.token ? { Authorization: `token ${props.token}` } : {},
+    headers: props.token ? { Authorization: `Bearer: ${props.token}` } : {},
   });
   return fetch(getRequest).then((response) => {
     switch (response.status) {
@@ -93,16 +93,15 @@ export const storage = new Storage({
   },
 });
 
-export const saveToken = (props: { token: User }) => {
+export const saveData = (props: { data: UserType }) => {
   // I always use same key because i only want 1 user to log in or log out.
-  const token = props.token;
   storage.save({
     key: "loginState",
-    data: token,
+    data: props.data,
   });
 };
 //normalde DEFAULT_USER'ı hiçbir yerde kullanmıyorum ama bilgileri gerekirse diye koydum.
-export const compareToken = async () => {
+export const compareData = async () => {
   // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
 
   return storage
@@ -133,7 +132,7 @@ export const compareToken = async () => {
     });
 };
 
-export const removeToken = () => {
+export const removeData = () => {
   storage.remove({ key: "loginState" });
 };
 

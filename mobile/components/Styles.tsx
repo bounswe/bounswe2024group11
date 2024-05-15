@@ -154,12 +154,12 @@ const styles = StyleSheet.create({
   profileInfoBox: {
     display: "flex",
     flexDirection: "row",
+    paddingVertical: 16,
   },
   profileChildBox: {
     borderRightWidth: 1,
     borderRightColor: "grey",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 24,
   },
   postUserDiv: {
     display: "flex",

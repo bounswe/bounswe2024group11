@@ -8,7 +8,7 @@ import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bott
 import { RootStackParamList } from "./Types";
 import { styles } from "./Styles";
 import { useUser } from "../context/UserContext";
-import { removeToken } from "./StorageHandler";
+import { removeData } from "./StorageHandler";
 
 type ProfileNavigationProp = MaterialBottomTabNavigationProp<
   RootStackParamList,
@@ -22,7 +22,7 @@ const ProfileHeader = ({
 }) => {
   const { user, setUser } = useUser();
   const handleLogOut = () => {
-    removeToken();
+    removeData();
     setUser(null);
     navigation.navigate("Auth");
   };

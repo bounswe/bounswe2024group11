@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, KeyboardAvoidingView } from "react-native";
+import { View, Text } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -14,15 +14,10 @@ import { FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { post, get } from "../components/StorageHandler";
 
-type CreatePostNavigationProp = StackNavigationProp<RootStackParamList, "Post">;
-
-const DEFAULT_SUGGESTIONS = [
-  { qid: "1", label_description: "tag1" },
-  { qid: "2", label_description: "tag2" },
-  { qid: "3", label_description: "tag3" },
-  { qid: "4", label_description: "tag4" },
-  { qid: "5", label_description: "tag5" },
-];
+type CreatePostNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "CreatePost"
+>;
 
 function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   const [title, setTitle] = useState("");

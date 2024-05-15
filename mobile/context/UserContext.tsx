@@ -17,24 +17,20 @@ export type User = {
   fullname: string;
 };
 
-export const DEFAULT_USER: User = {
-  id: 0,
-  username: "mobile_test_user",
-  email: "mobile_test_user@test.com",
-  last_login: "0101010",
-  date_joined: "0101010",
-  fullname: "10101",
+export type UserType = {
+  token: string;
+  user: User;
 };
 
 type UserContextType = {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
+  user: UserType | null;
+  setUser: Dispatch<SetStateAction<UserType | null>>;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = (props: { children: ReactNode }): ReactElement => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
 
   return <UserContext.Provider value={{ user, setUser }} {...props} />;
 };
