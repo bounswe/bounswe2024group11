@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import { View, Text, Image, ScrollView } from "react-native";
 import { styles } from "../components/Styles";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Button, Icon } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../components/Types";
+import { useTheme } from "../context/ThemeContext";
 
 /*
 type PostProps = {
@@ -42,11 +42,12 @@ function Post({ route, navigation }: Props) {
     bookmarked,
     isLiked,
   } = route.params.props;
+  const theme = useTheme();
   const [isBookmarked, setBookmarked] = useState(bookmarked);
   const [isLikedPost, setLiked] = useState(isLiked);
   const [postLikes, setLikes] = useState(likes);
   const toggleBookmark = () => {
-    setBookmarked(!bookmarked);
+    setBookmarked(!isBookmarked);
   };
   //                    <TouchableOpacity onPress={likepost}> <View> <Text> {postLikes} <Icon source="heart" size={16}></Icon> </Text> </View> </TouchableOpacity>
   //                    <TouchableOpacity  onPress={toggleBookmark}> {isBookmarked ? <View> <Text> <Icon source="bookmark" size={16}></Icon>  </Text> </View> : <View> <Text> <Icon source="bookmark" size={16}></Icon> </Text> </View> } </TouchableOpacity>
@@ -54,7 +55,7 @@ function Post({ route, navigation }: Props) {
   const likepost = () => {
     if (isLikedPost) {
       setLiked(false);
-      setLikes(likes - 1);
+      setLikes(likes);
     } else {
       setLiked(true);
       setLikes(likes + 1);
@@ -82,20 +83,37 @@ function Post({ route, navigation }: Props) {
 
         <View style={styles.postBottom}>
           <View>
-            <Text>
+            <Button
+              onPress={likepost}
+              icon="heart"
+              textColor={
+                isLikedPost ? theme.colors.red[2] : theme.colors.neutral[7]
+              }
+            >
+              {" "}
+              {postLikes}{" "}
+            </Button>
+            {/* <Text>
               {" "}
               {likes} <Icon source="heart" size={16}></Icon>{" "}
-            </Text>
+            </Text> */}
           </View>
           <View>
-            <Text>
+            <Button
+              onPress={toggleBookmark}
+              icon="bookmark"
+              textColor={
+                isBookmarked ? theme.colors.orange[2] : theme.colors.neutral[7]
+              }
+            >
               {" "}
-              {bookmarked ? (
+            </Button>
+
+            {/* {bookmarked ? (
                 <Icon source="bookmark" size={16}></Icon>
               ) : (
                 <Icon source="bookmark" size={16}></Icon>
-              )}{" "}
-            </Text>
+              )}*/}
           </View>
         </View>
       </View>

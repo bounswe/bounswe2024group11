@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, Image } from "react-native";
-import { Button } from "react-native-paper";
 
 import { styles } from "./Styles";
 import { useTheme } from "../context/ThemeContext";
-import { Divider } from "react-native-paper";
 import { User, useUser } from "../context/UserContext";
-import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "./CustomButton";
 
 const ProfileInfo = (props: { user: User }) => {
@@ -25,11 +22,12 @@ const ProfileInfo = (props: { user: User }) => {
   return (
     <View
       style={[
-        styles.center,
         {
           flexDirection: "column",
           flex: 1,
           padding: 24,
+
+          alignItems: "center",
         },
       ]}
     >
