@@ -5,33 +5,26 @@ import {
 	Fieldset,
 	Menu,
 	Modal,
-	ModalHeader,
-	CloseButton,
 	Textarea,
-	Divider,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
-import { Form, Link, redirect, useSubmit } from "react-router-dom";
+import { Form, Link, useFetcher, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import {
+	RiAddFill,
 	RiArrowDropDownLine,
 	RiBookmark2Line,
-	RiLogoutBoxRLine,
 	RiLogoutCircleLine,
 	RiQuillPenLine,
 	RiSearch2Line,
 	RiSettings2Line,
 } from "@remixicon/react";
-import { useActionData, useLoaderData } from "react-router-typesafe";
-import type { homeAction, homeLoader } from "./Home.data";
+import { useRouteLoaderData } from "react-router-typesafe";
 import { imageLink } from "../components/ImageLink";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
-import InfoBox from "../components/InfoBox";
-import type { InfoBoxProps } from "../components/InfoBox";
 import Post from "../components/Post";
 import { useDisclosure } from "@mantine/hooks";
+import type { authLoader } from "./global/auth.data";
 
 const CATEGORIES = [
 	"born in",
@@ -40,25 +33,11 @@ const CATEGORIES = [
 	"has superpower",
 ];
 
-const StripBG = () => {
-	return Array.from({ length: 20 }).map((_, i) => {
-		return (
-			<div key={`Strip ${i + 1}`}>
-				<div className="h-8 bg-slate-50" />
-				<div className="h-12" />
-			</div>
-		);
-	});
-};
-
 export const Home = () => {
 	const [opened, { open, close }] = useDisclosure(false);
+	const suggestionsFetcher = useFetcher();
 	const submit = useSubmit();
-	const user = useLoaderData<typeof homeLoader>();
-	const actionData = useActionData<typeof homeAction>();
-	const validResults =
-		actionData && "results" in actionData && actionData.results;
-	console.log("action data", actionData);
+	const user = useRouteLoaderData<typeof authLoader>("auth");
 	return (
 		<div className="relative">
 			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
@@ -73,7 +52,7 @@ export const Home = () => {
 								})}
 							>
 								<img
-									src="./zenith-logo.svg"
+									src="/zenith-logo.svg"
 									alt="Zenith Logo"
 									width={32}
 									height={32}
@@ -83,13 +62,18 @@ export const Home = () => {
 								</p>
 							</Link>
 							<div className="max-w-xl flex-1">
-								<Form
+								<suggestionsFetcher.Form
+									onChange={(e) => {
+										suggestionsFetcher.submit(e.currentTarget);
+									}}
+									action="/suggestions"
 									className="flex gap-2"
-									method="POST"
+									method="GET"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											e.preventDefault();
-											submit(e.currentTarget);
+											const formData = new FormData(e.currentTarget);
+											submit(formData);
 										}
 									}}
 								>
@@ -108,7 +92,14 @@ export const Home = () => {
 											nothingFoundMessage="No categories"
 											aria-keyshortcuts="ArrowDown ArrowUp"
 										/>
-										<TextInput
+										<Select
+											defaultValue="Universe"
+											data={suggestionsFetcher.data}
+											rightSection={<RiArrowDropDownLine size={20} />}
+											rightSectionPointerEvents="none"
+											searchable
+											nothingFoundMessage="No categories"
+											aria-keyshortcuts="ArrowDown ArrowUp"
 											className="w-full"
 											name="query"
 											placeholder="Search "
@@ -128,7 +119,7 @@ export const Home = () => {
 										<span className={buttonInnerRing({ intent: "primary" })} />
 										<span>Search</span>
 									</button>
-								</Form>
+								</suggestionsFetcher.Form>
 							</div>
 
 							<div className="items-center gap-2 hidden md:flex">
@@ -233,133 +224,108 @@ export const Home = () => {
 				</Container>
 			</div>
 			<div>
-				{validResults ? (
-					<Container className="flex flex-col gap-4 py-8">
-						<div className="flex gap-1 justify-between">
-							<h1 className="font-regular text-lg">
-								{actionData.results.length} results found for&nbsp;
-								<span className="font-medium">"{actionData.keyword}"</span>
-							</h1>
-							<p className="font-regular text-slate-500 text-sm">
-								Sorted by popularity.
-							</p>
-						</div>
-						<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-							{actionData.results.map((result: InfoBoxProps) => {
-								return <InfoBox key={result.label} {...result} />;
-							})}
-						</div>
-					</Container>
-				) : (
-					<Container className="flex flex-col justify-between gap-4 py-10 items-center max-width:480px max-w-md">
-						<h1 className="text-left w-full text-slate-950 text-lg">Feed</h1>
-						<div className="flex flex-col justify-between gap-4">
-							<Post
-								post={{
-									author: 1,
-									id: 0,
-									bookmarkcount: 31,
-									likecount: 41,
-									title: "A new beginning",
-									text: "Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something.",
-									imgUrl:
-										"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp",
-									tag: "space",
-								}}
-							/>
-						</div>
-						<Modal.Root opened={opened} onClose={close}>
-							<Modal.Overlay />
-							<Modal.Content>
-								<Modal.Header className="w-full flex flex-col p-0">
-									<div className="w-full flex flex-row gap-3 justify-between items-center p-4">
-										<button
-											type="button"
-											className="rounded-full w-12 h-11 border-slate-200 border-2 flex justify-center items-center"
-										>
-											<RiQuillPenLine size={24} />
-										</button>
-										<div className="flex flex-col w-full justify-between items-stretch gap-1">
-											<div className="flex flex-row items-center w-full justify-between">
-												<Modal.Title className="text-slate-900 text-lg">
-													New Post
-												</Modal.Title>
-												<Modal.CloseButton />
-											</div>
-											<h2 className="text-slate-500 text-sm">
-												Let's see your art! Create a new post!{" "}
-											</h2>
-										</div>
-									</div>
-									<hr className="h-1 w-full" />
-								</Modal.Header>
-								<Modal.Body className="px-5 py-6">
-									<form
-										className="w-full flex flex-col gap-4 justify-between items-end"
-										method="POST"
-										action="/profile"
+				<Container className="flex flex-col justify-between gap-4 py-10 items-center max-width:480px max-w-md">
+					<h1 className="text-left w-full text-slate-950 text-lg">Feed</h1>
+					<div className="flex flex-col justify-between gap-4">
+						<Post
+							post={{
+								author: 1,
+								id: 0,
+								bookmarkcount: 31,
+								likecount: 41,
+								title: "A new beginning",
+								text: "Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something.",
+								imgUrl:
+									"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp",
+								tag: "space",
+							}}
+						/>
+					</div>
+					<Modal.Root opened={opened} onClose={close}>
+						<Modal.Overlay />
+						<Modal.Content>
+							<Modal.Header className="w-full flex flex-col p-0">
+								<div className="w-full flex flex-row gap-3 justify-between items-center p-4">
+									<button
+										type="button"
+										className="rounded-full w-12 h-11 border-slate-200 border flex justify-center items-center"
 									>
-										<TextInput
-											label="Url of the picture"
-											classNames={{
-												label: "text-slate-900 text-lg",
-												input: "border-1 rounded-3 w-full text-slate-700",
-												wrapper: "w-full",
-												root: "w-full",
-											}}
-											type="text"
-											name="picurl"
-											aria-label="picture url"
-											aria-errormessage="Invalid password"
-										/>
-										<TextInput
-											label="Title"
-											classNames={{
-												label: "text-slate-900 text-lg",
-												input: "border-1 rounded-3 w-full text-slate-700",
-												wrapper: "w-full",
-												root: "w-full",
-											}}
-											type="text"
-											name="title"
-											aria-label="title"
-											aria-errormessage="Invalid password"
-										/>
-										<Textarea
-											className="w-full rounded-3 border-1"
-											placeholder="..."
-										/>
-										<button
-											type="submit"
-											className={button({ intent: "secondary" })}
-										>
-											Post
-										</button>
-									</form>
-								</Modal.Body>
-							</Modal.Content>
-						</Modal.Root>
+										<RiQuillPenLine className="text-slate-700" size={24} />
+									</button>
+									<div className="flex flex-col w-full justify-between items-stretch gap-1">
+										<div className="flex flex-row items-center w-full justify-between">
+											<Modal.Title className="text-slate-900 text-lg">
+												New Post
+											</Modal.Title>
+											<Modal.CloseButton />
+										</div>
+										<h2 className="text-slate-500 text-sm">
+											Let's see your art! Create a new post!{" "}
+										</h2>
+									</div>
+								</div>
+								<hr className="h-1 w-full" />
+							</Modal.Header>
+							<Modal.Body className="px-5 py-6">
+								<Form
+									className="w-full flex flex-col gap-4 justify-between items-end"
+									method="POST"
+									action="/profile"
+								>
+									<TextInput
+										label="Url of the picture"
+										classNames={{
+											label: "text-slate-900 text-lg",
+											input: "border-1 rounded-3 w-full text-slate-700",
+											wrapper: "w-full",
+											root: "w-full",
+										}}
+										type="text"
+										name="picurl"
+										aria-label="picture url"
+										aria-errormessage="Invalid password"
+									/>
+									<TextInput
+										label="Title"
+										classNames={{
+											label: "text-slate-900 text-lg",
+											input: "border-1 rounded-3 w-full text-slate-700",
+											wrapper: "w-full",
+											root: "w-full",
+										}}
+										type="text"
+										name="title"
+										aria-label="title"
+										aria-errormessage="Invalid password"
+									/>
+									<Textarea
+										className="w-full rounded-3 border-1"
+										placeholder="..."
+									/>
+									<button
+										type="submit"
+										className={button({ intent: "secondary" })}
+									>
+										Post
+									</button>
+								</Form>
+							</Modal.Body>
+						</Modal.Content>
+					</Modal.Root>
+					<aside className="fixed bottom-8 right-12">
 						<button
 							type="button"
 							onClick={open}
 							className={button({
 								intent: "secondary",
-								position: "fixed",
-								className: "bottom-8 right-12",
 							})}
 						>
-							<img
-								src="./add-fill.svg"
-								alt="new post"
-								width={20}
-								height={20}
-								className="rounded-full"
-							/>
+							<span className={buttonInnerRing({ intent: "secondary" })} />
+							<RiAddFill size={20} />
 							New Post
 						</button>
-					</Container>
-				)}
-				<StripBG />
+					</aside>
+				</Container>
 			</div>
 		</div>
 	);

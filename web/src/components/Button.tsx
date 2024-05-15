@@ -41,6 +41,7 @@ export const button = cva(
 		"justify-center",
 		"rounded-2",
 		"group",
+		"relative",
 		"transition-all",
 		"duration-300",
 		"focus-visible:ring-slate-300",
@@ -105,18 +106,11 @@ export const button = cva(
 				small: ["text-xs", "py-1", "px-2"],
 				medium: ["text-sm", "py-2", "px-4"],
 			},
-			position: {
-				relative: ["relative"],
-				absolute: ["absolute"],
-				fixed: ["fixed"],
-				sticky: ["sticky"],
-			},
 		},
 		defaultVariants: {
 			intent: "primary",
 			size: "medium",
 			icon: "none",
-			position: "relative",
 		},
 	},
 );
