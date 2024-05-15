@@ -1,40 +1,30 @@
 import {
 	RiBook2Line,
-	RiBookmark2Line,
-	RiContactsBook2Line,
-	RiDeleteBin2Line,
 	RiDeleteBin6Line,
 	RiEditLine,
 	RiHeart3Line,
 	RiSettings2Line,
 } from "@remixicon/react";
 import { Menu } from "@mantine/core";
-import { List } from "postcss/lib/list";
 import React from "react";
 import { Link } from "react-router-dom";
-import { button, button2, buttonInnerRing } from "../components/Button";
-import { imageLink } from "./ImageLink";
+import { button } from "../components/Button";
 
-export type PostProps = {
-	id: number;
-	bookmarkcount: number;
-	likecount: number;
-	title: string;
-	text: string;
-	image: string;
-	author: number;
-	tag: string;
+type PostProps = {
+	post: {
+		id: number;
+		bookmarkcount: number;
+		likecount: number;
+		title: string;
+		text: string;
+		imgUrl: string;
+		author: number;
+		tag: string;
+	};
 };
 
 const Post = ({
-	id,
-	bookmarkcount,
-	likecount,
-	title,
-	text,
-	image,
-	author,
-	tag,
+	post: { id, bookmarkcount, likecount, title, text, imgUrl, author, tag },
 }: PostProps) => {
 	// user will be retrieved by using author id by making a request to the backend
 	const user = {
@@ -44,15 +34,15 @@ const Post = ({
 		post: 41,
 		followers: 100,
 		following: 5432,
-		picUrl:
+		imgUrl:
 			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigaKbxrqZF0j7NeJHjWGvbpII2kPR5J7QNtpf_bP4aw&s",
 	};
 	return (
-		<div className="flex max-w-md flex-col gap-3 justify-between items-center  px-5 py-3 rounded-3 border-slate-200 border-2 ">
+		<div className="flex max-w-md flex-col gap-3 justify-between items-center px-6 py-4 rounded-3 border-slate-200 border">
 			<div className="flex flex-row w-full justify-between items-center">
 				<div className="flex flex-row gap-3 w-full">
 					<img
-						src={user.picUrl}
+						src={user.imgUrl}
 						alt="User"
 						width={40}
 						height={40}
@@ -70,13 +60,13 @@ const Post = ({
 						<button
 							type="button"
 							style={{ height: 32, width: 32 }}
-							className={button2({
-								intent: "edit",
+							className={button({
+								intent: "primary",
 								icon: "none",
 								size: "medium",
 							})}
 						>
-							...
+							A
 						</button>
 					</Menu.Target>
 					<Menu.Dropdown className="p-2">
@@ -101,11 +91,11 @@ const Post = ({
 					</Menu.Dropdown>
 				</Menu>
 			</div>
-			<h1 className="text-slate-950 text-xl">{title}</h1>
+			<h3 className="text-slate-950 text-lg">{title}</h3>
 			<div className="flex gap-4 flex-col text-slate-500">
 				<img
 					className="w-full rounded-3"
-					src={image}
+					src={imgUrl}
 					aria-label="post picture"
 				/>
 				<p>{`${text} #${tag}`}</p>
@@ -114,10 +104,10 @@ const Post = ({
 				<div className="flex flex-row justify-between gap-1 items-center">
 					<button
 						type="button"
-						className={button2({
-							intent: "edit",
+						className={button({
+							intent: "primary",
 							icon: "none",
-							size: "xsmall",
+							size: "small",
 						})}
 					>
 						<RiHeart3Line size={20} color="slate" />
@@ -126,10 +116,10 @@ const Post = ({
 				</div>
 				<button
 					type="button"
-					className={button2({
-						intent: "edit",
+					className={button({
+						intent: "primary",
 						icon: "none",
-						size: "xsmall",
+						size: "small",
 					})}
 				>
 					<RiBook2Line size={20} color="slate" />

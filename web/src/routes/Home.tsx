@@ -13,7 +13,7 @@ import {
 import "@mantine/core/styles.css";
 import { Form, Link, redirect, useSubmit } from "react-router-dom";
 import { href } from "../router";
-import { button, button2, buttonInnerRing } from "../components/Button";
+import { button, buttonInnerRing } from "../components/Button";
 import {
 	RiArrowDropDownLine,
 	RiBookmark2Line,
@@ -255,46 +255,17 @@ export const Home = () => {
 						<h1 className="text-left w-full text-slate-950 text-lg">Feed</h1>
 						<div className="flex flex-col justify-between gap-4">
 							<Post
-								author={1}
-								id={0}
-								bookmarkcount={31}
-								likecount={41}
-								title={"A new beginning"}
-								text={
-									"Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something."
-								}
-								image={
-									"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp"
-								}
-								tag={"space"}
-							/>
-							<Post
-								author={1}
-								id={0}
-								bookmarkcount={31}
-								likecount={41}
-								title={"A new beginning"}
-								text={
-									"Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something."
-								}
-								image={
-									"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp"
-								}
-								tag={"space"}
-							/>
-							<Post
-								author={1}
-								id={0}
-								bookmarkcount={31}
-								likecount={41}
-								title={"A new beginning"}
-								text={
-									"Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something."
-								}
-								image={
-									"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp"
-								}
-								tag={"space"}
+								post={{
+									author: 1,
+									id: 0,
+									bookmarkcount: 31,
+									likecount: 41,
+									title: "A new beginning",
+									text: "Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something.",
+									imgUrl:
+										"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp",
+									tag: "space",
+								}}
 							/>
 						</div>
 						<Modal.Root opened={opened} onClose={close}>
@@ -371,7 +342,7 @@ export const Home = () => {
 						<button
 							type="button"
 							onClick={open}
-							className={button2({ intent: "fixed" })}
+							className={button({ intent: "secondary", position: "fixed" })}
 						>
 							<img
 								src="./add-fill.svg"
