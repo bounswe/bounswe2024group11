@@ -4,7 +4,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .models import Post, Like, Bookmark, Follow
+from .models import Post, Like, Bookmark, Follow, Profile
 from .serializers import *
 from .permissions import IsOwnerOrReadOnly
 from . import wikidata_helpers
@@ -131,3 +131,11 @@ class SearchPostView(ListAPIView):
             return Response(serializer.data)
         except Exception as e:
             return Response({'res': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes= [permissions.IsAuthenticated]
+    def perform_create(self, serializer):
+        serializer.save(profile_owner=self.request.user)
