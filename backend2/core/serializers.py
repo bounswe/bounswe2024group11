@@ -8,6 +8,13 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
 
+class SearchPostSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="get_author_username", read_only=True)
+    
+    class Meta:
+        model = Post
+        exclude = ['author']
+        read_only_fields = ["username", "title", "content", "image_src", "qid", "qtitle", "created_at", "updated_at"]
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:

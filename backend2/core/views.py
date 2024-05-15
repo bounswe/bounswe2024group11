@@ -1,10 +1,11 @@
 import requests
 from rest_framework import viewsets, permissions, status
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .models import Post, Like, Bookmark, Follow
-from .serializers import PostSerializer, LikeSerializer, BookmarkSerializer, FollowSerializer, UserSerializer, UserRegistrationSerializer
+from .serializers import *
 from .permissions import IsOwnerOrReadOnly
 from . import wikidata_helpers
 
@@ -81,8 +82,12 @@ class WikidataSuggestionsView(APIView):
         except Exception as e:
             return Response({'res': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class PostSearchView(APIView):
+class SearchPostView(ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = SearchPostSerializer
     permission_classes = [permissions.AllowAny]
+
+    # permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         qid = request.query_params.get('qid').upper()
@@ -92,19 +97,37 @@ class PostSearchView(APIView):
         
         try:
             if category == "born in":
-                return wikidata_helpers.born_in_wikidata(qid)
+                result_data = wikidata_helpers.born_in_wikidata(qid)
             if category == "enemy of":
-                return wikidata_helpers.enemy_of_wikidata(qid)
+                result_data = wikidata_helpers.enemy_of_wikidata(qid)
             if category == "occupation":
-                return wikidata_helpers.occupation_wikidata(qid)
+                result_data = wikidata_helpers.occupation_wikidata(qid)
             if category == "present in":
-                return wikidata_helpers.present_in_wikidata(qid)
+                result_data = wikidata_helpers.present_in_wikidata(qid)
             if category == "educated at":
-                return wikidata_helpers.educated_at_wikidata(qid)
+                result_data = wikidata_helpers.educated_at_wikidata(qid)
             if category == "member of":
-                return wikidata_helpers.member_of_wikidata(qid)
+                result_data = wikidata_helpers.member_of_wikidata(qid)
             
+            # Extract QIDs from the result_data
+            qids = [entry['qid'] for entry in result_data.data['results']]
+            print("qids",qids)
+            # Call the SearchPostView's get method with QIDs as query parameters
+            # return result_data
+            queryset = self.get_queryset()
+            print(request.query_params)
+            # search_query = request.query_params.getlist('keyword') 
+            search_query = [qid.upper() for qid in qids]
+            print("search query", search_query)
+            
+            if search_query:
+                print("int")
+                queryset = queryset.filter(qid__in=search_query)
+                print("queryset", queryset)
+            queryset = queryset.filter(qid__in=search_query)
+            print("queryset", queryset)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
         except Exception as e:
             return Response({'res': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            

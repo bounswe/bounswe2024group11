@@ -13,5 +13,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserRegistrationView.as_view(), name='user_registration'),
     path('suggestions/', WikidataSuggestionsView.as_view(), name='wikidata_suggestions'),
-    path('post-search/', PostSearchView.as_view(), name='wikidata_post_search'),
+    path('search/', SearchPostView.as_view(), name='search_posts'),
 ]

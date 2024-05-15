@@ -12,6 +12,9 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_author_username(self):
+        return self.author.username
+    
     def __str__(self):
         return self.content[:20]
 
