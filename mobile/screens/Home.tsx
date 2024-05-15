@@ -8,7 +8,12 @@ import Auth from "./Auth";
 import Post from "./Post";
 import CreatePost from "./CreatePost";
 import { useUser } from "../context/UserContext";
-import { BadRequestError, compareToken } from "../components/StorageHandler";
+import {
+  BadRequestError,
+  UnauthorizedError,
+  compareData,
+  removeData,
+} from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
@@ -16,18 +21,16 @@ function Home() {
   const { user, setUser } = useUser();
 
   useEffect(() => {
-    compareToken()
-      .then((token) => {
-        // console.log(token);
-        return token;
+    compareData()
+      .then((data) => {
+        return data;
         throw new Error("Not implemented home validation");
-        // return getUser({ token: token, endpoint: "user/validate" });
       })
       .then((user) => {
         setUser(user);
       })
       .catch((error) => {
-        if (error instanceof BadRequestError) {
+        if (error instanceof UnauthorizedError) {
         } else {
           console.log(error);
         }

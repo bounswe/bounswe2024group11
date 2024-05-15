@@ -46,7 +46,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               },
             ]}
           >
-            <ProfileInfo user={user} />
+            <ProfileInfo profileUser={user.user} />
             {/* <Divider style={styles.divider}/>   
             <Image
               source={require("../assets/zenith-logo-login.png")}
@@ -113,6 +113,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               styles.center,
               {
                 backgroundColor: "white",
+                marginTop: 24,
               },
             ]}
           >

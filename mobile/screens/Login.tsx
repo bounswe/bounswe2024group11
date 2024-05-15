@@ -19,7 +19,7 @@ import { useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
 import {
-  saveToken,
+  saveData,
   UnauthorizedError,
   post,
 } from "../components/StorageHandler";
@@ -53,10 +53,10 @@ const Login = ({
     })
       .then((data) => {
         if (remember) {
-          saveToken({ token: data.user });
+          saveData({ data: data });
         }
-        setUser(data.user);
-        console.log(data.user);
+        setUser(data);
+        console.log(data);
         navigation.navigate("Home");
       })
       .catch((error) => {

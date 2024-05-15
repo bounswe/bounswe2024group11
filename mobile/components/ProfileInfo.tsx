@@ -6,11 +6,11 @@ import { useTheme } from "../context/ThemeContext";
 import { User, useUser } from "../context/UserContext";
 import CustomButton from "./CustomButton";
 
-const ProfileInfo = (props: { user: User }) => {
+const ProfileInfo = (props: { profileUser: User }) => {
   const theme = useTheme();
-  const { user } = props;
+  const { profileUser } = props;
   const [following, setFollowing] = useState(true);
-
+  const { user } = useUser();
   const onFollowPress = () => {
     setFollowing(false);
   };
@@ -39,8 +39,8 @@ const ProfileInfo = (props: { user: User }) => {
       />
 
       <View>
-        <Text style={styles.profileHeader}>{user.fullname}</Text>
-        <Text style={styles.profileSubHeader}>@{user.username}</Text>
+        <Text style={styles.profileHeader}>{profileUser.fullname}</Text>
+        <Text style={styles.profileSubHeader}>@{profileUser.username}</Text>
       </View>
 
       <View style={styles.profileInfoBox}>
@@ -50,7 +50,7 @@ const ProfileInfo = (props: { user: User }) => {
               fontWeight: "bold",
             }}
           >
-            {user.id}
+            {profileUser.id}
           </Text>
           <Text>Posts</Text>
         </View>
@@ -60,7 +60,7 @@ const ProfileInfo = (props: { user: User }) => {
               fontWeight: "bold",
             }}
           >
-            {user.id}
+            {profileUser.id}
           </Text>
           <Text>Followers</Text>
         </View>
@@ -70,29 +70,30 @@ const ProfileInfo = (props: { user: User }) => {
               fontWeight: "bold",
             }}
           >
-            {user.id}
+            {profileUser.id}
           </Text>
           <Text>Following</Text>
         </View>
       </View>
-
-      <View style={styles.profileInfoBox}>
-        {following ? (
-          <CustomButton
-            text="Follow"
-            onPress={onFollowPress}
-            bgColor={theme.colors.neutral[9]}
-            textColor={theme.colors.neutral[2]}
-          />
-        ) : (
-          <CustomButton
-            text="Unfollow"
-            onPress={onUnfollowPress}
-            bgColor={theme.colors.neutral[2]}
-            textColor={theme.colors.neutral[9]}
-          />
-        )}
-      </View>
+      {user && user.user.id !== profileUser.id && (
+        <View style={styles.profileInfoBox}>
+          {following ? (
+            <CustomButton
+              text="Follow"
+              onPress={onFollowPress}
+              bgColor={theme.colors.neutral[9]}
+              textColor={theme.colors.neutral[2]}
+            />
+          ) : (
+            <CustomButton
+              text="Unfollow"
+              onPress={onUnfollowPress}
+              bgColor={theme.colors.neutral[2]}
+              textColor={theme.colors.neutral[9]}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };
