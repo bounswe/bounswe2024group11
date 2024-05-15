@@ -78,6 +78,9 @@ export const Home = () => {
 									onChange={(e) => {
 										suggestionsFetcher.submit(e.currentTarget);
 									}}
+									onFocus={(e) => {
+										suggestionsFetcher.submit(e.currentTarget);
+									}}
 									action="/suggestions"
 									className="flex gap-2"
 									method="GET"

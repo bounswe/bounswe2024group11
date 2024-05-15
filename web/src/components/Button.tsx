@@ -101,6 +101,7 @@ export const button = cva(
 			icon: {
 				left: ["flex", "items-center", "gap-2", "pl-2"],
 				right: ["flex", "items-center", "gap-1", "pr-2"],
+				only: ["flex", "items-center", "gap-1", "p-0", "aspect-auto"],
 				none: [],
 			},
 			size: {

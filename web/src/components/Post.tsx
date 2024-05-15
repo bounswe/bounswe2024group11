@@ -3,6 +3,7 @@ import {
 	RiDeleteBin6Line,
 	RiEditLine,
 	RiHeart3Line,
+	RiMore2Fill,
 	RiSettings2Line,
 } from "@remixicon/react";
 import { Menu } from "@mantine/core";
@@ -70,14 +71,9 @@ const Post = ({
 					<Menu.Target>
 						<button
 							type="button"
-							style={{ height: 40, width: 40 }}
-							className={button({
-								intent: "primary",
-								icon: "none",
-								size: "medium",
-							})}
+							className={button({ intent: "tertiary", icon: "only" })}
 						>
-							A
+							<RiMore2Fill size={16} className="text-slate-70" />
 						</button>
 					</Menu.Target>
 					<Menu.Dropdown className="p-2">
