@@ -46,6 +46,12 @@ export const { router, href } = typesafeBrowserRouter([
 				action: profileAction,
 			},
 			{
+				path: "/bookmarks/:username",
+				Component: Profile,
+				loader: profileLoader,
+				action: profileAction,
+			},
+			{
 				path: "/terms",
 				Component: Terms,
 			},
