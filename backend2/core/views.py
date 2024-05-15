@@ -28,17 +28,26 @@ class LikeViewSet(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
     permission_classes = [permissions.IsAuthenticated, IsUserOwnerOrReadOnly]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class BookmarkViewSet(viewsets.ModelViewSet):
     queryset = Bookmark.objects.all()
     serializer_class = BookmarkSerializer
     permission_classes = [permissions.IsAuthenticated, IsUserOwnerOrReadOnly]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(follower=self.request.user)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

@@ -6,6 +6,7 @@ from .models import Post, Like, Bookmark, Follow
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
+        read_only_fields = ['author']
         fields = '__all__'
 
 class SearchPostSerializer(serializers.ModelSerializer):
@@ -19,18 +20,21 @@ class SearchPostSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
+        read_only_fields = ['user']
         fields = '__all__'
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bookmark
+        read_only_fields = ['user']
         fields = '__all__'
 
 
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
+        read_only_fields = ['follower']
         fields = '__all__'
 
 
