@@ -23,43 +23,54 @@ type PostProps = {
 	};
 };
 
+const Author = ({
+	user,
+}: { user: { imgUrl: string; fullname: string; username: string } }) => {
+	return (
+		<div className="flex flex-row gap-3 w-full items-center py-2">
+			<Link
+				to={`/profile/${user.username}`}
+				className="rounded-full overflow-hidden hover:ring-2 ring-transparent hover:ring-offset-1 hover:ring-slate-100 transition-all ring-offset-0 ring-0"
+			>
+				<img
+					src={user.imgUrl}
+					alt="User"
+					width={48}
+					height={48}
+					className="w-12 h-12"
+				/>
+			</Link>
+			<div className="flex flex-col">
+				<p className="text-slate-900 font-medium">{user.fullname}</p>
+				<p className="text-slate-500">{user.username}</p>
+			</div>
+		</div>
+	);
+};
+
+const user = {
+	email: "john@email.com",
+	fullname: "Ümit Can Evleksiz",
+	username: "ucedesign",
+	post: 41,
+	followers: 100,
+	following: 5432,
+	imgUrl:
+		"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
+};
+
 const Post = ({
 	post: { id, bookmarkcount, likecount, title, text, imgUrl, author, tag },
 }: PostProps) => {
-	// user will be retrieved by using author id by making a request to the backend
-	const user = {
-		email: "john@email.com",
-		fullname: "John Doe",
-		username: "@johnDoe",
-		post: 41,
-		followers: 100,
-		following: 5432,
-		imgUrl:
-			"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigaKbxrqZF0j7NeJHjWGvbpII2kPR5J7QNtpf_bP4aw&s",
-	};
 	return (
-		<div className="flex max-w-md flex-col gap-3 justify-between items-center px-6 py-4 rounded-3 border-slate-200 border">
+		<section className="flex max-w-lg flex-col gap-3 justify-between items-center px-5 py-4 rounded-2 border-slate-200 border">
 			<div className="flex flex-row w-full justify-between items-center">
-				<div className="flex flex-row gap-3 w-full">
-					<img
-						src={user.imgUrl}
-						alt="User"
-						width={40}
-						height={40}
-						className="rounded-full"
-					/>
-					<div className="w-full flex flex-col gap-1 items-stretch justify-between">
-						<Link to="/profile" className="text-slate-950">
-							{user.fullname}
-						</Link>
-						<h1 className="text-slate-500">{user.username}</h1>
-					</div>
-				</div>
+				<Author user={user} />
 				<Menu position="right-start">
 					<Menu.Target>
 						<button
 							type="button"
-							style={{ height: 32, width: 32 }}
+							style={{ height: 40, width: 40 }}
 							className={button({
 								intent: "primary",
 								icon: "none",
@@ -91,28 +102,42 @@ const Post = ({
 					</Menu.Dropdown>
 				</Menu>
 			</div>
-			<h3 className="text-slate-950 text-lg">{title}</h3>
-			<div className="flex gap-4 flex-col text-slate-500">
+			<div className="flex gap-6 flex-col text-slate-500">
 				<img
-					className="w-full rounded-3"
+					className="w-full rounded-2 max-h-72 object-cover"
 					src={imgUrl}
 					aria-label="post picture"
 				/>
-				<p>{`${text} #${tag}`}</p>
+				<div className="flex flex-col gap-3">
+					<div className="flex flex-col gap-2">
+						<h2 className="text-slate-900 font-medium text-lg">{title}</h2>
+						<hr className="border-slate-200" />
+					</div>
+					<p className="text-slate-600 text-sm leading-6 tracking-tight">
+						{text}
+					</p>
+					<Link
+						to={`/search=${tag}`}
+						className="text-cyan-800 bg-cyan-50 px-2 leading-7 hover:bg-cyan-100 active:bg-cyan-200 transition-colors rounded-full self-start"
+					>
+						#{tag}
+					</Link>
+				</div>
 			</div>
 			<div className="flex flex-row justify-between w-full">
 				<div className="flex flex-row justify-between gap-1 items-center">
 					<button
 						type="button"
-						className={button({
-							intent: "primary",
-							icon: "none",
-							size: "small",
-						})}
+						className="flex gap-1 items-center group hover:bg-slate-50 px-2 rounded-full transition-colors"
 					>
-						<RiHeart3Line size={20} color="slate" />
+						<RiHeart3Line
+							size={20}
+							className="text-slate-700 group-hover:text-slate-900"
+						/>
+						<span className="text-slate-500 text-sm leading-7">
+							{likecount}
+						</span>
 					</button>
-					<div className="text-slate-500">{likecount}</div>
 				</div>
 				<button
 					type="button"
@@ -125,7 +150,7 @@ const Post = ({
 					<RiBook2Line size={20} color="slate" />
 				</button>
 			</div>
-		</div>
+		</section>
 	);
 };
 

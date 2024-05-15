@@ -25,6 +25,7 @@ import { imageLink } from "../components/ImageLink";
 import Post from "../components/Post";
 import { useDisclosure } from "@mantine/hooks";
 import type { authLoader } from "./global/auth.data";
+import { NewPost } from "../components/NewPost";
 
 const CATEGORIES = [
 	"born in",
@@ -33,8 +34,19 @@ const CATEGORIES = [
 	"has superpower",
 ];
 
+const post = {
+	author: 1,
+	id: 0,
+	bookmarkcount: 31,
+	likecount: 41,
+	title: "A new beginning",
+	text: "Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something.",
+	imgUrl:
+		"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp",
+	tag: "space",
+};
+
 export const Home = () => {
-	const [opened, { open, close }] = useDisclosure(false);
 	const suggestionsFetcher = useFetcher();
 	const submit = useSubmit();
 	const user = useRouteLoaderData<typeof authLoader>("auth");
@@ -77,7 +89,7 @@ export const Home = () => {
 										}
 									}}
 								>
-									<Fieldset className="flex gap-2 justify-center border-0 p-0 flex-1">
+									<Fieldset className="flex gap-2 justify-center border-0 p-0 flex-1 bg-transparent">
 										<Select
 											className="max-w-72"
 											placeholder="Category"
@@ -224,109 +236,28 @@ export const Home = () => {
 				</Container>
 			</div>
 			<div>
-				<Container className="flex flex-col justify-between gap-4 py-10 items-center max-width:480px max-w-md">
-					<h1 className="text-left w-full text-slate-950 text-lg">Feed</h1>
-					<div className="flex flex-col justify-between gap-4">
-						<Post
-							post={{
-								author: 1,
-								id: 0,
-								bookmarkcount: 31,
-								likecount: 41,
-								title: "A new beginning",
-								text: "Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something.",
-								imgUrl:
-									"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp",
-								tag: "space",
-							}}
-						/>
-					</div>
-					<Modal.Root opened={opened} onClose={close}>
-						<Modal.Overlay />
-						<Modal.Content>
-							<Modal.Header className="w-full flex flex-col p-0">
-								<div className="w-full flex flex-row gap-3 justify-between items-center p-4">
-									<button
-										type="button"
-										className="rounded-full w-12 h-11 border-slate-200 border flex justify-center items-center"
-									>
-										<RiQuillPenLine className="text-slate-700" size={24} />
-									</button>
-									<div className="flex flex-col w-full justify-between items-stretch gap-1">
-										<div className="flex flex-row items-center w-full justify-between">
-											<Modal.Title className="text-slate-900 text-lg">
-												New Post
-											</Modal.Title>
-											<Modal.CloseButton />
-										</div>
-										<h2 className="text-slate-500 text-sm">
-											Let's see your art! Create a new post!{" "}
-										</h2>
-									</div>
-								</div>
-								<hr className="h-1 w-full" />
-							</Modal.Header>
-							<Modal.Body className="px-5 py-6">
-								<Form
-									className="w-full flex flex-col gap-4 justify-between items-end"
-									method="POST"
-									action="/profile"
-								>
-									<TextInput
-										label="Url of the picture"
-										classNames={{
-											label: "text-slate-900 text-lg",
-											input: "border-1 rounded-3 w-full text-slate-700",
-											wrapper: "w-full",
-											root: "w-full",
-										}}
-										type="text"
-										name="picurl"
-										aria-label="picture url"
-										aria-errormessage="Invalid password"
-									/>
-									<TextInput
-										label="Title"
-										classNames={{
-											label: "text-slate-900 text-lg",
-											input: "border-1 rounded-3 w-full text-slate-700",
-											wrapper: "w-full",
-											root: "w-full",
-										}}
-										type="text"
-										name="title"
-										aria-label="title"
-										aria-errormessage="Invalid password"
-									/>
-									<Textarea
-										className="w-full rounded-3 border-1"
-										placeholder="..."
-									/>
-									<button
-										type="submit"
-										className={button({ intent: "secondary" })}
-									>
-										Post
-									</button>
-								</Form>
-							</Modal.Body>
-						</Modal.Content>
-					</Modal.Root>
-					<aside className="fixed bottom-8 right-12">
-						<button
-							type="button"
-							onClick={open}
-							className={button({
-								intent: "secondary",
-							})}
-						>
-							<span className={buttonInnerRing({ intent: "secondary" })} />
-							<RiAddFill size={20} />
-							New Post
-						</button>
-					</aside>
+				<Container className="flex flex-col justify-between gap-4 py-10 items-center max-w-lg">
+					<main className="flex flex-col gap-8">
+						<div className="flex flex-col gap-1">
+							<h1 className="text-left w-full text-slate-950 text-xl font-medium">
+								Feed
+							</h1>
+							<p className="text-sm text-slate-500 text-pretty">
+								What have you been up to?
+							</p>
+						</div>
+						<div className="flex flex-col justify-between gap-8">
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+						</div>
+					</main>
 				</Container>
 			</div>
+			<NewPost />
 		</div>
 	);
 };
