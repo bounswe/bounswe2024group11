@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PostViewSet, LikeViewSet, BookmarkViewSet, FollowViewSet, UserViewSet, UserRegistrationView, WikidataSuggestionsView
+from .views import *
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
@@ -12,5 +12,6 @@ router.register(r'users', UserViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserRegistrationView.as_view(), name='user_registration'),
-    path('wikidata/suggestions/', WikidataSuggestionsView.as_view(), name='wikidata_suggestions'),
+    path('suggestions/', WikidataSuggestionsView.as_view(), name='wikidata_suggestions'),
+    path('post-search/', PostSearchView.as_view(), name='wikidata_post_search'),
 ]
