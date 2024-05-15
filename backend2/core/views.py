@@ -17,10 +17,18 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         followings = user.following.all().values_list('following_id', flat=True)
-        return Post.objects.filter(author__in=followings)
+        return Post.objects.filter(author__in=followings) | Post.objects.filter(author=user)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if(instance.author != request.user):
+            return Response({'res': 'You are not authorized to delete this post.'}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            self.perform_destroy(instance)
+            return Response({'res': 'Post deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class LikeViewSet(viewsets.ModelViewSet):
