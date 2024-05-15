@@ -6,18 +6,18 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .models import Post, Like, Bookmark, Follow
 from .serializers import *
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsAuthorOwnerOrReadOnly, IsUserOwnerOrReadOnly, IsFollowerOwnerOrReadOnly
 from . import wikidata_helpers
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsAuthorOwnerOrReadOnly]
 
     def get_queryset(self):
         user = self.request.user
         followings = user.following.all().values_list('following_id', flat=True)
-        return Post.objects.filter(author__in=followings)
+        return Post.objects.filter(author__in=followings) | Post.objects.filter(author=user)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -26,19 +26,19 @@ class PostViewSet(viewsets.ModelViewSet):
 class LikeViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserOwnerOrReadOnly]
 
 
 class BookmarkViewSet(viewsets.ModelViewSet):
     queryset = Bookmark.objects.all()
     serializer_class = BookmarkSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserOwnerOrReadOnly]
 
 
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
