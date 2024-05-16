@@ -15,10 +15,10 @@ type ProfileScreenProps = {
 };
 
 function ProfileScreen({ navigation, route }: ProfileScreenProps) {
-  const { profileUsername } = route.params;
+  const { profileUserId } = route.params;
   return (
     <View>
-      <ProfileInfo profileUser={profileUsername} />
+      <ProfileInfo profileUserId={profileUserId} />
     </View>
   );
 }

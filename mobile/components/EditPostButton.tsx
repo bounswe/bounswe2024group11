@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { View } from "react-native";
 import { Button, FAB, Icon } from "react-native-paper";
@@ -13,17 +13,11 @@ type FeedNavigationProp = NavigationProp<RootStackParamList, "Feed">;
 const EditPostButton = () => {
   const navigation = useNavigation<FeedNavigationProp>();
 
+  const [postId, setPostId] = useState(-1); // [postId, setPostId] = useState(0)
+
   const handleEditPost = () => {
     navigation.navigate("EditPost", {
-      authorNS: "string",
-      authorImg: "string",
-      authorUsername: "string",
-      title: "string",
-      content: "string",
-      imgsource: "string",
-      likes: 1,
-      bookmarked: true,
-      isLiked: true,
+      postId,
     });
   };
 

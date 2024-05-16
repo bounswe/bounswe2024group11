@@ -43,7 +43,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               },
             ]}
           >
-            <ProfileInfo profileUser={user.user.username} />
+            <ProfileInfo profileUserId={user.user.id} />
             {/* <Divider style={styles.divider}/>   
             <Image
               source={require("../assets/zenith-logo-login.png")}

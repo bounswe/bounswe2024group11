@@ -140,7 +140,7 @@ function Post({ route, navigation }: Props) {
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("Profiles", {
-                profileUsername: authorUsername,
+                profileUserId: authorId,
               })
             }
           >

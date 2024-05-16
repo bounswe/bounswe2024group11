@@ -5,9 +5,9 @@ export type RootStackParamList = {
   Post: { post_id: number };
   Search: undefined;
   Profile: undefined;
-  Profiles: { profileUsername: string };
+  Profiles: { profileUserId: number };
   CreatePost: undefined;
-  EditPost: {postId: number};
+  EditPost: { postId: number };
 };
 
 interface PostProps {
