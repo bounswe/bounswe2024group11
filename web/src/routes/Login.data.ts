@@ -1,4 +1,4 @@
-import type { LoginSuccess } from "@/schema/user";
+import type { LoginSuccess } from "@/types/user";
 import { href } from "../router";
 import { useActionData } from "react-router-typesafe";
 import { makeLoader, redirect } from "react-router-typesafe";
@@ -59,8 +59,8 @@ export const loginAction = async ({ request }: { request: Request }) => {
 		await response.json(),
 	);
 	if (!success) {
-		console.log(issues);
-		return null;
+		console.error(issues);
+		return { error: "Invalid response" };
 	}
 
 	if (formData.get("keep") === "on") {

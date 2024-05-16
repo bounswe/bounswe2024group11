@@ -3,7 +3,7 @@ import type {
 	Profile,
 	RegisterSuccess,
 	User,
-} from "../schema/user";
+} from "../types/user";
 import { makeAction, makeLoader, redirect } from "react-router-typesafe";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
