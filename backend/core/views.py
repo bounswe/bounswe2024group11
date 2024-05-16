@@ -240,6 +240,11 @@ class WikiInfoView(APIView):
                 {"res": 'Parameter "qid" is required.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        if qid[0] != "Q":
+            return Response(
+                {"res": f'QID should start with "Q".'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         try:
             result_data = wikidata_helpers.wiki_info_helper(qid)
