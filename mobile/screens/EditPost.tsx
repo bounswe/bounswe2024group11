@@ -52,7 +52,7 @@ function EditPost({ route, navigation }: Props) {
     }
     setLoading(true);
     post({
-      endpoint: "posts/${postId}",
+      endpoint: `posts/${postId}`,
       data: {
         titleNew,
         contentNew,
