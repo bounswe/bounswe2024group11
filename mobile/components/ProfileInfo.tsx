@@ -7,8 +7,8 @@ import { User, useUser } from "../context/UserContext";
 import CustomButton from "./CustomButton";
 import { get } from "./StorageHandler";
 
-const ProfileInfo = (props: { profileUser: string }) => {
-  const { profileUser } = props;
+const ProfileInfo = (props: { profileUserId: number }) => {
+  const { profileUserId } = props;
 
   const theme = useTheme();
   const { user } = useUser();
@@ -16,11 +16,7 @@ const ProfileInfo = (props: { profileUser: string }) => {
   const [following, setFollowing] = useState(true);
   const [profileInfo, setProfileInfo] = useState<User | undefined>(user?.user);
 
-  useEffect(() => {
-    getProfileInfo();
-  }, []);
-
-  const getProfileInfo = () => {};
+  useEffect(() => {}, []);
 
   const onFollowPress = () => {
     setFollowing(!following);

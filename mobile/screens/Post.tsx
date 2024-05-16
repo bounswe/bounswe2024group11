@@ -36,7 +36,7 @@ function Post({ route, navigation }: Props) {
   const theme = useTheme();
   const { user } = useUser();
 
-  const [authorId, setAuthorId] = useState(0); // [authorId, setAuthorId] = useState(0)
+  const [authorId, setAuthorId] = useState(-1); // [authorId, setAuthorId] = useState(0)
   const [authorUsername, setAuthorUsername] = useState("");
   const [authorFullName, setAuthorFullName] = useState("");
   const [authorImg, setAuthorImg] = useState("");
@@ -59,7 +59,7 @@ function Post({ route, navigation }: Props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        setAuthorId(data.author);
+        setAuthorId(data.user_id);
         setAuthorUsername(data.username);
         setTitle(data.title);
         setContent(data.content);
@@ -77,6 +77,7 @@ function Post({ route, navigation }: Props) {
   }, []);
 
   useEffect(() => {
+    if (authorId === -1) return;
     get({
       endpoint: `profiles/${authorId}`,
       token: user?.token,
@@ -90,7 +91,7 @@ function Post({ route, navigation }: Props) {
       .catch((error) => {
         console.log(error);
       });
-  }, [authorUsername]);
+  }, [authorId]);
 
   const bookmarkPost = () => {
     if (isBookmarked) {
