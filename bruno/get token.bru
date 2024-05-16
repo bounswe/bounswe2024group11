@@ -1,0 +1,18 @@
+meta {
+  name: get token
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}:{{port}}/api/token/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username":"username5",
+    "password":"pass5"
+  }
+}
