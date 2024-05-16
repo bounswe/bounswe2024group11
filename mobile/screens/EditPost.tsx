@@ -30,19 +30,12 @@ type Props = {
 function EditPost({ route, navigation }: Props) {
   
   const {
-    title,
-    content,
-    imgsource,
-    likes,
-    authorNS,
-    authorImg,
-    authorUsername,
-    bookmarked,
-    isLiked,
+    postId, 
   } = route.params;
-  const [titleNew, setTitle] = useState(title);
-  const [contentNew, setContent] = useState(content);
-  const [imageNew, setImage] = useState(imgsource);
+  const [postIdCurrent, setPostId] = useState(postId);
+  const [titleNew, setTitle] = useState("");
+  const [contentNew, setContent] = useState("");
+  const [imageNew, setImage] = useState("");
   const [suggestions, setSuggestions] = useState<
     Array<{ qid: string; label_description: string }>
   >([]); // Array<{qid: string, label_description: string}>
@@ -59,7 +52,7 @@ function EditPost({ route, navigation }: Props) {
     }
     setLoading(true);
     post({
-      endpoint: "posts/edit",
+      endpoint: "posts/${postId}",
       data: {
         titleNew,
         contentNew,
@@ -118,7 +111,7 @@ function EditPost({ route, navigation }: Props) {
     <ScrollView style={styles.createPostWrapper}>
       <View style={styles.createPostContainer}>
         <CustomInput
-          placeholder=" a title to your post..."
+          placeholder="Update the title..."
           value={titleNew}
           setValue={setTitle}
           secure={false}
@@ -126,7 +119,7 @@ function EditPost({ route, navigation }: Props) {
         />
         <View style={{ height: 200 }}>
           <CustomInput
-            placeholder="What do you want to say?..."
+            placeholder="Update the description..."
             value={contentNew}
             setValue={setContent}
             secure={false}
@@ -135,7 +128,7 @@ function EditPost({ route, navigation }: Props) {
           />
         </View>
         <CustomInput
-          placeholder="Add an image..."
+          placeholder="Update the image..."
           value={imageNew}
           setValue={setImage}
           secure={false}
