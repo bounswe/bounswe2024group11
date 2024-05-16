@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from .models import Post, Like, Bookmark, Follow
 
 
-class PostSerializer(serializers.ModelSerializer):
+class CreatePostSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Post
         read_only_fields = ['author']
@@ -11,11 +12,25 @@ class PostSerializer(serializers.ModelSerializer):
 
 class SearchPostSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="get_author_username", read_only=True)
+    like_count = serializers.SerializerMethodField()
+    bookmark_count = serializers.SerializerMethodField()
+    liked_by = serializers.SerializerMethodField()
+
+
+    def get_like_count(self, obj):
+        return obj.like_set.count()
+
+    def get_bookmark_count(self, obj):
+        return obj.bookmark_set.count()
     
+    def get_liked_by(self, obj):
+        likes = obj.like_set.all()
+        return [like.user.username for like in likes]
+
     class Meta:
         model = Post
         exclude = ['author']
-        read_only_fields = ["username", "title", "content", "image_src", "qid", "qtitle", "created_at", "updated_at"]
+        read_only_fields = ["username", "title", "content", "image_src", "qid", "qtitle", "created_at", "updated_at", "like_count", "bookmark_count", "liked_by"]
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:

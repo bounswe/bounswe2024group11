@@ -8,10 +8,12 @@ from .models import Post, Like, Bookmark, Follow
 from .serializers import *
 from .permissions import IsAuthorOwnerOrReadOnly, IsUserOwnerOrReadOnly, IsFollowerOwnerOrReadOnly
 from . import wikidata_helpers
+from django.db.models import Count
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = CreatePostSerializer
     permission_classes = [permissions.IsAuthenticated, IsAuthorOwnerOrReadOnly]
 
     def get_queryset(self):
@@ -21,6 +23,16 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+class ViewPostListView(ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = SearchPostSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.annotate(like_count=Count('like'), bookmark_count=Count('bookmark'))
+        return queryset
 
 
 class LikeViewSet(viewsets.ModelViewSet):
