@@ -2,7 +2,7 @@ import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserType } from "../context/UserContext";
 
-const URI = "http://164.90.189.150:8000/api/v1";
+const URI = "http://164.90.189.150:8000/api";
 
 type RequestProps = {
   endpoint: string;
@@ -32,7 +32,11 @@ export const post = async (props: RequestProps) => {
   const getRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "POST",
     body: formData,
-    headers: props.token ? { Authorization: `Bearer: ${props.token}` } : {},
+    // add contetnt type
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+    },
   });
   return fetch(getRequest).then((response) => {
     switch (response.status) {
@@ -53,7 +57,62 @@ export const get = async (props: RequestProps) => {
   const query = new URLSearchParams(props.data).toString();
   const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
     method: "GET",
-    headers: props.token ? { Authorization: `Bearer: ${props.token}` } : {},
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+    },
+  });
+  return fetch(getRequest).then((response) => {
+    switch (response.status) {
+      case 200:
+      case 201:
+        return response.json();
+      case 400:
+        throw new BadRequestError("Bad request!");
+      case 401:
+        throw new UnauthorizedError("Unauthorized access!");
+      default:
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  });
+};
+
+export const put = async (props: RequestProps) => {
+  const formData = new FormData();
+  for (const key in props.data) {
+    formData.append(key, props.data[key]);
+  }
+  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: "PUT",
+    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+    },
+  });
+  return fetch(getRequest).then((response) => {
+    switch (response.status) {
+      case 200:
+      case 201:
+        return response.json();
+      case 400:
+        throw new BadRequestError("Bad request!");
+      case 401:
+        throw new UnauthorizedError("Unauthorized access!");
+      default:
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  });
+};
+
+export const del = async (props: RequestProps) => {
+  const query = new URLSearchParams(props.data).toString();
+  const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+    },
   });
   return fetch(getRequest).then((response) => {
     switch (response.status) {

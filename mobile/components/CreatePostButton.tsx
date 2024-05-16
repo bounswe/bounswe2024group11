@@ -3,22 +3,14 @@ import React from "react";
 import { View } from "react-native";
 import { Button, FAB, Icon } from "react-native-paper";
 
-import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
-
 import { styles } from "./Styles";
 import { RootStackParamList } from "./Types";
 import { useTheme } from "../context/ThemeContext";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
-type FeedNavigationProp = MaterialBottomTabNavigationProp<
-  RootStackParamList,
-  "Feed"
->;
-
-const CreatePostButton = ({
-  navigation,
-}: {
-  navigation: FeedNavigationProp;
-}) => {
+const CreatePostButton = () => {
+  const navigation =
+    useNavigation<NavigationProp<RootStackParamList, "Feed">>();
   const handleCreatePost = () => {
     navigation.navigate("CreatePost");
   };

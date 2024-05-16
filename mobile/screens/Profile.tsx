@@ -6,7 +6,7 @@ import { Button } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { StyleSheet, Image, ImageSourcePropType } from "react-native";
 
-import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
+import { NavigationProp } from "@react-navigation/native";
 
 import { RootStackParamList } from "../components/Types";
 import ProfileHeader from "../components/ProfileHeader";
@@ -17,10 +17,7 @@ import { useTheme } from "../context/ThemeContext";
 import ProfileInfo from "../components/ProfileInfo";
 import CustomOutput from "../components/CustomOutput";
 
-type ProfileNavigationProp = MaterialBottomTabNavigationProp<
-  RootStackParamList,
-  "Profile"
->;
+type ProfileNavigationProp = NavigationProp<RootStackParamList, "Profile">;
 
 function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
   const { user } = useUser();
@@ -34,7 +31,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
         },
       ]}
     >
-      <ProfileHeader navigation={navigation} />
+      <ProfileHeader />
       <View style={styles.container}>
         {user ? (
           <View
@@ -46,7 +43,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               },
             ]}
           >
-            <ProfileInfo profileUser={user.user} />
+            <ProfileInfo profileUser={user.user.username} />
             {/* <Divider style={styles.divider}/>   
             <Image
               source={require("../assets/zenith-logo-login.png")}

@@ -13,6 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { post, get } from "../components/StorageHandler";
+import { useUser } from "../context/UserContext";
 
 type CreatePostNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,6 +33,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   const [suggestLoading, setSuggestLoading] = useState(false);
 
   const theme = useTheme();
+  const { user } = useUser();
 
   const handleSubmit = () => {
     if (!qid) {
@@ -39,13 +41,15 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
     }
     setLoading(true);
     post({
-      endpoint: "posts/create",
+      endpoint: "posts/",
       data: {
         title,
         content,
-        image,
-        tag: qid,
+        image_src: image,
+        qid,
+        qtitle: tag.split(":")[0],
       },
+      token: user?.token,
     })
       .then((response) => {
         console.log(response);
@@ -80,7 +84,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
     }
     setSuggestLoading(true);
     get({
-      endpoint: "users/wikidata-suggestions",
+      endpoint: "suggestions/",
       data: { keyword: tag.trim() },
     })
       .then((data) => {

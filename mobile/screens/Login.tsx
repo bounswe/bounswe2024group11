@@ -8,7 +8,7 @@ import {
   Divider,
 } from "react-native-paper";
 
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NavigationProp } from "@react-navigation/native";
 
 import { RootStackParamList } from "../components/Types";
 import CustomInput from "../components/CustomInput";
@@ -24,7 +24,7 @@ import {
   post,
 } from "../components/StorageHandler";
 
-type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
+type LoginNavigationProp = NavigationProp<RootStackParamList, "Auth">;
 
 const Login = ({
   navigation,

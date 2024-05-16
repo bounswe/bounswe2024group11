@@ -1,61 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { View, Text } from "react-native";
 
-import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
+import { NavigationProp } from "@react-navigation/native";
 
 import FeedHeader from "../components/FeedHeader";
 import CreatePostButton from "../components/CreatePostButton";
 import Post from "../components/Post";
 import { RootStackParamList } from "../components/Types";
 import { useUser } from "../context/UserContext";
-import { styles } from "../components/Styles";
-import { isNewBackTitleImplementation } from "react-native-screens";
+
+import { get } from "../components/StorageHandler";
 import EditPostButton from "../components/EditPostButton";
 
-type FeedNavigationProp = MaterialBottomTabNavigationProp<
-  RootStackParamList,
-  "Feed"
->;
+type FeedNavigationProp = NavigationProp<RootStackParamList, "Feed">;
 
 function Feed({ navigation }: { navigation: FeedNavigationProp }) {
   const { user, setUser } = useUser();
 
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    get({
+      endpoint: "posts",
+      token: user?.token,
+      data: {},
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setPosts(data);
+      });
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <FeedHeader navigation={navigation} />
+      <FeedHeader />
       <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch" }}>
-        <Post
-          authorImg="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg"
-          bookmarked={false}
-          likes={5}
-          authorNS="Arda Vural"
-          authorUsername="arda_vural"
-          title="ARDA HAS BECOME A HERO"
-          content="AA s  s  a dsfkpsdfnsd vjsdnvdsjvsj vsjdvfnsdlnvsd vnksd vldjsvnsdjl"
-          imgsource="https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg"
-          onClickFunction={() =>
-            navigation.navigate("Post", {
-              props: {
-                authorImg:
-                  "https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg",
-                bookmarked: false,
-                likes: 5,
-                authorNS: "Arda Vural",
-                authorUsername: "arda_vural",
-                title: "ARDA HAS BECOME A HERO",
-                content:
-                  "AA s  s  a dsfkpsdfnsd vjsdnvdsjvsj vsjdvfnsdlnvsd vnksd vldjsvnsdjl",
-                imgsource:
-                  "https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg",
-                isLiked: false,
-              },
-            })
-          }
-        />
+        {posts.map((post: any) => (
+          <Post
+            key={post.id}
+            authorNS={post.authorNS}
+            authorImg={post.authorImg}
+            authorUsername={post.authorUsername}
+            title={post.title}
+            content={post.content}
+            imgsource={post.imgsource}
+            likes={post.likes}
+            bookmarked={post.bookmarked}
+            onClickFunction={() => {
+              navigation.navigate("Post", { post_id: post.id });
+            }}
+          />
+        ))}
       </View>
-      {user && <CreatePostButton navigation={navigation} />}
-      {user && <EditPostButton navigation={navigation} />}
+      {user && <CreatePostButton />}
+      {user && <EditPostButton />}
     </View>
   );
 }

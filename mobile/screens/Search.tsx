@@ -12,9 +12,11 @@ import { useTheme } from "../context/ThemeContext";
 
 const categoryList = [
   { label: "born in", value: "born in" },
-  { label: "from universe", value: "from universe" },
-  { label: "from the comics", value: "from the comics" },
-  { label: "has superpower", value: "has superpower" },
+  { label: "enemy of", value: "enemy of" },
+  { label: "occupation", value: "occupation" },
+  { label: "present in", value: "present in" },
+  { label: "educated at", value: "educated at" },
+  { label: "member of", value: "member of" },
 ];
 
 function Search() {
@@ -79,7 +81,7 @@ function Search() {
         keyword: qid,
         category: dropdownValue,
       },
-      endpoint: "user/search/",
+      endpoint: "search/",
     })
       .then((response) => {
         setSearchResults(response.results);
