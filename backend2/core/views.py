@@ -67,20 +67,13 @@ class BookmarkViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class FollowAPIView(APIView):
+class FollowViewSet(viewsets.ModelViewSet):
+    queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
 
-    def get(self, request, *args, **kwargs):
-        follows = Follow.objects.all()
-        serializer = FollowSerializer(follows, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, *args, **kwargs):
-        serializer = FollowSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(follower=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(follower=self.request.user)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
