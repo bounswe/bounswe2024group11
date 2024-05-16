@@ -15,6 +15,8 @@ import { suggestionsLoader } from "./routes/shadow/Suggestions.data";
 import { updateProfileAction } from "./routes/shadow/profile/UpdateProfile.data";
 import { deleteProfileAction } from "./routes/shadow/profile/DeleteProfile.data";
 import { authLoader } from "./routes/global/auth.data";
+import { likeAction } from "./routes/shadow/post/Like.data";
+import { bookmarkAction } from "./routes/shadow/post/Bookmark.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -70,6 +72,14 @@ export const { router, href } = typesafeBrowserRouter([
 			{
 				path: "/update_bio",
 				action: updateProfileAction,
+			},
+			{
+				path: "/like_post",
+				action: likeAction,
+			},
+			{
+				path: "/bookmark_post",
+				action: bookmarkAction,
 			},
 		],
 	},

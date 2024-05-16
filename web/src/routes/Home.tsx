@@ -34,16 +34,23 @@ const CATEGORIES = [
 	"has superpower",
 ];
 
-const post = {
-	author: 1,
-	id: 0,
-	bookmarkcount: 31,
-	likecount: 41,
-	title: "A new beginning",
-	text: "Once upon a time in a galaxy far far away there was a star. It was a very bright star. It was the brightest star in. It is the most beautiful star. Copilot of the millennium falcon. The star was so bright that it could be seen from the other side of something.",
-	imgUrl:
-		"https://science.nasa.gov/wp-content/uploads/2023/09/Milky_Way_illustration-1.jpeg?w=1536&format=webp",
-	tag: "space",
+const post: Post = {
+	id: 4,
+	username: "username1",
+	user_id: "2",
+	likeCount: 0,
+	bookmarkCount: 0,
+	likedBy: [],
+	isLikedBy: false,
+	isBookmarked: false,
+	title: "title4",
+	content: "content4",
+	imageSrc:
+		"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
+	qid: "Q79037",
+	qtitle: "qtitle4",
+	createdAt: "2024-05-15T15:40:28.307213Z",
+	updatedAt: "2024-05-15T15:40:28.307213Z",
 };
 
 export const Home = () => {
@@ -240,7 +247,7 @@ export const Home = () => {
 			</div>
 			<div>
 				<Container className="flex flex-col justify-between gap-4 py-10 items-center max-w-lg">
-					<main className="flex flex-col gap-8">
+					<main className="flex flex-col gap-8 w-full">
 						<div className="flex flex-col gap-1">
 							<h1 className="text-left w-full text-slate-950 text-xl font-medium">
 								Feed
@@ -250,11 +257,6 @@ export const Home = () => {
 							</p>
 						</div>
 						<div className="flex flex-col justify-between gap-8">
-							<Post post={post} />
-							<Post post={post} />
-							<Post post={post} />
-							<Post post={post} />
-							<Post post={post} />
 							<Post post={post} />
 						</div>
 					</main>

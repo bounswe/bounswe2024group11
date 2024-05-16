@@ -22,7 +22,6 @@ export const Profile = () => {
 	const { profile } = useLoaderData<typeof profileLoader>();
 	const user = useRouteLoaderData<typeof authLoader>("auth");
 	const isOwner = user && user.username === profile.username;
-
 	const submit = useSubmit();
 	const actionData = useActionData<typeof loginAction>();
 	const isAuthError = actionData && "error" in actionData;
@@ -125,7 +124,7 @@ export const Profile = () => {
 									classNames={{
 										input: "border-0 rounded-4 w-full text-slate-700",
 									}}
-									defaultValue={user.fullname}
+									defaultValue={user?.username}
 									type="text"
 									required
 									name="fullname"
@@ -146,7 +145,7 @@ export const Profile = () => {
 									classNames={{
 										input: "border-0 rounded-4 w-full text-slate-700",
 									}}
-									defaultValue={user.email}
+									defaultValue={profile.email}
 									type="text"
 									required
 									name="email"
@@ -167,7 +166,7 @@ export const Profile = () => {
 									classNames={{
 										input: "border-0 rounded-4 w-full text-slate-700",
 									}}
-									defaultValue={user.username}
+									defaultValue={profile.username}
 									type="text"
 									required
 									name="username"
@@ -188,7 +187,7 @@ export const Profile = () => {
 									classNames={{
 										input: "border-0 rounded-4 w-full text-slate-700",
 									}}
-									defaultValue={user.picUrl}
+									defaultValue={profile.picUrl}
 									type="text"
 									required
 									name="picUrl"
@@ -209,7 +208,7 @@ export const Profile = () => {
 						method="POST"
 						className="w-full items-stretch flex flex-col"
 					>
-						<input hidden name="username" defaultValue={user.username} />
+						<input hidden name="username" defaultValue={profile.username} />
 						<button type="submit" className={button({ intent: "destructive" })}>
 							<div className={buttonInnerRing({ intent: "secondary" })} />
 							<span>Delete Account</span>

@@ -1,5 +1,6 @@
 import {
 	RiBook2Line,
+	RiBookmark2Line,
 	RiDeleteBin6Line,
 	RiEditLine,
 	RiHeart3Line,
@@ -8,25 +9,26 @@ import {
 } from "@remixicon/react";
 import { Menu } from "@mantine/core";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useFetcher } from "react-router-dom";
 import { button } from "../components/Button";
+import { getRelativeTime } from "../utils/date";
 
-type PostProps = {
-	post: {
-		id: number;
-		bookmarkcount: number;
-		likecount: number;
-		text: string;
-		imgUrl: string;
-		author: number;
-		tag: string;
-		title?: string;
-	};
+const user = {
+	email: "john@email.com",
+	fullname: "Ümit Can Evleksiz",
+	username: "ucedesign",
+	post: 41,
+	followers: 100,
+	following: 5432,
+	imgUrl:
+		"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
 };
 
 const Author = ({
 	user,
-}: { user: { imgUrl: string; fullname: string; username: string } }) => {
+}: {
+	user: { imgUrl: string; fullname: string; username: string };
+}) => {
 	return (
 		<div className="flex flex-row gap-3 w-full items-center py-2">
 			<Link
@@ -54,24 +56,58 @@ const Author = ({
 	);
 };
 
-const user = {
-	email: "john@email.com",
-	fullname: "Ümit Can Evleksiz",
-	username: "ucedesign",
-	post: 41,
-	followers: 100,
-	following: 5432,
-	imgUrl:
-		"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
+type Post = {
+	id: number;
+	username: string;
+	user_id: string;
+	likeCount: number;
+	bookmarkCount: number;
+	likedBy: string[];
+	isLikedBy: boolean;
+	isBookmarked: boolean;
+	title: string;
+	content: string;
+	imageSrc: string;
+	qid: string;
+	qtitle: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
+type PostProps = {
+	post: Post;
 };
 
 const Post = ({
-	post: { id, bookmarkcount, likecount, title, text, imgUrl, author, tag },
+	post: {
+		id,
+		username,
+		likeCount,
+		bookmarkCount,
+		title,
+		content,
+		imageSrc,
+		qid,
+		qtitle,
+		isBookmarked,
+		isLikedBy,
+		createdAt,
+		updatedAt,
+	},
 }: PostProps) => {
+	const likeFetcher = useFetcher();
+	const bookmarkFetcher = useFetcher();
 	return (
-		<section className="flex max-w-lg flex-col gap-3 justify-between items-center px-5 py-4 rounded-2 border-slate-200 border">
-			<div className="flex flex-row w-full justify-between items-center">
-				<Author user={user} />
+		<section className="flex max-w-lg flex-col gap-3 justify-between items-stretch px-5 py-4 rounded-2 border-slate-200 border w-full">
+			<div className="flex flex-row justify-between items-center">
+				<Author
+					user={{
+						imgUrl:
+							"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
+						fullname: "Ümit Can Evleksiz",
+						username,
+					}}
+				/>
 				<Menu position="right-start">
 					<Menu.Target>
 						<button
@@ -87,7 +123,6 @@ const Post = ({
 						>
 							Edit
 						</Menu.Item>
-
 						<Menu.Item
 							color="red"
 							leftSection={
@@ -106,52 +141,71 @@ const Post = ({
 			<div className="flex gap-6 flex-col text-slate-500">
 				<img
 					className="w-full rounded-2 max-h-72 object-cover"
-					src={imgUrl}
+					src={imageSrc}
 					aria-label="post picture"
 				/>
 				<div className="flex flex-col gap-3">
-					{title && (
-						<div className="flex flex-col gap-2">
+					<div className="flex flex-col gap-2">
+						<div className="flex justify-between items-center">
 							<h2 className="text-slate-900 font-medium text-lg">{title}</h2>
-							<hr className="border-slate-200" />
+							<p className="text-slate-500 text-xs">
+								Posted {getRelativeTime(new Date(createdAt))}
+							</p>
 						</div>
-					)}
+						<hr className="border-slate-200" />
+					</div>
+
 					<p className="text-slate-600 text-sm leading-6 tracking-tight">
-						{text}
+						{content}
 					</p>
 					<Link
-						to={`/search=${tag}`}
+						to={`/search=${qtitle}`}
 						className="text-cyan-800 bg-cyan-50 px-2 leading-7 hover:bg-cyan-100 active:bg-cyan-200 transition-colors rounded-full self-start"
 					>
-						#{tag}
+						#{qtitle}
 					</Link>
 				</div>
 			</div>
 			<div className="flex flex-row justify-between w-full">
-				<div className="flex flex-row justify-between gap-1 items-center">
-					<button
-						type="button"
-						className="flex gap-1 items-center group hover:bg-slate-50 px-2 rounded-full transition-colors"
+				<div className="flex flex-row justify-between items-center">
+					<likeFetcher.Form method="POST" action="/like_post">
+						<input hidden name="username" value={username} />
+						<input hidden name="post_id" value={id} />
+						<button
+							type="submit"
+							className="flex gap-1 items-center group hover:bg-slate-50 px-2 py-2 rounded-full transition-colors"
+						>
+							<RiHeart3Line
+								size={20}
+								className="text-slate-700 group-hover:text-slate-900"
+							/>
+						</button>
+					</likeFetcher.Form>
+					<a
+						className="text-slate-700 text-sm leading-7 hover:underline"
+						href="/"
 					>
-						<RiHeart3Line
-							size={20}
-							className="text-slate-700 group-hover:text-slate-900"
-						/>
-						<span className="text-slate-500 text-sm leading-7">
-							{likecount}
-						</span>
-					</button>
+						{likeCount}
+					</a>
 				</div>
-				<button
-					type="button"
-					className={button({
-						intent: "primary",
-						icon: "none",
-						size: "small",
-					})}
-				>
-					<RiBook2Line size={20} color="slate" />
-				</button>
+				<div className="flex flex-row justify-between items-center">
+					<a
+						href="/"
+						className="text-slate-700 text-sm leading-7 hover:underline"
+					>
+						{bookmarkCount}
+					</a>
+					<bookmarkFetcher.Form method="POST" action="/bookmark_post">
+						<input hidden name="username" value={username} />
+						<input hidden name="post_id" value={id} />
+						<button
+							type="submit"
+							className="flex gap-1 items-center group hover:bg-slate-50 py-2 px-2 rounded-full transition-colors"
+						>
+							<RiBookmark2Line size={20} className="text-slate-700" />
+						</button>
+					</bookmarkFetcher.Form>
+				</div>
 			</div>
 		</section>
 	);
