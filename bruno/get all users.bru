@@ -1,0 +1,19 @@
+meta {
+  name: get all users
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/v2/users/
+  body: none
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1OTY3OTEzLCJpYXQiOjE3MTU4ODE1MTMsImp0aSI6IjRmMDZjNDk3OTIzODQ4MmJhMzkxOTIwNGFhYzhlZjNiIiwidXNlcl9pZCI6NH0.JJ9FRjIhyiWCLyqWTT1-aw16BUKvxY2ZbEP0j33nluA
+}

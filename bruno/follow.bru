@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{base_url}}:{{posrt}}/api/follows/
+  url: {{base_url}}:{{port}}/api/v2/follows/
   body: json
   auth: bearer
 }
@@ -15,11 +15,11 @@ headers {
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1OTMzOTc0LCJpYXQiOjE3MTU4NDc1NzQsImp0aSI6IjE2MjM2Yjg0YzEzMzQyM2I4OTllZjcxNTQyZGZhODc1IiwidXNlcl9pZCI6Mn0.zVvWB8AXwJQYEsDu9oIvNpMaKk9Nj1yb7a5xplZjG_0
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1OTY4MDkwLCJpYXQiOjE3MTU4ODE2OTAsImp0aSI6IjE1MDdjNDYyZGEwNDQ0YzA5ZmU4ZWI1MjNkM2VjYTA4IiwidXNlcl9pZCI6Mn0.qWUPfXkGLFXgmokOZgltQUO256EQYoP_A4NSnVzmozE
 }
 
 body:json {
   {
-    "following":1
+    "following":4
   }
 }
