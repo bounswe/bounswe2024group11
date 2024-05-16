@@ -14,7 +14,7 @@ from .permissions import (
 from . import wikidata_helpers
 from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
-from swagger_docs.wikidata_swagger import *
+from swagger_docs.swagger import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
@@ -192,6 +192,7 @@ class SearchPostView(ListAPIView):
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(**login_swagger)
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
