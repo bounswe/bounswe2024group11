@@ -53,13 +53,21 @@ class BookmarkViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class FollowViewSet(viewsets.ModelViewSet):
-    queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
+class FollowAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(follower=self.request.user)
+    def get(self, request, *args, **kwargs):
+        follows = Follow.objects.all()
+        serializer = FollowSerializer(follows, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = FollowSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(follower=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -132,21 +140,15 @@ class SearchPostView(ListAPIView):
             
             # Extract QIDs from the result_data
             qids = [entry['qid'] for entry in result_data.data['results']]
-            print("qids",qids)
             # Call the SearchPostView's get method with QIDs as query parameters
             # return result_data
             queryset = self.get_queryset()
-            print(request.query_params)
             # search_query = request.query_params.getlist('keyword') 
             search_query = [qid.upper() for qid in qids]
-            print("search query", search_query)
             
             if search_query:
-                print("int")
                 queryset = queryset.filter(qid__in=search_query)
-                print("queryset", queryset)
             queryset = queryset.filter(qid__in=search_query)
-            print("queryset", queryset)
 
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
