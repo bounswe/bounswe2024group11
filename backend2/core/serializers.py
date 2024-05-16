@@ -94,5 +94,5 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        read_only_fields = ["profile_owner"]
+        read_only_fields = ["owner"]
         fields = '__all__'
