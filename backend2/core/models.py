@@ -15,6 +15,9 @@ class Post(models.Model):
     def get_author_username(self):
         return self.author.username
     
+    def get_author_id(self):
+        return self.author.id
+    
     def __str__(self):
         return self.content[:20]
 
