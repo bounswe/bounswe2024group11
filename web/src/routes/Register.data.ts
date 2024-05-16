@@ -1,16 +1,14 @@
-import { object, safeParse, string } from "valibot";
 import { href } from "../router";
-import type { LoginSuccess, RegisterSuccess } from "../types/user";
+import type { LoginSuccess, RegisterSuccess } from "../schema/user";
 import { makeLoader, redirect } from "react-router-typesafe";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const registerResponseSchema = object({
-	username: string(),
-	email: string(),
-});
-
-export const registerAction = async ({ request }: { request: Request }) => {
+export const registerAction = async ({
+	request,
+}: { request: Request }): Promise<
+	LoginSuccess | { error: string } | Response
+> => {
 	console.log("Register Action");
 	const formData = await request.formData();
 	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/register/`, {
@@ -18,17 +16,14 @@ export const registerAction = async ({ request }: { request: Request }) => {
 		body: JSON.stringify(Object.fromEntries(formData.entries())),
 		headers: {
 			Accept: "application/json",
-			"Content-Type": "application/json",
+			'Content-Type': "application/json",
 		},
 	});
-	const responseJson = await response.json();
-
 	if (!response.ok) {
 		switch (response.status) {
 			case 400:
 				return {
-					error: responseJson.error || responseJson.username,
-					//!! delete the username key from the responseJson object
+					error: "Invalid request",
 				};
 			default:
 				return {
@@ -36,20 +31,11 @@ export const registerAction = async ({ request }: { request: Request }) => {
 				};
 		}
 	}
-	console.log(responseJson);
-	const { issues, output, success } = safeParse(
-		registerResponseSchema,
-		responseJson,
-	);
-
-	if (!success) {
-		console.error(issues);
-		return {
-			error: "Invalid response",
-		};
+	const responseJson = await response.json();
+	if (responseJson && "token" in responseJson) {
+		return redirect(href({ path: "/login" }));
 	}
-
-	return redirect("/login");
+	return responseJson as RegisterSuccess;
 };
 
 export const registerLoader = makeLoader(async ({ request }) => {

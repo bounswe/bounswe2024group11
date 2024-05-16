@@ -1,4 +1,4 @@
-import type { User } from "../types/user";
+import type { User } from "../schema/user";
 import { makeLoader } from "react-router-typesafe";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;

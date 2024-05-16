@@ -1,4 +1,4 @@
-import type { User } from "../../types/user";
+import type { User } from "../../schema/user";
 import { makeLoader } from "react-router-typesafe";
 
 export const authLoader = makeLoader(async () => {
