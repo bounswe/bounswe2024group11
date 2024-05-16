@@ -100,6 +100,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
+    is_following = serializers.SerializerMethodField()
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.owner.followers.filter(follower=request.user).exists()
+        return False
+    
     class Meta:
         model = Profile
         read_only_fields = ["owner"]
