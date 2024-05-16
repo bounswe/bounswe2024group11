@@ -18,6 +18,8 @@ class BookmarkSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    follower_username = serializers.CharField(source="get_follower_username", read_only=True)
+    following_username = serializers.CharField(source="get_following_username", read_only=True)
     class Meta:
         model = Follow
         read_only_fields = ['follower']
@@ -50,17 +52,37 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             first_name=validated_data['fullname'],
         )
-        Profile.objects.create(owner=user)
+        Profile.objects.create(owner=user, biography="Please update your biography.", picture="https://i.ibb.co/kHBtv0g/zenith.png")
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
     is_following = serializers.SerializerMethodField()
+    posts = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
+    followings = serializers.SerializerMethodField()
+    follower_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    post_count = serializers.SerializerMethodField()
     def get_is_following(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.owner.followers.filter(follower=request.user).exists()
         return False
-    
+    def get_follower_count(self, obj):
+        return obj.owner.followers.count()
+    def get_following_count(self, obj):
+        return obj.owner.following.count()
+    def get_post_count(self, obj):
+        return Post.objects.filter(author=obj.owner).count()
+    def get_posts(self, obj):
+        posts = Post.objects.filter(author=obj.owner)
+        return SearchPostSerializer(posts, many=True, context=self.context).data
+    def get_followers(self, obj):
+        followers = obj.owner.followers.all()
+        return [follower.follower.username for follower in followers]
+    def get_followings(self, obj):
+        followings = obj.owner.following.all()
+        return [following.following.username for following in followings]
     class Meta:
         model = Profile
         read_only_fields = ["owner"]
