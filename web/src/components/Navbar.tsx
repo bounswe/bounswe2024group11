@@ -134,7 +134,7 @@ export const Navbar = () => {
 	const user = useRouteLoaderData<typeof authLoader>("auth");
 	return (
 		<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0 z-10">
-			<Container>
+			<Container className="max-w-7xl">
 				<header className="w-full md:py-6 py-4 ">
 					<div className="w-full flex flex-row items-center gap-4 justify-between">
 						<Link

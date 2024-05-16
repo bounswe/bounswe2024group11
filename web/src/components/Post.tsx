@@ -102,7 +102,7 @@ const Post = ({
 	const likeFetcher = useFetcher();
 	const bookmarkFetcher = useFetcher();
 	return (
-		<section className="flex max-w-lg flex-col gap-3 justify-between items-stretch px-5 py-4 rounded-2 border-slate-200 border w-full">
+		<section className="flex flex-col gap-3 justify-between items-stretch px-5 py-4 rounded-2 border-slate-200 border w-full">
 			<div className="flex flex-row justify-between items-center">
 				<Author
 					user={{
