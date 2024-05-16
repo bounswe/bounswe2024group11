@@ -4,6 +4,41 @@ from .models import Post, Like, Bookmark, Follow, Profile
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
+    like_count = serializers.SerializerMethodField()
+    bookmark_count = serializers.SerializerMethodField()
+    liked_by = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    is_bookmarked = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+
+
+    def get_like_count(self, obj):
+        return obj.like_set.count()
+
+    def get_bookmark_count(self, obj):
+        return obj.bookmark_set.count()
+    
+    def get_liked_by(self, obj):
+        likes = obj.like_set.all()
+        return [like.user.username for like in likes]
+    
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.like_set.filter(user=request.user).exists()
+        return False
+
+    def get_is_bookmarked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.bookmark_set.filter(user=request.user).exists()
+        return False
+    
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.author.followers.filter(follower=request.user).exists()
+        return False
 
     class Meta:
         model = Post
