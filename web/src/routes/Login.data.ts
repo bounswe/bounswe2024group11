@@ -72,8 +72,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
 		sessionStorage.setItem("zenith_app_token", output.token);
 		sessionStorage.setObject("zenith_app_user", output.user);
 	}
-
-	return output;
+	return redirect("/");
 };
 
 export const loginLoader = makeLoader(async () => {
