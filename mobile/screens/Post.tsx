@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { styles } from "../components/Styles";
-import { Button } from "react-native-paper";
+import { Button, Dialog, Portal } from "react-native-paper";
 import { RouteProp, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../components/Types";
 import { useTheme } from "../context/ThemeContext";
@@ -50,6 +50,7 @@ function Post({ route, navigation }: Props) {
   const [likeCount, setLikeCount] = useState(0);
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [likedBy, setLikedBy] = useState([]);
+  const [likesVisible, setLikesVisible] = useState(false);
 
   useEffect(() => {
     get({
@@ -131,7 +132,9 @@ function Post({ route, navigation }: Props) {
         });
     }
   };
-  const onSeeLikes = () => {};
+  const onSeeLikes = () => {
+    setLikesVisible(!likesVisible);
+  };
 
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
@@ -182,6 +185,14 @@ function Post({ route, navigation }: Props) {
             <Button onPress={onSeeLikes} textColor={theme.colors.neutral[7]}>
               See Likes
             </Button>
+            <Portal>
+              <Dialog visible={likesVisible} onDismiss={onSeeLikes}>
+                <Dialog.Title>Likes</Dialog.Title>
+                <Dialog.Content>
+                  <Text>This is simple dialog</Text>
+                </Dialog.Content>
+              </Dialog>
+            </Portal>
           </View>
           <View>
             <Button

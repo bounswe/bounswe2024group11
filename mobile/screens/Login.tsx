@@ -49,7 +49,7 @@ const Login = ({
     setLoading(true);
     post({
       data: { username: username.trim(), password: password },
-      endpoint: "users/login",
+      endpoint: "login/",
     })
       .then((data) => {
         if (remember) {
@@ -60,6 +60,7 @@ const Login = ({
         navigation.navigate("Home");
       })
       .catch((error) => {
+        console.log("loginnnn", error);
         if (error instanceof UnauthorizedError) {
           setInvalid(true);
         } else {
