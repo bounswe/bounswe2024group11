@@ -16,16 +16,16 @@ services:
     
     backend:
         build:
-            context: ./backend2
+            context: ./backend
         ports:
             - "8000:8000"
         volumes:
-            - ./backend2:/home/app/backend
+            - ./backend:/home/app/backend
         command: >
             sh -c "python manage.py makemigrations &&
             python manage.py migrate &&
             python manage.py runserver 0.0.0.0:8000"
-        env_file: ./backend2/.env
+        env_file: ./backend/.env
         restart: "on-failure"
         depends_on:
             - db
