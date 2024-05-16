@@ -8,6 +8,7 @@ import { RootStackParamList } from "../components/Types";
 import { useTheme } from "../context/ThemeContext";
 import { del, get, post } from "../components/StorageHandler";
 import { useUser } from "../context/UserContext";
+import InfoBox from "../components/InfoBox";
 
 /*
 type PostProps = {
@@ -44,7 +45,7 @@ function Post({ route, navigation }: Props) {
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("");
   const [imgsource, setImgsource] = useState("");
-
+  const [qid, setQid] = useState("");
   const [isBookmarked, setBookmarked] = useState(false);
   const [isLiked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -63,6 +64,7 @@ function Post({ route, navigation }: Props) {
         setAuthorUsername(data.username);
         setTitle(data.title);
         setContent(data.content);
+        setQid(data.qid);
         setTag(data.qtitle);
         setImgsource(data.image_src);
         setBookmarked(data.is_bookmarked);
@@ -195,6 +197,9 @@ function Post({ route, navigation }: Props) {
               {bookmarkCount}{" "}
             </Button>
           </View>
+        </View>
+        <View>
+          <InfoBox qid = {qid}/>
         </View>
       </View>
     </ScrollView>

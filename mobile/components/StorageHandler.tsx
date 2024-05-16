@@ -6,7 +6,7 @@ const URI = "http://164.90.189.150:8000/api";
 
 type RequestProps = {
   endpoint: string;
-  data: { [key: string]: string };
+  data: { [key: string]: any };
   token?: string;
 };
 
