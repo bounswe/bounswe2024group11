@@ -105,11 +105,7 @@ class WikidataSuggestionsView(APIView):
                 {"res": 'Keyword parameter "keyword" is required.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )          
-        if qid[0] != "Q":
-            return Response(
-                {"res": f'QID should start with "Q".'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+
         try:
             url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={keyword}&language=en&format=json"
             response = requests.get(url)
@@ -145,7 +141,10 @@ class SearchPostView(ListAPIView):
 
     @swagger_auto_schema(**search_post_swagger)
     def get(self, request):
-        qid = request.query_params.get("qid").upper()
+        qid = request.query_params.get("qid")
+        if qid:
+            qid = request.query_params.get("qid").upper()
+        
         category = request.query_params.get("category")
         if not qid or not category:
             return Response(
