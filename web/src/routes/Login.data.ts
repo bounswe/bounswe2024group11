@@ -1,5 +1,5 @@
 import type { LoginSuccess } from "@/types/user";
-import { href } from "../router";
+import { href } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
 import { makeLoader, redirect } from "react-router-typesafe";
 import { number, object, safeParse, string } from "valibot";
@@ -73,7 +73,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
 		sessionStorage.setObject("zenith_app_user", output.user);
 	}
 
-	return output;
+	return redirect("/");
 };
 
 export const loginLoader = makeLoader(async () => {
