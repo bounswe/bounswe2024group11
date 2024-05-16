@@ -12,13 +12,11 @@ export type User = {
   id: number;
   username: string;
   email: string;
-  last_login: string | null;
-  date_joined: string;
-  fullname: string;
 };
 
 export type UserType = {
-  token: string;
+  refresh: string;
+  token: string; // only this is useful
   user: User;
 };
 

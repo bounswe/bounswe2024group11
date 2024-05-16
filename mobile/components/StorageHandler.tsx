@@ -2,7 +2,7 @@ import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserType } from "../context/UserContext";
 
-const URI = "http://164.90.189.150:8000/api";
+const URI = "http://164.90.189.150:8000/api/v2";
 
 type RequestProps = {
   endpoint: string;
@@ -29,7 +29,8 @@ export const post = async (props: RequestProps) => {
   // for (const key in props.data) {
   //   formData.append(key, props.data[key]);
   // }
-  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+  console.log(props.data, props.endpoint, props.token);
+  const postRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "POST",
     body: JSON.stringify(props.data),
     // add contetnt type
@@ -38,7 +39,8 @@ export const post = async (props: RequestProps) => {
       ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
-  return fetch(getRequest).then((response) => {
+  console.log(postRequest.headers.get("Authorization"));
+  return fetch(postRequest).then((response) => {
     switch (response.status) {
       case 200:
       case 201:
@@ -87,7 +89,7 @@ export const put = async (props: RequestProps) => {
     body: formData,
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {
@@ -111,7 +113,7 @@ export const del = async (props: RequestProps) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {

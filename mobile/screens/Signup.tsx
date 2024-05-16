@@ -34,6 +34,7 @@ const Signup = ({
 
   const onSignupPress = () => {
     setLoading(true);
+    console.log;
     post({
       data: {
         fullname: fullname.trim(),
@@ -41,16 +42,23 @@ const Signup = ({
         username: username.trim(),
         password: password,
       },
-      endpoint: "users/signup",
+      endpoint: "register/",
     })
       .then((data) => {
         setSuccess(true);
+        post({
+          data: {},
+          endpoint: "profiles/",
+        }).catch((error) => {
+          console.log(error);
+        });
         setTimeout(() => {
           toggle(true);
           setSuccess(false);
         }, 1500);
       })
       .catch((error) => {
+        console.log(error);
         if (error) {
           setInvalid(true);
         } else {

@@ -25,7 +25,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
   const [suggestions, setSuggestions] = useState<
-    Array<{ qid: string; label_description: string }>
+    Array<{ qid: string; label: string; description: string }>
   >([]); // Array<{qid: string, label_description: string}>
   const [tag, setTag] = useState("");
   const [qid, setQid] = useState("");
@@ -40,6 +40,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
       console.log("Please select a tag using suggestions");
     }
     setLoading(true);
+    console.log(user?.token);
     post({
       endpoint: "posts/",
       data: {
@@ -47,7 +48,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
         content,
         image_src: image,
         qid,
-        qtitle: tag.split(":")[0],
+        qtitle: tag,
       },
       token: user?.token,
     })
@@ -64,10 +65,10 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
   };
 
   const handleTagSuggestion =
-    (item: { qid: string; label_description: string }) => () => {
+    (item: { qid: string; label: string; description: string }) => () => {
       setQid(item.qid);
       // this should be changed
-      setTag(item.label_description.split(":")[0]);
+      setTag(item.label);
       setSuggestions([]);
     };
 
@@ -147,7 +148,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
                 onPress={handleTagSuggestion(item)}
                 style={{ color: theme.colors.neutral[7] }}
               >
-                {item.label_description}
+                {item.label + item.description}
               </Text>
             </View>
           )}

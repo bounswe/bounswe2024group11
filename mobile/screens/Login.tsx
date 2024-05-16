@@ -66,6 +66,7 @@ const Login = ({
         navigation.navigate("Home");
       })
       .catch((error) => {
+        console.log("loginnnn", error);
         if (error instanceof UnauthorizedError) {
           setInvalid(true);
         } else {
