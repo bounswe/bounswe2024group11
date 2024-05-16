@@ -4,12 +4,13 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .models import Post, Like, Bookmark, Follow
+from .models import Post, Like, Bookmark, Follow, Profile
 from .serializers import *
 from .permissions import (
     IsAuthorOwnerOrReadOnly,
     IsUserOwnerOrReadOnly,
     IsFollowerOwnerOrReadOnly,
+    IsProfileOwnerOrReadOnly
 )
 from . import wikidata_helpers
 from django.db.models import Count
@@ -174,7 +175,14 @@ class SearchPostView(ListAPIView):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
         except Exception as e:
-            return Response(
-                {"res": "An unexpected error occurred."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+            return Response({'res': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes= [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+           

@@ -47,3 +47,19 @@ class Follow(models.Model):
 
     class Meta:
         unique_together = ('follower', 'following')
+
+
+class Profile(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    picture = models.URLField(blank=True, null=True)
+    biography = models.TextField(blank=True)
+    
+    def get_profile_owner_username(self):
+        return self.owner.username
+    
+    def get_prof_owner_email(self):
+        return self.owner.email
+
+    def __str__(self):
+        return f'{self.owner.username} Profile'
+    
