@@ -1,8 +1,9 @@
 import requests
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from django.contrib.auth.models import User
 from .models import Post, Like, Bookmark, Follow, Profile
 from .serializers import *
@@ -263,3 +264,16 @@ class WikiInfoView(APIView):
                 {"res": "An unexpected error occurred."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    lookup_field = 'username'
+
+    def get_object(self):
+        username = self.kwargs.get(self.lookup_field)
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound(f'User with username "{username}" not found')

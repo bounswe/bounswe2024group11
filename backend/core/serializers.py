@@ -118,3 +118,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         read_only_fields = ["owner"]
         fields = '__all__'
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    picture = serializers.URLField(source="profile.picture", allow_null=True)
+    biography = serializers.CharField(source="profile.biography", allow_blank=True)
+    fullname = serializers.CharField(source="first_name", allow_blank=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'fullname', 'picture', 'biography']
+    
