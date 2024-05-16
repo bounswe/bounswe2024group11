@@ -49,7 +49,7 @@ const Login = ({
     setLoading(true);
     post({
       data: { username: username.trim(), password: password },
-      endpoint: "users/login",
+      endpoint: "login/",
     })
       .then((data) => {
         if (remember) {

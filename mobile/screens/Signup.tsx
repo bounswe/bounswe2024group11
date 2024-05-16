@@ -41,7 +41,7 @@ const Signup = ({
         username: username.trim(),
         password: password,
       },
-      endpoint: "users/signup",
+      endpoint: "register/",
     })
       .then((data) => {
         setSuccess(true);
