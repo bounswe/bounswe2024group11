@@ -40,7 +40,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
       console.log("Please select a tag using suggestions");
     }
     setLoading(true);
-    console.log(user?.token);
+    console.log("Create post");
     post({
       endpoint: "posts/",
       data: {
@@ -54,7 +54,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
     })
       .then((response) => {
         console.log(response);
-        navigation.navigate("Home");
+        navigation.goBack();
       })
       .catch((error) => {
         console.log(error);
@@ -87,6 +87,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
     get({
       endpoint: "suggestions/",
       data: { keyword: tag.trim() },
+      token: user?.token,
     })
       .then((data) => {
         setSuggestions([...data]);

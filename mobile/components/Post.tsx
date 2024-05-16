@@ -42,14 +42,13 @@ function Post(props: PostProps) {
       token: user?.token,
       data: {},
     })
-      .then((response) => response.json())
       .then((data) => {
         setAuthorNS(data.full_name);
         setAuthorImg(data.profile_img);
         setAuthorUsername(data.username);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.log(error);
       });
   }, []);
 

@@ -23,18 +23,22 @@ const InfoBox = (props: { qid: string }) => {
     get({
       endpoint: `info/`,
       data: { qid: qid },
-    }).then((response) => {
-      var results = response.results[0];
-      setInfo({
-        inception: results["Inception"],
-        gender: results["Gender"],
-        birth_name: results["Birth Name"],
-        place_of_birth: results["Place of Birth"],
-        image_src: results["Image"],
-        description: results["Description"],
-        label: results["Label"],
+    })
+      .then((response) => {
+        var results = response.results[0];
+        setInfo({
+          inception: results["Inception"],
+          gender: results["Gender"],
+          birth_name: results["Birth Name"],
+          place_of_birth: results["Place of Birth"],
+          image_src: results["Image"],
+          description: results["Description"],
+          label: results["Label"],
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   });
 
   return (

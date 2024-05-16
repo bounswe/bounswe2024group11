@@ -73,12 +73,12 @@ function Post({ route, navigation }: Props) {
         setBookmarkCount(data.bookmark_count);
         setLiked(data.is_liked);
         setLikeCount(data.like_count);
-        setLikedBy(data.liked_by);
+        if (data.liked_by) setLikedBy(data.liked_by);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [navigation]);
 
   useEffect(() => {
     if (authorId === -1) return;
@@ -213,9 +213,7 @@ function Post({ route, navigation }: Props) {
             </Button>
           </View>
         </View>
-        <View>
-          <InfoBox qid={qid} />
-        </View>
+        <View>{!qid || qid === "" ? null : <InfoBox qid={qid} />}</View>
         {user && user.user.username === authorUsername && (
           <View>
             <CustomButton

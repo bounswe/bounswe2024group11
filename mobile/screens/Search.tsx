@@ -82,7 +82,7 @@ function Search({
         setSuggestions([...data]);
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
       })
       .finally(() => {
         setLoading(false);
@@ -110,7 +110,7 @@ function Search({
         setSearchResults(response);
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
         setHatakodu(error);
         if (error instanceof BadRequestError) {
           setNoResults(true);

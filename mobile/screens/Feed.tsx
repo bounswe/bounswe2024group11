@@ -46,7 +46,7 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
       .catch((error) => {
         console.log(error);
       });
-  }, [user]);
+  }, [user, navigation]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
