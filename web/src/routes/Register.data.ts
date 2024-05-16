@@ -11,11 +11,12 @@ export const registerAction = async ({
 > => {
 	console.log("Register Action");
 	const formData = await request.formData();
-	const response = await fetch(`${VITE_BACKEND_URL}/user/signup`, {
+	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/register/`, {
 		method: "POST",
-		body: formData,
+		body: JSON.stringify(Object.fromEntries(formData.entries())),
 		headers: {
 			Accept: "application/json",
+			'Content-Type': "application/json",
 		},
 	});
 	if (!response.ok) {
