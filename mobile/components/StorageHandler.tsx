@@ -25,17 +25,17 @@ export class UnauthorizedError extends Error {
 }
 
 export const post = async (props: RequestProps) => {
-  const formData = new FormData();
-  for (const key in props.data) {
-    formData.append(key, props.data[key]);
-  }
+  // const formData = new FormData();
+  // for (const key in props.data) {
+  //   formData.append(key, props.data[key]);
+  // }
   const getRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "POST",
-    body: formData,
+    body: JSON.stringify(props.data),
     // add contetnt type
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {
@@ -59,7 +59,7 @@ export const get = async (props: RequestProps) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {

@@ -1,6 +1,12 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
-
-import { View, Text, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+  ScrollView,
+} from "react-native";
 import {
   ActivityIndicator,
   Button,
@@ -49,7 +55,7 @@ const Login = ({
     setLoading(true);
     post({
       data: { username: username.trim(), password: password },
-      endpoint: "users/login",
+      endpoint: "login/",
     })
       .then((data) => {
         if (remember) {
