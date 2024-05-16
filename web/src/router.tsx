@@ -18,6 +18,7 @@ import { authLoader } from "./routes/global/auth.data";
 import { likeAction } from "./routes/shadow/post/Like.data";
 import { bookmarkAction } from "./routes/shadow/post/Bookmark.data";
 import { followProfileAction } from "./routes/shadow/profile/Follow.data";
+import { newPostAction } from "./routes/shadow/post/NewPost.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -73,6 +74,10 @@ export const { router, href } = typesafeBrowserRouter([
 			{
 				path: "/update_bio",
 				action: updateProfileAction,
+			},
+			{
+				path: "/new_post",
+				action: newPostAction,
 			},
 			{
 				path: "/like_post",

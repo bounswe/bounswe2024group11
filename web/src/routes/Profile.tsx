@@ -1,4 +1,4 @@
-import { TextInput, Container, Menu, Box } from "@mantine/core";
+import { TextInput, Container, Menu, Box, Modal } from "@mantine/core";
 import {
 	RiUser3Line,
 	RiBookmark2Line,
@@ -13,10 +13,10 @@ import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { button, buttonInnerRing } from "../components/Button";
 import { useActionData } from "react-router-typesafe";
 import type { loginAction } from "./Login.data";
-import { imageLink } from "../components/ImageLink";
 import type { profileLoader } from "./Profile.data";
 import type { authLoader } from "./global/auth.data";
 import { Navbar } from "../components/Navbar";
+import { idempotent } from "../utils/form";
 
 export const Profile = () => {
 	const { profile } = useLoaderData<typeof profileLoader>();

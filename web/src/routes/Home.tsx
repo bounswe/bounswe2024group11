@@ -39,8 +39,7 @@ const post: Post = {
 	isBookmarked: false,
 	title: "title4",
 	content: "content4",
-	imageSrc:
-		"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
+	imageSrc: "https://i.ibb.co/c1fGmZZ/post-image.png",
 	qid: "Q79037",
 	qtitle: "qtitle4",
 	createdAt: "2024-05-15T15:40:28.307213Z",
