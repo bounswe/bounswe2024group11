@@ -8,15 +8,15 @@ import {
 	RiLogoutCircleLine,
 	RiSettings2Line,
 } from "@remixicon/react";
-import { Link, Form, useSubmit, useFetcher } from "react-router-dom";
+import { useSubmit, useFetcher } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
-import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import { useActionData } from "react-router-typesafe";
 import type { loginAction } from "./Login.data";
 import { imageLink } from "../components/ImageLink";
 import type { profileLoader } from "./Profile.data";
 import type { authLoader } from "./global/auth.data";
+import { Navbar } from "../components/Navbar";
 
 export const Profile = () => {
 	const { profile } = useLoaderData<typeof profileLoader>();
@@ -30,31 +30,7 @@ export const Profile = () => {
 	const infoFetcher = useFetcher();
 	return (
 		<div className="relative">
-			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
-				<Container>
-					<header className="w-full md:py-6 py-4 ">
-						<div className="w-full flex flex-row items-center gap-4 justify-between">
-							<Link
-								to={href({ path: "/" })}
-								className={imageLink({
-									className:
-										"flex flex-row items-center gap-2 min-w-24 rounded-3 py-1 pr-3 pl-1",
-								})}
-							>
-								<img
-									src="/zenith-logo.svg"
-									alt="Zenith Logo"
-									width={32}
-									height={32}
-								/>
-								<p className="font-display tracking-tighter leading-8 font-medium">
-									Zenith
-								</p>
-							</Link>
-						</div>
-					</header>
-				</Container>
-			</div>
+			<Navbar />
 			<div>
 				<Container className="flex flex-col max-width:480px max-w-md items-center md:py-8 p-8 gap-6 border border-slate-200 rounded-8">
 					<Box>
