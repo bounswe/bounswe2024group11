@@ -27,8 +27,7 @@ export const profileLoader = makeLoader(async ({ request, params }) => {
 		post: 41,
 		followers: 100,
 		following: 5432,
-		picUrl:
-			"https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1715520071~exp=1715520671~hmac=ffad0c38a66747334e85982464792aa4d255f65fa0de3d902ec01499171cffd5",
+		picUrl: "https://i.ibb.co/c1fGmZZ/post-image.png",
 	};
 	return {
 		profile,

@@ -17,10 +17,12 @@ import { deleteProfileAction } from "./routes/shadow/profile/DeleteProfile.data"
 import { authLoader } from "./routes/global/auth.data";
 import { likeAction } from "./routes/shadow/post/Like.data";
 import { bookmarkAction } from "./routes/shadow/post/Bookmark.data";
-import { followProfileAction } from "./routes/shadow/profile/Follow.data";
+import { followAction } from "./routes/shadow/profile/Follow.data";
 import { newPostAction } from "./routes/shadow/post/NewPost.data";
 import { Bookmarks } from "./routes/Bookmarks";
 import { bookmarksLoader } from "./routes/Bookmarks.data";
+import { updateBioAction } from "./routes/shadow/profile/UpdateBio.data";
+import { unfollowAction } from "./routes/shadow/profile/Unfollow.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -75,7 +77,7 @@ export const { router, href } = typesafeBrowserRouter([
 			},
 			{
 				path: "/update_bio",
-				action: updateProfileAction,
+				action: updateBioAction,
 			},
 			{
 				path: "/new_post",
@@ -90,8 +92,12 @@ export const { router, href } = typesafeBrowserRouter([
 				action: bookmarkAction,
 			},
 			{
-				path: "/follow_profile",
-				action: followProfileAction,
+				path: "/follow",
+				action: followAction,
+			},
+			{
+				path: "/unfollow",
+				action: unfollowAction,
 			},
 		],
 	},
