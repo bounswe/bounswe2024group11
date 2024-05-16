@@ -48,7 +48,7 @@ function Search({
   const [noResults, setNoResults] = useState(false);
   const [hatakodu, setHatakodu] = useState("");
   const [suggestions, setSuggestions] = useState<
-    Array<{ qid: string; label_description: string }>
+    Array<{ qid: string; label: string; description: string }>
   >([]);
   const [loading, setLoading] = useState(false);
 
@@ -58,9 +58,9 @@ function Search({
   };
 
   const handleTagSuggestion =
-    (item: { qid: string; label_description: string }) => () => {
+    (item: { qid: string; label: string; description: string }) => () => {
       // this should be changed
-      setSearchQuery(item.label_description.split(":")[0]);
+      setSearchQuery(item.label);
       setSuggestions([]);
       onSearch(item.qid);
     };
@@ -78,9 +78,11 @@ function Search({
       },
     })
       .then((data) => {
+        console.log(data);
         setSuggestions([...data]);
       })
       .catch((error) => {
+        console.log("error", error);
         console.error(error);
       })
       .finally(() => {
@@ -96,15 +98,16 @@ function Search({
   const onSearch = (qid: string) => {
     setLoading(true);
     setSearchResults([]);
-    post({
+    get({
       data: {
-        keyword: qid,
+        qid,
         category: dropdownValue,
       },
       endpoint: "search/",
     })
       .then((response) => {
-        setSearchResults(response.results);
+        console.log(response);
+        setSearchResults(response);
       })
       .catch((error) => {
         console.error(error);
@@ -146,7 +149,7 @@ function Search({
                 onPress={handleTagSuggestion(item)}
                 style={{ color: theme.colors.neutral[7] }}
               >
-                {item.label_description}
+                {item.label + " : " + item.description}
               </Text>
             </View>
           )}

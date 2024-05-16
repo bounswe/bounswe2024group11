@@ -37,9 +37,13 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
       endpoint: "posts",
       token: user?.token,
       data: {},
-    }).then((data) => {
-      setPosts(data);
-    });
+    })
+      .then((data) => {
+        setPosts(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
@@ -63,7 +67,6 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
         ))}
       </View>
       {user && <CreatePostButton />}
-      {user && <EditPostButton />}
     </View>
   );
 }
