@@ -1,243 +1,152 @@
-import { Container, TextInput, Select, Fieldset, Menu } from "@mantine/core";
+import {
+	Container,
+	TextInput,
+	Select,
+	Fieldset,
+	Menu,
+	Modal,
+	Textarea,
+	Button,
+} from "@mantine/core";
 import "@mantine/core/styles.css";
-import { Form, Link, redirect, useSubmit } from "react-router-dom";
+import {
+	Form,
+	Link,
+	useFetcher,
+	useLocation,
+	useSearchParams,
+	useSubmit,
+} from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import {
+	RiAddFill,
 	RiArrowDropDownLine,
 	RiBookmark2Line,
-	RiLogoutBoxRLine,
 	RiLogoutCircleLine,
+	RiQuillPenLine,
 	RiSearch2Line,
 	RiSettings2Line,
 } from "@remixicon/react";
-import { useActionData, useLoaderData } from "react-router-typesafe";
-import type { homeAction, homeLoader } from "./Home.data";
+import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { imageLink } from "../components/ImageLink";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
-import InfoBox from "../components/InfoBox";
-import type { InfoBoxProps } from "../components/InfoBox";
+import Post from "../components/Post";
+import { useDisclosure } from "@mantine/hooks";
+import type { authLoader } from "./global/auth.data";
+import { NewPost } from "../components/NewPost";
+import { Navbar } from "../components/Navbar";
+import { WikiWidget } from "../components/WikiWidget";
+import { useState } from "react";
+import type { homeLoader } from "./Home.data";
 
-const CATEGORIES = [
-	"born in",
-	"from universe",
-	"from the comics",
-	"has superpower",
-];
-
-const StripBG = () => {
-	return Array.from({ length: 20 }).map((_, i) => {
-		return (
-			<div key={`Strip ${i + 1}`}>
-				<div className="h-8 bg-slate-50" />
-				<div className="h-12" />
-			</div>
-		);
-	});
+export const post: Post = {
+	id: 8,
+	username: "username1",
+	user_id: 2,
+	likeCount: 0,
+	bookmarkCount: 0,
+	likedBy: [],
+	isLikedBy: false,
+	isBookmarked: false,
+	title: "title4",
+	content: "content4",
+	imageSrc: "https://i.ibb.co/c1fGmZZ/post-image.png",
+	qid: "Q79037",
+	qtitle: "qtitle4",
+	createdAt: "2024-05-15T15:40:28.307213Z",
+	updatedAt: "2024-05-15T15:40:28.307213Z",
 };
 
 export const Home = () => {
+	const suggestionsFetcher = useFetcher();
 	const submit = useSubmit();
-	const user = useLoaderData<typeof homeLoader>();
-	const actionData = useActionData<typeof homeAction>();
-	const validResults =
-		actionData && "results" in actionData && actionData.results;
-	console.log("action data", actionData);
+	const user = useRouteLoaderData<typeof authLoader>("auth");
+	const [semanticData, setSemanticData] = useState<Record<string, string>>({
+		Pseudonym: "Spider-Man",
+		"Real Name": "Peter Parker",
+		Universe: "Marvel",
+	});
+	const location = useLocation();
+	const isOpen = location.search.includes("liked_by");
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const posts = useLoaderData<typeof homeLoader>();
+
+	// id: number(),
+	// title: string(),
+	// content: string(),
+	// image_src: nullable(string()),
+	// qid: nullable(string()),
+	// qtitle: nullable(string()),
+	// created_at: string(),
+	// updated_at: string(),
+	// author: number(),
+
 	return (
-		<div className="relative">
-			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
-				<Container>
-					<header className="w-full md:py-6 py-4 ">
-						<div className="w-full flex flex-row items-center gap-4 justify-between">
-							<Link
-								to={href({ path: "/" })}
-								className={imageLink({
-									className:
-										"flex flex-row items-center gap-2 min-w-24 rounded-3 py-1 pr-3 pl-1",
-								})}
-							>
-								<img
-									src="./zenith-logo.svg"
-									alt="Zenith Logo"
-									width={32}
-									height={32}
-								/>
-								<p className="font-display tracking-tighter leading-8 font-medium">
-									Zenith
-								</p>
-							</Link>
-							<div className="max-w-xl flex-1">
-								<Form
-									className="flex gap-2"
-									method="POST"
-									onKeyDown={(e) => {
-										if (e.key === "Enter") {
-											e.preventDefault();
-											submit(e.currentTarget);
-										}
-									}}
-								>
-									<Fieldset className="flex gap-2 justify-center border-0 p-0 flex-1">
-										<Select
-											className="max-w-72"
-											placeholder="Category"
-											defaultValue="Universe"
-											name="category"
-											aria-label="Select a category"
-											id="pick"
-											data={CATEGORIES}
-											rightSection={<RiArrowDropDownLine size={20} />}
-											rightSectionPointerEvents="none"
-											searchable
-											nothingFoundMessage="No categories"
-											aria-keyshortcuts="ArrowDown ArrowUp"
-										/>
-										<TextInput
-											className="w-full"
-											name="query"
-											placeholder="Search "
-											aria-label="Search"
-											id="search"
-											leftSection={<RiSearch2Line size={16} />}
-											leftSectionPointerEvents="none"
-										/>
-									</Fieldset>
-									<button
-										type="submit"
-										className={button({
-											intent: "primary",
-											className: "md:hidden",
-										})}
-									>
-										<span className={buttonInnerRing({ intent: "primary" })} />
-										<span>Search</span>
-									</button>
-								</Form>
-							</div>
-
-							<div className="items-center gap-2 hidden md:flex">
-								{user ? (
-									<Menu
-										shadow="md"
-										width={200}
-										position="bottom-end"
-										classNames={{
-											item: "text-slate-700 hover:text-slate-900",
-											dropdown: "shadow-card",
-										}}
-									>
-										<Menu.Target>
-											<button
-												type="button"
-												className={imageLink({
-													rounded: true,
-													className: "ml-auto cursor-pointer",
-												})}
-											>
-												<div className="rounded-full bg-cyan-100 hover:ring hover:ring-cyan-200 transition-all duration-500 active:ring-cyan-900 text-cyan-900 h-10 w-10 flex items-center justify-center ">
-													{user?.username[0] || "Z"}
-												</div>
-											</button>
-										</Menu.Target>
-
-										<Menu.Dropdown className="p-2">
-											<Menu.Label className="text-slate-400 text-xs">
-												{user.username}
-											</Menu.Label>
-											<Menu.Divider className="border-slate-100" />
-											<Menu.Item
-												leftSection={
-													<RiSettings2Line
-														className="text-slate-700"
-														size={20}
-													/>
-												}
-											>
-												Profile Settings
-											</Menu.Item>
-
-											<Menu.Item
-												leftSection={
-													<RiBookmark2Line
-														className="text-slate-700"
-														size={20}
-													/>
-												}
-											>
-												Bookmarks
-											</Menu.Item>
-											<Menu.Divider className="border-slate-100" />
-											<Menu.Item
-												className="hover:text-red-700 hover:bg-red-50"
-												leftSection={
-													<RiLogoutCircleLine
-														className="text-inherit"
-														size={20}
-													/>
-												}
-												onClick={() => {
-													localStorage.removeItem("zenith_app_user");
-													localStorage.removeItem("zenith_app_token");
-													sessionStorage.removeItem("zenith_app_user");
-													sessionStorage.removeItem("zenith_app_token");
-													window.location.reload();
-												}}
-											>
-												Log Out
-											</Menu.Item>
-											<Menu.Divider className="border-slate-100" />
-											<Menu.Label className="text-slate-400 text-xs">
-												Zenith ©2024
-											</Menu.Label>
-										</Menu.Dropdown>
-									</Menu>
-								) : (
-									<>
-										<a
-											className={button({ intent: "tertiary" })}
-											href={href({ path: "/login" })}
-										>
-											<span className="text-slate-900">Log In</span>
-										</a>
-										<a
-											className={button({ intent: "secondary" })}
-											href={href({ path: "/register" })}
-										>
-											<span
-												className={buttonInnerRing({ intent: "secondary" })}
-											/>
-
-											<span>Register</span>
-										</a>
-									</>
-								)}
-							</div>
-						</div>
-					</header>
-				</Container>
-			</div>
-			<div>
-				{validResults && (
-					<Container className="flex flex-col gap-4 py-8">
-						<div className="flex gap-1 justify-between">
-							<h1 className="font-regular text-lg">
-								{actionData.results.length} results found for&nbsp;
-								<span className="font-medium">"{actionData.keyword}"</span>
-							</h1>
-							<p className="font-regular text-slate-500 text-sm">
-								Sorted by popularity.
+		<div className="relative z-10">
+			<Navbar />
+			<Container className="grid grid-cols-7 gap-6 py-10 items-start max-w-7xl">
+				<main className="flex flex-col gap-8 w-full items-stretch col-start-3 col-span-3">
+					<div className="flex flex-col gap-1">
+						<h1 className="text-left w-full text-slate-950 text-xl font-medium">
+							Feed
+						</h1>
+						<p className="text-sm text-slate-500 text-pretty">
+							What have you been up to?
+						</p>
+					</div>
+					<div className="flex flex-col items-stretch justify-between gap-8 self-stretch">
+						{"error" in posts ? (
+							<p className="text-slate-500">
+								Oops, there was an error fetching the posts.
 							</p>
-						</div>
-						<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-							{actionData.results.map((result: InfoBoxProps) => {
-								return <InfoBox key={result.label} {...result} />;
-							})}
-						</div>
-					</Container>
-				)}
-				<StripBG />
-			</div>
+						) : (
+							posts.map((post) => (
+								<Post
+									key={post.id}
+									post={{
+										bookmarkCount: 3,
+										content: post.content,
+										createdAt: post.created_at,
+										id: post.id,
+										imageSrc: post.image_src,
+										isBookmarked: false,
+										isLikedBy: false,
+										likeCount: 3,
+										likedBy: [],
+										qid: post.qid,
+										qtitle: post.qtitle,
+										title: post.title,
+										updatedAt: post.updated_at,
+										user_id: post.author,
+										username: "username1",
+									}}
+									isOwner={post.author === user?.id}
+								/>
+							))
+						)}
+					</div>
+				</main>
+				<WikiWidget
+					semanticData={semanticData}
+					className="col-span-2 sticky top-32"
+				/>
+			</Container>
+			<Modal
+				opened={isOpen}
+				onClose={() => {
+					setSearchParams((params) => {
+						const searchParams = new URLSearchParams(params);
+						searchParams.delete("liked_by");
+						return searchParams.toString();
+					});
+					console.log("closed");
+				}}
+				withCloseButton={true}
+			>
+				Modal without header, press escape or click on overlay to close
+			</Modal>
+			<NewPost />
 		</div>
 	);
 };

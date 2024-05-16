@@ -1,11 +1,11 @@
 meta {
-  name: signup
+  name: register
   type: http
   seq: 2
 }
 
 post {
-  url: {{base_url}}:{{port}}/api/register/
+  url: {{base_url}}:{{port}}/api/v2/register/
   body: json
   auth: none
 }
