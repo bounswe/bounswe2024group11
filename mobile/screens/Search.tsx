@@ -39,8 +39,8 @@ function Search({
       content: string;
       qid: string;
       qtitle: string;
-      likes: number;
-      bookmarks: number;
+      like_count: number;
+      bookmark_count: number;
       image_src: string;
     }>
   >([]);
@@ -71,6 +71,7 @@ function Search({
       return;
     }
     setLoading(true);
+    console.log("fetching suggestions");
     get({
       endpoint: "suggestions",
       data: {
@@ -78,12 +79,10 @@ function Search({
       },
     })
       .then((data) => {
-        console.log(data);
         setSuggestions([...data]);
       })
       .catch((error) => {
-        console.log("error", error);
-        console.error(error);
+        console.log(error);
       })
       .finally(() => {
         setLoading(false);
@@ -98,6 +97,7 @@ function Search({
   const onSearch = (qid: string) => {
     setLoading(true);
     setSearchResults([]);
+    console.log("searching");
     get({
       data: {
         qid,
@@ -110,7 +110,7 @@ function Search({
         setSearchResults(response);
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
         setHatakodu(error);
         if (error instanceof BadRequestError) {
           setNoResults(true);
@@ -207,12 +207,12 @@ function Search({
               imgsource={result.image_src}
               qtitle={result.qtitle}
               onClickFunction={() => {
-                navigation.navigate("Profiles", {
-                  profileUserId: result.user_id,
+                navigation.navigate("Post", {
+                  post_id: result.id,
                 });
               }}
-              likes={result.likes}
-              bookmarks={result.bookmarks}
+              likes={result.like_count}
+              bookmarks={result.bookmark_count}
             />
           ))}
       </ScrollView>

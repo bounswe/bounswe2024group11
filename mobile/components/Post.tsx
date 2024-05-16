@@ -42,14 +42,13 @@ function Post(props: PostProps) {
       token: user?.token,
       data: {},
     })
-      .then((response) => response.json())
       .then((data) => {
         setAuthorNS(data.full_name);
         setAuthorImg(data.profile_img);
         setAuthorUsername(data.username);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.log(error);
       });
   }, []);
 
@@ -68,7 +67,9 @@ function Post(props: PostProps) {
       </View>
 
       <View style={styles.postContent}>
-        <Image style={styles.postContentImg} source={{ uri: imgsource }} />
+        {imgsource === "" ? null : (
+          <Image style={styles.postContentImg} source={{ uri: imgsource }} />
+        )}
         <Text style={styles.postContentText}> {content.substring(0, 20)} </Text>
         <Text style={styles.postContentText}> {" #" + qtitle} </Text>
       </View>
@@ -76,15 +77,14 @@ function Post(props: PostProps) {
       <View style={styles.postBottom}>
         <View>
           <Text>
-            {" "}
-            {likes} <Icon source="heart" size={16}></Icon>{" "}
+            <Icon source="heart" size={16}></Icon>
+            {`  ${likes} `}
           </Text>
         </View>
         <View>
           <Text>
-            {" "}
-            {bookmarks}
-            <Icon source="bookmark" size={16}></Icon>{" "}
+            <Icon source="bookmark" size={16}></Icon>
+            {`  ${bookmarks} `}
           </Text>
         </View>
       </View>

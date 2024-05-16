@@ -12,7 +12,8 @@ import { useTheme } from "../context/ThemeContext";
 import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { post, get } from "../components/StorageHandler";
+import { post, get, patch } from "../components/StorageHandler";
+import { useUser } from "../context/UserContext";
 
 type EditPostScreenRouteProp = RouteProp<RootStackParamList, "EditPost">;
 type EditPostNavigationProp = NavigationProp<RootStackParamList, "EditPost">;
@@ -28,16 +29,15 @@ type Props = {
 // >;
 
 function EditPost({ route, navigation }: Props) {
-  
-  const {
-    postId, 
-  } = route.params;
+  const { postId } = route.params;
+  const { user } = useUser();
+
   const [postIdCurrent, setPostId] = useState(postId);
   const [titleNew, setTitle] = useState("");
   const [contentNew, setContent] = useState("");
   const [imageNew, setImage] = useState("");
   const [suggestions, setSuggestions] = useState<
-    Array<{ qid: string; label_description: string }>
+    Array<{ qid: string; label: string; description: string }>
   >([]); // Array<{qid: string, label_description: string}>
   const [tag, setTag] = useState("");
   const [qid, setQid] = useState("");
@@ -51,18 +51,21 @@ function EditPost({ route, navigation }: Props) {
       console.log("Please select a tag using suggestions");
     }
     setLoading(true);
-    post({
-      endpoint: `posts/${postId}`,
+    console.log("Edit post with id ", postId);
+    patch({
+      endpoint: `posts/${postId}/`,
       data: {
-        titleNew,
-        contentNew,
-        imageNew,
-        tag: qid,
+        title: titleNew,
+        content: contentNew,
+        image_src: imageNew,
+        qid,
+        qtitle: tag,
       },
+      token: user?.token,
     })
       .then((response) => {
         console.log(response);
-        navigation.navigate("Home");
+        navigation.goBack();
       })
       .catch((error) => {
         console.log(error);
@@ -73,10 +76,10 @@ function EditPost({ route, navigation }: Props) {
   };
 
   const handleTagSuggestion =
-    (item: { qid: string; label_description: string }) => () => {
+    (item: { qid: string; label: string; description: string }) => () => {
       setQid(item.qid);
       // this should be changed
-      setTag(item.label_description.split(":")[0]);
+      setTag(item.label);
       setSuggestions([]);
     };
 
@@ -93,8 +96,9 @@ function EditPost({ route, navigation }: Props) {
     }
     setSuggestLoading(true);
     get({
-      endpoint: "users/wikidata-suggestions",
+      endpoint: "suggestions",
       data: { keyword: tag.trim() },
+      token: user?.token,
     })
       .then((data) => {
         setSuggestions([...data]);
@@ -156,7 +160,7 @@ function EditPost({ route, navigation }: Props) {
                 onPress={handleTagSuggestion(item)}
                 style={{ color: theme.colors.neutral[7] }}
               >
-                {item.label_description}
+                {item.label + " : " + item.description}
               </Text>
             </View>
           )}

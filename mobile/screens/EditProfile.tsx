@@ -19,38 +19,40 @@ import CustomOutput from "../components/CustomOutput";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 
-type EditProfileNavigationProp = NavigationProp<RootStackParamList, "EditProfile">;
+type EditProfileNavigationProp = NavigationProp<
+  RootStackParamList,
+  "EditProfile"
+>;
 type EditProfileScreenRouteProp = RouteProp<RootStackParamList, "EditProfile">;
 
 type Props = {
-    route: EditProfileScreenRouteProp;
-    navigation: EditProfileNavigationProp;
-  };
+  route: EditProfileScreenRouteProp;
+  navigation: EditProfileNavigationProp;
+};
 
 function EditProfile({ route, navigation }: Props) {
-    const { profileUserId, authorImg, authorUsername, authorBio, authorFullName } = route.params;
-    const { user } = useUser();
-    const theme = useTheme();
+  const { authorImg, authorBio, authorFullName } = route.params;
+  const { user } = useUser();
+  const theme = useTheme();
 
-    const [authorImgU, setAuthorImg] = useState(authorImg);
-    const [authorFullNameU, setAuthorFullName] = useState(authorFullName);
-    //const [authorSurnameU, setAuthorSurname] = useState(authorSurname);
-    const [authorBioU,setBio] = useState(authorBio);
-    const onSavePress = () => {
-        // Save the new post to the backend
-        navigation.goBack();
-      }
-    
+  const [authorImgU, setAuthorImg] = useState(authorImg);
+  const [authorFullNameU, setAuthorFullName] = useState(authorFullName);
+  const [authorBioU, setBio] = useState(authorBio);
+  const onSavePress = () => {
+    navigation.goBack();
+  };
+
   return (
     <ScrollView
       style={[
         styles.container,
         {
           flexDirection: "column",
+          padding: 24,
         },
       ]}
     >
-        <View>
+      <View>
         <CustomInput
           placeholder="Change your fullname..."
           value={authorFullNameU}
@@ -58,39 +60,35 @@ function EditProfile({ route, navigation }: Props) {
           secure={false}
           image="camera"
         />
-                </View>
+      </View>
 
-        <View style={{ height: 200 }}>
-
-          <CustomInput
-            placeholder="Change bio..."
-            value={authorBioU}
-            setValue={setBio}
-            secure={false}
-            image="head"
-            multiline={true}
-          />
-                    </View>
-            <View>
-
-          <CustomInput
+      <View style={{ height: 200 }}>
+        <CustomInput
+          placeholder="Change bio..."
+          value={authorBioU}
+          setValue={setBio}
+          secure={false}
+          image="head"
+          multiline={true}
+        />
+      </View>
+      <View>
+        <CustomInput
           placeholder="Change profile picture..."
           value={authorImgU}
           setValue={setAuthorImg}
           secure={false}
           image="camera"
-          />
-        </View>
-        
-        <View>
-            <CustomButton
-              text="Save"
-              onPress={onSavePress}
-              bgColor={theme.colors.neutral[9]}
-              textColor={theme.colors.neutral[2]}
-            />
+        />
       </View>
-
+      <View>
+        <CustomButton
+          text="Save"
+          onPress={onSavePress}
+          bgColor={theme.colors.neutral[9]}
+          textColor={theme.colors.neutral[2]}
+        />
+      </View>
     </ScrollView>
   );
 }

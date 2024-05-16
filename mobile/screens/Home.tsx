@@ -21,11 +21,8 @@ function Home() {
 
   useEffect(() => {
     compareData()
-      .then((data) => {
-        return data;
-        throw new Error("Not implemented home validation");
-      })
       .then((user) => {
+        console.log(user.token);
         setUser(user);
       })
       .catch((error) => {
@@ -97,7 +94,7 @@ function Home() {
             title: "Edit Post",
           }}
         />
-<Stack.Screen
+        <Stack.Screen
           name="EditProfile"
           component={EditProfile as any}
           initialParams={{
@@ -109,7 +106,6 @@ function Home() {
             title: "Edit Post",
           }}
         />
-
       </Stack.Navigator>
     </NavigationContainer>
   );

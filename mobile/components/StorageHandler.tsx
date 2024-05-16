@@ -24,39 +24,50 @@ export class UnauthorizedError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ForbiddenError";
+  }
+}
+
 export const post = async (props: RequestProps) => {
-  // const formData = new FormData();
-  // for (const key in props.data) {
-  //   formData.append(key, props.data[key]);
-  // }
   console.log(props.data, props.endpoint, props.token);
+  var status = 0;
   const postRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "POST",
     body: JSON.stringify(props.data),
-    // add contetnt type
     headers: {
       "Content-Type": "application/json",
       ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   console.log(postRequest.headers.get("Authorization"));
-  return fetch(postRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 400:
-        throw new BadRequestError("Bad request!");
-      case 401:
-        throw new UnauthorizedError("Unauthorized!");
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  });
+  return fetch(postRequest)
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      switch (status) {
+        case 200:
+        case 201:
+          return data;
+        case 400:
+          throw new BadRequestError(data);
+        case 401:
+          throw new UnauthorizedError(data);
+        case 403:
+          throw new ForbiddenError(data);
+        default:
+          throw new Error(`HTTP error! Status: ${status}`);
+      }
+    });
 };
 
 export const get = async (props: RequestProps) => {
   const query = new URLSearchParams(props.data).toString();
+  var status = 0;
   const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
     method: "GET",
     headers: {
@@ -64,29 +75,64 @@ export const get = async (props: RequestProps) => {
       ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
-  return fetch(getRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 400:
-        throw new BadRequestError("Bad request!");
-      case 401:
-        throw new UnauthorizedError("Unauthorized access!");
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+  return fetch(getRequest)
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      switch (status) {
+        case 200:
+        case 201:
+          return data;
+        case 400:
+          throw new BadRequestError(data);
+        case 401:
+          throw new UnauthorizedError(data);
+        case 403:
+          throw new ForbiddenError(data);
+        default:
+          throw new Error(`HTTP error! Status: ${status}`);
+      }
+    });
+};
+
+export const patch = async (props: RequestProps) => {
+  var status = 0;
+  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: "PATCH",
+    body: JSON.stringify(props.data),
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
+    },
   });
+  return fetch(getRequest)
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      switch (status) {
+        case 200:
+        case 201:
+          return data;
+        case 400:
+          throw new BadRequestError(data);
+        case 401:
+          throw new UnauthorizedError(data);
+        case 403:
+          throw new ForbiddenError(data);
+        default:
+          throw new Error(`HTTP error! Status: ${status}`);
+      }
+    });
 };
 
 export const put = async (props: RequestProps) => {
-  const formData = new FormData();
-  for (const key in props.data) {
-    formData.append(key, props.data[key]);
-  }
   const getRequest = new Request(`${URI}/${props.endpoint}`, {
     method: "PUT",
-    body: formData,
+    body: JSON.stringify(props.data),
     headers: {
       "Content-Type": "application/json",
       ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
