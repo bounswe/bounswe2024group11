@@ -1,23 +1,31 @@
-import { Container, TextInput, Select, Fieldset, Menu } from "@mantine/core";
+import {
+	Container,
+	TextInput,
+	Select,
+	Fieldset,
+	Menu,
+	Modal,
+	Textarea,
+} from "@mantine/core";
 import "@mantine/core/styles.css";
-import { Form, Link, redirect, useSubmit } from "react-router-dom";
+import { Form, Link, useFetcher, useSubmit } from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import {
+	RiAddFill,
 	RiArrowDropDownLine,
 	RiBookmark2Line,
-	RiLogoutBoxRLine,
 	RiLogoutCircleLine,
+	RiQuillPenLine,
 	RiSearch2Line,
 	RiSettings2Line,
 } from "@remixicon/react";
-import { useActionData, useLoaderData } from "react-router-typesafe";
-import type { homeAction, homeLoader } from "./Home.data";
+import { useRouteLoaderData } from "react-router-typesafe";
 import { imageLink } from "../components/ImageLink";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
-import InfoBox from "../components/InfoBox";
-import type { InfoBoxProps } from "../components/InfoBox";
+import Post from "../components/Post";
+import { useDisclosure } from "@mantine/hooks";
+import type { authLoader } from "./global/auth.data";
+import { NewPost } from "../components/NewPost";
 
 const CATEGORIES = [
 	"born in",
@@ -26,27 +34,32 @@ const CATEGORIES = [
 	"has superpower",
 ];
 
-const StripBG = () => {
-	return Array.from({ length: 20 }).map((_, i) => {
-		return (
-			<div key={`Strip ${i + 1}`}>
-				<div className="h-8 bg-slate-50" />
-				<div className="h-12" />
-			</div>
-		);
-	});
+const post: Post = {
+	id: 4,
+	username: "username1",
+	user_id: "2",
+	likeCount: 0,
+	bookmarkCount: 0,
+	likedBy: [],
+	isLikedBy: false,
+	isBookmarked: false,
+	title: "title4",
+	content: "content4",
+	imageSrc:
+		"https://www.bucodecomp.com/_next/image?url=%2Fimg%2Fteam%2Fumit.jpeg&w=256&q=75",
+	qid: "Q79037",
+	qtitle: "qtitle4",
+	createdAt: "2024-05-15T15:40:28.307213Z",
+	updatedAt: "2024-05-15T15:40:28.307213Z",
 };
 
 export const Home = () => {
+	const suggestionsFetcher = useFetcher();
 	const submit = useSubmit();
-	const user = useLoaderData<typeof homeLoader>();
-	const actionData = useActionData<typeof homeAction>();
-	const validResults =
-		actionData && "results" in actionData && actionData.results;
-	console.log("action data", actionData);
+	const user = useRouteLoaderData<typeof authLoader>("auth");
 	return (
-		<div className="relative">
-			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
+		<div className="relative z-10">
+			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0 z-10">
 				<Container>
 					<header className="w-full md:py-6 py-4 ">
 						<div className="w-full flex flex-row items-center gap-4 justify-between">
@@ -58,7 +71,7 @@ export const Home = () => {
 								})}
 							>
 								<img
-									src="./zenith-logo.svg"
+									src="/zenith-logo.svg"
 									alt="Zenith Logo"
 									width={32}
 									height={32}
@@ -68,17 +81,25 @@ export const Home = () => {
 								</p>
 							</Link>
 							<div className="max-w-xl flex-1">
-								<Form
+								<suggestionsFetcher.Form
+									onChange={(e) => {
+										suggestionsFetcher.submit(e.currentTarget);
+									}}
+									onFocus={(e) => {
+										suggestionsFetcher.submit(e.currentTarget);
+									}}
+									action="/suggestions"
 									className="flex gap-2"
-									method="POST"
+									method="GET"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											e.preventDefault();
-											submit(e.currentTarget);
+											const formData = new FormData(e.currentTarget);
+											submit(formData);
 										}
 									}}
 								>
-									<Fieldset className="flex gap-2 justify-center border-0 p-0 flex-1">
+									<Fieldset className="flex gap-2 justify-center border-0 p-0 flex-1 bg-transparent">
 										<Select
 											className="max-w-72"
 											placeholder="Category"
@@ -93,7 +114,14 @@ export const Home = () => {
 											nothingFoundMessage="No categories"
 											aria-keyshortcuts="ArrowDown ArrowUp"
 										/>
-										<TextInput
+										<Select
+											defaultValue="Universe"
+											data={suggestionsFetcher.data}
+											rightSection={<RiArrowDropDownLine size={20} />}
+											rightSectionPointerEvents="none"
+											searchable
+											nothingFoundMessage="No categories"
+											aria-keyshortcuts="ArrowDown ArrowUp"
 											className="w-full"
 											name="query"
 											placeholder="Search "
@@ -113,7 +141,7 @@ export const Home = () => {
 										<span className={buttonInnerRing({ intent: "primary" })} />
 										<span>Search</span>
 									</button>
-								</Form>
+								</suggestionsFetcher.Form>
 							</div>
 
 							<div className="items-center gap-2 hidden md:flex">
@@ -218,26 +246,30 @@ export const Home = () => {
 				</Container>
 			</div>
 			<div>
-				{validResults && (
-					<Container className="flex flex-col gap-4 py-8">
-						<div className="flex gap-1 justify-between">
-							<h1 className="font-regular text-lg">
-								{actionData.results.length} results found for&nbsp;
-								<span className="font-medium">"{actionData.keyword}"</span>
+				<Container className="flex flex-col justify-between gap-4 py-10 items-center max-w-lg">
+					<main className="flex flex-col gap-8 w-full">
+						<div className="flex flex-col gap-1">
+							<h1 className="text-left w-full text-slate-950 text-xl font-medium">
+								Feed
 							</h1>
-							<p className="font-regular text-slate-500 text-sm">
-								Sorted by popularity.
+							<p className="text-sm text-slate-500 text-pretty">
+								What have you been up to?
 							</p>
 						</div>
-						<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-							{actionData.results.map((result: InfoBoxProps) => {
-								return <InfoBox key={result.label} {...result} />;
-							})}
+						<div className="flex flex-col justify-between gap-8">
+							<Post post={post} isOwner />
+							<Post post={post} />
+							<Post post={post} isOwner />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
 						</div>
-					</Container>
-				)}
-				<StripBG />
+					</main>
+				</Container>
 			</div>
+			<NewPost />
 		</div>
 	);
 };

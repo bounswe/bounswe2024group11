@@ -11,40 +11,40 @@ import { compareToken, getUser } from "../components/StorageHandler";
 const Stack = createStackNavigator();
 
 function Home() {
-  const { user, setUser } = useUser();
+	const { user, setUser } = useUser();
 
-  useEffect(() => {
-    compareToken()
-      .then(token => {
-        return getUser({ token: token, endpoint: "user/validate" });
-      })
-      .then(user => {
-        setUser(user);
-      })
-      .catch(error => {
-        console.log("home 25");
-        console.error(error);
-      });
-  }, []);
+	useEffect(() => {
+		compareToken()
+			.then((token) => {
+				return getUser({ token: token, endpoint: "user/validate" });
+			})
+			.then((user) => {
+				setUser(user);
+			})
+			.catch((error) => {
+				console.log("home 25");
+				console.error(error);
+			});
+	}, []);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={BottomTab}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Auth"
-          component={Auth}
-          options={{
-            title: "Authentication",
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+	return (
+		<NavigationContainer>
+			<Stack.Navigator initialRouteName="Home">
+				<Stack.Screen
+					name="Home"
+					component={BottomTab}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="Auth"
+					component={Auth}
+					options={{
+						title: "Authentication",
+					}}
+				/>
+			</Stack.Navigator>
+		</NavigationContainer>
+	);
 }
 
 export default Home;

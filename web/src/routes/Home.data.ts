@@ -37,9 +37,8 @@ export const homeAction = async ({ request }: { request: Request }) => {
 	return responseJson;
 };
 
-export const homeLoader = makeLoader(async ({ request }) => {
-	const user: User | null =
-		localStorage.getObject("zenith_app_user") ||
-		sessionStorage.getObject("zenith_app_user");
-	return user;
+export const homeLoader = makeLoader(async ({ request, params, context }) => {
+	const { searchParams } = new URL(request.url);
+	console.log(searchParams);
+	return null;
 });
