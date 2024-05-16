@@ -10,6 +10,7 @@ from .permissions import (
     IsAuthorOwnerOrReadOnly,
     IsUserOwnerOrReadOnly,
     IsFollowerOwnerOrReadOnly,
+    IsProfileOwnerOrReadOnly
 )
 from . import wikidata_helpers
 from django.db.models import Count
@@ -180,7 +181,7 @@ class SearchPostView(ListAPIView):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes= [permissions.IsAuthenticated]
+    permission_classes= [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
