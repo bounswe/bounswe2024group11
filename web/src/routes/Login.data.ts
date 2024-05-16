@@ -1,9 +1,19 @@
-import type { LoginSuccess } from "@/schema/user";
+import type { LoginSuccess } from "@/types/user";
 import { href } from "../router";
 import { useActionData } from "react-router-typesafe";
 import { makeLoader, redirect } from "react-router-typesafe";
+import { number, object, safeParse, string } from "valibot";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const loginResponseSchema = object({
+	token: string(),
+	user: object({
+		id: number(),
+		username: string(),
+		email: string(),
+	}),
+});
 
 Storage.prototype.setObject = function (key: string, value: object) {
 	this.setItem(key, JSON.stringify(value));
@@ -17,11 +27,7 @@ Storage.prototype.getObject = function (key: string) {
 	return JSON.parse(item);
 };
 
-export const loginAction = async ({
-	request,
-}: { request: Request }): Promise<
-	LoginSuccess | { error: string } | Response
-> => {
+export const loginAction = async ({ request }: { request: Request }) => {
 	console.log("Login Action");
 	const formData = await request.formData();
 	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/login/`, {
@@ -29,18 +35,20 @@ export const loginAction = async ({
 		body: JSON.stringify(Object.fromEntries(formData.entries())), // Sending the form data
 		headers: {
 			Accept: "application/json",
-			'Content-Type': "application/json",
+			"Content-Type": "application/json",
 		},
 	});
+	const responseJson = await response.json();
+
 	if (!response.ok) {
 		switch (response.status) {
 			case 400:
 				return {
-					error: "Invalid request",
+					error: responseJson.error,
 				};
 			case 401:
 				return {
-					error: "Unauthorized",
+					error: responseJson.error,
 				};
 			default:
 				return {
@@ -48,22 +56,24 @@ export const loginAction = async ({
 				};
 		}
 	}
-	const responseJson = await response.json();
-	console.log(responseJson);
-	if (responseJson && "token" in responseJson) {
-		if (formData.get("keep") === "on") {
-			localStorage.setItem("zenith_app_token", responseJson.token);
-			localStorage.setObject("zenith_app_user", responseJson.user);
-		} else {
-			sessionStorage.setItem("zenith_app_token", responseJson.token);
-			sessionStorage.setObject("zenith_app_user", responseJson.user);
-		}
-		console.log("User logged in");
-		return redirect(href({ path: "/" }));
+	const { issues, output, success } = safeParse(
+		loginResponseSchema,
+		responseJson,
+	);
+	if (!success) {
+		console.error(issues);
+		return { error: "Invalid response" };
 	}
-	return {
-		error: "Unknown error",
-	};
+
+	if (formData.get("keep") === "on") {
+		localStorage.setItem("zenith_app_token", output.token);
+		localStorage.setObject("zenith_app_user", output.user);
+	} else {
+		sessionStorage.setItem("zenith_app_token", output.token);
+		sessionStorage.setObject("zenith_app_user", output.user);
+	}
+
+	return output;
 };
 
 export const loginLoader = makeLoader(async () => {

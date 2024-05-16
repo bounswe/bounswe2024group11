@@ -17,9 +17,9 @@ import { RiErrorWarningLine } from "@remixicon/react";
 
 export const Register = () => {
 	const actionData = useActionData<typeof registerAction>();
-	const isAuthError = actionData && "error" in actionData;
+	const isAuthError = actionData !== undefined && "error" in actionData;
 	return (
-		<Container className="flex flex-col items-center md:py-20 py-12">
+		<Container className="flex flex-col items-center md:py-20 py-12 relative">
 			<div className="flex flex-col items-stretch justify-center min-h-12 gap-6 w-full max-w-md shadow-card border border-slate-100 rounded-4 p-6">
 				<div className="flex flex-col items-center gap-2">
 					<Link
@@ -116,11 +116,7 @@ export const Register = () => {
 				</Form>
 			</div>
 			{isAuthError && (
-				<Notification
-					style={{ position: "fixed", bottom: "40px", right: "40px" }}
-					title="Login Error"
-					className="shadow-card border-red-100 border rounded-2"
-				>
+				<Notification className="shadow-card border-red-100 border rounded-2 fixed bottom-10 right-10">
 					<div className="flex flex-col gap-1">
 						<div className="flex gap-2 items-center">
 							<RiErrorWarningLine size={20} className="text-red-800" />
@@ -129,7 +125,7 @@ export const Register = () => {
 							</h2>
 						</div>
 						<p className="text-sm text-slate-500 text-pretty">
-							Please try with a different email or username.
+							{actionData.error}
 						</p>
 					</div>
 				</Notification>
