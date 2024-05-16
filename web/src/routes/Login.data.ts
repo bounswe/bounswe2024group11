@@ -38,15 +38,17 @@ export const loginAction = async ({ request }: { request: Request }) => {
 			"Content-Type": "application/json",
 		},
 	});
+	const responseJson = await response.json();
+
 	if (!response.ok) {
 		switch (response.status) {
 			case 400:
 				return {
-					error: "Invalid request",
+					error: responseJson.error,
 				};
 			case 401:
 				return {
-					error: "Unauthorized",
+					error: responseJson.error,
 				};
 			default:
 				return {
@@ -56,7 +58,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
 	}
 	const { issues, output, success } = safeParse(
 		loginResponseSchema,
-		await response.json(),
+		responseJson,
 	);
 	if (!success) {
 		console.error(issues);

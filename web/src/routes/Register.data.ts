@@ -21,13 +21,14 @@ export const registerAction = async ({ request }: { request: Request }) => {
 			"Content-Type": "application/json",
 		},
 	});
-
 	const responseJson = await response.json();
+
 	if (!response.ok) {
 		switch (response.status) {
 			case 400:
 				return {
-					error: responseJson.username,
+					error: responseJson.error || responseJson.username,
+					//!! delete the username key from the responseJson object
 				};
 			default:
 				return {
