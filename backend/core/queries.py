@@ -1,4 +1,4 @@
-birthOfPlace_query = """
+born_in = """
 #New York doğumlu insanlar
 #title: Humans born in New York City
 SELECT DISTINCT ?item ?itemLabel ?itemDescription ?sitelinks ?placeOfBirthLabel 
@@ -30,7 +30,7 @@ enemy_of_query = """
 SELECT DISTINCT ?enemy ?enemyLabel (SUM(?sitelink) AS ?sitelinks)
         WHERE {
         # Replace "INPUT_ENTITY_QID" with the QID of the input entity
-        wd:Q79037 wdt:P7047 ?enemy.
+        wd:%s wdt:P7047 ?enemy.
 
         ?enemy wikibase:sitelinks ?sitelink.
         
@@ -84,7 +84,7 @@ SELECT DISTINCT ?item ?itemLabel (SUM(?sitelink) AS ?sitelinks)
         GROUP BY ?item ?itemLabel
         ORDER BY DESC(?sitelinks)
 """
-memberOf = """
+member_of = """
 SELECT DISTINCT ?item ?itemLabel(SUM(?sitelink) AS ?sitelinks)
         WHERE {
         
