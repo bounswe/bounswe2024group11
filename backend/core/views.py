@@ -104,6 +104,11 @@ class WikidataSuggestionsView(APIView):
             return Response(
                 {"res": 'Keyword parameter "keyword" is required.'},
                 status=status.HTTP_400_BAD_REQUEST,
+            )          
+        if qid[0] != "Q":
+            return Response(
+                {"res": f'QID should start with "Q".'},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         try:
             url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={keyword}&language=en&format=json"
