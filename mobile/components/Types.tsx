@@ -2,9 +2,10 @@ export type RootStackParamList = {
   Home: undefined;
   Auth: undefined;
   Feed: undefined;
-  Post: { props: PostProps };
+  Post: { post_id: number };
   Search: undefined;
   Profile: undefined;
+  Profiles: { profileUsername: string };
   CreatePost: undefined;
 };
 

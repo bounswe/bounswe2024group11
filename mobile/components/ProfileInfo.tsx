@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image } from "react-native";
 
 import { styles } from "./Styles";
 import { useTheme } from "../context/ThemeContext";
 import { User, useUser } from "../context/UserContext";
 import CustomButton from "./CustomButton";
+import { get } from "./StorageHandler";
 
-const ProfileInfo = (props: { profileUser: User }) => {
-  const theme = useTheme();
+const ProfileInfo = (props: { profileUser: string }) => {
   const { profileUser } = props;
-  const [following, setFollowing] = useState(true);
-  const { user } = useUser();
-  const onFollowPress = () => {
-    setFollowing(false);
-  };
 
-  const onUnfollowPress = () => {
-    setFollowing(true);
+  const theme = useTheme();
+  const { user } = useUser();
+
+  const [following, setFollowing] = useState(true);
+  const [profileInfo, setProfileInfo] = useState<User | undefined>(user?.user);
+
+  useEffect(() => {
+    getProfileInfo();
+  }, []);
+
+  const getProfileInfo = () => {};
+
+  const onFollowPress = () => {
+    setFollowing(!following);
   };
 
   return (
@@ -39,8 +46,8 @@ const ProfileInfo = (props: { profileUser: User }) => {
       />
 
       <View>
-        <Text style={styles.profileHeader}>{profileUser.fullname}</Text>
-        <Text style={styles.profileSubHeader}>@{profileUser.username}</Text>
+        <Text style={styles.profileHeader}>{profileInfo?.fullname}</Text>
+        <Text style={styles.profileSubHeader}>@{profileInfo?.username}</Text>
       </View>
 
       <View style={styles.profileInfoBox}>
@@ -50,7 +57,7 @@ const ProfileInfo = (props: { profileUser: User }) => {
               fontWeight: "bold",
             }}
           >
-            {profileUser.id}
+            {profileInfo?.id}
           </Text>
           <Text>Posts</Text>
         </View>
@@ -60,7 +67,7 @@ const ProfileInfo = (props: { profileUser: User }) => {
               fontWeight: "bold",
             }}
           >
-            {profileUser.id}
+            {profileInfo?.id}
           </Text>
           <Text>Followers</Text>
         </View>
@@ -70,12 +77,12 @@ const ProfileInfo = (props: { profileUser: User }) => {
               fontWeight: "bold",
             }}
           >
-            {profileUser.id}
+            {profileInfo?.id}
           </Text>
           <Text>Following</Text>
         </View>
       </View>
-      {user && user.user.id !== profileUser.id && (
+      {user && user.user.id !== profileInfo?.id && (
         <View style={styles.profileInfoBox}>
           {following ? (
             <CustomButton
@@ -87,7 +94,7 @@ const ProfileInfo = (props: { profileUser: User }) => {
           ) : (
             <CustomButton
               text="Unfollow"
-              onPress={onUnfollowPress}
+              onPress={onFollowPress}
               bgColor={theme.colors.neutral[2]}
               textColor={theme.colors.neutral[9]}
             />

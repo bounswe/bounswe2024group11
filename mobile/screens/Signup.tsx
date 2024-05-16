@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { View, Text, Image, ScrollView } from "react-native";
 
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NavigationProp } from "@react-navigation/native";
 
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
@@ -13,7 +13,7 @@ import { ActivityIndicator, Divider } from "react-native-paper";
 
 import { post } from "../components/StorageHandler";
 
-type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
+type SignupNavigationProp = NavigationProp<RootStackParamList, "Auth">;
 
 const Signup = ({
   navigation,

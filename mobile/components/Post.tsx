@@ -59,11 +59,7 @@ function Post(props: PostProps) {
         <View>
           <Text>
             {" "}
-            {bookmarked ? (
-              <Icon source="bookmark" size={16}></Icon>
-            ) : (
-              <Icon source="bookmark" size={16}></Icon>
-            )}{" "}
+            <Icon source="bookmark" size={16}></Icon>{" "}
           </Text>
         </View>
       </View>

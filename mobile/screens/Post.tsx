@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { styles } from "../components/Styles";
 import { Button } from "react-native-paper";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../components/Types";
 import { useTheme } from "../context/ThemeContext";
+import { del, get, post } from "../components/StorageHandler";
+import { useUser } from "../context/UserContext";
 
 /*
 type PostProps = {
@@ -23,7 +24,7 @@ type PostProps = {
 */
 
 type PostScreenRouteProp = RouteProp<RootStackParamList, "Post">;
-type PostScreenNavigationProp = StackNavigationProp<RootStackParamList, "Post">;
+type PostScreenNavigationProp = NavigationProp<RootStackParamList, "Post">;
 
 type Props = {
   route: PostScreenRouteProp;
@@ -31,43 +32,121 @@ type Props = {
 };
 
 function Post({ route, navigation }: Props) {
-  const {
-    title,
-    content,
-    imgsource,
-    likes,
-    authorNS,
-    authorImg,
-    authorUsername,
-    bookmarked,
-    isLiked,
-  } = route.params.props;
+  const { post_id } = route.params;
   const theme = useTheme();
-  const [isBookmarked, setBookmarked] = useState(bookmarked);
-  const [isLikedPost, setLiked] = useState(isLiked);
-  const [postLikes, setLikes] = useState(likes);
-  const toggleBookmark = () => {
-    setBookmarked(!isBookmarked);
-  };
-  //                    <TouchableOpacity onPress={likepost}> <View> <Text> {postLikes} <Icon source="heart" size={16}></Icon> </Text> </View> </TouchableOpacity>
-  //                    <TouchableOpacity  onPress={toggleBookmark}> {isBookmarked ? <View> <Text> <Icon source="bookmark" size={16}></Icon>  </Text> </View> : <View> <Text> <Icon source="bookmark" size={16}></Icon> </Text> </View> } </TouchableOpacity>
+  const { user } = useUser();
 
-  const likepost = () => {
-    if (isLikedPost) {
-      setLiked(false);
-      setLikes(likes);
+  const [authorId, setAuthorId] = useState(0); // [authorId, setAuthorId] = useState(0)
+  const [authorUsername, setAuthorUsername] = useState("");
+  const [authorFullName, setAuthorFullName] = useState("");
+  const [authorImg, setAuthorImg] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("");
+  const [imgsource, setImgsource] = useState("");
+
+  const [isBookmarked, setBookmarked] = useState(false);
+  const [isLiked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [bookmarkCount, setBookmarkCount] = useState(0);
+  const [likedBy, setLikedBy] = useState([]);
+
+  useEffect(() => {
+    get({
+      endpoint: `posts/${post_id}`,
+      token: user?.token,
+      data: {},
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAuthorId(data.author);
+        setAuthorUsername(data.username);
+        setTitle(data.title);
+        setContent(data.content);
+        setTag(data.qtitle);
+        setImgsource(data.image_src);
+        setBookmarked(data.is_bookmarked);
+        setBookmarkCount(data.bookmark_count);
+        setLiked(data.is_liked);
+        setLikeCount(data.like_count);
+        setLikedBy(data.liked_by);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    get({
+      endpoint: `profiles/${authorId}`,
+      token: user?.token,
+      data: {},
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAuthorFullName(data.full_name);
+        setAuthorImg(data.profile_picture);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [authorUsername]);
+
+  const bookmarkPost = () => {
+    if (isBookmarked) {
+      // unbookmark
     } else {
-      setLiked(true);
-      setLikes(likes + 1);
+      // bookmark
     }
   };
+  const likepost = () => {
+    if (isLiked) {
+      del({
+        endpoint: `likes`,
+        token: user?.token,
+        data: {},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setLiked(false);
+          setLikeCount(likeCount - 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      post({
+        endpoint: `likes`,
+        token: user?.token,
+        data: { post: `${post_id}` },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setLiked(true);
+          setLikeCount(likeCount + 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+  const onSeeLikes = () => {};
+
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={styles.border2}>
         <View style={styles.postUserDiv}>
-          <Image style={styles.postUserImg} source={{ uri: authorImg }} />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profiles", {
+                profileUsername: authorUsername,
+              })
+            }
+          >
+            <Image style={styles.postUserImg} source={{ uri: authorImg }} />
+          </TouchableOpacity>
           <View style={styles.postUserContent}>
-            <Text> {authorNS} </Text>
+            <Text> {authorFullName} </Text>
             <Text style={{ color: "grey" }}> {authorUsername} </Text>
           </View>
         </View>
@@ -79,6 +158,10 @@ function Post({ route, navigation }: Props) {
         <View style={styles.postContent}>
           <Image style={styles.postContentImg2} source={{ uri: imgsource }} />
           <Text style={styles.postContentText}> {content} </Text>
+          <Text style={styles.postContentText}>
+            {" #"}
+            {tag}{" "}
+          </Text>
         </View>
 
         <View style={styles.postBottom}>
@@ -87,33 +170,29 @@ function Post({ route, navigation }: Props) {
               onPress={likepost}
               icon="heart"
               textColor={
-                isLikedPost ? theme.colors.red[2] : theme.colors.neutral[7]
+                isLiked ? theme.colors.red[2] : theme.colors.neutral[7]
               }
             >
               {" "}
-              {postLikes}{" "}
+              {likeCount}{" "}
             </Button>
-            {/* <Text>
-              {" "}
-              {likes} <Icon source="heart" size={16}></Icon>{" "}
-            </Text> */}
+          </View>
+          <View>
+            <Button onPress={onSeeLikes} textColor={theme.colors.neutral[7]}>
+              See Likes
+            </Button>
           </View>
           <View>
             <Button
-              onPress={toggleBookmark}
+              onPress={bookmarkPost}
               icon="bookmark"
               textColor={
                 isBookmarked ? theme.colors.orange[2] : theme.colors.neutral[7]
               }
             >
               {" "}
+              {bookmarkCount}{" "}
             </Button>
-
-            {/* {bookmarked ? (
-                <Icon source="bookmark" size={16}></Icon>
-              ) : (
-                <Icon source="bookmark" size={16}></Icon>
-              )}*/}
           </View>
         </View>
       </View>

@@ -9,6 +9,8 @@ import Post from "./Post";
 import CreatePost from "./CreatePost";
 import { useUser } from "../context/UserContext";
 import { UnauthorizedError, compareData } from "../components/StorageHandler";
+import Profile from "./Profile";
+import Profiles from "./Profiles";
 
 const Stack = createStackNavigator();
 
@@ -72,6 +74,13 @@ function Home() {
           component={CreatePost}
           options={{
             title: "Create Post",
+          }}
+        />
+        <Stack.Screen
+          name="Profiles"
+          component={Profiles as any} //as any
+          options={{
+            title: "Profiles",
           }}
         />
       </Stack.Navigator>
