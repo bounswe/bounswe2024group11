@@ -9,6 +9,7 @@ import Post from "./Post";
 import CreatePost from "./CreatePost";
 import { useUser } from "../context/UserContext";
 import { UnauthorizedError, compareData } from "../components/StorageHandler";
+import EditPost from "./EditPost";
 
 const Stack = createStackNavigator();
 
@@ -72,6 +73,26 @@ function Home() {
           component={CreatePost}
           options={{
             title: "Create Post",
+          }}
+        />
+        <Stack.Screen
+          name="EditPost"
+          component={EditPost as any}
+          initialParams={{
+            props: {
+              authorNS: "Default Name",
+              authorImg: "https://defaultimage.com/default.jpg",
+              authorUsername: "@defaultuser",
+              title: "Default Title",
+              content: "Default content here...",
+              imgsource: "https://defaultimage.com/post.jpg",
+              likes: 0,
+              bookmarked: false,
+              isLiked: false,
+            },
+          }}
+          options={{
+            title: "Edit Post",
           }}
         />
       </Stack.Navigator>
