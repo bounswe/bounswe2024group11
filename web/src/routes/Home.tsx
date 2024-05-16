@@ -60,7 +60,7 @@ export const Home = () => {
 	return (
 		<div className="relative z-10">
 			<Navbar />
-			<Container className="grid grid-cols-7 gap-4 py-10 items-start max-w-7xl">
+			<Container className="grid grid-cols-7 gap-6 py-10 items-stretch max-w-7xl">
 				<main className="flex flex-col gap-8 w-full items-stretch col-start-3 col-span-3">
 					<div className="flex flex-col gap-1">
 						<h1 className="text-left w-full text-slate-950 text-xl font-medium">

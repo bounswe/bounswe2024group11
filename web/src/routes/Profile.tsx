@@ -28,12 +28,13 @@ export const Profile = () => {
 	const deleteFetcher = useFetcher();
 	const bioFetcher = useFetcher();
 	const infoFetcher = useFetcher();
+
 	return (
 		<div className="relative">
 			<Navbar />
-			<div>
-				<Container className="flex flex-col max-width:480px max-w-md items-center md:py-8 p-8 gap-6 border border-slate-200 rounded-8">
-					<Box>
+			<Container className="max-w-7xl flex flex-col py-10">
+				<div className="flex border border-slate-200 rounded-3 flex-col items-center self-center p-7 gap-6">
+					<div>
 						{profile.picUrl ? (
 							<img
 								src={profile.picUrl}
@@ -46,20 +47,20 @@ export const Profile = () => {
 								{profile.fullname[0]}
 							</div>
 						)}
-					</Box>
-					<div className="flex flex-col items-center gap-3 w-full">
+					</div>
+					<div className="flex flex-col items-center gap-3">
 						<div className="flex flex-col items-center gap-1">
 							<h1 className="text-2xl font-medium font-display text-slate-950">
 								{profile.fullname}
 							</h1>
 							<p className="text-center text-slate-500">{user?.username}</p>
-							<bioFetcher.Form method="POST">
+							<bioFetcher.Form className="w-full" method="POST">
 								<textarea
 									name="bio"
 									defaultValue={profile.bio}
 									// TOOD: resize="none"
 									onBlur={(e) => submit(e.currentTarget.form)}
-									className="text-center text-slate-500"
+									className="text-center text-slate-500 w-full"
 								/>
 							</bioFetcher.Form>
 						</div>
@@ -190,8 +191,8 @@ export const Profile = () => {
 							<span>Delete Account</span>
 						</button>
 					</deleteFetcher.Form>
-				</Container>
-			</div>
+				</div>
+			</Container>
 		</div>
 	);
 };
