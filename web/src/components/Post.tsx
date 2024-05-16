@@ -16,11 +16,11 @@ type PostProps = {
 		id: number;
 		bookmarkcount: number;
 		likecount: number;
-		title: string;
 		text: string;
 		imgUrl: string;
 		author: number;
 		tag: string;
+		title?: string;
 	};
 };
 
@@ -42,8 +42,13 @@ const Author = ({
 				/>
 			</Link>
 			<div className="flex flex-col">
-				<p className="text-slate-900 font-medium">{user.fullname}</p>
-				<p className="text-slate-500">{user.username}</p>
+				<Link
+					to={`/profile/${user.username}`}
+					className="text-slate-900 font-medium hover:underline underline-offset-2"
+				>
+					{user.fullname}
+				</Link>
+				<p className="text-slate-500">@{user.username}</p>
 			</div>
 		</div>
 	);
@@ -105,10 +110,12 @@ const Post = ({
 					aria-label="post picture"
 				/>
 				<div className="flex flex-col gap-3">
-					<div className="flex flex-col gap-2">
-						<h2 className="text-slate-900 font-medium text-lg">{title}</h2>
-						<hr className="border-slate-200" />
-					</div>
+					{title && (
+						<div className="flex flex-col gap-2">
+							<h2 className="text-slate-900 font-medium text-lg">{title}</h2>
+							<hr className="border-slate-200" />
+						</div>
+					)}
 					<p className="text-slate-600 text-sm leading-6 tracking-tight">
 						{text}
 					</p>
