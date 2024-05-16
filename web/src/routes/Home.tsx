@@ -269,6 +269,7 @@ export const Home = () => {
 					</main>
 				</Container>
 			</div>
+			<NewPost />
 		</div>
 	);
 };
