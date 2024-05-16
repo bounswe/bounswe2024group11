@@ -9,6 +9,9 @@ import InfoBox from "../components/InfoBox";
 import { styles } from "../components/Styles";
 import { BadRequestError, post, get } from "../components/StorageHandler";
 import { useTheme } from "../context/ThemeContext";
+import Post from "../components/Post";
+import { NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "../components/Types";
 
 const categoryList = [
   { label: "born in", value: "born in" },
@@ -19,11 +22,28 @@ const categoryList = [
   { label: "member of", value: "member of" },
 ];
 
-function Search() {
+function Search({
+  navigation,
+}: {
+  navigation: NavigationProp<RootStackParamList, "Search">;
+}) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [dropdownValue, setDropdownValue] = useState(categoryList[0].value);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<
+    Array<{
+      id: number;
+      username: string;
+      user_id: number;
+      title: string;
+      content: string;
+      qid: string;
+      qtitle: string;
+      likes: number;
+      bookmarks: number;
+      image_src: string;
+    }>
+  >([]);
   const [panic, setPanic] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const [hatakodu, setHatakodu] = useState("");
@@ -52,7 +72,7 @@ function Search() {
     }
     setLoading(true);
     get({
-      endpoint: "users/wikidata-suggestions",
+      endpoint: "suggestions",
       data: {
         keyword: query.trim(),
       },
@@ -176,7 +196,21 @@ function Search() {
       <ScrollView style={styles.searchResultsContainer}>
         {searchResults.length != 0 &&
           searchResults.map((result, index) => (
-            <InfoBox key={index} info={result} />
+            <Post
+              key={index}
+              title={result.title}
+              content={result.content}
+              author_id={result.user_id}
+              imgsource={result.image_src}
+              qtitle={result.qtitle}
+              onClickFunction={() => {
+                navigation.navigate("Profiles", {
+                  profileUserId: result.user_id,
+                });
+              }}
+              likes={result.likes}
+              bookmarks={result.bookmarks}
+            />
           ))}
       </ScrollView>
     </View>
