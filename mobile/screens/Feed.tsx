@@ -9,9 +9,9 @@ import CreatePostButton from "../components/CreatePostButton";
 import Post from "../components/Post";
 import { RootStackParamList } from "../components/Types";
 import { useUser } from "../context/UserContext";
-import { styles } from "../components/Styles";
-import { isNewBackTitleImplementation } from "react-native-screens";
+
 import { get } from "../components/StorageHandler";
+import EditPostButton from "../components/EditPostButton";
 
 type FeedNavigationProp = NavigationProp<RootStackParamList, "Feed">;
 
@@ -54,6 +54,7 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
         ))}
       </View>
       {user && <CreatePostButton />}
+      {user && <EditPostButton />}
     </View>
   );
 }

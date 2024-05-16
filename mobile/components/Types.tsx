@@ -7,9 +7,11 @@ export type RootStackParamList = {
   Profile: undefined;
   Profiles: { profileUsername: string };
   CreatePost: undefined;
+  EditPost: {postId: number};
 };
 
 interface PostProps {
+  postId: number;
   authorNS: string;
   authorImg: string;
   authorUsername: string;

@@ -11,6 +11,7 @@ import { useUser } from "../context/UserContext";
 import { UnauthorizedError, compareData } from "../components/StorageHandler";
 import Profile from "./Profile";
 import Profiles from "./Profiles";
+import EditPost from "./EditPost";
 
 const Stack = createStackNavigator();
 
@@ -81,6 +82,26 @@ function Home() {
           component={Profiles as any} //as any
           options={{
             title: "Profiles",
+          }}
+        />
+        <Stack.Screen
+          name="EditPost"
+          component={EditPost as any}
+          initialParams={{
+            props: {
+              authorNS: "Default Name",
+              authorImg: "https://defaultimage.com/default.jpg",
+              authorUsername: "@defaultuser",
+              title: "Default Title",
+              content: "Default content here...",
+              imgsource: "https://defaultimage.com/post.jpg",
+              likes: 0,
+              bookmarked: false,
+              isLiked: false,
+            },
+          }}
+          options={{
+            title: "Edit Post",
           }}
         />
       </Stack.Navigator>
