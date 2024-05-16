@@ -37,6 +37,8 @@ export const homeAction = async ({ request }: { request: Request }) => {
 	return responseJson;
 };
 
-export const homeLoader = makeLoader(async ({ request }) => {
+export const homeLoader = makeLoader(async ({ request, params, context }) => {
+	const { searchParams } = new URL(request.url);
+	console.log(searchParams);
 	return null;
 });

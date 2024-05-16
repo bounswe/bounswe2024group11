@@ -17,6 +17,7 @@ import { deleteProfileAction } from "./routes/shadow/profile/DeleteProfile.data"
 import { authLoader } from "./routes/global/auth.data";
 import { likeAction } from "./routes/shadow/post/Like.data";
 import { bookmarkAction } from "./routes/shadow/post/Bookmark.data";
+import { followProfileAction } from "./routes/shadow/profile/Follow.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -80,6 +81,10 @@ export const { router, href } = typesafeBrowserRouter([
 			{
 				path: "/bookmark_post",
 				action: bookmarkAction,
+			},
+			{
+				path: "/follow_profile",
+				action: followProfileAction,
 			},
 		],
 	},

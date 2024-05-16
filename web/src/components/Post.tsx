@@ -10,8 +10,9 @@ import {
 import { Menu } from "@mantine/core";
 import React from "react";
 import { Link, useFetcher } from "react-router-dom";
-import { button } from "../components/Button";
+import { button, buttonInnerRing } from "../components/Button";
 import { getRelativeTime } from "../utils/date";
+import { idempotent } from "../utils/form";
 
 const user = {
 	email: "john@email.com",
@@ -50,7 +51,7 @@ const Author = ({
 				>
 					{user.fullname}
 				</Link>
-				<p className="text-slate-500">@{user.username}</p>
+				<p className="text-slate-500 text-sm">@{user.username}</p>
 			</div>
 		</div>
 	);
@@ -76,6 +77,7 @@ type Post = {
 
 type PostProps = {
 	post: Post;
+	isOwner?: boolean;
 };
 
 const Post = ({
@@ -94,7 +96,9 @@ const Post = ({
 		createdAt,
 		updatedAt,
 	},
+	isOwner = false,
 }: PostProps) => {
+	const followFetcher = useFetcher();
 	const likeFetcher = useFetcher();
 	const bookmarkFetcher = useFetcher();
 	return (
@@ -108,35 +112,52 @@ const Post = ({
 						username,
 					}}
 				/>
-				<Menu position="right-start">
-					<Menu.Target>
-						<button
-							type="button"
-							className={button({ intent: "tertiary", icon: "only" })}
-						>
-							<RiMore2Fill size={16} className="text-slate-70" />
+				{isOwner ? (
+					<Menu position="right-start">
+						<Menu.Target>
+							<button
+								type="button"
+								className={button({ intent: "tertiary", icon: "only" })}
+							>
+								<RiMore2Fill size={16} className="text-slate-70" />
+							</button>
+						</Menu.Target>
+						<Menu.Dropdown className="p-2">
+							<Menu.Item
+								leftSection={
+									<RiEditLine className="text-slate-700" size={20} />
+								}
+							>
+								Edit
+							</Menu.Item>
+							<Menu.Item
+								color="red"
+								leftSection={
+									<RiDeleteBin6Line
+										color="red"
+										className="text-slate-700"
+										size={20}
+									/>
+								}
+							>
+								Delete Post
+							</Menu.Item>
+						</Menu.Dropdown>
+					</Menu>
+				) : (
+					<followFetcher.Form method="POST" action="/follow_profile">
+						<input
+							hidden
+							name="username"
+							value={username}
+							onChange={idempotent}
+						/>
+						<button type="submit" className={button({ intent: "primary" })}>
+							<span className={buttonInnerRing({ intent: "primary" })} />
+							Follow
 						</button>
-					</Menu.Target>
-					<Menu.Dropdown className="p-2">
-						<Menu.Item
-							leftSection={<RiEditLine className="text-slate-700" size={20} />}
-						>
-							Edit
-						</Menu.Item>
-						<Menu.Item
-							color="red"
-							leftSection={
-								<RiDeleteBin6Line
-									color="red"
-									className="text-slate-700"
-									size={20}
-								/>
-							}
-						>
-							Delete Post
-						</Menu.Item>
-					</Menu.Dropdown>
-				</Menu>
+					</followFetcher.Form>
+				)}
 			</div>
 			<div className="flex gap-6 flex-col text-slate-500">
 				<img
@@ -169,8 +190,13 @@ const Post = ({
 			<div className="flex flex-row justify-between w-full">
 				<div className="flex flex-row justify-between items-center">
 					<likeFetcher.Form method="POST" action="/like_post">
-						<input hidden name="username" value={username} />
-						<input hidden name="post_id" value={id} />
+						<input
+							hidden
+							name="username"
+							value={username}
+							onChange={idempotent}
+						/>
+						<input hidden name="post_id" value={id} onChange={idempotent} />
 						<button
 							type="submit"
 							className="flex gap-1 items-center group hover:bg-slate-50 px-2 py-2 rounded-full transition-colors"
@@ -181,23 +207,28 @@ const Post = ({
 							/>
 						</button>
 					</likeFetcher.Form>
-					<a
+					<Link
 						className="text-slate-700 text-sm leading-7 hover:underline"
-						href="/"
+						to={`?liked_by=${id}`}
 					>
 						{likeCount}
-					</a>
+					</Link>
 				</div>
 				<div className="flex flex-row justify-between items-center">
-					<a
-						href="/"
+					<Link
+						to={`?bookmarked_by=${id}`}
 						className="text-slate-700 text-sm leading-7 hover:underline"
 					>
 						{bookmarkCount}
-					</a>
+					</Link>
 					<bookmarkFetcher.Form method="POST" action="/bookmark_post">
-						<input hidden name="username" value={username} />
-						<input hidden name="post_id" value={id} />
+						<input
+							hidden
+							name="username"
+							value={username}
+							onChange={idempotent}
+						/>
+						<input hidden name="post_id" value={id} onChange={idempotent} />
 						<button
 							type="submit"
 							className="flex gap-1 items-center group hover:bg-slate-50 py-2 px-2 rounded-full transition-colors"

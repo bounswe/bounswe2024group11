@@ -58,8 +58,8 @@ export const Home = () => {
 	const submit = useSubmit();
 	const user = useRouteLoaderData<typeof authLoader>("auth");
 	return (
-		<div className="relative">
-			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0">
+		<div className="relative z-10">
+			<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0 z-10">
 				<Container>
 					<header className="w-full md:py-6 py-4 ">
 						<div className="w-full flex flex-row items-center gap-4 justify-between">
@@ -257,12 +257,18 @@ export const Home = () => {
 							</p>
 						</div>
 						<div className="flex flex-col justify-between gap-8">
+							<Post post={post} isOwner />
+							<Post post={post} />
+							<Post post={post} isOwner />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
+							<Post post={post} />
 							<Post post={post} />
 						</div>
 					</main>
 				</Container>
 			</div>
-			<NewPost />
 		</div>
 	);
 };

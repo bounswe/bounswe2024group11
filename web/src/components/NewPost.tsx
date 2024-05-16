@@ -4,7 +4,7 @@ import { button, buttonInnerRing } from "./Button";
 import { RiAddFill, RiQuillPenLine } from "@remixicon/react";
 import { useDisclosure } from "@mantine/hooks";
 
-export const NewPost = () => {
+export const NewPost = ({ initial = false }: { initial?: boolean }) => {
 	const [opened, { open, close }] = useDisclosure(false);
 	return (
 		<>

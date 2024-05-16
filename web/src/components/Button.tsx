@@ -90,6 +90,7 @@ export const button = cva(
 					"active:bg-red-800",
 					"active:ring-2",
 					"active:ring-red-200",
+					"text-white",
 				],
 				tertiary: [
 					"bg-transparent",
