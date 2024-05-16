@@ -33,19 +33,6 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-class ViewPostListView(ListAPIView):
-    queryset = Post.objects.all()
-    serializer_class = SearchPostSerializer
-    permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = queryset.annotate(
-            like_count=Count("like"), bookmark_count=Count("bookmark")
-        )
-        return queryset
-
-
 class LikeViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
