@@ -10,6 +10,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
         read_only_fields = ['author']
         fields = '__all__'
 
+
 class SearchPostSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="get_author_username", read_only=True)
     user_id = serializers.CharField(source="get_author_id", read_only=True)
@@ -46,6 +47,7 @@ class SearchPostSerializer(serializers.ModelSerializer):
         model = Post
         exclude = ['author']
         read_only_fields = ["username", "title", "content", "image_src", "qid", "qtitle", "created_at", "updated_at", "like_count", "bookmark_count", "liked_by", "is_liked", "is_bookmarked", "user_id"]
+
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
