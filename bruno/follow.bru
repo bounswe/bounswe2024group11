@@ -6,6 +6,20 @@ meta {
 
 post {
   url: {{base_url}}:{{port}}/api/follows/
-  body: none
-  auth: none
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1OTQ0MDg0LCJpYXQiOjE3MTU4NTc2ODQsImp0aSI6IjE3NzEyNTc2N2U0NDQwZGM5NGNhNTFiYTA4YWJkOTA1IiwidXNlcl9pZCI6M30.ZCa_zgQajzAULI9OuMz4SYsun5tPaHKqHZRZJ19ZK00
+}
+
+body:json {
+  {
+    "following":2
+  }
 }
