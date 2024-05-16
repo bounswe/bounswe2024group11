@@ -1,0 +1,24 @@
+meta {
+  name: search posts
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/search?qid=q60&category=born%20in
+  body: json
+  auth: bearer
+}
+
+query {
+  qid: q60
+  category: born%20in
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1OTMyNzU4LCJpYXQiOjE3MTU4NDYzNTgsImp0aSI6ImE0MDhkZTY5MzM3ZDQ0OWU5MmI0NTQ4NGU3YmI1MjQ1IiwidXNlcl9pZCI6Mn0.JLZCbD-jwYZNwb48P3edC730yD09tCUFWHMkNT7lp5M
+}

@@ -6,7 +6,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomTab from "../components/BottomTab";
 import Auth from "./Auth";
 import { DEFAULT_USER, User, useUser } from "../context/UserContext";
-import { compareToken, getUser } from "../components/StorageHandler";
+import {
+	NotSavedError,
+	compareToken,
+	getUser,
+} from "../components/StorageHandler";
 
 const Stack = createStackNavigator();
 
@@ -16,14 +20,19 @@ function Home() {
 	useEffect(() => {
 		compareToken()
 			.then((token) => {
-				return getUser({ token: token, endpoint: "user/validate" });
+				// console.log(token);
+				return token;
+				throw new Error("Not implemented home validation");
+				// return getUser({ token: token, endpoint: "user/validate" });
 			})
 			.then((user) => {
 				setUser(user);
 			})
 			.catch((error) => {
-				console.log("home 25");
-				console.error(error);
+				if (error instanceof NotSavedError) {
+				} else {
+					console.log(error);
+				}
 			});
 	}, []);
 

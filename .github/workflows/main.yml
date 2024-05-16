@@ -33,4 +33,4 @@ jobs:
           END
       - name: Run deploy
         run: |
-          ssh target "cd bounswe2024group11/backend/ && docker-compose down && git pull && docker-compose build && docker-compose up -d --force-recreate"
+          ssh target "cd ~/bounswe2024group11/backend/ && docker-compose down && git stash && git pull && docker-compose build && docker-compose up -d --force-recreate"
