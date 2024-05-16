@@ -155,6 +155,7 @@ export const Profile = () => {
 										</p>
 									</div>
 									<TextInput
+										className="flex-1"
 										defaultValue={user?.username}
 										type="text"
 										required
@@ -173,6 +174,7 @@ export const Profile = () => {
 										</p>
 									</div>
 									<TextInput
+										className="flex-1"
 										defaultValue={profile.email}
 										type="text"
 										required
@@ -191,6 +193,7 @@ export const Profile = () => {
 										</p>
 									</div>
 									<TextInput
+										className="flex-1"
 										defaultValue={profile.username}
 										type="text"
 										required
@@ -209,6 +212,7 @@ export const Profile = () => {
 										</p>
 									</div>
 									<TextInput
+										className="flex-1"
 										defaultValue={profile.picUrl}
 										type="text"
 										required
@@ -268,159 +272,31 @@ export const Profile = () => {
 							</div>
 						</div>
 						<div className="flex flex-col items-stretch gap-4 self-stretch">
-							{isFollowing ? (
-								<unfollowFetcher.Form
-									action="/unfollow"
-									method="POST"
-									className="w-full items-stretch flex flex-col"
+							<followFetcher.Form
+								action="/follow"
+								method="POST"
+								className="w-full items-stretch flex flex-col"
+							>
+								<input
+									hidden
+									name="is_already_following"
+									defaultValue={isFollowing ? "true" : "false"}
+								/>
+								<input hidden name="username" defaultValue={profile.username} />
+								<button
+									type="submit"
+									className={button({ intent: "secondary" })}
+									onClick={(e) => {
+										e.preventDefault();
+										setIsFollowing(!isFollowing);
+									}}
 								>
-									<input
-										hidden
-										name="username"
-										defaultValue={profile.username}
-									/>
-									<button
-										type="submit"
-										className={button({ intent: "tertiary" })}
-										onClick={(e) => {
-											e.preventDefault();
-											setIsFollowing(!isFollowing);
-										}}
-									>
-										<div className={buttonInnerRing({ intent: "tertiary" })} />
-										<span>Unfollow</span>
-									</button>
-								</unfollowFetcher.Form>
-							) : (
-								<followFetcher.Form
-									action="/follow"
-									method="POST"
-									className="w-full items-stretch flex flex-col"
-								>
-									<input
-										hidden
-										name="username"
-										defaultValue={profile.username}
-									/>
-									<button
-										type="submit"
-										className={button({ intent: "primary" })}
-										onClick={(e) => {
-											e.preventDefault();
-											setIsFollowing(!isFollowing);
-										}}
-									>
-										<div className={buttonInnerRing({ intent: "primary" })} />
-										<span>Follow</span>
-									</button>
-								</followFetcher.Form>
-							)}
-							<hr className="w-full border-slate-200" />
+									<div className={buttonInnerRing({ intent: "secondary" })} />
+									<span>Follow</span>
+								</button>
+							</followFetcher.Form>
 
-							<div className="flex gap-6 items-center justify-stretch self-stretch">
-								{isBlocked ? (
-									<unblockFetcher.Form
-										action="/unblock"
-										method="POST"
-										className="w-full items-stretch flex flex-col"
-									>
-										<input
-											hidden
-											name="username"
-											defaultValue={profile.username}
-										/>
-										<button
-											type="submit"
-											className={button({ intent: "tertiary" })}
-											onClick={(e) => {
-												e.preventDefault();
-												setIsBlocked(!isBlocked);
-											}}
-										>
-											<div
-												className={buttonInnerRing({ intent: "tertiary" })}
-											/>
-											<span>Unblock</span>
-										</button>
-									</unblockFetcher.Form>
-								) : (
-									<blockFetcher.Form
-										action="/block"
-										method="POST"
-										className="w-full items-stretch flex flex-col"
-									>
-										<input
-											hidden
-											name="username"
-											defaultValue={profile.username}
-										/>
-										<button
-											type="submit"
-											className={button({ intent: "secondary" })}
-											onClick={(e) => {
-												e.preventDefault();
-												setIsBlocked(!isBlocked);
-											}}
-										>
-											<div
-												className={buttonInnerRing({ intent: "secondary" })}
-											/>
-											<span>Block</span>
-										</button>
-									</blockFetcher.Form>
-								)}
-								{isMuted ? (
-									<unmuteFetcher.Form
-										action="/unmute"
-										method="POST"
-										className="w-full items-stretch flex flex-col"
-									>
-										<input
-											hidden
-											name="username"
-											defaultValue={profile.username}
-										/>
-										<button
-											type="submit"
-											className={button({ intent: "tertiary" })}
-											onClick={(e) => {
-												e.preventDefault();
-												setIsMuted(!isMuted);
-											}}
-										>
-											<div
-												className={buttonInnerRing({ intent: "tertiary" })}
-											/>
-											<span>Unmute</span>
-										</button>
-									</unmuteFetcher.Form>
-								) : (
-									<muteFetcher.Form
-										action="/mute"
-										method="POST"
-										className="w-full items-stretch flex flex-col"
-									>
-										<input
-											hidden
-											name="username"
-											defaultValue={profile.username}
-										/>
-										<button
-											type="submit"
-											className={button({ intent: "destructive" })}
-											onClick={(e) => {
-												e.preventDefault();
-												setIsMuted(!isMuted);
-											}}
-										>
-											<div
-												className={buttonInnerRing({ intent: "secondary" })}
-											/>
-											<span>Mute</span>
-										</button>
-									</muteFetcher.Form>
-								)}
-							</div>
+							<hr className="w-full border-slate-200" />
 						</div>
 					</div>
 				)}

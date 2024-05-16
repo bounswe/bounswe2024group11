@@ -1,5 +1,5 @@
 import { Modal, TextInput, Textarea } from "@mantine/core";
-import { Form, useFetcher } from "react-router-dom";
+import { Form, useFetcher, useSearchParams } from "react-router-dom";
 import { button, buttonInnerRing } from "./Button";
 import { RiAddFill, RiQuillPenLine } from "@remixicon/react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -28,7 +28,7 @@ export const NewPost = ({ initial = false }: { initial?: boolean }) => {
 				opened={opened}
 				onClose={close}
 				fullScreen={isMobile}
-				yOffset={"8rem"}
+				yOffset={"6rem"}
 			>
 				<Modal.Overlay />
 				<Modal.Content>

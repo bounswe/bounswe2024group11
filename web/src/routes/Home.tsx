@@ -6,9 +6,17 @@ import {
 	Menu,
 	Modal,
 	Textarea,
+	Button,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
-import { Form, Link, useFetcher, useSubmit } from "react-router-dom";
+import {
+	Form,
+	Link,
+	useFetcher,
+	useLocation,
+	useSearchParams,
+	useSubmit,
+} from "react-router-dom";
 import { href } from "../router";
 import { button, buttonInnerRing } from "../components/Button";
 import {
@@ -20,7 +28,7 @@ import {
 	RiSearch2Line,
 	RiSettings2Line,
 } from "@remixicon/react";
-import { useRouteLoaderData } from "react-router-typesafe";
+import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { imageLink } from "../components/ImageLink";
 import Post from "../components/Post";
 import { useDisclosure } from "@mantine/hooks";
@@ -29,11 +37,12 @@ import { NewPost } from "../components/NewPost";
 import { Navbar } from "../components/Navbar";
 import { WikiWidget } from "../components/WikiWidget";
 import { useState } from "react";
+import type { homeLoader } from "./Home.data";
 
 export const post: Post = {
-	id: 4,
+	id: 8,
 	username: "username1",
-	user_id: "2",
+	user_id: 2,
 	likeCount: 0,
 	bookmarkCount: 0,
 	likedBy: [],
@@ -57,6 +66,22 @@ export const Home = () => {
 		"Real Name": "Peter Parker",
 		Universe: "Marvel",
 	});
+	const location = useLocation();
+	const isOpen = location.search.includes("liked_by");
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const posts = useLoaderData<typeof homeLoader>();
+
+	// id: number(),
+	// title: string(),
+	// content: string(),
+	// image_src: nullable(string()),
+	// qid: nullable(string()),
+	// qtitle: nullable(string()),
+	// created_at: string(),
+	// updated_at: string(),
+	// author: number(),
+
 	return (
 		<div className="relative z-10">
 			<Navbar />
@@ -71,14 +96,35 @@ export const Home = () => {
 						</p>
 					</div>
 					<div className="flex flex-col items-stretch justify-between gap-8 self-stretch">
-						<Post post={post} isOwner />
-						<Post post={post} />
-						<Post post={post} isOwner />
-						<Post post={post} />
-						<Post post={post} />
-						<Post post={post} />
-						<Post post={post} />
-						<Post post={post} />
+						{"error" in posts ? (
+							<p className="text-slate-500">
+								Oops, there was an error fetching the posts.
+							</p>
+						) : (
+							posts.map((post) => (
+								<Post
+									key={post.id}
+									post={{
+										bookmarkCount: 3,
+										content: post.content,
+										createdAt: post.created_at,
+										id: post.id,
+										imageSrc: post.image_src,
+										isBookmarked: false,
+										isLikedBy: false,
+										likeCount: 3,
+										likedBy: [],
+										qid: post.qid,
+										qtitle: post.qtitle,
+										title: post.title,
+										updatedAt: post.updated_at,
+										user_id: post.author,
+										username: "username1",
+									}}
+									isOwner={post.author === user?.id}
+								/>
+							))
+						)}
 					</div>
 				</main>
 				<WikiWidget
@@ -86,7 +132,20 @@ export const Home = () => {
 					className="col-span-2 sticky top-32"
 				/>
 			</Container>
-
+			<Modal
+				opened={isOpen}
+				onClose={() => {
+					setSearchParams((params) => {
+						const searchParams = new URLSearchParams(params);
+						searchParams.delete("liked_by");
+						return searchParams.toString();
+					});
+					console.log("closed");
+				}}
+				withCloseButton={true}
+			>
+				Modal without header, press escape or click on overlay to close
+			</Modal>
 			<NewPost />
 		</div>
 	);

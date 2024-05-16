@@ -1,14 +1,16 @@
 import {
 	RiBook2Line,
+	RiBookmark2Fill,
 	RiBookmark2Line,
 	RiDeleteBin6Line,
 	RiEditLine,
+	RiHeart3Fill,
 	RiHeart3Line,
 	RiMore2Fill,
 	RiSettings2Line,
 } from "@remixicon/react";
 import { Menu } from "@mantine/core";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useFetcher } from "react-router-dom";
 import { button, buttonInnerRing } from "../components/Button";
 import { getRelativeTime } from "../utils/date";
@@ -60,7 +62,7 @@ const Author = ({
 type Post = {
 	id: number;
 	username: string;
-	user_id: string;
+	user_id: number;
 	likeCount: number;
 	bookmarkCount: number;
 	likedBy: string[];
@@ -68,9 +70,9 @@ type Post = {
 	isBookmarked: boolean;
 	title: string;
 	content: string;
-	imageSrc: string;
-	qid: string;
-	qtitle: string;
+	imageSrc: string | null;
+	qid: string | null;
+	qtitle: string | null;
 	createdAt: string;
 	updatedAt: string;
 };
@@ -101,6 +103,8 @@ const Post = ({
 	const followFetcher = useFetcher();
 	const likeFetcher = useFetcher();
 	const bookmarkFetcher = useFetcher();
+	const [isLiked, setIsLiked] = useState(false);
+	const [isBookmarked2, setIsBookmarked2] = useState(false);
 	return (
 		<section className="flex flex-col gap-3 justify-between items-stretch px-5 py-4 rounded-2 border-slate-200 border w-full">
 			<div className="flex flex-row justify-between items-center">
@@ -160,11 +164,13 @@ const Post = ({
 				)}
 			</div>
 			<div className="flex gap-6 flex-col text-slate-500">
-				<img
-					className="w-full rounded-2 max-h-72 object-cover"
-					src={imageSrc}
-					aria-label="post picture"
-				/>
+				{imageSrc && (
+					<img
+						className="w-full rounded-2 max-h-72 object-cover"
+						src={imageSrc}
+						aria-label="post picture"
+					/>
+				)}
 				<div className="flex flex-col gap-3">
 					<div className="flex flex-col gap-2">
 						<div className="flex justify-between items-center">
@@ -189,7 +195,12 @@ const Post = ({
 			</div>
 			<div className="flex flex-row justify-between w-full">
 				<div className="flex flex-row justify-between items-center">
-					<likeFetcher.Form method="POST" action="/like_post">
+					<likeFetcher.Form method="POST" action="/like">
+						<input
+							hidden
+							name="is_already_liked"
+							value={isLikedBy ? "true" : "false"}
+						/>
 						<input
 							hidden
 							name="username"
@@ -199,29 +210,40 @@ const Post = ({
 						<input hidden name="post_id" value={id} onChange={idempotent} />
 						<button
 							type="submit"
-							className="flex gap-1 items-center group hover:bg-slate-50 px-2 py-2 rounded-full transition-colors"
+							onClick={(e) => {
+								// e.preventDefault();
+								setIsLiked(!isLiked);
+							}}
+							className="active:scale-75 transition-all duration-300 flex gap-1 items-center group hover:bg-rose-50 hover:text-rose-800 active:text-rose-900 active:bg-rose-100 px-2 py-2 rounded-full"
 						>
-							<RiHeart3Line
-								size={20}
-								className="text-slate-700 group-hover:text-slate-900"
-							/>
+							{isLiked ? (
+								<RiHeart3Fill
+									size={20}
+									className="text-rose-500 group-hover:text-rose-500"
+								/>
+							) : (
+								<RiHeart3Line size={20} className="text-inherit" />
+							)}
 						</button>
 					</likeFetcher.Form>
 					<Link
 						className="text-slate-700 text-sm leading-7 hover:underline"
-						to={`?liked_by=${id}`}
+						to={{
+							pathname: "./",
+							search: `liked_by=${id}`,
+						}}
 					>
 						{likeCount}
 					</Link>
 				</div>
 				<div className="flex flex-row justify-between items-center">
-					<Link
-						to={`?bookmarked_by=${id}`}
-						className="text-slate-700 text-sm leading-7 hover:underline"
-					>
-						{bookmarkCount}
-					</Link>
-					<bookmarkFetcher.Form method="POST" action="/bookmark_post">
+					<p className="text-slate-700 text-sm leading-7">{bookmarkCount}</p>
+					<bookmarkFetcher.Form method="POST" action="/bookmark">
+						<input
+							hidden
+							name="is_already_bookmarked"
+							value={isBookmarked ? "true" : "false"}
+						/>
 						<input
 							hidden
 							name="username"
@@ -231,9 +253,20 @@ const Post = ({
 						<input hidden name="post_id" value={id} onChange={idempotent} />
 						<button
 							type="submit"
-							className="flex gap-1 items-center group hover:bg-slate-50 py-2 px-2 rounded-full transition-colors"
+							onClick={(e) => {
+								// e.preventDefault();
+								setIsBookmarked2(!isBookmarked2);
+							}}
+							className="active:scale-75 transition-all duration-300 flex gap-1 items-center group hover:bg-amber-50 hover:text-amber-800 active:bg-amber-100 active:text-amber-900 py-2 px-2 rounded-full"
 						>
-							<RiBookmark2Line size={20} className="text-slate-700" />
+							{isBookmarked2 ? (
+								<RiBookmark2Fill
+									size={20}
+									className="text-amber-500 group-hover:text-amber-500"
+								/>
+							) : (
+								<RiBookmark2Line size={20} className="text-inherit" />
+							)}
 						</button>
 					</bookmarkFetcher.Form>
 				</div>

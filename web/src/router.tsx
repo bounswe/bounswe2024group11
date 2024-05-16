@@ -22,7 +22,6 @@ import { newPostAction } from "./routes/shadow/post/NewPost.data";
 import { Bookmarks } from "./routes/Bookmarks";
 import { bookmarksLoader } from "./routes/Bookmarks.data";
 import { updateBioAction } from "./routes/shadow/profile/UpdateBio.data";
-import { unfollowAction } from "./routes/shadow/profile/Unfollow.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
@@ -84,20 +83,16 @@ export const { router, href } = typesafeBrowserRouter([
 				action: newPostAction,
 			},
 			{
-				path: "/like_post",
+				path: "/like",
 				action: likeAction,
 			},
 			{
-				path: "/bookmark_post",
+				path: "/bookmark",
 				action: bookmarkAction,
 			},
 			{
 				path: "/follow",
 				action: followAction,
-			},
-			{
-				path: "/unfollow",
-				action: unfollowAction,
 			},
 		],
 	},
