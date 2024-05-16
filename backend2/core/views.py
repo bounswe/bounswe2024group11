@@ -41,14 +41,33 @@ class BookmarkViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class FollowViewSet(viewsets.ModelViewSet):
-    queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
+class FollowAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(follower=self.request.user)
+    def get(self, request, format=None):
+        follows = Follow.objects.filter(follower=request.user)
+        serializer = FollowSerializer(follows, many=True)
+        return Response(serializer.data)
 
+    def post(self, request, *args, **kwargs):
+        serializer = FollowSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(follower=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk=None, format=None):
+        target_id = request.data.get('following')
+        if target_id is None:
+            return Response({'error': 'target_id must be provided in the request data'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            follow = Follow.objects.get(follower=request.user, following=target_id)
+        except Follow.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        follow.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
