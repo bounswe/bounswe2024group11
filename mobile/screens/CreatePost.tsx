@@ -148,7 +148,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
                 onPress={handleTagSuggestion(item)}
                 style={{ color: theme.colors.neutral[7] }}
               >
-                {item.label + item.description}
+                {item.label + ": " + item.description}
               </Text>
             </View>
           )}

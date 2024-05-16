@@ -143,6 +143,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: 8,
   },
+  infoBoxImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 5,
+    marginVertical: 12,
+  },
   profileHeader: {
     fontSize: 16,
     fontWeight: "bold",

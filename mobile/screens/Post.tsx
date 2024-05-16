@@ -9,6 +9,7 @@ import { useTheme } from "../context/ThemeContext";
 import { del, get, post } from "../components/StorageHandler";
 import { useUser } from "../context/UserContext";
 import InfoBox from "../components/InfoBox";
+import CustomButton from "../components/CustomButton";
 
 /*
 type PostProps = {
@@ -54,12 +55,12 @@ function Post({ route, navigation }: Props) {
   const [likesVisible, setLikesVisible] = useState(false);
 
   useEffect(() => {
+    console.log("Fetching post info", post_id);
     get({
       endpoint: `posts/${post_id}`,
       token: user?.token,
       data: {},
     })
-      .then((response) => response.json())
       .then((data) => {
         setAuthorId(data.user_id);
         setAuthorUsername(data.username);
@@ -86,7 +87,6 @@ function Post({ route, navigation }: Props) {
       token: user?.token,
       data: {},
     })
-      .then((response) => response.json())
       .then((data) => {
         setAuthorFullName(data.full_name);
         setAuthorImg(data.profile_picture);
@@ -100,31 +100,28 @@ function Post({ route, navigation }: Props) {
     if (isBookmarked) {
       // unbookmark
     } else {
-      // bookmark
-    }
-  };
-  const likepost = () => {
-    if (isLiked) {
-      del({
-        endpoint: `likes`,
+      post({
+        endpoint: `bookmarks/`,
         token: user?.token,
-        data: {},
+        data: { post: post_id },
       })
-        .then((response) => response.json())
         .then((data) => {
-          setLiked(false);
-          setLikeCount(likeCount - 1);
+          setBookmarked(true);
+          setBookmarkCount(bookmarkCount + 1);
         })
         .catch((error) => {
           console.log(error);
         });
+    }
+  };
+  const likepost = () => {
+    if (isLiked) {
     } else {
       post({
-        endpoint: `likes`,
+        endpoint: `likes/`,
         token: user?.token,
-        data: { post: `${post_id}` },
+        data: { post: post_id },
       })
-        .then((response) => response.json())
         .then((data) => {
           setLiked(true);
           setLikeCount(likeCount + 1);
@@ -149,7 +146,9 @@ function Post({ route, navigation }: Props) {
               })
             }
           >
-            <Image style={styles.postUserImg} source={{ uri: authorImg }} />
+            {authorImg === "" ? null : (
+              <Image style={styles.postUserImg} source={{ uri: authorImg }} />
+            )}
           </TouchableOpacity>
           <View style={styles.postUserContent}>
             <Text> {authorFullName} </Text>
@@ -162,12 +161,13 @@ function Post({ route, navigation }: Props) {
         </View>
 
         <View style={styles.postContent}>
-          <Image style={styles.postContentImg2} source={{ uri: imgsource }} />
+          {imgsource === "" ? null : (
+            <Image style={styles.postContentImg} source={{ uri: imgsource }} />
+          )}
           <Text style={styles.postContentText}> {content} </Text>
-          <Text style={styles.postContentText}>
-            {" #"}
-            {tag}{" "}
-          </Text>
+          {tag === "" ? null : (
+            <Text style={styles.postContentText}>{" #" + tag}</Text>
+          )}
         </View>
 
         <View style={styles.postBottom}>
@@ -191,7 +191,11 @@ function Post({ route, navigation }: Props) {
               <Dialog visible={likesVisible} onDismiss={onSeeLikes}>
                 <Dialog.Title>Likes</Dialog.Title>
                 <Dialog.Content>
-                  <Text>This is simple dialog</Text>
+                  {likedBy.map((like, index) => (
+                    <View key={index}>
+                      <Text>{like}</Text>
+                    </View>
+                  ))}
                 </Dialog.Content>
               </Dialog>
             </Portal>
@@ -210,8 +214,22 @@ function Post({ route, navigation }: Props) {
           </View>
         </View>
         <View>
-          <InfoBox qid = {qid}/>
+          <InfoBox qid={qid} />
         </View>
+        {user && user.user.username === authorUsername && (
+          <View>
+            <CustomButton
+              text="Edit Post"
+              textColor={theme.colors.neutral[2]}
+              bgColor={theme.colors.neutral[9]}
+              onPress={() =>
+                navigation.navigate("EditPost", {
+                  postId: post_id,
+                })
+              }
+            />
+          </View>
+        )}
       </View>
     </ScrollView>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 import { NavigationProp } from "@react-navigation/native";
 
@@ -20,7 +20,7 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
 
   const [posts, setPosts] = useState<
     Array<{
-      post_id: number;
+      id: number;
       user_id: number;
       title: string;
       content: string;
@@ -33,26 +33,28 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
   >([]);
 
   useEffect(() => {
+    console.log("Fetching feed");
     get({
-      endpoint: "posts",
+      endpoint: "posts/",
       token: user?.token,
       data: {},
     })
       .then((data) => {
         setPosts(data);
+        console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [user]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <FeedHeader />
-      <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch" }}>
+      <ScrollView style={{ flex: 1, flexDirection: "column" }}>
         {posts.map((post) => (
           <Post
-            key={post.post_id}
+            key={post.id}
             author_id={post.user_id}
             title={post.title}
             content={post.content}
@@ -61,11 +63,11 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
             likes={post.likes}
             bookmarks={post.bookmarks}
             onClickFunction={() => {
-              navigation.navigate("Post", { post_id: post.post_id });
+              navigation.navigate("Post", { post_id: post.id });
             }}
           />
         ))}
-      </View>
+      </ScrollView>
       {user && <CreatePostButton />}
     </View>
   );

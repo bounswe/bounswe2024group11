@@ -44,65 +44,6 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
             ]}
           >
             <ProfileInfo profileUserId={user.user.id} />
-            {/* <Divider style={styles.divider}/>   
-            <Image
-              source={require("../assets/zenith-logo-login.png")}
-              style={styles.logo}
-              resizeMethod="scale"
-              resizeMode="contain"
-            />
-            <Divider style={styles.divider}/>   
-            <CustomOutput
-              field_name="Full Name"
-              value={user.fullname}
-              image="account"
-            />
-            <CustomOutput
-              field_name="E-mail"
-              value={user.email}
-              image="email"
-            />
-            <CustomOutput
-              field_name="User Name"
-              value={user.username}
-              image="heart"
-            />          
-            <Divider style={styles.divider}/>
-            <View
-            style={[
-              styles.center,
-              {
-                flexDirection: 'row',        
-                justifyContent: "space-between",
-                paddingHorizontal: 10       
-              },
-            ]}>
-              <View>
-                <Text>
-                  Posts
-                </Text>
-                <Text>
-                  {user.id}
-                </Text>
-              </View>
-              <View>
-                <Text>
-                  Follewers
-                </Text>
-                <Text>
-                  {user.id}
-                </Text>
-              </View>
-              <View>
-                <Text>
-                  Following
-                </Text>
-                <Text>
-                  {user.id}
-                </Text>
-              </View>
-            </View>
-            */}
           </View>
         ) : (
           <View
