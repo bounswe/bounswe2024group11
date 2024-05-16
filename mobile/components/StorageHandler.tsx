@@ -6,7 +6,7 @@ const URI = "http://164.90.189.150:8000/api/v2";
 
 type RequestProps = {
   endpoint: string;
-  data: { [key: string]: string };
+  data: { [key: string]: any };
   token?: string;
 };
 
@@ -61,7 +61,7 @@ export const get = async (props: RequestProps) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {
@@ -89,7 +89,7 @@ export const put = async (props: RequestProps) => {
     body: formData,
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {
@@ -113,7 +113,7 @@ export const del = async (props: RequestProps) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      ...(props.token ? { Authorization: `Bearer: ${props.token}` } : {}),
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
   return fetch(getRequest).then((response) => {

@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
 import { styles } from "./Styles";
 import { useTheme } from "../context/ThemeContext";
 import { Divider } from "react-native-paper";
+import { get } from "./StorageHandler";
 
-const InfoBox = (props: { key: number; info: { [key: string]: string } }) => {
-  const { info } = props;
+const InfoBox = (props: { qid: string; }) => {
+  const { qid } = props;
   const theme = useTheme();
+  const [info, setInfo] = useState({
+    label: "",
+    description: "",
+    place: "",
+    siteLinks: "",
+  });
+
+  useEffect(() => {
+    get({
+      endpoint: `tags/${qid}`,
+      data: {qid: qid},
+    }).then((response) => {
+      setInfo({
+        label: response.label,
+        description: response.description,
+        place: response.place,
+        siteLinks: response.siteLinks,
+      });
+    });
+  });
+
   return (
     <View style={styles.infoBoxContainer}>
       <Text

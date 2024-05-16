@@ -1,6 +1,12 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
-
-import { View, Text, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+  ScrollView,
+} from "react-native";
 import {
   ActivityIndicator,
   Button,

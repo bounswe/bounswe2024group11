@@ -12,6 +12,7 @@ import { UnauthorizedError, compareData } from "../components/StorageHandler";
 import Profile from "./Profile";
 import Profiles from "./Profiles";
 import EditPost from "./EditPost";
+import EditProfile from "./EditProfile";
 
 const Stack = createStackNavigator();
 
@@ -89,21 +90,26 @@ function Home() {
           component={EditPost as any}
           initialParams={{
             props: {
-              authorNS: "Default Name",
-              authorImg: "https://defaultimage.com/default.jpg",
-              authorUsername: "@defaultuser",
-              title: "Default Title",
-              content: "Default content here...",
-              imgsource: "https://defaultimage.com/post.jpg",
-              likes: 0,
-              bookmarked: false,
-              isLiked: false,
+              postId: -1,
             },
           }}
           options={{
             title: "Edit Post",
           }}
         />
+<Stack.Screen
+          name="EditProfile"
+          component={EditProfile as any}
+          initialParams={{
+            props: {
+              profileId: -1,
+            },
+          }}
+          options={{
+            title: "Edit Post",
+          }}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
