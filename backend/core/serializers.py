@@ -19,6 +19,7 @@ class SearchPostSerializer(serializers.ModelSerializer):
     liked_by = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
 
 
     def get_like_count(self, obj):
@@ -42,11 +43,17 @@ class SearchPostSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.bookmark_set.filter(user=request.user).exists()
         return False
+    
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.author.followers.filter(follower=request.user).exists()
+        return False
 
     class Meta:
         model = Post
         exclude = ['author']
-        read_only_fields = ["username", "title", "content", "image_src", "qid", "qtitle", "created_at", "updated_at", "like_count", "bookmark_count", "liked_by", "is_liked", "is_bookmarked", "user_id"]
+        read_only_fields = ["username", "title", "content", "image_src", "qid", "qtitle", "created_at", "updated_at", "like_count", "bookmark_count", "liked_by", "is_liked", "is_bookmarked", "user_id", "is_following"]
 
 
 class LikeSerializer(serializers.ModelSerializer):
