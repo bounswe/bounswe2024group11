@@ -27,7 +27,7 @@ import { useDisclosure } from "@mantine/hooks";
 import type { authLoader } from "./global/auth.data";
 import { NewPost } from "../components/NewPost";
 import { Navbar } from "../components/Navbar";
-import type { bookmarksLoader } from "./Bookmark.data";
+import type { bookmarksLoader } from "./Bookmarks.data";
 
 export const Bookmarks = () => {
 	const { posts } = useLoaderData<typeof bookmarksLoader>();

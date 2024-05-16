@@ -19,8 +19,8 @@ import { likeAction } from "./routes/shadow/post/Like.data";
 import { bookmarkAction } from "./routes/shadow/post/Bookmark.data";
 import { followProfileAction } from "./routes/shadow/profile/Follow.data";
 import { newPostAction } from "./routes/shadow/post/NewPost.data";
-import { Bookmarks } from "./routes/Bookmark";
-import { bookmarksLoader } from "./routes/Bookmark.data";
+import { Bookmarks } from "./routes/Bookmarks";
+import { bookmarksLoader } from "./routes/Bookmarks.data";
 
 export const { router, href } = typesafeBrowserRouter([
 	{
