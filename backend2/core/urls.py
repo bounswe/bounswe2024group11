@@ -21,7 +21,7 @@ router = DefaultRouter()
 router.register(r"posts", PostViewSet)
 router.register(r"likes", LikeViewSet)
 router.register(r"bookmarks", BookmarkViewSet)
-# router.register(r'follows', FollowAPIView)
+router.register(r'follows', FollowViewSet)
 router.register(r"users", UserViewSet)
 
 urlpatterns = [
@@ -31,7 +31,6 @@ urlpatterns = [
         "suggestions/", WikidataSuggestionsView.as_view(), name="wikidata_suggestions"
     ),
     path("search/", SearchPostView.as_view(), name="search_posts"),
-    path("follows/", FollowAPIView.as_view(), name="follows"),
     path(
         "swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),
