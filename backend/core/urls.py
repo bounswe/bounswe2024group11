@@ -24,6 +24,7 @@ router.register(r"likes", LikeViewSet)
 router.register(r"bookmarks", BookmarkViewSet)
 router.register(r'follows', FollowViewSet)
 router.register(r"users", UserViewSet)
+router.register(r"mutes", MuteViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

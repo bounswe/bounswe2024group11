@@ -76,6 +76,26 @@ class FollowViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)
 
+class MuteViewSet(viewsets.ModelViewSet):
+    queryset = Mute.objects.all()
+    serializer_class = MuteSerializer
+    permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(muter=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.muter != request.user:
+            return Response(
+                {"res": "You are not authorized to delete this mute."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        else:
+            self.perform_destroy(instance)
+            return Response(
+                {"res": "Mute deleted successfully."}, status=status.HTTP_204_NO_CONTENT
+            )
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()

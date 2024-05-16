@@ -48,6 +48,13 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('follower', 'following')
 
+class Mute(models.Model):
+    muter = models.ForeignKey(User, related_name='muting', on_delete=models.CASCADE)
+    muted = models.ForeignKey(User, related_name='muted', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('muter', 'muted')
 
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -62,4 +69,5 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.owner.username} Profile'
+
     

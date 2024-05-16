@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Post, Like, Bookmark, Follow, Profile
+from .models import *
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -20,6 +20,13 @@ class SearchPostSerializer(serializers.ModelSerializer):
     is_liked = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
+    is_muted = serializers.SerializerMethodField()
+
+    def get_is_muted(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return Mute.objects.filter(muter=request.user, muted=obj.author).exists()
+        return False
 
 
     def get_like_count(self, obj):
@@ -77,6 +84,11 @@ class FollowSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['follower']
 
+class MuteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mute
+        read_only_fields = ['muter']
+        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     fullname = serializers.SerializerMethodField()
