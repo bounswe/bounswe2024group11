@@ -232,7 +232,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 class WikiInfoView(APIView):
     permission_classes = [permissions.AllowAny]
 
-    # @swagger_auto_schema(**wiki_info_swagger)
+    @swagger_auto_schema(**wiki_info_swagger)
     def get(self, request):
         qid = request.query_params.get("qid")
         if not qid:
