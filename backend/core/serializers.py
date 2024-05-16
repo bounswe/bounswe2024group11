@@ -103,6 +103,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             first_name=validated_data['fullname'],
         )
+        Profile.objects.create(owner=user)
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):

@@ -50,7 +50,7 @@ class Follow(models.Model):
 
 
 class Profile(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
     picture = models.URLField(blank=True, null=True)
     biography = models.TextField(blank=True)
     
