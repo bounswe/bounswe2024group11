@@ -12,7 +12,7 @@ const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const post: Post = {
 	id: 4,
 	username: "username1",
-	user_id: "2",
+	user_id: 2,
 	likeCount: 0,
 	bookmarkCount: 0,
 	likedBy: [],
