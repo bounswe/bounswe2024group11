@@ -10,12 +10,14 @@ from .permissions import (
     IsAuthorOwnerOrReadOnly,
     IsUserOwnerOrReadOnly,
     IsFollowerOwnerOrReadOnly,
-    IsProfileOwnerOrReadOnly
+    IsProfileOwnerOrReadOnly,
 )
 from . import wikidata_helpers
 from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
-from swagger_docs.wikidata_swagger import *
+from swagger_docs.swagger import *
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -25,19 +27,26 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        followings = user.following.all().values_list('following_id', flat=True)
-        return Post.objects.filter(author__in=followings) | Post.objects.filter(author=user)
+        followings = user.following.all().values_list("following_id", flat=True)
+        return Post.objects.filter(author__in=followings) | Post.objects.filter(
+            author=user
+        )
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if(instance.author != request.user):
-            return Response({'res': 'You are not authorized to delete this post.'}, status=status.HTTP_403_FORBIDDEN)
+        if instance.author != request.user:
+            return Response(
+                {"res": "You are not authorized to delete this post."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         else:
             self.perform_destroy(instance)
-            return Response({'res': 'Post deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"res": "Post deleted successfully."}, status=status.HTTP_204_NO_CONTENT
+            )
 
 
 class LikeViewSet(viewsets.ModelViewSet):
@@ -175,14 +184,49 @@ class SearchPostView(ListAPIView):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
         except Exception as e:
-            return Response({'res': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+            return Response(
+                {"res": "An unexpected error occurred."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(**login_swagger)
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if username is None or password is None:
+            return Response(
+                {"error": "Please provide both username and password"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = authenticate(username=username, password=password)
+
+        if not user:
+            return Response(
+                {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        refresh = RefreshToken.for_user(user)
+        serialized_user = UserSerializer(user).data
+        return Response(
+            {
+                "refresh": str(refresh),
+                "token": str(refresh.access_token),
+                "user": serialized_user,
+            },
+            status=status.HTTP_200_OK,
+        )
+
 
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes= [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-           
