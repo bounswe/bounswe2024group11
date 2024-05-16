@@ -44,22 +44,22 @@ class Follow(models.Model):
     follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
     following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         unique_together = ('follower', 'following')
 
 
 class Profile(models.Model):
-    profile_owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile_picture = models.URLField(blank=True, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    picture = models.URLField(blank=True, null=True)
     biography = models.TextField(blank=True)
     
     def get_profile_owner_username(self):
-        return self.profile_owner.username
+        return self.owner.username
     
     def get_prof_owner_email(self):
-        return self.profile_owner.email
+        return self.owner.email
 
     def __str__(self):
-        return f'{self.profile_owner.username} Profile'
+        return f'{self.owner.username} Profile'
     
