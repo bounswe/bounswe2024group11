@@ -49,7 +49,7 @@ class Follow(models.Model):
         unique_together = ('follower', 'following')
 
 class Mute(models.Model):
-    muter = models.ForeignKey(User, related_name='muting', on_delete=models.CASCADE)
+    muter = models.ForeignKey(User, related_name='muter', on_delete=models.CASCADE)
     muted = models.ForeignKey(User, related_name='muted', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
