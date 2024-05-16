@@ -106,6 +106,18 @@ function Home() {
             title: "Edit Post",
           }}
         />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile as any}
+          initialParams={{
+            props: {
+              profileId: -1,
+            },
+          }}
+          options={{
+            title: "Edit Post",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

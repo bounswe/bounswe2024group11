@@ -139,14 +139,12 @@ const ProfileInfo = (props: { profileUserId: number }) => {
             bgColor={theme.colors.neutral[9]}
             textColor={theme.colors.neutral[2]}
           />
-
           <CustomButton
             text={isBlocked ? "Block" : "Unblock"}
             onPress={onBlockPress}
             bgColor={theme.colors.neutral[9]}
             textColor={theme.colors.neutral[2]}
           />
-
           <CustomButton
             text={isMuted ? "Mute" : "Unmute"}
             onPress={onMutePress}
@@ -157,6 +155,16 @@ const ProfileInfo = (props: { profileUserId: number }) => {
       )}
       {user && user.user.id == profileUserId && (
         <View style={styles.profileInfoBox}>
+          <CustomButton
+            text="Edit"
+            onPress={onEditPress}
+            bgColor={theme.colors.neutral[9]}
+            textColor={theme.colors.neutral[2]}
+          />
+        </View>
+      )}
+      {user && user.user.id == profileUserId && (
+        <View>
           <CustomButton
             text="Edit"
             onPress={onEditPress}

@@ -81,7 +81,6 @@ function EditProfile({ route, navigation }: Props) {
           image="camera"
         />
       </View>
-
       <View>
         <CustomButton
           text="Save"
