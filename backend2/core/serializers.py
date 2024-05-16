@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Post, Like, Bookmark, Follow
+from .models import Post, Like, Bookmark, Follow, Profile
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -90,3 +90,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        read_only_fields = ["owner"]
+        fields = '__all__'

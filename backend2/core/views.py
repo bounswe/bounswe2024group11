@@ -4,12 +4,13 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .models import Post, Like, Bookmark, Follow
+from .models import Post, Like, Bookmark, Follow, Profile
 from .serializers import *
 from .permissions import (
     IsAuthorOwnerOrReadOnly,
     IsUserOwnerOrReadOnly,
     IsFollowerOwnerOrReadOnly,
+    IsProfileOwnerOrReadOnly,
 )
 from . import wikidata_helpers
 from django.db.models import Count
@@ -220,3 +221,12 @@ class LoginView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

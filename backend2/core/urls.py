@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 )
 
 router = DefaultRouter()
+router.register(r'profiles', ProfileViewSet)
 router.register(r"posts", PostViewSet)
 router.register(r"likes", LikeViewSet)
 router.register(r"bookmarks", BookmarkViewSet)
