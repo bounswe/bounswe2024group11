@@ -24,11 +24,12 @@ export const loginAction = async ({
 > => {
 	console.log("Login Action");
 	const formData = await request.formData();
-	const response = await fetch(`${VITE_BACKEND_URL}/user/login`, {
+	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/login/`, {
 		method: "POST",
-		body: formData, // Sending the form data
+		body: JSON.stringify(Object.fromEntries(formData.entries())), // Sending the form data
 		headers: {
 			Accept: "application/json",
+			'Content-Type': "application/json",
 		},
 	});
 	if (!response.ok) {
