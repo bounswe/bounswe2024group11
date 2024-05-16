@@ -65,28 +65,33 @@ const UserDropdown = () => {
 						</Menu.Label>
 						<Menu.Divider className="border-slate-100" />
 						<Menu.Item
+							component={Link}
+							to={`/profile/${user.username}`}
 							leftSection={
 								<RiSettings2Line className="text-slate-700" size={20} />
 							}
 						>
-							<Link to={`/profile/${user.username}`}>Profile Settings</Link>
+							Profile
 						</Menu.Item>
 
 						<Menu.Item
+							component={Link}
+							to={`/bookmarks/${user.username}`}
 							leftSection={
 								<RiBookmark2Line className="text-slate-700" size={20} />
 							}
 						>
-							<Link to={`/bookmarks/${user.username}`}>Bookmarks</Link>
+							Bookmarks
 						</Menu.Item>
 						<Menu.Divider className="border-slate-100" />
 						<Menu.Item
+							component={Link}
+							to="/login"
 							onClick={() => {
 								localStorage.removeItem("zenith_app_user");
 								localStorage.removeItem("zenith_app_token");
 								sessionStorage.removeItem("zenith_app_user");
 								sessionStorage.removeItem("zenith_app_token");
-								window.location.href = "/login";
 							}}
 							className="hover:!text-red-700 hover:!bg-red-50 active:!text-red-900 active:!bg-red-100"
 							leftSection={
