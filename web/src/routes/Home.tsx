@@ -30,7 +30,7 @@ import { Navbar } from "../components/Navbar";
 import { WikiWidget } from "../components/WikiWidget";
 import { useState } from "react";
 
-const post: Post = {
+export const post: Post = {
 	id: 4,
 	username: "username1",
 	user_id: "2",

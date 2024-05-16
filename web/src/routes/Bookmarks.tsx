@@ -42,10 +42,10 @@ export const Bookmarks = () => {
 					<main className="flex flex-col gap-8 w-full">
 						<div className="flex flex-col gap-1">
 							<h1 className="text-left w-full text-slate-950 text-xl font-medium">
-								Bookmark
+								Bookmarks
 							</h1>
 							<p className="text-sm text-slate-500 text-pretty">
-								What have you bookmarked?
+								You never want to lose these...
 							</p>
 						</div>
 						<div className="flex flex-col justify-between gap-8">
@@ -60,7 +60,6 @@ export const Bookmarks = () => {
 					</main>
 				</Container>
 			</div>
-			<NewPost />
 		</div>
 	);
 };
