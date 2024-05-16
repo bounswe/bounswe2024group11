@@ -140,7 +140,8 @@ wiki_info_swagger = {
                 "qid",
                 openapi.IN_QUERY,
                 description="The QID (Query ID) of the Wikidata entity. "
-                            "QID is a unique identifier assigned to each item on Wikidata.",
+                            "QID is a unique identifier assigned to each item on Wikidata. "
+                            "It should start with 'Q'.",
                 type=openapi.TYPE_STRING,
                 required=True,
             ),
@@ -196,7 +197,6 @@ wiki_info_swagger = {
                 )
             ),
             400: "Bad Request: Missing or invalid QID parameter.",
-            404: "Not Found: The specified Wikidata entity does not exist.",
             500: "Internal Server Error: An unexpected error occurred."
-        },   
+        },
 } 
