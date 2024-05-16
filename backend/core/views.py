@@ -104,6 +104,11 @@ class WikidataSuggestionsView(APIView):
             return Response(
                 {"res": 'Keyword parameter "keyword" is required.'},
                 status=status.HTTP_400_BAD_REQUEST,
+            )          
+        if qid[0] != "Q":
+            return Response(
+                {"res": f'QID should start with "Q".'},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         try:
             url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={keyword}&language=en&format=json"
@@ -223,3 +228,29 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+class WikiInfoView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(**wiki_info_swagger)
+    def get(self, request):
+        qid = request.query_params.get("qid")
+        if not qid:
+            return Response(
+                {"res": 'Parameter "qid" is required.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if qid[0] != "Q":
+            return Response(
+                {"res": f'QID should start with "Q".'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            result_data = wikidata_helpers.wiki_info_helper(qid)
+            return Response(result_data.data)
+        except Exception as e:
+            return Response(
+                {"res": "An unexpected error occurred."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

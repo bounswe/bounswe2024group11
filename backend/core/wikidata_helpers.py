@@ -259,3 +259,41 @@ def member_of_wikidata(qid):
         return Response({'keyword': qid, 'results': combined_results})
     else:
         return Response({'error': 'Failed to retrieve data from Wikidata.'}, status=400)
+
+def wiki_info_helper(qid):
+    wiki_info_query_formatted = queries.wiki_info%qid
+    wiki_info_query_params = {
+            'query': wiki_info_query_formatted,
+            'format': 'json'  # Response format
+    }
+    # API endpoint
+    url = 'https://query.wikidata.org/sparql'
+
+    # Make the API call
+
+    try:
+        wiki_info_response = requests.get(url, params=wiki_info_query_params)
+    except:
+        return(Response({'res': 'Wrong query format.'}, status=400))
+    
+    # Check if the request was successful
+    if wiki_info_response.status_code == 200 :
+        
+        # Parse JSON response
+        wiki_info_data = wiki_info_response.json()
+        #character_data = character_response.json()
+        
+        wiki_info_results = [{ 
+                             "Inception": item.get('inception',{}).get('value','Unknown'),
+                                "Gender": item.get('sexOrGenderLabel',{}).get('value','Unknown'),
+                                "Birth Name": item.get('birthName',{}).get('value','Unknown'),
+                                "Place of Birth": item.get('placeOfBirthLabel',{}).get('value','Unknown'),
+                                "Image": item.get('image',{}).get('value','Unknown'),
+                                "Description": item.get('description',{}).get('value','Unknown'),
+                                "Label": item.get('label',{}).get('value','Unknown'),
+                            } for item in wiki_info_data['results']['bindings']]
+        
+
+        return Response({'keyword': qid, 'results': wiki_info_results})
+    else:   
+        return Response({'res': 'Failed to retrieve data from Wikidata.'}, status=400)

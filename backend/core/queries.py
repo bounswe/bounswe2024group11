@@ -97,3 +97,24 @@ SELECT DISTINCT ?item ?itemLabel(SUM(?sitelink) AS ?sitelinks)
         GROUP BY ?item ?itemLabel
         ORDER BY DESC(?sitelinks)
 """
+
+wiki_info = """
+SELECT ?inception ?sexOrGenderLabel ?birthName ?placeOfBirthLabel ?image ?description ?label
+WHERE {
+  BIND(wd:%s AS ?character).
+  OPTIONAL { ?character wdt:P571 ?inception. }      # inception
+  OPTIONAL { ?character wdt:P21 ?sexOrGender. }     # sex or gender
+  OPTIONAL { ?character wdt:P1477 ?birthName. }     # birth name
+  OPTIONAL { ?character wdt:P19 ?placeOfBirth. }    # place of birth
+  OPTIONAL { ?character wdt:P18 ?image. }
+  
+  OPTIONAL { ?character schema:description ?description. FILTER(LANG(?description) = "en") }  # description
+  OPTIONAL { ?character rdfs:label ?label. FILTER(LANG(?label) = "en") }                        # label
+  
+  OPTIONAL { ?sexOrGender rdfs:label ?sexOrGenderLabel. FILTER(LANG(?sexOrGenderLabel) = "en") }
+  OPTIONAL { ?placeOfBirth rdfs:label ?placeOfBirthLabel. FILTER(LANG(?placeOfBirthLabel) = "en") }
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+
+"""
