@@ -18,6 +18,7 @@ from drf_yasg.utils import swagger_auto_schema
 from swagger_docs.swagger import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.db import IntegrityError
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -226,8 +227,17 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def create(self, request):
+        serializer = ProfileSerializer(data=request.data)
+        if(serializer.is_valid()):
+            try:
+                serializer.save(owner=request.user)
+                return Response({"res": "Profile created successfully."},status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({"res": "You already have a profile."},status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class WikiInfoView(APIView):
     permission_classes = [permissions.AllowAny]
