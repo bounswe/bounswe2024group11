@@ -103,7 +103,6 @@ const Post = ({
 	const followFetcher = useFetcher();
 	const likeFetcher = useFetcher();
 	const bookmarkFetcher = useFetcher();
-	const [isLiked, setIsLiked] = useState(false);
 	const [isBookmarked2, setIsBookmarked2] = useState(false);
 	return (
 		<section className="flex flex-col gap-3 justify-between items-stretch px-5 py-4 rounded-2 border-slate-200 border w-full">
@@ -201,22 +200,12 @@ const Post = ({
 							name="is_already_liked"
 							value={isLikedBy ? "true" : "false"}
 						/>
-						<input
-							hidden
-							name="username"
-							value={username}
-							onChange={idempotent}
-						/>
 						<input hidden name="post_id" value={id} onChange={idempotent} />
 						<button
 							type="submit"
-							onClick={(e) => {
-								// e.preventDefault();
-								setIsLiked(!isLiked);
-							}}
 							className="active:scale-75 transition-all duration-300 flex gap-1 items-center group hover:bg-rose-50 hover:text-rose-800 active:text-rose-900 active:bg-rose-100 px-2 py-2 rounded-full"
 						>
-							{isLiked ? (
+							{isLikedBy ? (
 								<RiHeart3Fill
 									size={20}
 									className="text-rose-500 group-hover:text-rose-500"

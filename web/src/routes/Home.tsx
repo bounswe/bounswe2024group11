@@ -60,8 +60,6 @@ export const post: Post = {
 const POST_COUNT = 5;
 
 export const Home = () => {
-	const suggestionsFetcher = useFetcher();
-	const submit = useSubmit();
 	const user = useRouteLoaderData<typeof authLoader>("auth");
 	const [semanticData, setSemanticData] = useState<Record<string, string>>({
 		Pseudonym: "Spider-Man",
@@ -69,8 +67,9 @@ export const Home = () => {
 		Universe: "Marvel",
 	});
 	const location = useLocation();
-	const isOpen = location.search.includes("liked_by");
-	const [searchParams, setSearchParams] = useSearchParams();
+	const isLikesOpen = location.search.includes("liked_by");
+	const isEditOpen = location.search.includes("edit");
+	const [_, setSearchParams] = useSearchParams();
 	const [postCount, setPostCount] = useState(POST_COUNT);
 	const posts = useLoaderData<typeof homeLoader>();
 
@@ -151,7 +150,7 @@ export const Home = () => {
 				/>
 			</Container>
 			<Modal
-				opened={isOpen}
+				opened={isLikesOpen}
 				onClose={() => {
 					setSearchParams((params) => {
 						const searchParams = new URLSearchParams(params);
