@@ -57,9 +57,9 @@ export const post: Post = {
 	updatedAt: "2024-05-15T15:40:28.307213Z",
 };
 
+const POST_COUNT = 5;
+
 export const Home = () => {
-	const suggestionsFetcher = useFetcher();
-	const submit = useSubmit();
 	const user = useRouteLoaderData<typeof authLoader>("auth");
 	const [semanticData, setSemanticData] = useState<Record<string, string>>({
 		Pseudonym: "Spider-Man",
@@ -67,20 +67,11 @@ export const Home = () => {
 		Universe: "Marvel",
 	});
 	const location = useLocation();
-	const isOpen = location.search.includes("liked_by");
-	const [searchParams, setSearchParams] = useSearchParams();
-
+	const isLikesOpen = location.search.includes("liked_by");
+	const isEditOpen = location.search.includes("edit");
+	const [_, setSearchParams] = useSearchParams();
+	const [postCount, setPostCount] = useState(POST_COUNT);
 	const posts = useLoaderData<typeof homeLoader>();
-
-	// id: number(),
-	// title: string(),
-	// content: string(),
-	// image_src: nullable(string()),
-	// qid: nullable(string()),
-	// qtitle: nullable(string()),
-	// created_at: string(),
-	// updated_at: string(),
-	// author: number(),
 
 	return (
 		<div className="relative z-10">
@@ -101,29 +92,55 @@ export const Home = () => {
 								Oops, there was an error fetching the posts.
 							</p>
 						) : (
-							posts.map((post) => (
-								<Post
-									key={post.id}
-									post={{
-										bookmarkCount: 3,
-										content: post.content,
-										createdAt: post.created_at,
-										id: post.id,
-										imageSrc: post.image_src,
-										isBookmarked: false,
-										isLikedBy: false,
-										likeCount: 3,
-										likedBy: [],
-										qid: post.qid,
-										qtitle: post.qtitle,
-										title: post.title,
-										updatedAt: post.updated_at,
-										user_id: post.author,
-										username: "username1",
-									}}
-									isOwner={post.author === user?.id}
-								/>
-							))
+							<>
+								{posts
+									.sort((a, b) => {
+										return (
+											new Date(b.created_at).getTime() -
+											new Date(a.created_at).getTime()
+										);
+									})
+									.slice(0, postCount)
+									.map((post) => (
+										<Post
+											key={post.id}
+											post={{
+												bookmarkCount: 3,
+												content: post.content,
+												createdAt: post.created_at,
+												id: post.id,
+												imageSrc: post.image_src,
+												isBookmarked: false,
+												isLikedBy: false,
+												likeCount: 3,
+												likedBy: [],
+												qid: post.qid,
+												qtitle: post.qtitle,
+												title: post.title,
+												updatedAt: post.updated_at,
+												user_id: post.author,
+												username: "username1",
+											}}
+											isOwner={post.author === user?.id}
+										/>
+									))}
+								{posts.length > postCount && (
+									<Button
+										onClick={() =>
+											setPostCount((count) =>
+												Math.min(count + POST_COUNT, posts.length),
+											)
+										}
+										variant="link"
+										color="gray"
+										fullWidth
+										className={button({ intent: "primary" })}
+									>
+										<span className={buttonInnerRing({ intent: "primary" })} />
+										Load more
+									</Button>
+								)}
+							</>
 						)}
 					</div>
 				</main>
@@ -133,7 +150,7 @@ export const Home = () => {
 				/>
 			</Container>
 			<Modal
-				opened={isOpen}
+				opened={isLikesOpen}
 				onClose={() => {
 					setSearchParams((params) => {
 						const searchParams = new URLSearchParams(params);
