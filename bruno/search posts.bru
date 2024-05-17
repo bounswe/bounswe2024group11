@@ -1,0 +1,24 @@
+meta {
+  name: search posts
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/search?qid=q60&category=born%20in
+  body: json
+  auth: bearer
+}
+
+query {
+  qid: q60
+  category: born%20in
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}

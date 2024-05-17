@@ -1,0 +1,32 @@
+meta {
+  name: create post
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}:{{port}}/api/v2/posts/
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:basic {
+  username: username1
+  password: pass1
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Batman superior",
+    "content": "Batman >> Spiderman. and in fact Batman >> all",
+    "image_src": "https://i.ibb.co/c1fGmZZ/post-image.png"
+  }
+}
