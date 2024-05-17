@@ -38,4 +38,6 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("login/", LoginView.as_view(), name="login"),
+    path("info/", WikiInfoView.as_view(), name="info"),
+    path("user-profile/<str:username>/", UserProfileView.as_view(), name="user-profile"),
 ]
