@@ -6,6 +6,7 @@ import {
 	Menu,
 	Modal,
 	Textarea,
+	Input,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { Form, Link, useFetcher, useSubmit } from "react-router-dom";
@@ -18,9 +19,13 @@ import {
 	RiSearch2Line,
 	RiSettings2Line,
 } from "@remixicon/react";
-import { useRouteLoaderData } from "react-router-typesafe";
+import { useActionData, useRouteLoaderData } from "react-router-typesafe";
 import { imageLink } from "../components/ImageLink";
-import type { authLoader } from "@/routes/global/auth.data";
+import type { authLoader } from "../routes/global/auth.data";
+import type { suggestionsLoader } from "../routes/shadow/Suggestions.data";
+import { useState } from "react";
+
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const WIKIDATA_CATEGORIES = [
 	"born in",
@@ -133,9 +138,18 @@ const UserDropdown = () => {
 	);
 };
 
+type Suggestion = {
+	qid: string;
+	label: string;
+	description: string;
+};
+
 export const Navbar = () => {
 	const suggestionsFetcher = useFetcher();
 	const submit = useSubmit();
+
+	const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
 	const user = useRouteLoaderData<typeof authLoader>("auth");
 	return (
 		<div className="border-b border-slate-100 bg-[rgba(255,255,255,.92)] backdrop-blur-sm sticky top-0 z-10">
@@ -160,29 +174,50 @@ export const Navbar = () => {
 							</p>
 						</Link>
 						<div className="max-w-xl flex-1">
-							<suggestionsFetcher.Form
-								onChange={(e) => {
-									suggestionsFetcher.submit(e.currentTarget);
-								}}
-								onFocus={(e) => {
-									suggestionsFetcher.submit(e.currentTarget);
-								}}
-								action="/suggestions"
+							<Form
+								action="/"
 								className="flex gap-2"
 								method="GET"
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										e.preventDefault();
-										const formData = new FormData(e.currentTarget);
-										submit(formData);
+								onChange={async (e) => {
+									const formData = new FormData(e.currentTarget);
+									const keyword = formData.get("keyword");
+									const response = await fetch(
+										`${VITE_BACKEND_URL}/api/v2/suggestions/?keyword=${keyword}`,
+										{
+											method: "GET",
+											headers: {
+												Accept: "application/json",
+											},
+										},
+									);
+
+									if (!response.ok) {
+										switch (response.status) {
+											case 400:
+												return {
+													error: "Invalid request",
+												};
+											case 401:
+												return {
+													error: "Unauthorized",
+												};
+											default:
+												return {
+													error: "Unknown error",
+												};
+										}
 									}
+
+									const responseJson = await response.json();
+									console.log(responseJson);
+									setSuggestions(responseJson);
 								}}
 							>
 								<Fieldset className="flex gap-2 justify-center border-0 p-0 flex-1 bg-transparent">
 									<Select
 										className="max-w-72"
 										placeholder="Category"
-										defaultValue="Universe"
+										defaultValue="born in"
 										name="category"
 										aria-label="Select a category"
 										id="pick"
@@ -192,22 +227,43 @@ export const Navbar = () => {
 										nothingFoundMessage="No categories"
 										aria-keyshortcuts="ArrowDown ArrowUp"
 									/>
-									<Select
-										defaultValue="Universe"
-										data={suggestionsFetcher.data}
-										rightSection={<RiArrowDropDownLine size={20} />}
-										rightSectionPointerEvents="none"
-										searchable
-										nothingFoundMessage="No categories"
-										aria-keyshortcuts="ArrowDown ArrowUp"
-										className="w-full"
-										name="query"
-										placeholder="Search "
-										aria-label="Search"
-										id="search"
-										leftSection={<RiSearch2Line size={16} />}
-										leftSectionPointerEvents="none"
-									/>
+									<div className="flex-1 relative">
+										<Input
+											name="keyword"
+											placeholder="Search"
+											aria-label="Search"
+											id="keyword"
+											leftSection={<RiSearch2Line size={16} />}
+											leftSectionPointerEvents="none"
+											onBlur={() => {
+												setTimeout(() => {
+													setSuggestions([]);
+												}, 50);
+											}}
+										/>
+										<div className="absolute top-12 bg-red z-10 bg-white rounded-2 px-2 py-1 max-h-80 overflow-auto shadow-card border-slate-200">
+											<ul className="bg-white flex flex-col">
+												{suggestions?.map((suggestion) => (
+													<li
+														key={suggestion.qid}
+														className="w-full text-start"
+													>
+														<button
+															type="submit"
+															className="border-b border-slate-200 py-3 px-4 hover:bg-slate-50 flex flex-col gap-1 w-full text-start"
+														>
+															<p className="font-medium text-sm">
+																{suggestion.label}
+															</p>
+															<p className="text-xs text-slate-500">
+																{suggestion.description}
+															</p>
+														</button>
+													</li>
+												))}
+											</ul>
+										</div>
+									</div>
 								</Fieldset>
 								<button
 									type="submit"
@@ -219,7 +275,7 @@ export const Navbar = () => {
 									<span className={buttonInnerRing({ intent: "primary" })} />
 									<span>Search</span>
 								</button>
-							</suggestionsFetcher.Form>
+							</Form>
 						</div>
 						<UserDropdown />
 					</div>
