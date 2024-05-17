@@ -111,7 +111,7 @@ export const Home = () => {
 												id: post.id,
 												imageSrc: post.image_src,
 												isBookmarked: false,
-												isLikedBy: post.likedBy.includes(
+												isLikedBy: post.liked_by.includes(
 													user?.id.toString() || "",
 												),
 												likeCount: 3,
@@ -121,7 +121,7 @@ export const Home = () => {
 												title: post.title,
 												updatedAt: post.updated_at,
 												user_id: post.author,
-												username: "username1",
+												username: post.author_profile.username,
 											}}
 											isOwner={post.author === user?.id}
 										/>
