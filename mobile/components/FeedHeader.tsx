@@ -3,18 +3,15 @@ import React from "react";
 import { View, Text, Image } from "react-native";
 import { Appbar, Button } from "react-native-paper";
 
-import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 import { styles } from "../components/Styles";
 import { RootStackParamList } from "../components/Types";
 import { useUser } from "../context/UserContext";
 
-type FeedNavigationProp = MaterialBottomTabNavigationProp<
-  RootStackParamList,
-  "Feed"
->;
-
-const FeedHeader = ({ navigation }: { navigation: FeedNavigationProp }) => {
+const FeedHeader = () => {
+  const navigation =
+    useNavigation<NavigationProp<RootStackParamList, "Feed">>();
   const goToLogin = () => {
     navigation.navigate("Auth");
   };

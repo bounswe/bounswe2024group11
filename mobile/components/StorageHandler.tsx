@@ -1,109 +1,176 @@
 import Storage from "react-native-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User } from "../context/UserContext";
+import { UserType } from "../context/UserContext";
 
-const URI = "http://159.65.125.158:8000";
+const URI = "http://164.90.189.150:8000/api/v2";
 
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super("Invalid credentials");
-    this.name = "InvalidCredentialsError";
+type RequestProps = {
+  endpoint: string;
+  data: { [key: string]: any };
+  token?: string;
+};
+
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BadRequestError";
   }
 }
 
-export class NonuniquenessError extends Error {
-  constructor() {
-    super("Nonuniqueness or missing required fields");
-    this.name = "NonuniquenessError";
+export class UnauthorizedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UnauthorizedError";
   }
 }
 
-export class NotFoundError extends Error {
-  constructor() {
-    super("Not found");
-    this.name = "NotFoundError";
+export class ForbiddenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ForbiddenError";
   }
 }
 
-export class NotSavedError extends Error {
-  constructor() {
-    super("Not saved");
-    this.name = "NotSavedError";
-  }
-}
-
-export const getUser = async (props: { token: string; endpoint: string }) => {
-  const getUserRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "GET",
+export const post = async (props: RequestProps) => {
+  console.log(props.data, props.endpoint, props.token);
+  var status = 0;
+  const postRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: "POST",
+    body: JSON.stringify(props.data),
     headers: {
-      Authorization: `Bearer ${props.token}`,
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
     },
   });
+  console.log(postRequest.headers.get("Authorization"));
+  return fetch(postRequest)
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      switch (status) {
+        case 200:
+        case 201:
+          return data;
+        case 400:
+          throw new BadRequestError(data);
+        case 401:
+          throw new UnauthorizedError(data);
+        case 403:
+          throw new ForbiddenError(data);
+        default:
+          throw new Error(`HTTP error! Status: ${status}`);
+      }
+    });
+};
 
-  return fetch(getUserRequest).then((response) => {
+export const get = async (props: RequestProps) => {
+  const query = new URLSearchParams(props.data).toString();
+  var status = 0;
+  const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
+    },
+  });
+  return fetch(getRequest)
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      switch (status) {
+        case 200:
+        case 201:
+          return data;
+        case 400:
+          throw new BadRequestError(data);
+        case 401:
+          throw new UnauthorizedError(data);
+        case 403:
+          throw new ForbiddenError(data);
+        default:
+          throw new Error(`HTTP error! Status: ${status}`);
+      }
+    });
+};
+
+export const patch = async (props: RequestProps) => {
+  var status = 0;
+  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: "PATCH",
+    body: JSON.stringify(props.data),
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
+    },
+  });
+  return fetch(getRequest)
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      switch (status) {
+        case 200:
+        case 201:
+          return data;
+        case 400:
+          throw new BadRequestError(data);
+        case 401:
+          throw new UnauthorizedError(data);
+        case 403:
+          throw new ForbiddenError(data);
+        default:
+          throw new Error(`HTTP error! Status: ${status}`);
+      }
+    });
+};
+
+export const put = async (props: RequestProps) => {
+  const getRequest = new Request(`${URI}/${props.endpoint}`, {
+    method: "PUT",
+    body: JSON.stringify(props.data),
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
+    },
+  });
+  return fetch(getRequest).then((response) => {
     switch (response.status) {
       case 200:
       case 201:
         return response.json();
+      case 400:
+        throw new BadRequestError("Bad request!");
       case 401:
-        throw new InvalidCredentialsError();
+        throw new UnauthorizedError("Unauthorized access!");
       default:
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
   });
 };
 
-export const getSearch = async (props: {
-  body: { [key: string]: string };
-  endpoint: string;
-}) => {
-  const formData = new FormData();
-  for (const key in props.body) {
-    formData.append(key, props.body[key]);
-  }
-  const getSearchRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "POST",
-    body: formData,
+export const del = async (props: RequestProps) => {
+  const query = new URLSearchParams(props.data).toString();
+  const getRequest = new Request(`${URI}/${props.endpoint}?${query}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(props.token ? { Authorization: `Bearer ${props.token}` } : {}),
+    },
   });
-
-  return fetch(getSearchRequest).then((response) => {
+  return fetch(getRequest).then((response) => {
     switch (response.status) {
       case 200:
       case 201:
         return response.json();
       case 400:
-        throw new NotFoundError();
+        throw new BadRequestError("Bad request!");
       case 401:
-        throw new InvalidCredentialsError();
-      default:
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  });
-};
-
-export const postUser = async (props: {
-  body: { [key: string]: string };
-  endpoint: string;
-}) => {
-  const formData = new FormData();
-  for (const key in props.body) {
-    formData.append(key, props.body[key]);
-  }
-
-  const postUserRequest = new Request(`${URI}/${props.endpoint}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  return fetch(postUserRequest).then((response) => {
-    switch (response.status) {
-      case 200:
-      case 201:
-        return response.json();
-      case 400:
-        throw new NonuniquenessError();
-      case 401:
-        throw new InvalidCredentialsError();
+        throw new UnauthorizedError("Unauthorized access!");
       default:
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -131,18 +198,17 @@ export const storage = new Storage({
   sync: {
     // we'll talk about the details later.
   },
-});
+  });
 
-export const saveToken = (props: { token: User }) => {
+export const saveData = (props: { data: UserType }) => {
   // I always use same key because i only want 1 user to log in or log out.
-  const token = props.token;
   storage.save({
     key: "loginState",
-    data: token,
+    data: props.data,
   });
 };
 //normalde DEFAULT_USER'ı hiçbir yerde kullanmıyorum ama bilgileri gerekirse diye koydum.
-export const compareToken = async () => {
+export const compareData = async () => {
   // async yapmazsam storage ı beklemiyor ve comparedtoken  if'e girdikten sonra true oluyor yani çalışmıyor.
 
   return storage
@@ -168,13 +234,14 @@ export const compareToken = async () => {
     })
     .catch((error) => {
       if (error.name === "NotFoundError") {
-        throw new NotSavedError();
+        throw new UnauthorizedError("Not found");
       }
     });
 };
 
-export const removeToken = () => {
+export const removeData = () => {
   storage.remove({ key: "loginState" });
 };
 
 export default storage;
+

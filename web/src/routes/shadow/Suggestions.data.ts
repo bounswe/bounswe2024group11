@@ -1,10 +1,10 @@
-import { makeLoader } from "react-router-typesafe";
+import { Params } from "react-router-dom";
+import { makeAction, makeLoader } from "react-router-typesafe";
 
-export const suggestionsLoader = makeLoader(async ({ request }) => {
-	const url = new URL(request.url);
-	const query = url.searchParams.get("query");
-	console.log(query);
+export const suggestionsLoader = makeLoader(async ({ request, params }) => {
 	console.log("Suggestions Loader");
+	console.log(params);
+
 	return [
 		"a",
 		"b",

@@ -90,6 +90,16 @@ export const NewPost = ({ initial = false }: { initial?: boolean }) => {
 								aria-label="image url"
 								aria-errormessage="Invalid password"
 							/>
+							<TextInput
+								label="qid"
+								classNames={{
+									label: "text-slate-900 text-base font-medium mb-1",
+								}}
+								type="text"
+								name="qid"
+								aria-label="qid"
+								aria-errormessage="Invalid password"
+							/>
 							<button type="submit" className={button({ intent: "secondary" })}>
 								<span className={buttonInnerRing({ intent: "secondary" })} />
 								Post

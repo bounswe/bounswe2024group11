@@ -12,14 +12,15 @@ import { useTheme } from "../context/ThemeContext";
 
 type CustomInputTypes = {
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  setValue: (arg: string) => void;
   placeholder: string;
   secure: boolean;
   image: string;
+  multiline?: boolean;
 };
 
 const CustomInput = (props: CustomInputTypes) => {
-  const { value, setValue, placeholder, secure, image } = props;
+  const { value, setValue, placeholder, secure, image, multiline } = props;
 
   const theme = useTheme();
 
@@ -42,6 +43,8 @@ const CustomInput = (props: CustomInputTypes) => {
           placeholder={placeholder}
           style={styles.input}
           secureTextEntry={secure}
+          multiline={multiline}
+          cursorColor={theme.colors.neutral[7]}
         />
       </View>
     </View>

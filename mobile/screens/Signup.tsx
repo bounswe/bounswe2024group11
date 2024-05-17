@@ -1,15 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NavigationProp } from "@react-navigation/native";
 
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
@@ -18,14 +11,9 @@ import { styles } from "../components/Styles";
 import { useTheme } from "../context/ThemeContext";
 import { ActivityIndicator, Divider } from "react-native-paper";
 
-import {
-  saveToken,
-  postUser,
-  InvalidCredentialsError,
-  NonuniquenessError,
-} from "../components/StorageHandler";
+import { post } from "../components/StorageHandler";
 
-type SignupNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
+type SignupNavigationProp = NavigationProp<RootStackParamList, "Auth">;
 
 const Signup = ({
   navigation,
@@ -46,24 +34,32 @@ const Signup = ({
 
   const onSignupPress = () => {
     setLoading(true);
-    postUser({
-      body: {
-        fullname: fullname,
-        email: email,
-        username: username,
+    console.log;
+    post({
+      data: {
+        fullname: fullname.trim(),
+        email: email.trim(),
+        username: username.trim(),
         password: password,
       },
-      endpoint: "user/signup",
+      endpoint: "register/",
     })
       .then((data) => {
         setSuccess(true);
+        post({
+          data: {},
+          endpoint: "profiles/",
+        }).catch((error) => {
+          console.log(error);
+        });
         setTimeout(() => {
           toggle(true);
           setSuccess(false);
         }, 1500);
       })
       .catch((error) => {
-        if (error instanceof NonuniquenessError) {
+        console.log(error);
+        if (error) {
           setInvalid(true);
         } else {
           setPanic(true);

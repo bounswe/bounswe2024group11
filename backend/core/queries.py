@@ -39,7 +39,7 @@ SELECT DISTINCT ?enemy ?enemyLabel (SUM(?sitelink) AS ?sitelinks)
         GROUP BY ?enemy ?enemyLabel
         ORDER BY DESC(?sitelinks)
 """
-#occupation query gets an input occupation and output the characters with this occupation.
+# occupation query gets an input occupation and output the characters with this occupation.
 occupation = """
 SELECT DISTINCT ?item ?itemLabel (SUM(?sitelink) AS ?sitelinks)
         WHERE {

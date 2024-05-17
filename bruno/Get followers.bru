@@ -1,0 +1,15 @@
+meta {
+  name: Get followers
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{base_url}}:{{port}}/api/v2/follows/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1OTc3NjI0LCJpYXQiOjE3MTU4OTEyMjQsImp0aSI6IjgxYjFmODUzNDhiNTQ2MDNhYzQwZWI5OGZhYTM0MjU3IiwidXNlcl9pZCI6MX0.uRZ7LZ2xOflP0p3JEW4705CqAbstjy-LPMQV7Vv_Nnc
+}

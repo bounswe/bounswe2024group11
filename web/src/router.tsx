@@ -65,6 +65,7 @@ export const { router, href } = typesafeBrowserRouter([
 			{
 				path: "/suggestions",
 				loader: suggestionsLoader,
+				id: "suggestions",
 			},
 			{
 				path: "/delete_profile",
