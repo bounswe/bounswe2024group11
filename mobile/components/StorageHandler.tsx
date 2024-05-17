@@ -198,7 +198,7 @@ export const storage = new Storage({
   sync: {
     // we'll talk about the details later.
   },
-});
+  });
 
 export const saveData = (props: { data: UserType }) => {
   // I always use same key because i only want 1 user to log in or log out.
@@ -244,3 +244,4 @@ export const removeData = () => {
 };
 
 export default storage;
+

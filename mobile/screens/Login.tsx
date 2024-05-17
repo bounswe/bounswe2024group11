@@ -72,16 +72,10 @@ const Login = ({
         } else {
           setPanic(true);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
+
   };
 
-  useEffect(() => {
-    setInvalid(false);
-    setPanic(false);
-  }, [username, password]);
 
   const onSignupPress = () => {
     toggle(false);

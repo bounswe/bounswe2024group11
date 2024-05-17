@@ -12,6 +12,7 @@ const SearchHeader = (props: {
 }) => {
   const [loading, setLoading] = useState(false);
 
+
   return (
     <Appbar.Header style={styles.appBar}>
       <Appbar.Content
