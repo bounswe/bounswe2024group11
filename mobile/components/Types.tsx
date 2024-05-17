@@ -6,7 +6,7 @@ export type RootStackParamList = {
   Search: undefined;
   Profile: undefined;
   Profiles: { profileUserId: number };
-  CreatePost: undefined;
+  CreatePost: { setSuccess: (success: boolean) => void };
   EditPost: { postId: number };
   EditProfile: {
     authorImg: string;

@@ -14,13 +14,20 @@ import { FlatList } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { post, get } from "../components/StorageHandler";
 import { useUser } from "../context/UserContext";
+import { RouteProp } from "@react-navigation/native";
 
 type CreatePostNavigationProp = StackNavigationProp<
   RootStackParamList,
   "CreatePost"
 >;
 
-function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
+function CreatePost({
+  navigation,
+  route,
+}: {
+  navigation: CreatePostNavigationProp;
+  route: RouteProp<RootStackParamList, "CreatePost">;
+}) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
@@ -54,6 +61,7 @@ function CreatePost({ navigation }: { navigation: CreatePostNavigationProp }) {
     })
       .then((response) => {
         console.log(response);
+        route.params.setSuccess(true);
         navigation.goBack();
       })
       .catch((error) => {

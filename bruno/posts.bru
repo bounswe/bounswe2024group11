@@ -7,5 +7,9 @@ meta {
 get {
   url: {{base_url}}:{{port}}/api/v2/posts
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2MDE2NTM1LCJpYXQiOjE3MTU5MzAxMzUsImp0aSI6IjJlZTA5ODhhZjBmMTQxYmI4NzQ3YWE1MDc0Y2M0M2Q4IiwidXNlcl9pZCI6Mn0.yqmsm0OlChj61xuASjLs_jKjI9VDcnx7M5ROq2ln-lQ
 }

@@ -17,6 +17,7 @@ type FeedNavigationProp = NavigationProp<RootStackParamList, "Feed">;
 
 function Feed({ navigation }: { navigation: FeedNavigationProp }) {
   const { user, setUser } = useUser();
+  const [success, setSuccess] = useState(false);
 
   const [posts, setPosts] = useState<
     Array<{
@@ -46,7 +47,7 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
       .catch((error) => {
         console.log(error);
       });
-  }, [user, navigation]);
+  }, [user, success]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -68,7 +69,7 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
           />
         ))}
       </ScrollView>
-      {user && <CreatePostButton />}
+      {user && <CreatePostButton setSuccess={setSuccess} />}
     </View>
   );
 }

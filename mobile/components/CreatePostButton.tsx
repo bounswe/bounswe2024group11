@@ -8,11 +8,11 @@ import { RootStackParamList } from "./Types";
 import { useTheme } from "../context/ThemeContext";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
-const CreatePostButton = () => {
+const CreatePostButton = (props: { setSuccess: (arg0: boolean) => void }) => {
   const navigation =
     useNavigation<NavigationProp<RootStackParamList, "Feed">>();
   const handleCreatePost = () => {
-    navigation.navigate("CreatePost");
+    navigation.navigate("CreatePost", { setSuccess: props.setSuccess });
   };
 
   const theme = useTheme();

@@ -13,6 +13,9 @@ import Profile from "./Profile";
 import Profiles from "./Profiles";
 import EditPost from "./EditPost";
 import EditProfile from "./EditProfile";
+import { LogBox } from "react-native";
+
+LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
 
@@ -70,7 +73,7 @@ function Home() {
         />
         <Stack.Screen
           name="CreatePost"
-          component={CreatePost}
+          component={CreatePost as any}
           options={{
             title: "Create Post",
           }}
