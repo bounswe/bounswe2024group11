@@ -103,7 +103,7 @@ function Home() {
             },
           }}
           options={{
-            title: "Edit Post",
+            title: "Edit Profile",
           }}
         />
       </Stack.Navigator>

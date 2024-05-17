@@ -11,7 +11,7 @@ export type RootStackParamList = {
   EditProfile: {
     authorImg: string;
     authorBio: string;
-    authorFullName: string;
+    setSuccess: (success: boolean) => void;
   };
 };
 

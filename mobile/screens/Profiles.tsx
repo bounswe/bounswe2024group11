@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { RouteProp, NavigationProp } from "@react-navigation/native";
 
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 
 import { RootStackParamList } from "../components/Types";
@@ -16,10 +16,21 @@ type ProfileScreenProps = {
 
 function ProfileScreen({ navigation, route }: ProfileScreenProps) {
   const { profileUserId } = route.params;
+
+  useEffect(() => {
+    console.log("Profile screen for user", profileUserId);
+  });
   return (
-    <View>
+    <ScrollView
+      style={[
+        styles.container,
+        {
+          flexDirection: "column",
+        },
+      ]}
+    >
       <ProfileInfo profileUserId={profileUserId} />
-    </View>
+    </ScrollView>
   );
 }
 

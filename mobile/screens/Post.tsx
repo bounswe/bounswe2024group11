@@ -38,7 +38,7 @@ function Post({ route, navigation }: Props) {
   const theme = useTheme();
   const { user } = useUser();
 
-  const [authorId, setAuthorId] = useState(-1); // [authorId, setAuthorId] = useState(0)
+  const [authorId, setAuthorId] = useState(""); // [authorId, setAuthorId] = useState(0)
   const [authorUsername, setAuthorUsername] = useState("");
   const [authorFullName, setAuthorFullName] = useState("");
   const [authorImg, setAuthorImg] = useState("");
@@ -62,7 +62,8 @@ function Post({ route, navigation }: Props) {
       data: {},
     })
       .then((data) => {
-        setAuthorId(data.user_id);
+        console.log(data);
+        setAuthorId(data.author);
         setAuthorUsername(data.username);
         setTitle(data.title);
         setContent(data.content);
@@ -74,27 +75,29 @@ function Post({ route, navigation }: Props) {
         setLiked(data.is_liked);
         setLikeCount(data.like_count);
         if (data.liked_by) setLikedBy(data.liked_by);
+        setAuthorFullName(data.author_profile.fullname);
+        setAuthorImg(data.author_profile.picture);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [navigation]);
+  }, []);
 
-  useEffect(() => {
-    if (authorId === -1) return;
-    get({
-      endpoint: `profiles/${authorId}`,
-      token: user?.token,
-      data: {},
-    })
-      .then((data) => {
-        setAuthorFullName(data.full_name);
-        setAuthorImg(data.profile_picture);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [authorId]);
+  // useEffect(() => {
+  //   if (authorId === -1) return;
+  //   get({
+  //     endpoint: `profiles/${authorId}`,
+  //     token: user?.token,
+  //     data: {},
+  //   })
+  //     .then((data) => {
+  //       setAuthorFullName(data.full_name);
+  //       setAuthorImg(data.profile_picture);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [authorId]);
 
   const bookmarkPost = () => {
     if (isBookmarked) {
@@ -142,7 +145,7 @@ function Post({ route, navigation }: Props) {
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("Profiles", {
-                profileUserId: authorId,
+                profileUserId: Number(authorId),
               })
             }
           >

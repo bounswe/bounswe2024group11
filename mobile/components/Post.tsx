@@ -37,28 +37,46 @@ function Post(props: PostProps) {
   const [authorUsername, setAuthorUsername] = useState();
 
   useEffect(() => {
+    console.log(imgsource);
+    console.log("Fetching author info", author_id);
     get({
       endpoint: `profiles/${author_id}`,
       token: user?.token,
       data: {},
     })
       .then((data) => {
-        setAuthorNS(data.full_name);
-        setAuthorImg(data.profile_img);
-        setAuthorUsername(data.username);
+        console.log(data);
+        setAuthorImg(data.picture);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
+  useEffect(() => {
+    console.log("Fetching author user info", author_id);
+    get({
+      endpoint: `users/${author_id}`,
+      token: user?.token,
+      data: {},
+    })
+      .then((data) => {
+        console.log(data);
+        setAuthorNS(data.fullname);
+        setAuthorUsername(data.username);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [authorImg]);
+
   return (
     <TouchableOpacity onPress={onClickFunction} style={styles.border}>
       <View style={styles.postUserDiv}>
         <Image style={styles.postUserImg} source={{ uri: authorImg }} />
         <View style={styles.postUserContent}>
-          <Text> {authorNS} </Text>
-          <Text style={{ color: "grey" }}> {authorUsername} </Text>
+          <Text> {` ${authorNS}`} </Text>
+          <Text style={{ color: "grey" }}> {` @${authorUsername}`} </Text>
         </View>
       </View>
 

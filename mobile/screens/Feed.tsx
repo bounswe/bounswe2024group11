@@ -21,13 +21,13 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
   const [posts, setPosts] = useState<
     Array<{
       id: number;
-      user_id: number;
+      author: number;
       title: string;
       content: string;
       qtitle: string;
-      imgsource: string;
-      likes: number;
-      bookmarks: number;
+      image_src: string;
+      like_count: number;
+      bookmark_count: number;
       onClickFunction: () => void;
     }>
   >([]);
@@ -55,13 +55,13 @@ function Feed({ navigation }: { navigation: FeedNavigationProp }) {
         {posts.map((post) => (
           <Post
             key={post.id}
-            author_id={post.user_id}
+            author_id={post.author}
             title={post.title}
             content={post.content}
             qtitle={post.qtitle}
-            imgsource={post.imgsource}
-            likes={post.likes}
-            bookmarks={post.bookmarks}
+            imgsource={post.image_src}
+            likes={post.like_count}
+            bookmarks={post.bookmark_count}
             onClickFunction={() => {
               navigation.navigate("Post", { post_id: post.id });
             }}

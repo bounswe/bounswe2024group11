@@ -21,6 +21,8 @@ const ProfileInfo = (props: { profileUserId: number }) => {
   const theme = useTheme();
   const { user } = useUser();
 
+  const [success, setSuccess] = useState(false);
+
   const [authorBio, setAuthorBio] = useState("");
   const [authorImg, setAuthorImg] = useState("");
   const [authorUsername, setAuthorUsername] = useState("");
@@ -42,10 +44,9 @@ const ProfileInfo = (props: { profileUserId: number }) => {
       data: {},
     })
       .then((response) => {
+        console.log(response);
         setAuthorImg(response.picture);
-        setAuthorUsername(response.owner);
         setAuthorBio(response.biography);
-        setAuthorFullName(response.fullname);
         setPostNumber(response.post_count);
         setFollowersNumber(response.follower_count);
         setFollowingNumber(response.following_count);
@@ -53,7 +54,23 @@ const ProfileInfo = (props: { profileUserId: number }) => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [success]);
+
+  useEffect(() => {
+    get({
+      endpoint: `users/${profileUserId}`,
+      token: user?.token,
+      data: {},
+    })
+      .then((response) => {
+        console.log(response);
+        setAuthorUsername(response.username);
+        setAuthorFullName(response.fullname);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [success]);
 
   const onFollowPress = () => {
     setIsFollowed(!isFollowed);
@@ -69,7 +86,7 @@ const ProfileInfo = (props: { profileUserId: number }) => {
     navigation.navigate("EditProfile", {
       authorImg,
       authorBio,
-      authorFullName,
+      setSuccess,
     }); //authorSurname
   };
 
@@ -82,15 +99,18 @@ const ProfileInfo = (props: { profileUserId: number }) => {
           padding: 24,
 
           alignItems: "center",
+          justifyContent: "space-between",
         },
       ]}
     >
-      <Image
-        source={{ uri: authorImg }}
-        style={styles.logo}
-        resizeMethod="scale"
-        resizeMode="contain"
-      />
+      {authorImg === "" ? null : (
+        <Image
+          source={{ uri: authorImg }}
+          style={styles.logo}
+          resizeMethod="scale"
+          resizeMode="contain"
+        />
+      )}
 
       <View>
         <Text style={styles.profileHeader}>{authorFullName}</Text>
@@ -155,16 +175,6 @@ const ProfileInfo = (props: { profileUserId: number }) => {
       )}
       {user && user.user.id == profileUserId && (
         <View style={styles.profileInfoBox}>
-          <CustomButton
-            text="Edit"
-            onPress={onEditPress}
-            bgColor={theme.colors.neutral[9]}
-            textColor={theme.colors.neutral[2]}
-          />
-        </View>
-      )}
-      {user && user.user.id == profileUserId && (
-        <View>
           <CustomButton
             text="Edit"
             onPress={onEditPress}
