@@ -74,12 +74,12 @@ class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
-
+    
     def get_object(self):
         queryset = self.get_queryset()
         obj = get_object_or_404(queryset, follower=self.request.user, following__id=self.kwargs['pk'])
         return obj
-
+    
     def destroy(self, request, *args, **kwargs):
         follow = self.get_object()
         if follow.follower != request.user:
@@ -87,7 +87,7 @@ class FollowViewSet(viewsets.ModelViewSet):
         else:
             self.perform_destroy(follow)
             return Response(status=status.HTTP_204_NO_CONTENT)
-
+        
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)
 
@@ -120,7 +120,7 @@ class WikidataSuggestionsView(APIView):
             return Response(
                 {"res": 'Keyword parameter "keyword" is required.'},
                 status=status.HTTP_400_BAD_REQUEST,
-            )
+            )          
 
         try:
             url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={keyword}&language=en&format=json"
@@ -160,7 +160,7 @@ class SearchPostView(ListAPIView):
         qid = request.query_params.get("qid")
         if qid:
             qid = request.query_params.get("qid").upper()
-
+        
         category = request.query_params.get("category")
         if not qid or not category:
             return Response(

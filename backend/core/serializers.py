@@ -114,11 +114,11 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
     def get_bookmark_count(self, obj):
         return obj.bookmark_set.count()
-
+    
     def get_liked_by(self, obj):
         likes = obj.like_set.all()
         return [like.user.username for like in likes]
-
+    
     def get_is_liked(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
@@ -130,7 +130,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.bookmark_set.filter(user=request.user).exists()
         return False
-
+    
     def get_is_following(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
@@ -159,11 +159,11 @@ class SearchPostSerializer(serializers.ModelSerializer):
 
     def get_bookmark_count(self, obj):
         return obj.bookmark_set.count()
-
+    
     def get_liked_by(self, obj):
         likes = obj.like_set.all()
         return [like.user.username for like in likes]
-
+    
     def get_is_liked(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
@@ -175,7 +175,7 @@ class SearchPostSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.bookmark_set.filter(user=request.user).exists()
         return False
-
+    
     def get_is_following(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:

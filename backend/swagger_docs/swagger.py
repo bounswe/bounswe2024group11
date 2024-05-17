@@ -199,4 +199,4 @@ wiki_info_swagger = {
             400: "Bad Request: Missing or invalid QID parameter.",
             500: "Internal Server Error: An unexpected error occurred."
         },
-}
+} 
