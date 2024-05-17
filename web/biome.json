@@ -3,6 +3,15 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"ignore": [],
+		"attributePosition": "auto",
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 80
+	  },
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -13,5 +22,5 @@
 		"include": ["src/**/*.ts", "src/**/*.tsx"],
 		"ignore": ["node_modules", "dist"],
 		"ignoreUnknown": true
-	}
+	},
 }

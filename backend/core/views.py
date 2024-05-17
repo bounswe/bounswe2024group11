@@ -1,8 +1,9 @@
 import requests
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from django.contrib.auth.models import User
 from .models import Post, Like, Bookmark, Follow, Profile
 from .serializers import *
@@ -19,6 +20,7 @@ from swagger_docs.swagger import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -72,7 +74,20 @@ class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
-
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, follower=self.request.user, following__id=self.kwargs['pk'])
+        return obj
+    
+    def destroy(self, request, *args, **kwargs):
+        follow = self.get_object()
+        if follow.follower != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        else:
+            self.perform_destroy(follow)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)
 
@@ -263,3 +278,16 @@ class WikiInfoView(APIView):
                 {"res": "An unexpected error occurred."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    lookup_field = 'username'
+
+    def get_object(self):
+        username = self.kwargs.get(self.lookup_field)
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound(f'User with username "{username}" not found')

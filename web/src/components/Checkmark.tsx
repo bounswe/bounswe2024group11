@@ -11,6 +11,7 @@ export const Checkmark = ({ indeterminate, className }: IconProps) => {
 			xmlns="http://www.w3.org/2000/svg"
 			style={{ transform: indeterminate ? "rotate(45deg)" : "" }}
 		>
+			<title>Checkmark</title>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"

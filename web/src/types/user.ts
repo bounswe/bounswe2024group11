@@ -7,6 +7,17 @@ export type User = {
 	last_login: string | null;
 };
 
+export type Profile = {
+	username: string;
+	email: string;
+	fullname: string;
+	bio: string;
+	post: number;
+	followers: number;
+	following: number;
+	picUrl: string;
+};
+
 // Login
 export type LoginPayload = {
 	username: string;
