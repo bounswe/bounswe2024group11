@@ -111,10 +111,25 @@ WHERE {
   OPTIONAL { ?character schema:description ?description. FILTER(LANG(?description) = "en") }  # description
   OPTIONAL { ?character rdfs:label ?label. FILTER(LANG(?label) = "en") }                        # label
   
-  OPTIONAL { ?sexOrGender rdfs:label ?sexOrGenderLabel. FILTER(LANG(?sexOrGenderLabel) = "en") }
-  OPTIONAL { ?placeOfBirth rdfs:label ?placeOfBirthLabel. FILTER(LANG(?placeOfBirthLabel) = "en") }
+  FILTER(BOUND(?sexOrGender))  # Apply filter only if sexOrGender is bound
+  
+  OPTIONAL {
+    ?sexOrGender rdfs:label ?sexOrGenderLabel.
+    FILTER(LANG(?sexOrGenderLabel) = "en")
+  }
+  
+  OPTIONAL {
+    {
+      SELECT ?placeOfBirthLabel WHERE {
+        ?character wdt:P19 ?placeOfBirth.
+        ?placeOfBirth rdfs:label ?placeOfBirthLabel.
+        FILTER(LANG(?placeOfBirthLabel) = "en")
+      }
+    }
+  }
   
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 }
+
 
 """
