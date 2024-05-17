@@ -3,27 +3,47 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Button } from "react-native-paper";
 
-import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
+import { ScrollView } from "react-native-gesture-handler";
+import { StyleSheet, Image, ImageSourcePropType } from "react-native";
+
+import { NavigationProp } from "@react-navigation/native";
 
 import { RootStackParamList } from "../components/Types";
 import ProfileHeader from "../components/ProfileHeader";
 import { useUser } from "../context/UserContext";
 import { styles } from "../components/Styles";
+import { useTheme } from "../context/ThemeContext";
 
-type ProfileNavigationProp = MaterialBottomTabNavigationProp<
-  RootStackParamList,
-  "Profile"
->;
+import ProfileInfo from "../components/ProfileInfo";
+import CustomOutput from "../components/CustomOutput";
+
+type ProfileNavigationProp = NavigationProp<RootStackParamList, "Profile">;
 
 function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
   const { user } = useUser();
+  const theme = useTheme();
   return (
-    <View style={{ flex: 1 }}>
-      <ProfileHeader navigation={navigation} />
-      <View style={{ flex: 1 }}>
+    <ScrollView
+      style={[
+        styles.container,
+        {
+          flexDirection: "column",
+        },
+      ]}
+    >
+      <ProfileHeader />
+      <View style={styles.container}>
         {user ? (
-          <View style={styles.center}>
-            <Text>Profile</Text>
+          <View
+            style={[
+              styles.center,
+              {
+                flexDirection: "column",
+                flex: 1,
+              },
+            ]}
+          >
+            <ProfileInfo profileUserId={user.user.id} />
           </View>
         ) : (
           <View
@@ -31,6 +51,7 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
               styles.center,
               {
                 backgroundColor: "white",
+                marginTop: 24,
               },
             ]}
           >
@@ -38,14 +59,14 @@ function Profile({ navigation }: { navigation: ProfileNavigationProp }) {
             <Button
               onPress={() => navigation.navigate("Auth")}
               style={styles.headerButton}
-              labelStyle={{ color: "white" }}
+              labelStyle={{ color: theme.colors.neutral[0] }}
             >
               Log in
             </Button>
           </View>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

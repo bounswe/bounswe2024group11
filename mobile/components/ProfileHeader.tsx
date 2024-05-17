@@ -3,26 +3,19 @@ import React from "react";
 import { View, Text, Image } from "react-native";
 import { Appbar, Button } from "react-native-paper";
 
-import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 import { RootStackParamList } from "./Types";
 import { styles } from "./Styles";
 import { useUser } from "../context/UserContext";
-import { removeToken } from "./StorageHandler";
+import { removeData } from "./StorageHandler";
 
-type ProfileNavigationProp = MaterialBottomTabNavigationProp<
-  RootStackParamList,
-  "Profile"
->;
-
-const ProfileHeader = ({
-  navigation,
-}: {
-  navigation: ProfileNavigationProp;
-}) => {
+const ProfileHeader = () => {
+  const navigation =
+    useNavigation<NavigationProp<RootStackParamList, "Profile">>();
   const { user, setUser } = useUser();
   const handleLogOut = () => {
-    removeToken();
+    removeData();
     setUser(null);
     navigation.navigate("Auth");
   };

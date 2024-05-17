@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { View } from "react-native";
 import { Button, FAB, Icon } from "react-native-paper";
@@ -8,11 +8,17 @@ import { RootStackParamList } from "./Types";
 import { useTheme } from "../context/ThemeContext";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
-const CreatePostButton = (props: { setSuccess: (arg0: boolean) => void }) => {
-  const navigation =
-    useNavigation<NavigationProp<RootStackParamList, "Feed">>();
-  const handleCreatePost = () => {
-    navigation.navigate("CreatePost", { setSuccess: props.setSuccess });
+type FeedNavigationProp = NavigationProp<RootStackParamList, "Feed">;
+
+const EditPostButton = () => {
+  const navigation = useNavigation<FeedNavigationProp>();
+
+  const [postId, setPostId] = useState(-1); // [postId, setPostId] = useState(0)
+
+  const handleEditPost = () => {
+    navigation.navigate("EditPost", {
+      postId,
+    });
   };
 
   const theme = useTheme();
@@ -20,16 +26,16 @@ const CreatePostButton = (props: { setSuccess: (arg0: boolean) => void }) => {
   return (
     <View style={styles.createPostButton}>
       <FAB
-        icon="plus"
+        icon="car"
         style={{
           backgroundColor: theme.colors.neutral[9],
         }}
         rippleColor={theme.colors.neutral[7]}
         color={theme.colors.neutral[0]}
-        onPress={handleCreatePost}
+        onPress={handleEditPost}
       />
     </View>
   );
 };
 
-export default CreatePostButton;
+export default EditPostButton;

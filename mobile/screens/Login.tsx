@@ -1,11 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
-
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,10 +12,9 @@ import {
   Button,
   Checkbox,
   Divider,
-  PaperProvider,
 } from "react-native-paper";
 
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NavigationProp } from "@react-navigation/native";
 
 import { RootStackParamList } from "../components/Types";
 import CustomInput from "../components/CustomInput";
@@ -33,12 +25,12 @@ import { useUser } from "../context/UserContext";
 import { useTheme } from "../context/ThemeContext";
 
 import {
-  saveToken,
-  postUser,
-  InvalidCredentialsError,
+  saveData,
+  UnauthorizedError,
+  post,
 } from "../components/StorageHandler";
 
-type LoginNavigationProp = StackNavigationProp<RootStackParamList, "Auth">;
+type LoginNavigationProp = NavigationProp<RootStackParamList, "Auth">;
 
 const Login = ({
   navigation,
@@ -61,34 +53,29 @@ const Login = ({
 
   const onLoginPress = () => {
     setLoading(true);
-    postUser({
-      body: { username: username, password: password },
-      endpoint: "user/login",
+    post({
+      data: { username: username.trim(), password: password },
+      endpoint: "login/",
     })
       .then((data) => {
         if (remember) {
-          saveToken({ token: data.user });
+          saveData({ data: data });
         }
-        setUser(data.user);
-        console.log(data.user);
+        setUser(data);
+        console.log(data);
         navigation.navigate("Home");
       })
       .catch((error) => {
-        if (error instanceof InvalidCredentialsError) {
+        console.log("loginnnn", error);
+        if (error instanceof UnauthorizedError) {
           setInvalid(true);
         } else {
           setPanic(true);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
+
   };
 
-  useEffect(() => {
-    setInvalid(false);
-    setPanic(false);
-  }, [username, password]);
 
   const onSignupPress = () => {
     toggle(false);

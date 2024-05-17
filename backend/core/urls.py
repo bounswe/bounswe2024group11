@@ -18,11 +18,11 @@ schema_view = get_schema_view(
 )
 
 router = DefaultRouter()
-router.register(r'profiles', ProfileViewSet)
+router.register(r"profiles", ProfileViewSet)
 router.register(r"posts", PostViewSet)
 router.register(r"likes", LikeViewSet)
 router.register(r"bookmarks", BookmarkViewSet)
-router.register(r'follows', FollowViewSet)
+router.register(r"follows", FollowViewSet)
 router.register(r"users", UserViewSet)
 
 urlpatterns = [
@@ -39,5 +39,7 @@ urlpatterns = [
     ),
     path("login/", LoginView.as_view(), name="login"),
     path("info/", WikiInfoView.as_view(), name="info"),
-    path("user-profile/<str:username>/", UserProfileView.as_view(), name="user-profile"),
+    path(
+        "user-profile/<str:username>/", UserProfileView.as_view(), name="user-profile"
+    ),
 ]
