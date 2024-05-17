@@ -1,0 +1,21 @@
+meta {
+  name: bookmarks
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}:{{port}}/api/v2/bookmarks/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "post": 2
+  }
+}
