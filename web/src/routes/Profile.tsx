@@ -62,14 +62,13 @@ const Avatar = ({
 };
 
 export const Profile = () => {
-	const { profile } = useLoaderData<typeof profileLoader>();
+	const loaderData = useLoaderData<typeof profileLoader>();
 	const [semanticData, setSemanticData] = useState<Record<string, string>>({
 		Pseudonym: "Spider-Man",
 		"Real Name": "Peter Parker",
 		Universe: "Marvel",
 	});
 	const user = useRouteLoaderData<typeof authLoader>("auth");
-	const isOwner = user !== null && user.username === profile.username;
 	const submit = useSubmit();
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [isMuted, setIsMuted] = useState(false);
@@ -85,6 +84,23 @@ export const Profile = () => {
 	const unfollowFetcher = useFetcher();
 	const muteFetcher = useFetcher();
 	const unmuteFetcher = useFetcher();
+
+	if ("error" in loaderData) {
+		return (
+			<>
+				<Navbar />
+				<Container className="max-w-7xl flex flex-col py-10 pb-16">
+					<p className="text-slate-900 text-xl font-medium">
+						This user does not exist
+					</p>
+				</Container>
+			</>
+		);
+	}
+
+	const profile = loaderData.profile;
+	const isOwner = user !== null && user.username === loaderData.profile;
+
 	return (
 		<div className="relative">
 			<Navbar />
@@ -92,7 +108,7 @@ export const Profile = () => {
 				{isOwner ? (
 					<div className="flex border border-slate-200 rounded-3 flex-col items-center self-center p-7 gap-6 max-w-xl w-full">
 						<Avatar
-							picUrl={profile.picUrl}
+							picUrl={profile.picture}
 							fullname={profile.fullname}
 							username={profile.username}
 						/>
@@ -105,7 +121,7 @@ export const Profile = () => {
 								>
 									<Textarea
 										name="bio"
-										defaultValue={profile.bio}
+										defaultValue={profile.biography || ""}
 										onBlur={(e) =>
 											bioFetcher.submit(e.currentTarget.form, {
 												action: "/update_bio",
@@ -124,19 +140,19 @@ export const Profile = () => {
 						<div className="flex flex-row items-center justify-stretch w-full">
 							<div className="border-r-slate-200 border-r pr-2.5 pl-2.5 flex flex-col gap-1 items-center w-full">
 								<h3 className="text-base font-medium font-display text-slate-900">
-									{profile.post}
+									0
 								</h3>
 								<p className="text-center text-slate-500 text-xs">Posts</p>
 							</div>
 							<div className="border-r-slate-200 border-r pr-2.5 pl-2.5 flex flex-col gap-1 items-center w-full">
 								<h3 className="text-base font-medium font-display text-slate-900">
-									{profile.followers}
+									0
 								</h3>
 								<p className="text-center text-slate-500 text-xs">Follower</p>
 							</div>
 							<div className="border-r-slate-200 pr-2.5 pl-2.5 flex flex-col gap-1 items-center w-full">
 								<h3 className="text-base font-medium font-display text-slate-900">
-									{profile.following}
+									0
 								</h3>
 								<p className="text-center text-slate-500 text-xs">Following</p>
 							</div>
@@ -175,7 +191,7 @@ export const Profile = () => {
 									</div>
 									<TextInput
 										className="flex-1"
-										defaultValue={profile.email}
+										defaultValue={profile.biography || ""}
 										type="text"
 										required
 										name="email"
@@ -194,7 +210,7 @@ export const Profile = () => {
 									</div>
 									<TextInput
 										className="flex-1"
-										defaultValue={profile.username}
+										defaultValue={profile.id}
 										type="text"
 										required
 										name="username"
@@ -213,7 +229,7 @@ export const Profile = () => {
 									</div>
 									<TextInput
 										className="flex-1"
-										defaultValue={profile.picUrl}
+										defaultValue={profile.picture || ""}
 										type="text"
 										required
 										name="picUrl"
@@ -247,26 +263,26 @@ export const Profile = () => {
 				) : (
 					<div className="flex border bg-white border-slate-200 rounded-3 flex-col items-center self-center p-7 gap-6 max-w-xl w-full">
 						<Avatar
-							picUrl={profile.picUrl}
+							picUrl={profile.picture || null}
 							fullname={profile.fullname}
 							username={profile.username}
 						/>
 						<div className="flex flex-row items-center justify-stretch w-full">
 							<div className="border-r-slate-200 border-r pr-2.5 pl-2.5 flex flex-col gap-1 items-center w-full">
 								<h3 className="text-base font-medium font-display text-slate-900">
-									{profile.post}
+									0
 								</h3>
 								<p className="text-center text-slate-500 text-xs">Posts</p>
 							</div>
 							<div className="border-r-slate-200 border-r pr-2.5 pl-2.5 flex flex-col gap-1 items-center w-full">
 								<h3 className="text-base font-medium font-display text-slate-900">
-									{profile.followers}
+									0
 								</h3>
 								<p className="text-center text-slate-500 text-xs">Follower</p>
 							</div>
 							<div className="border-r-slate-200 pr-2.5 pl-2.5 flex flex-col gap-1 items-center w-full">
 								<h3 className="text-base font-medium font-display text-slate-900">
-									{profile.following}
+									0
 								</h3>
 								<p className="text-center text-slate-500 text-xs">Following</p>
 							</div>

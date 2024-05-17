@@ -111,7 +111,9 @@ export const Home = () => {
 												id: post.id,
 												imageSrc: post.image_src,
 												isBookmarked: false,
-												isLikedBy: false,
+												isLikedBy: post.likedBy.includes(
+													user?.id.toString() || "",
+												),
 												likeCount: 3,
 												likedBy: [],
 												qid: post.qid,

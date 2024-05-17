@@ -60,13 +60,13 @@ const postSchema = object({
 	created_at: string(),
 	updated_at: string(),
 	author: number(),
+	likedBy: array(string()),
 });
 
 export const homeLoader = makeLoader(async ({ request, params, context }) => {
 	const token =
 		localStorage.getItem("zenith_app_token") ||
 		sessionStorage.getItem("zenith_app_token");
-	console.log(token);
 	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/posts/`, {
 		method: "GET",
 		headers: {

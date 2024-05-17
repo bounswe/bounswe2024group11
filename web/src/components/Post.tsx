@@ -103,7 +103,6 @@ const Post = ({
 	const followFetcher = useFetcher();
 	const likeFetcher = useFetcher();
 	const bookmarkFetcher = useFetcher();
-	const [isBookmarked2, setIsBookmarked2] = useState(false);
 	return (
 		<section className="flex flex-col gap-3 justify-between items-stretch px-5 py-4 rounded-2 border-slate-200 border w-full">
 			<div className="flex flex-row justify-between items-center">
@@ -242,13 +241,9 @@ const Post = ({
 						<input hidden name="post_id" value={id} onChange={idempotent} />
 						<button
 							type="submit"
-							onClick={(e) => {
-								// e.preventDefault();
-								setIsBookmarked2(!isBookmarked2);
-							}}
 							className="active:scale-75 transition-all duration-300 flex gap-1 items-center group hover:bg-amber-50 hover:text-amber-800 active:bg-amber-100 active:text-amber-900 py-2 px-2 rounded-full"
 						>
-							{isBookmarked2 ? (
+							{isBookmarked ? (
 								<RiBookmark2Fill
 									size={20}
 									className="text-amber-500 group-hover:text-amber-500"
