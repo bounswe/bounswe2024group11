@@ -1,8 +1,9 @@
 import requests
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from django.contrib.auth.models import User
 from .models import Post, Like, Bookmark, Follow, Profile
 from .serializers import *
@@ -18,6 +19,8 @@ from drf_yasg.utils import swagger_auto_schema
 from swagger_docs.swagger import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -71,7 +74,20 @@ class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, IsFollowerOwnerOrReadOnly]
-
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, follower=self.request.user, following__id=self.kwargs['pk'])
+        return obj
+    
+    def destroy(self, request, *args, **kwargs):
+        follow = self.get_object()
+        if follow.follower != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        else:
+            self.perform_destroy(follow)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)
 
@@ -104,7 +120,8 @@ class WikidataSuggestionsView(APIView):
             return Response(
                 {"res": 'Keyword parameter "keyword" is required.'},
                 status=status.HTTP_400_BAD_REQUEST,
-            )
+            )          
+
         try:
             url = f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={keyword}&language=en&format=json"
             response = requests.get(url)
@@ -140,7 +157,10 @@ class SearchPostView(ListAPIView):
 
     @swagger_auto_schema(**search_post_swagger)
     def get(self, request):
-        qid = request.query_params.get("qid").upper()
+        qid = request.query_params.get("qid")
+        if qid:
+            qid = request.query_params.get("qid").upper()
+        
         category = request.query_params.get("category")
         if not qid or not category:
             return Response(
@@ -221,5 +241,53 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated, IsProfileOwnerOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def create(self, request):
+        serializer = ProfileSerializer(data=request.data)
+        if(serializer.is_valid()):
+            try:
+                serializer.save(owner=request.user)
+                return Response({"res": "Profile created successfully."},status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({"res": "You already have a profile."},status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class WikiInfoView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(**wiki_info_swagger)
+    def get(self, request):
+        qid = request.query_params.get("qid")
+        if not qid:
+            return Response(
+                {"res": 'Parameter "qid" is required.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if qid[0] != "Q":
+            return Response(
+                {"res": f'QID should start with "Q".'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            result_data = wikidata_helpers.wiki_info_helper(qid)
+            return Response(result_data.data)
+        except Exception as e:
+            return Response(
+                {"res": "An unexpected error occurred."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    lookup_field = 'username'
+
+    def get_object(self):
+        username = self.kwargs.get(self.lookup_field)
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound(f'User with username "{username}" not found')
