@@ -10,6 +10,7 @@ export const likeAction = makeAction(async ({ request }) => {
 		localStorage.getItem("zenith_app_token") ||
 		sessionStorage.getItem("zenith_app_token");
 	const isAlreadyLiked = formData.get("is_already_liked") === "true";
+	console.log(isAlreadyLiked);
 	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/likes/`, {
 		method: isAlreadyLiked ? "DELETE" : "POST",
 		headers: {

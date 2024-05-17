@@ -98,8 +98,9 @@ export const homeLoader = makeLoader(async ({ request, params, context }) => {
 	}
 	const responseJson = await response.json();
 	console.log(responseJson);
-	// const output = parse(array(postSchema), responseJson);
-	// console.log(output);
+	const output = parse(array(postSchema), responseJson);
+	console.log(output);
+	return output;
 
-	return responseJson as any;
+	// return responseJson as any;
 });

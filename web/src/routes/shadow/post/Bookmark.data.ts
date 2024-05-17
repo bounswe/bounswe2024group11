@@ -10,9 +10,8 @@ export const bookmarkAction = makeAction(async ({ request }) => {
 	const token =
 		localStorage.getItem("zenith_app_token") ||
 		sessionStorage.getItem("zenith_app_token");
-	const endpoint = isAlreadyBookmarked ? "unbookmark" : "bookmark";
-	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/post/${endpoint}/`, {
-		method: "POST",
+	const response = await fetch(`${VITE_BACKEND_URL}/api/v2/bookmarks/`, {
+		method: isAlreadyBookmarked ? "DELETE" : "POST",
 		headers: {
 			Authorization: `Bearer ${token}`,
 			"Content-Type": "application/json",
