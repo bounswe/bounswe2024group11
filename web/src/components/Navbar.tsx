@@ -66,7 +66,7 @@ const UserDropdown = () => {
 						<Menu.Divider className="border-slate-100" />
 						<Menu.Item
 							component={Link}
-							to={`/profile/${user.username}`}
+							to={`/profile/${user.id}`}
 							leftSection={
 								<RiSettings2Line className="text-slate-700" size={20} />
 							}

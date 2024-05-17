@@ -1,0 +1,21 @@
+meta {
+  name: likes
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}:{{port}}/api/v2/likes/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "post": 4
+  }
+}

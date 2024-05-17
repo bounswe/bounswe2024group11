@@ -105,21 +105,23 @@ export const Home = () => {
 										<Post
 											key={post.id}
 											post={{
-												bookmarkCount: 3,
+												bookmarkCount: post.bookmark_count,
 												content: post.content,
 												createdAt: post.created_at,
 												id: post.id,
 												imageSrc: post.image_src,
-												isBookmarked: false,
-												isLikedBy: false,
-												likeCount: 3,
+												isBookmarked: post.is_bookmarked,
+												isLikedBy:
+													post.liked_by?.includes(user?.id.toString() || "") ||
+													false,
+												likeCount: post.like_count,
 												likedBy: [],
 												qid: post.qid,
 												qtitle: post.qtitle,
 												title: post.title,
 												updatedAt: post.updated_at,
 												user_id: post.author,
-												username: "username1",
+												username: post.author_profile.username,
 											}}
 											isOwner={post.author === user?.id}
 										/>
