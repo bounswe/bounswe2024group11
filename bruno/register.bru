@@ -1,0 +1,20 @@
+meta {
+  name: register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}:{{port}}/api/v2/register/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "username5",
+    "email": "user5@email.com",
+    "password": "pass5",
+    "fullname":"Username5"
+  }
+}

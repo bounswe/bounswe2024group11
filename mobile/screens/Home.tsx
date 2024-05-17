@@ -20,7 +20,7 @@ LogBox.ignoreAllLogs();
 const Stack = createStackNavigator();
 
 function Home() {
-  const { user, setUser } = useUser();
+	const { user, setUser } = useUser();
 
   useEffect(() => {
     compareData()

@@ -5,14 +5,20 @@ meta {
 }
 
 get {
-  url: {{base_url}}:{{port}}/api/v1/users/post-search
+  url: {{base_url}}:{{port}}/api/search?qid=q60&category=born%20in
   body: json
-  auth: none
+  auth: bearer
 }
 
-body:json {
-  {
-    "qid":"Q1546",
-    "category":"born in"
-  }
+query {
+  qid: q60
+  category: born%20in
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
 }

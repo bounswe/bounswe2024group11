@@ -5,16 +5,19 @@ meta {
 }
 
 post {
-  url: {{base_url}}:{{port}}/api/v1/users/login
+  url: {{base_url}}:{{port}}/api/v2/login/
   body: json
   auth: none
 }
 
+headers {
+  Content-Type: application/json
+}
+
 body:json {
   {
-    "username": "username2",
-    "password": "pass2",
-    "keep": "on"
+    "username": "username5",
+    "password": "pass5"
   }
 }
 
