@@ -1,7 +1,7 @@
 import { LoaderFunction } from "react-router";
 import { useLoaderData } from "react-router-typesafe";
 import { object, parse, string } from "valibot";
-import { joinUrl } from "../api";
+import { joinUrl } from "../utils";
 
 const IdParamsSchema = object({
     id: string(),
@@ -23,5 +23,11 @@ export const IdLoader = (async ({ params }) => {
 
 export const Id = () => {
     const data = useLoaderData<typeof IdLoader>();
-    return <div>Id {data.firstName}</div>;
+    return (
+        <div>
+            <span>Id: {data.id}</span>
+            <span>First name: {data.firstName}</span>
+            <span>Last name: {data.lastName}</span>
+        </div>
+    );
 };

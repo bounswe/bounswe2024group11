@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { joinUrl } from "../api";
+import { joinUrl } from "../utils";
 
 export const handlers = [
     http.get(joinUrl("user/john-maverick"), ({ request }) => {

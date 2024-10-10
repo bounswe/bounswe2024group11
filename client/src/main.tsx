@@ -7,6 +7,7 @@ import { Root } from "./routes/_root";
 import { Home } from "./routes/Home";
 import { Id, IdLoader } from "./routes/Id";
 import { Login } from "./routes/Login";
+import { enableMocking } from "./utils";
 
 export const router = () => {
     return createBrowserRouter([
@@ -33,16 +34,6 @@ export const router = () => {
         },
     ]);
 };
-
-export async function enableMocking() {
-    if (import.meta.env.VITE_ENABLE_MOCKS === "false") {
-        return;
-    }
-
-    const { worker } = await import("./mocks/browser");
-
-    return worker.start();
-}
 
 enableMocking().then(() => {
     createRoot(document.getElementById("root")!).render(
