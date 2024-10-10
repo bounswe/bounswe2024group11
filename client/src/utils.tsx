@@ -1,9 +1,5 @@
 export const BASE_URL = "http://localhost:3000";
 
-export const joinUrl = (url: string) => {
-    return `${BASE_URL}/${url.replace(/^\/|\/$/g, "")}`;
-};
-
 export async function enableMocking() {
     if (import.meta.env.VITE_ENABLE_MOCKS === "false") {
         return;
@@ -13,3 +9,17 @@ export async function enableMocking() {
 
     return worker.start();
 }
+
+Storage.prototype.setObject = function (key: string, value: object) {
+    this.setItem(key, JSON.stringify(value));
+};
+
+Storage.prototype.getObject = function (key: string) {
+    const item = this.getItem(key);
+    if (!item) {
+        return null;
+    }
+    return JSON.parse(item);
+};
+
+localStorage;

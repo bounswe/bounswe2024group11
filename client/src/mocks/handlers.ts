@@ -1,8 +1,8 @@
 import { http, HttpResponse } from "msw";
-import { joinUrl } from "../utils";
+import { BASE_URL } from "../utils";
 
 export const handlers = [
-    http.get(joinUrl("user/john-maverick"), ({ request }) => {
+    http.get(`${BASE_URL}/user/john-maverick`, ({ request }) => {
         const url = new URL(request.url);
         const id = url.searchParams.get("id");
         return HttpResponse.json({
