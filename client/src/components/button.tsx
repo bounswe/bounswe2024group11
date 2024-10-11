@@ -38,7 +38,7 @@ export const button = cva(
         "flex",
         "items-center",
         "justify-center",
-        "rounded-2",
+        "rounded-[7px]",
         "group",
         "relative",
         "transition-all",
