@@ -92,12 +92,12 @@ export const Login = () => {
                             <span>Log In</span>
                         </button>
 
-                        <a
+                        <Link
                             className={button({ intent: "tertiary" })}
-                            href={"/register"}
+                            to="/register"
                         >
                             <span className="text-slate-900">Register</span>
-                        </a>
+                        </Link>
                     </div>
                 </Form>
             </div>

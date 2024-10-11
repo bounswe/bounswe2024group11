@@ -1,7 +1,6 @@
-import { makeLoader, redirect } from "react-router-typesafe";
+import { redirect } from "react-router-typesafe";
 import { number, object, safeParse, string } from "valibot";
 import { BASE_URL } from "../utils";
-//const BACKEND_URL = "asdsaa";
 
 const loginResponseSchema = object({
     token: string(),
@@ -12,20 +11,7 @@ const loginResponseSchema = object({
     }),
 });
 
-Storage.prototype.setObject = function (key: string, value: object) {
-    this.setItem(key, JSON.stringify(value));
-};
-
-Storage.prototype.getObject = function (key: string) {
-    const item = this.getItem(key);
-    if (!item) {
-        return null;
-    }
-    return JSON.parse(item);
-};
-
 export const loginAction = async ({ request }: { request: Request }) => {
-    console.log("Login Action");
     const formData = await request.formData();
     const response = await fetch(`${BASE_URL}/api/v2/login/`, {
         method: "POST",
@@ -53,7 +39,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
                 };
         }
     }
-    const { issues, /*output,*/ success } = safeParse(
+    const { issues, output, success } = safeParse(
         loginResponseSchema,
         responseJson,
     );
@@ -61,17 +47,12 @@ export const loginAction = async ({ request }: { request: Request }) => {
         console.error(issues);
         return { error: "Invalid response" };
     }
-    /*
-    if (formData.get("keep") === "on") {
-        localStorage.setItem("zenith_app_token", output.token);
-        localStorage.setObject("zenith_app_user", output.user);
+    if (formData.get("keep_me_logged_in") === "on") {
+        localStorage.setItem("turquiz_app_token", output.token);
+        localStorage.setObject("turquiz_app_user", output.user);
     } else {
-        sessionStorage.setItem("zenith_app_token", output.token);
-        sessionStorage.setObject("zenith_app_user", output.user);
-    }*/
+        sessionStorage.setItem("turquiz_app_token", output.token);
+        sessionStorage.setObject("turquiz_app_user", output.user);
+    }
     return redirect("/");
 };
-
-export const loginLoader = makeLoader(async () => {
-    return null;
-});
