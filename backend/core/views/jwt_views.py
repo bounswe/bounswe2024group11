@@ -14,10 +14,23 @@ from django.contrib.auth.models import User
 from ..serializers import RegisterSerializer
 from rest_framework.permissions import AllowAny
 
+class RegisterResponseSerializer(serializers.Serializer):
+    access = serializers.CharField()
+    refresh = serializers.CharField()
+
+    def create(self, validated_data):
+        raise NotImplementedError()
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError()
+    
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
+
+    @swagger_auto_schema(responses={status.HTTP_201_CREATED: RegisterResponseSerializer})
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
