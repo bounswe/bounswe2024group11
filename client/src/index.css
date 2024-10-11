@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+        outline-color: #0891b2;
+    }
+
+    input,
+    button,
+    textarea,
+    select {
+        font: inherit;
+    }
+    button,
+    select {
+        text-transform: none;
+    }
+    body {
+        font-smooth: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        margin: 0;
+    }
+    body,
+    p {
+        letter-spacing: -0.01em;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        letter-spacing: -0.025em;
+    }
+}
+
+@layer components {
+    .gradient-mask {
+        mask-image: linear-gradient(0deg, rgba(0, 0, 0, 0), #000);
+    }
+
+    .dot-pattern {
+        background:
+            fixed 0 0 / 16px 16px radial-gradient(#e2e8f0 1px, transparent 0),
+            fixed 8px 8px / 16px 16px
+                radial-gradient(#e2e8f0 1px, transparent 0);
+    }
+}
