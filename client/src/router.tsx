@@ -3,6 +3,7 @@ import { Root } from "./routes/_root";
 import { Home } from "./routes/Home";
 import { Id, IdLoader } from "./routes/Id";
 import { Login } from "./routes/Login";
+import { loginAction, loginLoader } from "./routes/Login.data";
 import { Register } from "./routes/Register";
 
 export const routes = [
@@ -18,6 +19,8 @@ export const routes = [
                 path: "login",
                 errorElement: <ErrorPage />,
                 element: <Login />,
+                action: loginAction,
+                loader: loginLoader,
             },
             {
                 path: "register",
