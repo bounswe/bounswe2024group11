@@ -14,3 +14,6 @@
 
 ## Run the App
 * Type `$ python manage.py runserver`
+
+## Run the Unit Tests
+* Type `$ python manage.py test core.tests`
