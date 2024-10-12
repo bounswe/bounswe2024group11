@@ -6,6 +6,7 @@ import { homeLoader } from "./routes/Home.data";
 import { Id, IdLoader } from "./routes/Id";
 import { Login } from "./routes/Login";
 import { loginAction } from "./routes/Login.data";
+import { logoutLoader } from "./routes/Logout";
 import { Register } from "./routes/Register";
 
 export const routes: RouteObject[] = [
@@ -34,6 +35,11 @@ export const routes: RouteObject[] = [
                 element: <Id />,
                 errorElement: <ErrorPage />,
                 loader: IdLoader,
+            },
+            {
+                path: "logout",
+                loader: logoutLoader,
+                element: <Root />,
             },
         ],
     },

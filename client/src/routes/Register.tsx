@@ -2,7 +2,7 @@ import { Form, Link } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
 import { button, buttonInnerRing } from "../components/button";
 
-import { inputClass } from "../components/input";
+import { inputClass, labelClass } from "../components/input";
 import { Logo } from "../components/logo";
 import type { loginAction } from "./Login.data";
 
@@ -11,16 +11,12 @@ export const Register = () => {
     const isAuthError = actionData && "error" in actionData;
 
     return (
-        <div className="flex flex-col items-center md:py-20 py-1 relative dot-pattern min-h-[100dvh]">
+        <div className="flex flex-col items-center md:py-16 py-1 relative dot-pattern min-h-[100dvh] gap-6">
             <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 bg-white w-full max-w-md shadow-card border rounded-2xl border-slate-100 rounded-4 p-6">
                 <div className="flex flex-col items-center gap-2">
-                    <Link
-                        to={"/"}
-                        aria-description="App Home Page"
-                        className="hover:bg-slate-50 border-slate-100 items-center p-4 aspect-square bg-gradient-to-b from-[rgba(228,229,231,.48)] to-[rgba(228,229,231,0)] rounded-full ring-1 ring-slate-100"
-                    >
+                    <div className="hover:bg-slate-50 border-slate-100 items-center p-4 aspect-square bg-gradient-to-b from-[rgba(228,229,231,.48)] to-[rgba(228,229,231,0)] rounded-full ring-1 ring-slate-100">
                         <Logo size={40} />
-                    </Link>
+                    </div>
                     <div className="flex flex-col items-center gap-1">
                         <h1 className="text-2xl font-medium font-display text-slate-950">
                             Register for Turquiz today
@@ -37,52 +33,77 @@ export const Register = () => {
                     method="POST"
                     action="/register"
                 >
-                    <div className="flex flex-col gap-3">
-                        <input
-                            type="text"
-                            name="fullname"
-                            autoComplete="name"
-                            placeholder="Emily Brown"
-                            aria-label="Full name"
-                            aria-invalid={isAuthError}
-                            className={inputClass()}
-                            required
-                        />
+                    <fieldset className="flex flex-col gap-3">
+                        <label className={labelClass()}>
+                            <span>
+                                Full Name{" "}
+                                <span className="text-cyan-600">*</span>
+                            </span>
 
-                        <input
-                            type="email"
-                            name="email"
-                            autoComplete="email"
-                            placeholder="emily@example.com"
-                            aria-label="Email"
-                            aria-invalid={isAuthError}
-                            className={inputClass()}
-                            required
-                        />
+                            <input
+                                autoFocus={true}
+                                type="text"
+                                name="fullname"
+                                autoComplete="name"
+                                placeholder="Emily Brown"
+                                aria-label="Full name"
+                                aria-invalid={isAuthError}
+                                className={inputClass()}
+                                required
+                            />
+                        </label>
+                        <label className={labelClass()}>
+                            <span>
+                                Email Address{" "}
+                                <span className="text-cyan-600">*</span>
+                            </span>
+                            <input
+                                type="email"
+                                name="email"
+                                autoComplete="email"
+                                placeholder="emily@example.com"
+                                aria-label="Email"
+                                aria-invalid={isAuthError}
+                                className={inputClass()}
+                                required
+                            />
+                        </label>
 
-                        <input
-                            type="text"
-                            name="username"
-                            autoComplete="username"
-                            placeholder="emily_brown"
-                            aria-label="Username"
-                            aria-invalid={isAuthError}
-                            className={inputClass()}
-                            required
-                        />
+                        <label className={labelClass()}>
+                            <span>
+                                Username{" "}
+                                <span className="text-cyan-600">*</span>
+                            </span>
+                            <input
+                                type="text"
+                                name="username"
+                                autoComplete="username"
+                                placeholder="emily_brown"
+                                aria-label="Username"
+                                aria-invalid={isAuthError}
+                                className={inputClass()}
+                                required
+                            />
+                        </label>
 
-                        <input
-                            type="password"
-                            name="password"
-                            autoComplete="current-password"
-                            placeholder="••••••••••"
-                            aria-label="Password"
-                            aria-invalid={isAuthError}
-                            aria-description="Password"
-                            className={inputClass()}
-                            required
-                        />
-                    </div>
+                        <label className={labelClass()}>
+                            <span>
+                                Password{" "}
+                                <span className="text-cyan-600">*</span>
+                            </span>
+                            <input
+                                type="password"
+                                name="password"
+                                autoComplete="current-password"
+                                placeholder="••••••••••"
+                                aria-label="Password"
+                                aria-invalid={isAuthError}
+                                aria-description="Password"
+                                className={inputClass()}
+                                required
+                            />
+                        </label>
+                    </fieldset>
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -121,6 +142,15 @@ export const Register = () => {
                         </Link>
                     </div>
                 </Form>
+            </div>
+            <div className="px-6 flex flex-col items-center w-full max-w-md rounded-2xl rounded-4 gap-0">
+                <span className="text-slate-500">Just looking around?</span>
+                <Link
+                    to="/"
+                    className="text-cyan-800 font-medium hover:text-cyan-950 ml-1 hover:underline underline-offset-2"
+                >
+                    Use Turquiz as a guest
+                </Link>
             </div>
         </div>
     );

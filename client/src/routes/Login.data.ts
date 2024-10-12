@@ -1,6 +1,7 @@
 import { redirect } from "react-router-typesafe";
 import { number, object, safeParse, string } from "valibot";
 import { BASE_URL } from "../utils";
+import { USER_TOKEN } from "../constants";
 
 const loginResponseSchema = object({
     token: string(),
@@ -48,7 +49,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
         return { error: "Invalid response" };
     }
     if (formData.get("keep_me_logged_in") === "on") {
-        localStorage.setItem("turquiz_app_token", output.token);
+        localStorage.setItem(USER_TOKEN, output.token);
         localStorage.setObject("turquiz_app_user", output.user);
     } else {
         sessionStorage.setItem("turquiz_app_token", output.token);

@@ -64,6 +64,7 @@
     }
     .animate-in {
         animation: animateIn 1s cubic-bezier(0.19, 1, 0.22, 1);
+        animation-fill-mode: forwards;
     }
 
     .touch-hitbox::before {
