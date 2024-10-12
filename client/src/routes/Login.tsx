@@ -110,7 +110,9 @@ export const Login = () => {
                             className={button({ intent: "tertiary" })}
                             to="/register"
                         >
-                            <span className="text-slate-900">Register</span>
+                            <span className="text-slate-900 transition-all">
+                                Register
+                            </span>
                         </Link>
                     </div>
                 </Form>

@@ -46,6 +46,7 @@ export const button = cva(
         "focus-visible:ring-slate-300",
         "focus-visible:ring-3",
         "focus-visible:outline-none",
+        "outline-none",
     ],
     {
         variants: {
