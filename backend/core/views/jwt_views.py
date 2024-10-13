@@ -52,14 +52,41 @@ class TokenObtainPairResponseSerializer(serializers.Serializer):
     access = serializers.CharField()
     refresh = serializers.CharField()
 
+    class UserResponseSerializer(serializers.Serializer):
+        username = serializers.CharField()
+        email = serializers.EmailField()
+        full_name = serializers.CharField()
+
+    user = UserResponseSerializer()
+
     def create(self, validated_data):
         raise NotImplementedError()
 
     def update(self, instance, validated_data):
         raise NotImplementedError()
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+
+        # Nest the user information inside the 'user' key
+        data.update({
+            'user': {
+                'username': user.username,
+                'email': user.email,
+                'full_name': user.full_name,
+            }
+        })
+
+        return data
+
 
 class DecoratedTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
     @swagger_auto_schema(
         responses={
             status.HTTP_200_OK: TokenObtainPairResponseSerializer,
