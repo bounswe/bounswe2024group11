@@ -6,7 +6,7 @@ __pycache__/
 *$py.class
 
 # migartions cache
-
+./core/migrations/__pycache__/*
 
 
 # C extensions
