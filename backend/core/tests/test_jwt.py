@@ -5,8 +5,10 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 
 data = {
-     'username': Faker().user_name(),
-     'password': Faker().password(),
+    'username': Faker().user_name(),
+    'password': Faker().password(),
+    'email': Faker().email(),
+    'full_name': Faker().name()
 }
 
 User = get_user_model()
