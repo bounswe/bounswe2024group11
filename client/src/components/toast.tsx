@@ -59,7 +59,7 @@ const ToastModal = ({
             aria-modal="false"
             aria-description={message}
             aria-live="polite"
-            className="animate-in flex gap-2 py-2 px-3 w-full max-w-[24rem] items-center ring-slate-200 overflow-hidden ring-1 rounded-2 shadow-card bg-white"
+            className="animate-in flex gap-2 py-2 px-3 w-full max-w-[24rem] items-center ring-slate-200 overflow-hidden ring-1 rounded-2 shadow-lg bg-white"
         >
             <div className={toastBadgeClass({ type })} aria-hidden="true"></div>
             <svg
@@ -81,7 +81,7 @@ const ToastModal = ({
                         {message}
                     </div>
                     {description && (
-                        <span className="text-sm text-slate-600 text-balance">
+                        <span className="text-sm text-slate-600">
                             {description}
                         </span>
                     )}
@@ -113,7 +113,7 @@ const ToastModal = ({
 export const ToastWrapper = () => {
     const toastStore = useToastStore();
     return (
-        <div className="absolute bottom-0 right-6 z-10 flex flex-col items-center pb-10 gap-2">
+        <div className="fixed bottom-0 right-6 z-10 flex flex-col items-center pb-10 gap-2">
             {toastStore.toasts.map((toast) => (
                 <ToastModal key={toast.id} {...toast} />
             ))}

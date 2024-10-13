@@ -1,18 +1,20 @@
-import { number, object, parse, string } from "valibot";
+import { object, safeParse, string } from "valibot";
+import { USER } from "../constants";
 import { useToastStore } from "../store";
 
 const userSchema = object({
-    id: number(),
+    full_name: string(),
     username: string(),
     email: string(),
 });
 
 export const homeLoader = () => {
-    const user =
-        localStorage.getObject("turquiz_app_user") ||
-        sessionStorage.getObject("turquiz_app_user");
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+    const { output, issues, success } = safeParse(userSchema, user);
 
-    if (!user) {
+    if (!success) {
+        console.error(issues);
+
         useToastStore.getState().add(
             {
                 id: Math.random().toString(),
@@ -28,7 +30,5 @@ export const homeLoader = () => {
         return { logged_in: false } as const;
     }
 
-    const parsedUser = parse(userSchema, user);
-
-    return { logged_in: true, user: parsedUser } as const;
+    return { logged_in: true, user: output } as const;
 };

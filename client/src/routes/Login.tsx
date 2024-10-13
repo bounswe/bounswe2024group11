@@ -49,7 +49,6 @@ export const Login = () => {
                                     type="text"
                                     name="username"
                                     autoComplete="username"
-                                    placeholder="emily_brown"
                                     aria-label="Username"
                                     aria-invalid={isAuthError}
                                     className={inputClass()}
@@ -65,7 +64,6 @@ export const Login = () => {
                                     type="password"
                                     name="password"
                                     autoComplete="current-password"
-                                    placeholder="••••••••••"
                                     aria-label="Password"
                                     aria-invalid={isAuthError}
                                     aria-description="Password"
@@ -87,6 +85,7 @@ export const Login = () => {
                                     id="keep_me_logged_in"
                                     name="keep_me_logged_in"
                                     className="m-0 p-0"
+                                    aria-label="Keep me logged in"
                                 />
                                 Keep me logged in
                             </label>

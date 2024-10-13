@@ -1,15 +1,21 @@
 import { Form, Link } from "react-router-dom";
-import { useActionData } from "react-router-typesafe";
 import { button, buttonInnerRing } from "../components/button";
 
+import { useEffect, useRef } from "react";
+import { useActionData } from "react-router-typesafe";
 import { inputClass, labelClass } from "../components/input";
 import { Logo } from "../components/logo";
-import type { loginAction } from "./Login.data";
+import { registerAction } from "./Register.data";
 
 export const Register = () => {
-    const actionData = useActionData<typeof loginAction>();
-    const isAuthError = actionData && "error" in actionData;
-
+    const actionData = useActionData<typeof registerAction>();
+    const mismatchedPasswords = actionData?.error === "Passwords do not match";
+    const passwordRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        if (mismatchedPasswords) {
+            passwordRef.current?.focus();
+        }
+    }, [mismatchedPasswords]);
     return (
         <div className="flex flex-col items-center md:py-16 py-1 relative dot-pattern min-h-[100dvh] gap-6">
             <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 bg-white w-full max-w-md shadow-card border rounded-2xl border-slate-100 rounded-4 p-6">
@@ -43,11 +49,10 @@ export const Register = () => {
                             <input
                                 autoFocus={true}
                                 type="text"
-                                name="fullname"
+                                name="full_name"
                                 autoComplete="name"
-                                placeholder="Emily Brown"
                                 aria-label="Full name"
-                                aria-invalid={isAuthError}
+                                aria-invalid={mismatchedPasswords}
                                 className={inputClass()}
                                 required
                             />
@@ -61,9 +66,8 @@ export const Register = () => {
                                 type="email"
                                 name="email"
                                 autoComplete="email"
-                                placeholder="emily@example.com"
                                 aria-label="Email"
-                                aria-invalid={isAuthError}
+                                aria-invalid={mismatchedPasswords}
                                 className={inputClass()}
                                 required
                             />
@@ -77,10 +81,9 @@ export const Register = () => {
                             <input
                                 type="text"
                                 name="username"
-                                autoComplete="username"
-                                placeholder="emily_brown"
+                                autoComplete="new_password"
+                                autoFocus={mismatchedPasswords}
                                 aria-label="Username"
-                                aria-invalid={isAuthError}
                                 className={inputClass()}
                                 required
                             />
@@ -94,32 +97,35 @@ export const Register = () => {
                             <input
                                 type="password"
                                 name="password"
-                                autoComplete="current-password"
-                                placeholder="••••••••••"
+                                autoComplete="new_password"
                                 aria-label="Password"
-                                aria-invalid={isAuthError}
+                                ref={passwordRef}
                                 aria-description="Password"
-                                className={inputClass()}
+                                className={inputClass({
+                                    invalid: mismatchedPasswords,
+                                })}
+                                required
+                            />
+                        </label>
+
+                        <label className={labelClass()}>
+                            <span>
+                                Confirm Password{" "}
+                                <span className="text-cyan-600">*</span>
+                            </span>
+                            <input
+                                type="password"
+                                name="confirm_password"
+                                autoComplete="new_password"
+                                aria-label="Confirm Password"
+                                aria-description="Type your password again"
+                                className={inputClass({
+                                    invalid: mismatchedPasswords,
+                                })}
                                 required
                             />
                         </label>
                     </fieldset>
-
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <label
-                                htmlFor="keep_me_logged_in"
-                                className="text-slate-600 cursor-pointer"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="keep_me_logged_in"
-                                    className="m-0 p-0"
-                                />
-                                Keep me logged in
-                            </label>
-                        </div>
-                    </div>
 
                     <div className="flex flex-col gap-2">
                         <button

@@ -8,6 +8,7 @@ import { Login } from "./routes/Login";
 import { loginAction } from "./routes/Login.data";
 import { logoutLoader } from "./routes/Logout";
 import { Register } from "./routes/Register";
+import { registerAction } from "./routes/Register.data";
 
 export const routes: RouteObject[] = [
     {
@@ -29,6 +30,7 @@ export const routes: RouteObject[] = [
                 path: "register",
                 errorElement: <ErrorPage />,
                 element: <Register />,
+                action: registerAction,
             },
             {
                 path: ":id",

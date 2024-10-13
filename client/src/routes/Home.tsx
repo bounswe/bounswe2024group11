@@ -4,8 +4,8 @@ import { useToastStore } from "../store";
 import { homeLoader } from "./Home.data";
 
 export const Home = () => {
-    const { logged_in, user } = useLoaderData<typeof homeLoader>();
-    if (!logged_in) {
+    const { user } = useLoaderData<typeof homeLoader>();
+    if (!user) {
         return (
             <div>
                 <div>Not logged in</div>

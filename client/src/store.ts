@@ -11,7 +11,10 @@ export const useToastStore = create<ToastStore>((set) => ({
     toasts: [],
     add: (toast, duration = 5000) => {
         set((state) => ({
-            toasts: [...state.toasts, toast],
+            // if the toast already exists, don't add it again
+            toasts: state.toasts.some((t) => t.id === toast.id)
+                ? state.toasts
+                : [...state.toasts, toast],
         }));
 
         setTimeout(() => {
