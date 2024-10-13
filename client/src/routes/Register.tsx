@@ -16,6 +16,9 @@ export const Register = () => {
             passwordRef.current?.focus();
         }
     }, [mismatchedPasswords]);
+    const usedUsername = actionData?.error === "Username is already taken";
+    const usedEmail = actionData?.error === "Email is already taken";
+
     return (
         <div className="flex flex-col items-center md:py-16 py-1 relative dot-pattern min-h-[100dvh] gap-6">
             <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 bg-white w-full max-w-md shadow-card border rounded-2xl border-slate-100 rounded-4 p-6">
@@ -68,7 +71,7 @@ export const Register = () => {
                                 autoComplete="email"
                                 aria-label="Email"
                                 aria-invalid={mismatchedPasswords}
-                                className={inputClass()}
+                                className={inputClass({ invalid: usedEmail })}
                                 required
                             />
                         </label>
@@ -81,10 +84,11 @@ export const Register = () => {
                             <input
                                 type="text"
                                 name="username"
-                                autoComplete="new_password"
-                                autoFocus={mismatchedPasswords}
+                                autoComplete="username"
                                 aria-label="Username"
-                                className={inputClass()}
+                                className={inputClass({
+                                    invalid: usedUsername,
+                                })}
                                 required
                             />
                         </label>

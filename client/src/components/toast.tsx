@@ -1,13 +1,17 @@
 import { cva } from "cva";
 import { useToastStore } from "../store";
 
-export type ToastProps = {
+export type Toast = {
     id: string;
     type: "success" | "error" | "info" | "warning";
     data: {
         message: string;
         description?: string | undefined;
     };
+};
+
+export type ToastProps = {
+    toast: Toast;
 };
 
 const toastBadgeClass = cva("h-8 w-1 rounded-r-full absolute left-0", {
@@ -21,7 +25,7 @@ const toastBadgeClass = cva("h-8 w-1 rounded-r-full absolute left-0", {
     },
 });
 
-const typeToIcon: Record<ToastProps["type"], JSX.Element> = {
+const typeToIcon: Record<Toast["type"], JSX.Element> = {
     success: (
         <path
             d="M10 17.5C5.85775 17.5 2.5 14.1422 2.5 10C2.5 5.85775 5.85775 2.5 10 2.5C14.1422 2.5 17.5 5.85775 17.5 10C17.5 14.1422 14.1422 17.5 10 17.5ZM9.25225 13L14.5547 7.69675L13.4943 6.63625L9.25225 10.879L7.1305 8.75725L6.07 9.81775L9.25225 13Z"
@@ -48,20 +52,27 @@ const typeToIcon: Record<ToastProps["type"], JSX.Element> = {
     ),
 };
 
-const ToastModal = ({
-    id,
-    type,
-    data: { message, description },
-}: ToastProps) => {
+const ToastModal = ({ toast }: ToastProps) => {
+    const index = useToastStore.getState().toasts.indexOf(toast);
+    const length = useToastStore.getState().toasts.length;
+    const order = length - index - 1;
     return (
         <div
             role="alert-dialog"
             aria-modal="false"
-            aria-description={message}
+            aria-description={toast.data.message}
             aria-live="polite"
-            className="animate-in flex gap-2 py-2 px-3 max-w-full w-[24rem] items-center ring-slate-200 overflow-hidden ring-1 rounded-2 shadow-lg bg-white"
+            className="flex gap-2 py-2 px-3 max-w-full w-[24rem] items-center ring-slate-200 overflow-hidden ring-1 rounded-2 bg-white"
+            style={{
+                transformOrigin: "top",
+                transform: `translateY(-${order * 8}px) scale(${index === length - 1 ? 1 : Math.pow(0.96, order)})`,
+                transition: "transform 0.3s",
+            }}
         >
-            <div className={toastBadgeClass({ type })} aria-hidden="true"></div>
+            <div
+                className={toastBadgeClass({ type: toast.type })}
+                aria-hidden="true"
+            ></div>
             <svg
                 width="20"
                 height="20"
@@ -69,7 +80,7 @@ const ToastModal = ({
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                {typeToIcon[type]}
+                {typeToIcon[toast.type]}
             </svg>
             <div className="flex-1">
                 <div className="flex flex-col">
@@ -78,11 +89,11 @@ const ToastModal = ({
                         aria-atomic="true"
                         className="font-medium"
                     >
-                        {message}
+                        {toast.data.message}
                     </div>
-                    {description && (
+                    {toast.data.description && (
                         <span className="text-sm text-slate-600">
-                            {description}
+                            {toast.data.description}
                         </span>
                     )}
                 </div>
@@ -90,7 +101,7 @@ const ToastModal = ({
             <button
                 className="rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all focus:text-slate-700 touch-hitbox relative p-2 focus-visible:bg-slate-100"
                 onClick={() => {
-                    useToastStore.getState().remove(id);
+                    useToastStore.getState().remove(toast.id);
                 }}
             >
                 <svg
@@ -111,12 +122,19 @@ const ToastModal = ({
 };
 
 export const ToastWrapper = () => {
-    const toastStore = useToastStore();
+    const { toasts } = useToastStore();
     return (
-        <div className="fixed bottom-0 right-6 z-10 flex flex-col items-end pb-10 gap-2">
-            {toastStore.toasts.map((toast) => (
-                <ToastModal key={toast.id} {...toast} />
-            ))}
+        <div className="fixed bottom-0 right-6 z-10 flex flex-col items-end pb-10 gap-2 perspective-md">
+            {toasts.map((toast) => {
+                return (
+                    <div
+                        key={toast.id}
+                        className="animate-in absolute bottom-8"
+                    >
+                        <ToastModal toast={toast} />
+                    </div>
+                );
+            })}
         </div>
     );
 };

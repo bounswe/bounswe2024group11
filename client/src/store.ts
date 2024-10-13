@@ -1,27 +1,40 @@
 import { create } from "zustand";
-import { ToastProps } from "./components/toast";
+import { Toast } from "./components/toast";
 
 type ToastStore = {
-    toasts: ToastProps[];
-    add: (toast: ToastProps, duration?: number) => void;
+    toasts: Toast[];
+    add: (toast: Toast) => void;
     remove: (id: string) => void;
+    duration: number;
+    timer: NodeJS.Timeout | null;
+    maxToasts: number;
 };
 
 export const useToastStore = create<ToastStore>((set) => ({
     toasts: [],
-    add: (toast, duration = 5000) => {
-        set((state) => ({
-            // if the toast already exists, don't add it again
-            toasts: state.toasts.some((t) => t.id === toast.id)
+    duration: 5000,
+    timer: null,
+    maxToasts: 5,
+    add: (toast) => {
+        set((state) => {
+            let newToasts = state.toasts.some((t) => t.id === toast.id)
                 ? state.toasts
-                : [...state.toasts, toast],
-        }));
+                : [...state.toasts, toast];
 
-        setTimeout(() => {
-            set((state) => ({
-                toasts: state.toasts.filter((t) => t.id !== toast.id),
-            }));
-        }, duration);
+            if (newToasts.length > state.maxToasts) {
+                newToasts = newToasts.slice(1);
+            }
+
+            if (state.timer) {
+                clearTimeout(state.timer);
+            }
+
+            const newTimer = setTimeout(() => {
+                set({ toasts: [], timer: null });
+            }, state.duration);
+
+            return { toasts: newToasts, timer: newTimer };
+        });
     },
     remove: (id) => {
         set((state) => ({

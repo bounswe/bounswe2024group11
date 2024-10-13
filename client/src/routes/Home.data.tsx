@@ -15,18 +15,15 @@ export const homeLoader = () => {
     if (!success) {
         console.error(issues);
 
-        useToastStore.getState().add(
-            {
-                id: Math.random().toString(),
-                type: "info",
-                data: {
-                    message: "You are not logged in",
-                    description:
-                        "You can still browse Turquiz, but you need to login to engage with the platform",
-                },
+        useToastStore.getState().add({
+            id: Math.random().toString(),
+            type: "info",
+            data: {
+                message: "You are not logged in",
+                description:
+                    "You can still browse Turquiz, but you need to login to engage with the platform.",
             },
-            10000,
-        );
+        });
         return { logged_in: false } as const;
     }
 

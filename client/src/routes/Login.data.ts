@@ -93,3 +93,11 @@ export const loginAction = async ({ request }: { request: Request }) => {
     });
     return redirect("/");
 };
+
+export const loginLoader = async () => {
+    const user = localStorage.getObject(USER) || sessionStorage.getObject(USER);
+    if (user) {
+        return redirect("/");
+    }
+    return null;
+};

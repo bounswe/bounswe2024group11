@@ -113,8 +113,15 @@ const config = {
             boxShadow: {
                 card: "0 2px 4px 0 rgba(27, 28, 29, 0.04)",
             },
+            perspective: {
+                none: "none",
+                xs: "400px",
+                sm: "800px",
+                md: "1600px",
+                lg: "3200px",
+            },
         },
-        plugins: [],
+        plugins: [require("@xpd/tailwind-3dtransforms")],
     },
 };
 

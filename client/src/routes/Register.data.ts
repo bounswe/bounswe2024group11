@@ -29,18 +29,15 @@ export const registerAction = async ({ request }: { request: Request }) => {
     const matchingPasswords =
         formData.get("password") === formData.get("confirm_password");
     if (!matchingPasswords) {
-        useToastStore.getState().add(
-            {
-                type: "error",
-                id: "register-error",
-                data: {
-                    message: "Passwords do not match",
-                    description:
-                        "Do you even remember the lyrics of your favorite song?",
-                },
+        useToastStore.getState().add({
+            type: "error",
+            id: "register-error",
+            data: {
+                message: "Passwords do not match",
+                description:
+                    "Do you even remember the lyrics of your favorite song?",
             },
-            5000,
-        );
+        });
         return { error: "Passwords do not match" };
     }
     formData.delete("confirm_password");
@@ -91,7 +88,8 @@ export const registerAction = async ({ request }: { request: Request }) => {
         type: "success",
         data: {
             message: "Registration successful",
-            description: "Welcome to Turquiz. You are now a registered user",
+            description:
+                "Welcome to Turquiz. You are now a registered user. Enjoy!",
         },
     });
 

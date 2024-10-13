@@ -23,6 +23,8 @@ export const Home = () => {
                         type: "info",
                         data: {
                             message: "This is a toast",
+                            description:
+                                "You can add toasts to your app. If they are 2 lines, it's perfect",
                         },
                     });
                 }}
