@@ -5,6 +5,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# migartions cache
+
+
+
 # C extensions
 *.so
 
