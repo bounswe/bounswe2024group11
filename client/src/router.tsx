@@ -6,7 +6,7 @@ import { homeLoader } from "./routes/Home.data";
 import { Id, IdLoader } from "./routes/Id";
 import { Login } from "./routes/Login";
 import { loginAction } from "./routes/Login.data";
-import { logoutLoader } from "./routes/Logout";
+import { logoutLoader } from "./routes/Logout.data";
 import { Register } from "./routes/Register";
 import { registerAction } from "./routes/Register.data";
 

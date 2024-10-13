@@ -1,5 +1,5 @@
 import { redirect } from "react-router-typesafe";
-import { object, safeParse, string } from "valibot";
+import { object, safeParse, string, union } from "valibot";
 import { useToastStore } from "../store";
 import { BASE_URL } from "../utils";
 
@@ -10,10 +10,19 @@ export const registerRequestSchema = object({
     full_name: string(),
 });
 
-const registerResponseSchema = object({
+const registerResponseSuccessSchema = object({
     access: string(),
     refresh: string(),
 });
+
+const registerResponseErrorSchema = object({
+    error: string(),
+});
+
+const registerResponseSchema = union([
+    registerResponseSuccessSchema,
+    registerResponseErrorSchema,
+]);
 
 export const registerAction = async ({ request }: { request: Request }) => {
     const formData = await request.formData();
@@ -55,14 +64,28 @@ export const registerAction = async ({ request }: { request: Request }) => {
     });
     const responseJson = await response.json();
 
-    const { issues: responseIssues, success: responseSuccess } = safeParse(
-        registerResponseSchema,
-        responseJson,
-    );
+    const {
+        issues: responseIssues,
+        success: responseSuccess,
+        output: responseOutput,
+    } = safeParse(registerResponseSchema, responseJson);
     if (!responseSuccess) {
         console.error(responseIssues);
         return { error: "Invalid response" };
     }
+
+    if ("error" in responseOutput) {
+        useToastStore.getState().add({
+            id: responseOutput.error,
+            type: "error",
+            data: {
+                message: responseOutput.error,
+                description: "You think you can just waltz in here?",
+            },
+        });
+        return { error: responseOutput.error };
+    }
+
     useToastStore.getState().add({
         id: "register-success",
         type: "success",
@@ -71,5 +94,6 @@ export const registerAction = async ({ request }: { request: Request }) => {
             description: "Welcome to Turquiz. You are now a registered user",
         },
     });
+
     return redirect("/login");
 };

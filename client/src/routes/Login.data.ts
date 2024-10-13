@@ -9,7 +9,7 @@ export const loginRequestSchema = object({
     password: string(),
 });
 
-const loginSuccessResponseSchema = object({
+const loginResponseSuccessSchema = object({
     access: string(),
     refresh: string(),
     user: object({
@@ -19,13 +19,13 @@ const loginSuccessResponseSchema = object({
     }),
 });
 
-const loginErrorResponseSchema = object({
+const loginResponseErrorSchema = object({
     error: string(),
 });
 
 const loginResponseSchema = union([
-    loginSuccessResponseSchema,
-    loginErrorResponseSchema,
+    loginResponseSuccessSchema,
+    loginResponseErrorSchema,
 ]);
 
 export const loginAction = async ({ request }: { request: Request }) => {
@@ -83,5 +83,13 @@ export const loginAction = async ({ request }: { request: Request }) => {
         sessionStorage.setItem(USER_TOKEN_REFRESH, responseOutput.refresh);
         sessionStorage.setObject(USER, responseOutput.user);
     }
+    useToastStore.getState().add({
+        id: "login-success",
+        type: "success",
+        data: {
+            message: "Welcome back buddy!",
+            description: "Ready to kick some quiz butt?",
+        },
+    });
     return redirect("/");
 };
