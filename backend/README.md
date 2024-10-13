@@ -12,8 +12,11 @@
 ## 2. Install Requirements
 * _After activating venv_ install requirements by `$ pip install -r requirements.txt`
 
-## Run the App
-* Type `$ python manage.py runserver`
+## 3. Migrate the models
+* Type `$ python manage.py migrate`
 
-## Run the Unit Tests
+## 4. Run the Unit Tests
 * Type `$ python manage.py test core.tests`
+
+## 5. Run the App
+* Type `$ python manage.py runserver`
