@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import ForumQuestion
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -21,3 +22,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             full_name=validated_data['full_name'],
         )
         return user
+    
+class ForumQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForumQuestion
+        fields = ('id', 'title', 'question', 'tag', 'author', 'date')
+        read_only_fields = ('author',)
