@@ -58,6 +58,7 @@ const ToastModal = ({ toast }: ToastProps) => {
     const order = length - index - 1;
     return (
         <div
+            aria-hidden={order !== length - 1}
             role="alert-dialog"
             aria-modal="false"
             aria-description={toast.data.message}
@@ -99,7 +100,10 @@ const ToastModal = ({ toast }: ToastProps) => {
                 </div>
             </div>
             <button
-                className="rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all focus:text-slate-700 touch-hitbox relative p-2 focus-visible:bg-slate-100"
+                disabled={order !== 0}
+                aria-roledescription="close button"
+                aria-disabled={order !== 0}
+                className="rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all focus:text-slate-700 touch-hitbox relative p-2 focus-visible:bg-slate-100 disabled:opacity-50 disabled:pointer-events-none"
                 onClick={() => {
                     useToastStore.getState().remove(toast.id);
                 }}
