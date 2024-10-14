@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "http://localhost:8000/api/v1";
 
 export async function enableMocking() {
     if (import.meta.env.VITE_ENABLE_MOCKS === "false") {

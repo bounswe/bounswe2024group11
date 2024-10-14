@@ -1,41 +1,37 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
-import { Toast } from "../components/toast";
+import { useToastStore } from "../store";
 import { homeLoader } from "./Home.data";
 
 export const Home = () => {
-    const [isToastOpen, setIsToastOpen] = useState(true);
-    const { logged_in, user } = useLoaderData<typeof homeLoader>();
-    if (!logged_in) {
+    const { user } = useLoaderData<typeof homeLoader>();
+    if (!user) {
         return (
             <div>
                 <div>Not logged in</div>
                 <Link to="/login">Login</Link>
-                {isToastOpen && (
-                    <Toast
-                        type="error"
-                        message="Not logged in"
-                        onClose={() => {
-                            setIsToastOpen(false);
-                        }}
-                    />
-                )}
             </div>
         );
     }
     return (
         <div>
             <div> Welcome {user.username}</div>
-            {isToastOpen && (
-                <Toast
-                    type="success"
-                    message="Logged in"
-                    onClose={() => {
-                        setIsToastOpen(false);
-                    }}
-                />
-            )}
+            <button
+                onClick={() => {
+                    useToastStore.getState().add({
+                        id: Math.random().toString(),
+                        type: "info",
+                        data: {
+                            message: "This is a toast",
+                            description:
+                                "You can add toasts to your app. If they are 2 lines, it's perfect",
+                        },
+                    });
+                }}
+            >
+                Add a toast
+            </button>
+            <Link to="/logout">Logout</Link>
         </div>
     );
 };
