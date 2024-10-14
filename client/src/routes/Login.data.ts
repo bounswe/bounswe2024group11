@@ -2,7 +2,7 @@ import { redirect } from "react-router-typesafe";
 import { object, safeParse, string, union } from "valibot";
 import { USER, USER_TOKEN_ACCESS, USER_TOKEN_REFRESH } from "../constants";
 import { useToastStore } from "../store";
-import { BASE_URL } from "../utils";
+import { BASE_URL, logger } from "../utils";
 
 export const loginRequestSchema = object({
     username: string(),
@@ -95,6 +95,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
 };
 
 export const loginLoader = async () => {
+    logger("Hello from loginLoader using logger utility");
     const user = localStorage.getObject(USER) || sessionStorage.getObject(USER);
     if (user) {
         return redirect("/");

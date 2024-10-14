@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { safeParse } from "valibot";
 import { loginRequestSchema } from "../routes/Login.data";
 import { registerRequestSchema } from "../routes/Register.data";
-import { BASE_URL } from "../utils";
+import { BASE_URL, logger } from "../utils";
 import { data } from "./data";
 
 export const handlers = [
@@ -13,7 +13,7 @@ export const handlers = [
             requestBody,
         );
         if (!success) {
-            console.log("/token/ endpoint issues: ", issues);
+            logger("/token/ endpoint issues: " + issues);
             return HttpResponse.json(
                 { error: "Invalid request body" },
                 { status: 400 },
@@ -51,7 +51,7 @@ export const handlers = [
             requestBody,
         );
         if (!success) {
-            console.log("/register/ endpoint issues: ", issues);
+            logger("/register/ endpoint issues: " + issues);
             return HttpResponse.json(
                 { error: "Invalid request body" },
                 { status: 400 },

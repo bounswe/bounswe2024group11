@@ -10,6 +10,12 @@ export async function enableMocking() {
     return worker.start();
 }
 
+export function logger(message: string) {
+    if (import.meta.env.VITE_LOGGING === "true") {
+        console.log(message);
+    }
+}
+
 Storage.prototype.setObject = function (key: string, value: object) {
     this.setItem(key, JSON.stringify(value));
 };
