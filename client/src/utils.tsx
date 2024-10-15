@@ -10,6 +10,36 @@ export async function enableMocking() {
     return worker.start();
 }
 
+/*export const logger: typeof console.log = (...params) => {
+    if (import.meta.env.VITE_LOGGING === "true") {
+        console.log(...params);
+    }
+};*/
+
+type Logger = {
+    log: typeof console.log;
+    error: typeof console.error;
+    info: typeof console.info;
+};
+
+export const logger: Logger = {
+    log: (...params) => {
+        if (import.meta.env.VITE_LOGGING === "true") {
+            console.log(...params);
+        }
+    },
+    error: (...params) => {
+        if (import.meta.env.VITE_LOGGING === "true") {
+            console.error(...params);
+        }
+    },
+    info: (...params) => {
+        if (import.meta.env.VITE_LOGGING === "true") {
+            console.info(...params);
+        }
+    },
+};
+
 Storage.prototype.setObject = function (key: string, value: object) {
     this.setItem(key, JSON.stringify(value));
 };

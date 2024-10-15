@@ -2,7 +2,7 @@ import { redirect } from "react-router-typesafe";
 import { object, safeParse, string, union } from "valibot";
 import { USER, USER_TOKEN_ACCESS, USER_TOKEN_REFRESH } from "../constants";
 import { useToastStore } from "../store";
-import { BASE_URL } from "../utils";
+import { BASE_URL, logger } from "../utils";
 
 export const loginRequestSchema = object({
     username: string(),
@@ -39,7 +39,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
         success: requestSuccess,
     } = safeParse(loginRequestSchema, requestBody);
     if (!requestSuccess) {
-        console.error(requestIssues);
+        logger.error(requestIssues);
         return { error: "Invalid request body" };
     }
     const response = await fetch(`${BASE_URL}/token/`, {
@@ -58,7 +58,7 @@ export const loginAction = async ({ request }: { request: Request }) => {
         success: responseSuccess,
     } = safeParse(loginResponseSchema, responseJson);
     if (!responseSuccess) {
-        console.error(responseIssues);
+        logger.error(responseIssues);
         return { error: "Invalid response" };
     }
 
@@ -95,6 +95,11 @@ export const loginAction = async ({ request }: { request: Request }) => {
 };
 
 export const loginLoader = async () => {
+    logger.log(
+        "Hello from loginLoader using logger utility",
+        "This is param1",
+        "This is param2",
+    );
     const user = localStorage.getObject(USER) || sessionStorage.getObject(USER);
     if (user) {
         return redirect("/");
