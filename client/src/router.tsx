@@ -7,6 +7,7 @@ import { Id, IdLoader } from "./routes/Id";
 import { Login } from "./routes/Login";
 import { loginAction, loginLoader } from "./routes/Login.data";
 import { logoutLoader } from "./routes/Logout.data";
+import { Quizzes } from "./routes/Quizzes";
 import { Register } from "./routes/Register";
 import { registerAction } from "./routes/Register.data";
 
@@ -43,6 +44,10 @@ export const routes: RouteObject[] = [
                 path: "logout",
                 loader: logoutLoader,
                 element: <Root />,
+            },
+            {
+                path: "quizzes",
+                element: <Quizzes />,
             },
         ],
     },
