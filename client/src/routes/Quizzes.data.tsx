@@ -30,9 +30,10 @@ const quizzesResponseSchema = object({
     quizzes: array(quizSchema),
 });
 
-export const quizzesLoader = (async ({ params }) => {
-    const page = params["page"];
-    const per_page = params["per_page"];
+export const quizzesLoader = (async ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page")) || 1;
+    const per_page = Number(url.searchParams.get("per_page")) || 20;
     const res = await fetch(
         `${BASE_URL}/quizzes/?page=${page}&per_page=${per_page}`,
         {

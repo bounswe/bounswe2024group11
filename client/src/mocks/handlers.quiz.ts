@@ -4,11 +4,12 @@ import { BASE_URL } from "../utils";
 
 export const quizHandlers = [
     http.post(`${BASE_URL}/quizzes`, async ({ request, params }) => {
-        const page = params["page"];
-        const per_page = params["per_page"];
+        const url = new URL(request.url);
+        const page = Number(url.searchParams.get("page")) || 1;
+        const per_page = Number(url.searchParams.get("per_page")) || 20;
         const seed = Number(page) * Number(per_page);
         faker.seed(seed);
-        const quizzes = Array.from({ length: 100 }, (_) => ({
+        const quizzes = Array.from({ length: per_page }, (_) => ({
             id: faker.string.uuid(),
             title: faker.animal.crocodilia() + " Quiz",
             description: faker.lorem.paragraph(),
