@@ -12,6 +12,19 @@ type Quiz = {
         avatar: string;
     };
     created_at: string; // 2021-09-01T12:00:00Z
+    tags: {
+        id: string;
+        name: string;
+    };
+    is_taken: boolean;
+    question_count: number;
+    difficulty: string;
+    type: number; // 1: English to Turkish, 2: Turkish to English, 3: English to English definition
+    num_taken: number; // Number of times the quiz has been taken by users
+    rating: {
+        score: number;
+        count: number;
+    };
 };
 
 const quizSchema = object({
@@ -24,6 +37,12 @@ const quizSchema = object({
         avatar: string(),
     }),
     created_at: string(),
+    tags: array(
+        object({
+            id: string(),
+            name: string(),
+        }),
+    ),
 });
 
 const quizzesResponseSchema = object({

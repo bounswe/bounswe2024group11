@@ -1,4 +1,4 @@
-import { RouteObject } from "react-router-dom";
+import { redirect, RouteObject } from "react-router-dom";
 import { ErrorPage } from "./routes/_error";
 import { Root } from "./routes/_root";
 import { Home } from "./routes/Home";
@@ -50,6 +50,12 @@ export const routes: RouteObject[] = [
                 path: "quizzes",
                 element: <Quizzes />,
                 loader: quizzesLoader,
+            },
+            {
+                path: "quiz",
+                loader: () => {
+                    return redirect("/quizzes");
+                },
             },
         ],
     },
