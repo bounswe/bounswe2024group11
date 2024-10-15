@@ -13,7 +13,7 @@ export const handlers = [
             requestBody,
         );
         if (!success) {
-            logger("/token/ endpoint issues: " + issues);
+            logger("/token/ endpoint issues: ", issues);
             return HttpResponse.json(
                 { error: "Invalid request body" },
                 { status: 400 },
@@ -51,7 +51,7 @@ export const handlers = [
             requestBody,
         );
         if (!success) {
-            logger("/register/ endpoint issues: " + issues);
+            logger("/register/ endpoint issues: ", issues);
             return HttpResponse.json(
                 { error: "Invalid request body" },
                 { status: 400 },

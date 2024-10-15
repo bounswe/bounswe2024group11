@@ -95,7 +95,11 @@ export const loginAction = async ({ request }: { request: Request }) => {
 };
 
 export const loginLoader = async () => {
-    logger("Hello from loginLoader using logger utility");
+    logger(
+        "Hello from loginLoader using logger utility",
+        "This is param1",
+        "This is param2",
+    );
     const user = localStorage.getObject(USER) || sessionStorage.getObject(USER);
     if (user) {
         return redirect("/");

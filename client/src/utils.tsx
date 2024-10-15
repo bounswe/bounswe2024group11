@@ -10,9 +10,9 @@ export async function enableMocking() {
     return worker.start();
 }
 
-export function logger(message: string) {
+export function logger(message?: any, ...optionalParams: any[]) {
     if (import.meta.env.VITE_LOGGING === "true") {
-        console.log(message);
+        console.log(message, optionalParams);
     }
 }
 
