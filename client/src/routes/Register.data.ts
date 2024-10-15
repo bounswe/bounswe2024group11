@@ -1,7 +1,7 @@
 import { redirect } from "react-router-typesafe";
 import { object, safeParse, string, union } from "valibot";
 import { useToastStore } from "../store";
-import { BASE_URL } from "../utils";
+import { BASE_URL, logger } from "../utils";
 
 export const registerRequestSchema = object({
     username: string(),
@@ -48,7 +48,7 @@ export const registerAction = async ({ request }: { request: Request }) => {
         success: requestSuccess,
     } = safeParse(registerRequestSchema, requestBody);
     if (!requestSuccess) {
-        console.error(requestIssues);
+        logger.error(requestIssues);
         return { error: "Invalid request body" };
     }
     const response = await fetch(`${BASE_URL}/register/`, {
@@ -68,7 +68,7 @@ export const registerAction = async ({ request }: { request: Request }) => {
         output: responseOutput,
     } = safeParse(registerResponseSchema, responseJson);
     if (!responseSuccess) {
-        console.error(responseIssues);
+        logger.error(responseIssues);
         return { error: "Invalid response" };
     }
 
