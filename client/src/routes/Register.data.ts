@@ -59,6 +59,7 @@ export const registerAction = async ({ request }: { request: Request }) => {
             "Content-Type": "application/json",
         },
     });
+
     const responseJson = await response.json();
 
     const {
@@ -70,6 +71,8 @@ export const registerAction = async ({ request }: { request: Request }) => {
         logger.error(responseIssues);
         return { error: "Invalid response" };
     }
+
+    responseOutput;
 
     if ("error" in responseOutput) {
         useToastStore.getState().add({
