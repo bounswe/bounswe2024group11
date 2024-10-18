@@ -1,0 +1,416 @@
+swagger: '2.0'
+info:
+  title: API documentation
+  description: API documentation
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /api/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /auth/login/:
+    post:
+      operationId: auth_login_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CustomTokenObtainPair'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPairResponse'
+      tags:
+      - auth
+    parameters: []
+  /auth/register/:
+    post:
+      operationId: auth_register_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Register'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+      tags:
+      - auth
+    parameters: []
+  /forum-questions/:
+    get:
+      operationId: forum-questions_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    post:
+      operationId: forum-questions_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    parameters: []
+  /forum-questions/{id}/:
+    get:
+      operationId: forum-questions_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    put:
+      operationId: forum-questions_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    patch:
+      operationId: forum-questions_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    delete:
+      operationId: forum-questions_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - forum-questions
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum question.
+      required: true
+      type: integer
+  /token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefreshResponse'
+      tags:
+      - token
+    parameters: []
+  /token/verify/:
+    post:
+      operationId: token_verify_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenVerify'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenVerifyResponse'
+      tags:
+      - token
+    parameters: []
+definitions:
+  CustomTokenObtainPair:
+    required:
+    - username
+    - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  UserResponse:
+    required:
+    - username
+    - email
+    - full_name
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+      full_name:
+        title: Full name
+        type: string
+        minLength: 1
+  TokenObtainPairResponse:
+    required:
+    - access
+    - refresh
+    - user
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        minLength: 1
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      user:
+        $ref: '#/definitions/UserResponse'
+  Register:
+    required:
+    - username
+    - password
+    - email
+    - full_name
+    type: object
+    properties:
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      full_name:
+        title: Full name
+        type: string
+        maxLength: 100
+        minLength: 1
+      avatar:
+        title: Avatar
+        type: string
+        maxLength: 1000
+        x-nullable: true
+  RegisterResponse:
+    required:
+    - access
+    - refresh
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        minLength: 1
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+  Tag:
+    required:
+    - name
+    - linked_data_id
+    - description
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 100
+        minLength: 1
+      linked_data_id:
+        title: Linked data id
+        type: string
+        maxLength: 100
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        maxLength: 1000
+        minLength: 1
+  UserInfo:
+    required:
+    - username
+    - email
+    - full_name
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      full_name:
+        title: Full name
+        type: string
+        maxLength: 100
+        minLength: 1
+      avatar:
+        title: Avatar
+        type: string
+        maxLength: 1000
+        x-nullable: true
+  ForumQuestion:
+    required:
+    - title
+    - question
+    - tags
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 100
+        minLength: 1
+      question:
+        title: Question
+        type: string
+        maxLength: 1000
+        minLength: 1
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/Tag'
+      author:
+        $ref: '#/definitions/UserInfo'
+      date:
+        title: Date
+        type: string
+        format: date-time
+        readOnly: true
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  TokenRefreshResponse:
+    required:
+    - access
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        minLength: 1
+  TokenVerify:
+    required:
+    - token
+    type: object
+    properties:
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  TokenVerifyResponse:
+    type: object
+    properties: {}
