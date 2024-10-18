@@ -1,12 +1,15 @@
-import { FlatList, View } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import React, { useState, useEffect } from "react";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from '../App';
 import axios from "axios";
 import { Question } from "../types/forum";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 
 const API_URL = "http://10.0.2.2:3000/forum-feed";
 
-export const Forum: React.FC = () => {
+export const Forum: React.FC = ({ navigation }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -27,7 +30,9 @@ export const Forum: React.FC = () => {
         data={questions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <ForumQuestionCard item={item} />
+          <TouchableOpacity onPress={() => navigation.navigate('ForumQuestionDetail', { question: item })}>
+            <ForumQuestionCard item={item} />
+          </TouchableOpacity>
         )}
       />
     </View>
