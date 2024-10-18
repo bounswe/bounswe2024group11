@@ -24,3 +24,14 @@ export type Question = {
   is_downvoted: boolean;
   downvotes_count: number;
 };
+
+export type Answer = {
+  id: string;
+  body: string;
+  author: Author;
+  created_at: string;
+  is_upvoted: boolean;
+  upvotes_count: number;
+  is_downvoted: boolean;
+  downvotes_count: number;
+}
