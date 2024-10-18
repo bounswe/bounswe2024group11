@@ -5,13 +5,18 @@ from .models import ForumQuestion, Tag
 User = get_user_model()
 queryset = User.objects.all()
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', "full_name", "avatar")  # Include relevant fields
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'full_name')
+        fields = ('username', 'password', 'email', 'full_name', "avatar")
 
     def create(self, validated_data):
         # Use Django's User model manager to create a new user
@@ -32,6 +37,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)  # For nested representation of tags
+    author = UserInfoSerializer(read_only=True)
 
     class Meta:
         model = ForumQuestion
