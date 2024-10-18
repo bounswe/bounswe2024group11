@@ -1,20 +1,24 @@
-import { FlatList, StyleSheet, Text, View, Image } from "react-native";
+import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from 'react'
 import { Card, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Question } from "../types/forum";
 import VoteButtonsView from "./VoteButtonsView";
 import AuthorView from "./AuthorView";
+import BookmarkButton from "./BookmarkButton";
 
 interface ForumQuestionCardProps {
     item: Question;
-}
+};
 
 const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
     return (
         <View>
             <Card style={{ borderRadius: 10, marginBottom: 10, padding: 10 }}>
-                <AuthorView author={item.author} />
+                <View style={styles.container}>
+                    <AuthorView author={item.author} />
+                    <BookmarkButton is_bookmarked={item.is_bookmarked} />
+                </View>
                 <Text
                     style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
                 >
@@ -77,5 +81,14 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        // alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+});
 
 export default ForumQuestionCard
