@@ -6,12 +6,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./app/screens/Home";
 import Login from "./app/screens/Login";
-import { Forum } from "./app/screens/Forum";
+import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import { Question } from './app/types/forum';
 import React from 'react';
 
-type RootStackParamList = {
+export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
   Forum: undefined;
