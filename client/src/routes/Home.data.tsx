@@ -1,21 +1,30 @@
-import { number, object, parse, string } from "valibot";
+import { object, safeParse, string } from "valibot";
+import { USER } from "../constants";
+import { useToastStore } from "../store";
+import { logger } from "../utils";
 
 const userSchema = object({
-    id: number(),
+    full_name: string(),
     username: string(),
     email: string(),
 });
 
 export const homeLoader = () => {
-    const user =
-        localStorage.getObject("turquiz_app_user") ||
-        sessionStorage.getObject("turquiz_app_user");
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+    const { output, issues, success } = safeParse(userSchema, user);
 
-    if (!user) {
+    if (!success) {
+        useToastStore.getState().add({
+            id: Math.random().toString(),
+            type: "info",
+            data: {
+                message: "You are not logged in",
+                description:
+                    "You can still browse Turquiz, but you need to login to engage with the platform.",
+            },
+        });
         return { logged_in: false } as const;
     }
 
-    const parsedUser = parse(userSchema, user);
-
-    return { logged_in: true, user: parsedUser } as const;
+    return { logged_in: true, user: output } as const;
 };

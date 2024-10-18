@@ -2,7 +2,7 @@ import { Form, Link } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
 import { button, buttonInnerRing } from "../components/button";
 
-import { inputClass } from "../components/input";
+import { inputClass, labelClass } from "../components/input";
 import { Logo } from "../components/logo";
 import type { loginAction } from "./Login.data";
 
@@ -11,7 +11,7 @@ export const Login = () => {
     const isAuthError = actionData && "error" in actionData;
 
     return (
-        <div className="flex flex-col items-center md:py-20 py-1 relative dot-pattern min-h-[100dvh]">
+        <div className="flex flex-col items-center md:py-16 py-1 relative dot-pattern min-h-[100dvh] gap-6">
             <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 bg-white w-full max-w-md shadow-card border rounded-2xl border-slate-100 rounded-4 p-6">
                 <div className="flex flex-col items-center gap-2">
                     <Link
@@ -38,28 +38,40 @@ export const Login = () => {
                     action="/login"
                 >
                     <div className="flex flex-col gap-3">
-                        <input
-                            type="text"
-                            name="username"
-                            autoComplete="username"
-                            placeholder="emily_brown"
-                            aria-label="Username"
-                            aria-invalid={isAuthError}
-                            className={inputClass()}
-                            required
-                        />
-
-                        <input
-                            type="password"
-                            name="password"
-                            autoComplete="current-password"
-                            placeholder="••••••••••"
-                            aria-label="Password"
-                            aria-invalid={isAuthError}
-                            aria-description="Password"
-                            className={inputClass()}
-                            required
-                        />
+                        <fieldset className="flex flex-col gap-3">
+                            <label className={labelClass()}>
+                                <span>
+                                    Username{" "}
+                                    <span className="text-cyan-600">*</span>
+                                </span>
+                                <input
+                                    autoFocus={true}
+                                    type="text"
+                                    name="username"
+                                    autoComplete="username"
+                                    aria-label="Username"
+                                    aria-invalid={isAuthError}
+                                    className={inputClass()}
+                                    required
+                                />
+                            </label>
+                            <label className={labelClass()}>
+                                <span>
+                                    Password{" "}
+                                    <span className="text-cyan-600">*</span>
+                                </span>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    autoComplete="current-password"
+                                    aria-label="Password"
+                                    aria-invalid={isAuthError}
+                                    aria-description="Password"
+                                    className={inputClass()}
+                                    required
+                                />
+                            </label>
+                        </fieldset>
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -71,12 +83,13 @@ export const Login = () => {
                                 <input
                                     type="checkbox"
                                     id="keep_me_logged_in"
+                                    name="keep_me_logged_in"
                                     className="m-0 p-0"
+                                    aria-label="Keep me logged in"
                                 />
                                 Keep me logged in
                             </label>
                         </div>
-                        <Link to="/">Forgot Password</Link>
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -96,10 +109,21 @@ export const Login = () => {
                             className={button({ intent: "tertiary" })}
                             to="/register"
                         >
-                            <span className="text-slate-900">Register</span>
+                            <span className="text-slate-900 transition-all">
+                                Register
+                            </span>
                         </Link>
                     </div>
                 </Form>
+            </div>
+            <div className="px-6 flex flex-col items-center w-full max-w-md rounded-2xl rounded-4 gap-0">
+                <span className="text-slate-500"> Just looking around?</span>
+                <Link
+                    to="/"
+                    className="text-cyan-800 font-medium hover:text-cyan-950 ml-1 hover:underline underline-offset-2"
+                >
+                    Use Turquiz as a guest
+                </Link>
             </div>
         </div>
     );

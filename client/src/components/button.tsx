@@ -19,7 +19,7 @@ export const buttonInnerRing = cva(
                     "group-hover:border-cyan-500",
                     "group-active:border-cyan-600",
                 ],
-                secondary: ["border-white/25"],
+                secondary: ["border-cyan-100/30"],
                 fixed: ["border-white/25"],
                 tertiary: ["border-white/50"],
                 destructive: ["border-red-400"],
@@ -38,7 +38,7 @@ export const button = cva(
         "flex",
         "items-center",
         "justify-center",
-        "rounded-[7px]",
+        "rounded-2",
         "group",
         "relative",
         "transition-all",
@@ -46,6 +46,7 @@ export const button = cva(
         "focus-visible:ring-slate-300",
         "focus-visible:ring-3",
         "focus-visible:outline-none",
+        "outline-none",
     ],
     {
         variants: {
