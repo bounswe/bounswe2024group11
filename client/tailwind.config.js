@@ -121,8 +121,14 @@ const config = {
                 lg: "3200px",
             },
         },
-        plugins: [require("@xpd/tailwind-3dtransforms")],
     },
+    plugins: [
+        "prettier-plugin-tailwindcss",
+        require("@tailwindcss/typography"),
+        require("@tailwindcss/forms"),
+        require("@tailwindcss/aspect-ratio"),
+        require("@tailwindcss/container-queries"),
+    ],
 };
 
 export default config;

@@ -3,18 +3,19 @@ import { useLoaderData } from "react-router-typesafe";
 import { useToastStore } from "../store";
 import { homeLoader } from "./Home.data";
 
+
 export const Home = () => {
     const { user } = useLoaderData<typeof homeLoader>();
     if (!user) {
         return (
-            <div>
+            <div className="bg-slate-50">
                 <div>Not logged in</div>
                 <Link to="/login">Login</Link>
             </div>
         );
     }
     return (
-        <div>
+        <div className="bg-slate-50  px-2    dark:text-white text-slate-950 dark:bg-slate-900">
             <div> Welcome {user.username}</div>
             <button
                 onClick={() => {
