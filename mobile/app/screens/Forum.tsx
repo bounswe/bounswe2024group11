@@ -31,7 +31,7 @@ interface Question {
   downvotes_count: number;
 }
 
-const API_URL = "http://localhost:3000/forum-feed";
+const API_URL = "http://10.0.2.2:3000/forum-feed";
 
 export const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
