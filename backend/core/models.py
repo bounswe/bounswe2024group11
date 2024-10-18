@@ -9,9 +9,17 @@ class CustomUser(AbstractUser):
 class ForumQuestion(models.Model):
     title = models.CharField(max_length=100)
     question = models.CharField(max_length=1000)
-    tag = models.CharField(max_length=100)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField('Tag')
 
     def __str__(self):
         return self.title
+    
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+    linked_data_id = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.name
