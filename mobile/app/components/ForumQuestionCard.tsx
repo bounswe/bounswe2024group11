@@ -4,6 +4,7 @@ import { Card, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Question } from "../types/forum";
 import VoteButtonsView from "./VoteButtonsView";
+import AuthorView from "./AuthorView";
 
 interface ForumQuestionCardProps {
     item: Question;
@@ -13,29 +14,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
     return (
         <View>
             <Card style={{ borderRadius: 10, marginBottom: 10, padding: 10 }}>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        marginBottom: 10,
-                    }}
-                >
-                    <Image
-                        source={{ uri: item.author.avatar }}
-                        style={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
-                            marginRight: 10,
-                        }}
-                    />
-                    <View>
-                        <Text style={{ fontWeight: "bold" }}>
-                            {item.author.full_name}
-                        </Text>
-                        <Text style={{ color: "grey" }}>@{item.author.username}</Text>
-                    </View>
-                </View>
+                <AuthorView author={item.author} />
                 <Text
                     style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
                 >
