@@ -1,8 +1,16 @@
-import { FlatList, StyleSheet, Text, View, Image } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 interface Tag {
   id: string;
@@ -35,6 +43,7 @@ const API_URL = "http://10.0.2.2:3000/forum-feed";
 
 export const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const navigation = useNavigation();
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -47,6 +56,10 @@ export const Forum: React.FC = () => {
     };
     fetchQuestions();
   }, []);
+
+  const handleCreateQuestion = () => {
+    (navigation as any).navigate("CreateQuestion"); // not sure about this solution
+  };
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
@@ -159,6 +172,27 @@ export const Forum: React.FC = () => {
           </Card>
         )}
       />
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleCreateQuestion}
+      >
+        <Icon name="plus" size={24} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  floatingButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#2196F3",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 8,
+  },
+});
