@@ -3,6 +3,7 @@ import React from 'react'
 import { Card, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Question } from "../types/forum";
+import VoteButtonsView from "./VoteButtonsView";
 
 interface ForumQuestionCardProps {
     item: Question;
@@ -72,27 +73,6 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
                 >
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Icon
-                            name={item.is_upvoted ? "thumb-up" : "thumb-up-outline"}
-                            color={item.is_upvoted ? "blue" : "grey"}
-                            size={24}
-                            onPress={() => {
-                                /* Handle upvote logic */
-                            }}
-                        />
-                        <Text style={{ marginLeft: 5 }}>{item.upvotes_count}</Text>
-                        <Icon
-                            name={item.is_downvoted ? "thumb-down" : "thumb-down-outline"}
-                            color={item.is_downvoted ? "red" : "grey"}
-                            size={24}
-                            style={{ marginLeft: 20 }}
-                            onPress={() => {
-                                /* Handle downvote logic */
-                            }}
-                        />
-                        <Text style={{ marginLeft: 5 }}>{item.downvotes_count}</Text>
-                    </View>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Icon
                             name={item.is_bookmarked ? "bookmark" : "bookmark-outline"}
                             color={item.is_bookmarked ? "gold" : "grey"}
                             size={24}
@@ -104,6 +84,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
                             {item.answers_count} Answers
                         </Text>
                     </View>
+                    <VoteButtonsView is_upvoted={item.is_upvoted} upvotes_count={item.upvotes_count} is_downvoted={item.is_downvoted} downvotes_count={item.downvotes_count} />
                 </View>
                 <Button
                     mode="outlined"
