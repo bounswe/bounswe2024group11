@@ -55,14 +55,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
                     }}
                 >
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Icon
-                            name={item.is_bookmarked ? "bookmark" : "bookmark-outline"}
-                            color={item.is_bookmarked ? "gold" : "grey"}
-                            size={24}
-                            onPress={() => {
-                                /* Handle bookmark logic */
-                            }}
-                        />
+                        <Icon name="comment-text-outline" size={24} color="grey" />
                         <Text style={{ marginLeft: 10 }}>
                             {item.answers_count} Answers
                         </Text>
