@@ -1,0 +1,228 @@
+swagger: '2.0'
+info:
+  title: API documentation
+  description: API documentation
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /api/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /auth/login/:
+    post:
+      operationId: auth_login_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CustomTokenObtainPair'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPairResponse'
+      tags:
+      - auth
+    parameters: []
+  /auth/register/:
+    post:
+      operationId: auth_register_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Register'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+      tags:
+      - auth
+    parameters: []
+  /token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefreshResponse'
+      tags:
+      - token
+    parameters: []
+  /token/verify/:
+    post:
+      operationId: token_verify_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenVerify'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenVerifyResponse'
+      tags:
+      - token
+    parameters: []
+definitions:
+  CustomTokenObtainPair:
+    required:
+    - username
+    - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  UserResponse:
+    required:
+    - username
+    - email
+    - full_name
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+      full_name:
+        title: Full name
+        type: string
+        minLength: 1
+  TokenObtainPairResponse:
+    required:
+    - access
+    - refresh
+    - user
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        minLength: 1
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      user:
+        $ref: '#/definitions/UserResponse'
+  Register:
+    required:
+    - username
+    - password
+    - email
+    - full_name
+    type: object
+    properties:
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      full_name:
+        title: Full name
+        type: string
+        maxLength: 100
+        minLength: 1
+  RegisterResponse:
+    required:
+    - access
+    - refresh
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        minLength: 1
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  TokenRefreshResponse:
+    required:
+    - access
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        minLength: 1
+  TokenVerify:
+    required:
+    - token
+    type: object
+    properties:
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  TokenVerifyResponse:
+    type: object
+    properties: {}
