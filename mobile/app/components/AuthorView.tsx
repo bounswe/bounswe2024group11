@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, StyleSheet } from 'react-native'
 import React from 'react'
 import { Author } from '../types/forum'
 
@@ -8,14 +8,34 @@ interface AuthorViewProps {
 
 const AuthorView: React.FC<AuthorViewProps> = ({ author }) => {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-            <Image source={{ uri: author.avatar }} style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10 }} />
+        <View style={styles.container}>
+            <Image source={{ uri: author.avatar }} style={styles.image} />
             <View>
-                <Text style={{ fontWeight: 'bold' }}>{author.full_name}</Text>
-                <Text style={{ color: 'grey' }}>@{author.username}</Text>
+                <Text style={styles.full_name}>{author.full_name}</Text>
+                <Text style={styles.username}>@{author.username}</Text>
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    image: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+    },
+    full_name: {
+        fontWeight: 'bold',
+    },
+    username: {
+        color: 'grey',
+    },
+});
 
 export default AuthorView
