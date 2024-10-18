@@ -4,14 +4,22 @@ ENV DockerHOME=/home/app/client
 
 WORKDIR ${DockerHOME}
 
+RUN npm i -g pnpm
+# RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
+
 COPY package.json pnpm-lock.yaml ./
-RUN npm install
+
+# Set environment variables to fix pnpm global bin installation issues
+ENV PNPM_HOME=/root/.pnpm
+ENV PATH=$PNPM_HOME:$PATH
+
+RUN pnpm install
 
 COPY . ${DockerHOME}
 
-RUN npm run build
+RUN pnpm run build
 
-RUN npm install -g serve
+RUN pnpm install -g serve
 
 EXPOSE 3310
 

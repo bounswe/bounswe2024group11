@@ -2,7 +2,7 @@ import { LoaderFunction } from "react-router";
 import { array, object, safeParse, string } from "valibot";
 import { BASE_URL } from "../utils";
 
-type Quiz = {
+export type Quiz = {
     id: string;
     title: string;
     description: string;
