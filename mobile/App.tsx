@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./app/screens/Home";
 import Login from "./app/screens/Login";
 import { Forum } from "./app/screens/Forum";
+import { CreateQuestion } from "./app/screens/CreateQuestion";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ export const Layout = () => {
           : <Stack.Screen name='Login' component={Login}></Stack.Screen>}
           */}
         <Stack.Screen name="Forum" component={Forum} />
+        <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
       </Stack.Navigator>
     </NavigationContainer>
   );
