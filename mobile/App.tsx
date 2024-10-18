@@ -1,4 +1,4 @@
-import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
@@ -22,9 +22,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Layout></Layout>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <Layout></Layout>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
 
