@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { http, HttpResponse } from "msw";
 import { BASE_URL } from "../utils";
+import { quizData } from "./quiz";
 
 export const quizHandlers = [
     http.post(`${BASE_URL}/quizzes`, async ({ request }) => {
@@ -68,6 +69,7 @@ export const quizHandlers = [
                     name: "SCIENCE",
                 },
             ],
+            questions: quizData,
         };
 
         // Return the single quiz data as JSON response with 200 status

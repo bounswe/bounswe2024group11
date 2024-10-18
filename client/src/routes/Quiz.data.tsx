@@ -18,6 +18,20 @@ const quizSchema = object({
             name: string(),
         }),
     ),
+    questions: array(
+        object({
+            id: string(),
+            text: string(),
+            options: array(
+                object({
+                    id: string(),
+                    text: string(),
+                    is_correct: string(),
+                }),
+            ),
+            selected_option_id: string(),
+        }),
+    ),
 });
 
 export const quizLoader = (async ({ params }) => {
