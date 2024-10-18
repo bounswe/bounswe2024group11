@@ -5,6 +5,7 @@ from django.db import models
 class CustomUser(AbstractUser):
     email = models.EmailField()
     full_name = models.CharField(max_length=100)
+    avatar = models.CharField(max_length=1000, blank=True, null=True)
 
 class ForumQuestion(models.Model):
     title = models.CharField(max_length=100)
