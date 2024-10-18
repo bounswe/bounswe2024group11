@@ -62,14 +62,6 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
                     </View>
                     <VoteButtonsView is_upvoted={item.is_upvoted} upvotes_count={item.upvotes_count} is_downvoted={item.is_downvoted} downvotes_count={item.downvotes_count} />
                 </View>
-                <Button
-                    mode="outlined"
-                    onPress={() => {
-                        /* Handle answer navigation */
-                    }}
-                >
-                    Answer
-                </Button>
             </Card>
         </View>
     )
