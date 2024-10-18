@@ -9,6 +9,8 @@ import { loginAction, loginLoader } from "./routes/Login.data";
 import { logoutLoader } from "./routes/Logout.data";
 import { Quizzes } from "./routes/Quizzes";
 import { quizzesLoader } from "./routes/Quizzes.data";
+import { quizLoader } from "./routes/Quiz.data";
+import { Quiz } from "./routes/Quiz";
 import { Register } from "./routes/Register";
 import { registerAction } from "./routes/Register.data";
 
@@ -45,6 +47,12 @@ export const routes: RouteObject[] = [
                 path: "logout",
                 loader: logoutLoader,
                 element: <Root />,
+            },
+            {
+                path: "quizzes/:quizId",
+                element: <Quiz />,
+                errorElement: <ErrorPage />,
+                loader: quizLoader,
             },
             {
                 path: "quizzes",

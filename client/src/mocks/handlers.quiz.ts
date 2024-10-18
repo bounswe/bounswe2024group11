@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { http, HttpResponse } from "msw";
 import { BASE_URL } from "../utils";
+import { quizData } from "./quiz";
 
 export const quizHandlers = [
     http.post(`${BASE_URL}/quizzes`, async ({ request }) => {
@@ -37,5 +38,41 @@ export const quizHandlers = [
         }));
 
         return HttpResponse.json({ quizzes }, { status: 200 });
+    }),
+    http.get(`${BASE_URL}/quizzes/:id`, async ({ request, params }) => {
+        const { id } = params as { id: string };
+
+        faker.seed(Number(id.split("-").join("")) % 100);
+
+        const quiz = {
+            id,
+            title: faker.animal.crocodilia() + " Quiz",
+            description: faker.lorem.paragraph(),
+            author: {
+                full_name: faker.person.fullName(),
+                username: faker.internet.userName(),
+                avatar: faker.image.avatar(),
+            },
+            created_at: faker.date
+                .between({
+                    from: new Date("2024-10-13"),
+                    to: new Date("2024-10-15"),
+                })
+                .toISOString(),
+            tags: [
+                {
+                    id: "tag id 1",
+                    name: "MATH",
+                },
+                {
+                    id: "tag id 2",
+                    name: "SCIENCE",
+                },
+            ],
+            questions: quizData,
+        };
+
+        // Return the single quiz data as JSON response with 200 status
+        return HttpResponse.json(quiz, { status: 200 });
     }),
 ];
