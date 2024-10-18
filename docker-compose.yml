@@ -50,5 +50,13 @@ services:
         env_file: ./client/.env
         depends_on:
             - backend
+    nginx:
+        image: nginx:1.27-alpine
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+        ports:
+            - "80:80"
+        depends_on:
+            - client
 volumes:
     db_data:
