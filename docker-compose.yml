@@ -24,6 +24,7 @@ services:
             - "8000:8000"
         volumes:
             - ./backend:/home/app/backend
+        container_name: backend
         command: >
             sh -c "
             ./wait-for-it.sh db:3306 -- 
@@ -35,5 +36,19 @@ services:
         depends_on:
             db:
                 condition: service_healthy
+    client:
+        build:
+            context: ./client
+        ports:
+            - "3310:3310"
+        volumes:
+            - ./client:/home/app/client
+        container_name: client
+        command: >
+            sh -c "serve -s build -l 3310"
+        restart: "on-failure"
+        env_file: ./client/.env
+        depends_on:
+            - backend
 volumes:
     db_data:
