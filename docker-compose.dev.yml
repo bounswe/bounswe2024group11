@@ -46,7 +46,7 @@ services:
             - ./client:/home/app/client
         container_name: client
         command: >
-            sh -c "serve -s build -l 3310"
+            sh -c "serve -s dist -l 3310"
         restart: "on-failure"
         env_file: ./.env.dev
         depends_on:
