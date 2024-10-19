@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { http, HttpResponse } from "msw";
 import { BASE_URL } from "../utils";
-import { quizData } from "./quiz";
+import { predefinedQuizzes } from "./mockQuizzes";
+import { quizDataType1, quizDataType2, quizDataType3 } from "./quiz";
 
 export const quizHandlers = [
     http.post(`${BASE_URL}/quizzes`, async ({ request }) => {
@@ -9,66 +10,37 @@ export const quizHandlers = [
         const page = Number(url.searchParams.get("page")) || 1;
         const per_page = Number(url.searchParams.get("per_page")) || 20;
         const seed = Number(page) * Number(per_page);
-        faker.seed(seed);
-        const quizzes = Array.from({ length: per_page }, (_) => ({
-            id: faker.string.uuid(),
-            title: faker.animal.crocodilia() + " Quiz",
-            description: faker.lorem.paragraph(),
-            author: {
-                full_name: faker.person.fullName(),
-                username: faker.internet.userName(),
-                avatar: faker.image.avatar(),
-            },
-            created_at: faker.date
-                .between({
-                    from: new Date("2024-10-13"),
-                    to: new Date("2024-10-15"),
-                })
-                .toISOString(),
-            tags: [
-                {
-                    id: "tag id 1",
-                    name: "MATH",
-                },
-                {
-                    id: "tag id 1",
-                    name: "MATH2",
-                },
-            ],
-        }));
 
+        faker.seed(seed);
+
+        const quizzes = predefinedQuizzes
+            .slice((page - 1) * per_page, page * per_page)
+            .map((quiz) => ({
+                ...quiz,
+            }));
         return HttpResponse.json({ quizzes }, { status: 200 });
     }),
     http.get(`${BASE_URL}/quizzes/:id`, async ({ params }) => {
         const { id } = params as { id: string };
-
+        const quizFromMockBackend = predefinedQuizzes.find(
+            (quiz) => quiz.id === id,
+        );
         faker.seed(Number(id.split("-").join("")) % 100);
-
+        const quizData =
+            quizFromMockBackend?.type === 1
+                ? quizDataType1
+                : quizFromMockBackend?.type === 2
+                  ? quizDataType2
+                  : quizFromMockBackend?.type === 3
+                    ? quizDataType3
+                    : [];
         const quiz = {
             id,
-            title: faker.animal.crocodilia() + " Quiz",
-            description: faker.lorem.paragraph(),
-            author: {
-                full_name: faker.person.fullName(),
-                username: faker.internet.userName(),
-                avatar: faker.image.avatar(),
-            },
-            created_at: faker.date
-                .between({
-                    from: new Date("2024-10-13"),
-                    to: new Date("2024-10-15"),
-                })
-                .toISOString(),
-            tags: [
-                {
-                    id: "tag id 1",
-                    name: "MATH",
-                },
-                {
-                    id: "tag id 2",
-                    name: "SCIENCE",
-                },
-            ],
+            title: quizFromMockBackend?.title,
+            description: quizFromMockBackend?.description,
+            author: quizFromMockBackend?.author,
+            created_at: quizFromMockBackend?.created_at,
+            tags: quizFromMockBackend?.tags,
             questions: quizData,
         };
 
