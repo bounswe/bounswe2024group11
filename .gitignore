@@ -4,3 +4,8 @@
 web/
 
 .idea/
+
+.env
+.env.dev
+.env.stage
+.env.prod
