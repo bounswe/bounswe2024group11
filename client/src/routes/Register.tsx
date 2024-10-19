@@ -20,17 +20,17 @@ export const Register = () => {
     const usedEmail = actionData?.error === "Email is already taken";
 
     return (
-        <div className="flex flex-col items-center md:py-16 py-1 relative dot-pattern min-h-[100dvh] gap-6">
-            <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 bg-white w-full max-w-md shadow-card border rounded-2xl border-slate-100 rounded-4 p-6">
+        <div className="dot-pattern relative flex min-h-[100dvh] flex-col items-center gap-6 py-1 md:py-16">
+            <div className="rounded-2xl flex min-h-12 w-full max-w-md flex-col items-stretch justify-center gap-6 rounded-4 border border-slate-100 bg-white p-6 shadow-card">
                 <div className="flex flex-col items-center gap-2">
-                    <div className="hover:bg-slate-50 border-slate-100 items-center p-4 aspect-square bg-gradient-to-b from-[rgba(228,229,231,.48)] to-[rgba(228,229,231,0)] rounded-full ring-1 ring-slate-100">
+                    <div className="aspect-square items-center rounded-full border-slate-100 bg-gradient-to-b from-[rgba(228,229,231,.48)] to-[rgba(228,229,231,0)] p-4 ring-1 ring-slate-100">
                         <Logo size={40} />
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                        <h1 className="text-2xl font-medium font-display text-slate-950">
+                        <h1 className="font-display text-2xl font-medium text-slate-950">
                             Register for Turquiz today
                         </h1>
-                        <p className="text-center text-slate-500 text-balance">
+                        <p className="text-balance text-center text-slate-500">
                             Access interactive quizzes, engaging forums, and a
                             whole community of learners.
                         </p>
@@ -38,7 +38,7 @@ export const Register = () => {
                 </div>
                 <hr className="border-slate-100" />
                 <Form
-                    className="w-full flex flex-col gap-6"
+                    className="flex w-full flex-col gap-6"
                     method="POST"
                     action="/register"
                 >
@@ -153,11 +153,11 @@ export const Register = () => {
                     </div>
                 </Form>
             </div>
-            <div className="px-6 flex flex-col items-center w-full max-w-md rounded-2xl rounded-4 gap-0">
+            <div className="rounded-2xl flex w-full max-w-md flex-col items-center gap-0 rounded-4 px-6">
                 <span className="text-slate-500">Just looking around?</span>
                 <Link
                     to="/"
-                    className="text-cyan-800 font-medium hover:text-cyan-950 ml-1 hover:underline underline-offset-2"
+                    className="ml-1 font-medium text-cyan-800 underline-offset-2 hover:text-cyan-950 hover:underline"
                 >
                     Use Turquiz as a guest
                 </Link>
