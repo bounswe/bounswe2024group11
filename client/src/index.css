@@ -29,6 +29,7 @@
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
         margin: 0;
+        min-height: 100dvh;
     }
 
     body,

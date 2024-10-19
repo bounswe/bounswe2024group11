@@ -39,7 +39,7 @@ export const quizHandlers = [
 
         return HttpResponse.json({ quizzes }, { status: 200 });
     }),
-    http.get(`${BASE_URL}/quizzes/:id`, async ({ request, params }) => {
+    http.get(`${BASE_URL}/quizzes/:id`, async ({ params }) => {
         const { id } = params as { id: string };
 
         faker.seed(Number(id.split("-").join("")) % 100);
