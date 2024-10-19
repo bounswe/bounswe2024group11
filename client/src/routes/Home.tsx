@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router-typesafe";
 import { useToastStore } from "../store";
 import { homeLoader } from "./Home.data";
 
-
 export const Home = () => {
     const { user } = useLoaderData<typeof homeLoader>();
     if (!user) {
@@ -14,8 +13,9 @@ export const Home = () => {
             </div>
         );
     }
+
     return (
-        <div className="bg-slate-50  px-2    dark:text-white text-slate-950 dark:bg-slate-900">
+        <div className="bg-slate-50 px-2 text-slate-950 dark:bg-slate-900 dark:text-white">
             <div> Welcome {user.username}</div>
             <button
                 onClick={() => {
