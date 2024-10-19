@@ -54,7 +54,7 @@ jobs:
       - name: Build, tag, and push images to Docker Hub
         id: build-image
         run: |
-          docker-compose -f docker-compose.dev.yml build .
+          docker-compose -f docker-compose.dev.yml build
           docker push $CONTAINER_REPOSITORY:$BACKEND_IMAGE_TAG
           docker push $CONTAINER_REPOSITORY:$CLIENT_IMAGE_TAG
           docker push $CONTAINER_REPOSITORY:$NGINX_IMAGE_TAG
