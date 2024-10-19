@@ -96,9 +96,12 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.12
         version: 0.4.12(eslint@9.12.0(jiti@1.21.6))
+<<<<<<< HEAD
       eslint-plugin-unused-imports:
         specifier: ^4.1.4
         version: 4.1.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))
+=======
+>>>>>>> origin/development
       globals:
         specifier: ^15.9.0
         version: 15.11.0
@@ -111,9 +114,12 @@ importers:
       prettier:
         specifier: 3.3.3
         version: 3.3.3
+<<<<<<< HEAD
       prettier-plugin-tailwindcss:
         specifier: ^0.6.8
         version: 0.6.8(prettier@3.3.3)
+=======
+>>>>>>> origin/development
       tailwind-merge:
         specifier: ^2.5.3
         version: 2.5.3
@@ -1147,6 +1153,7 @@ packages:
     peerDependencies:
       eslint: '>=7'
 
+<<<<<<< HEAD
   eslint-plugin-unused-imports@4.1.4:
     resolution: {integrity: sha512-YptD6IzQjDardkl0POxnnRBhU1OEePMV0nd6siHaRBbd+lyh6NAhFEobiznKU7kTsSsDeSD62Pe7kAM1b7dAZQ==}
     peerDependencies:
@@ -1156,6 +1163,8 @@ packages:
       '@typescript-eslint/eslint-plugin':
         optional: true
 
+=======
+>>>>>>> origin/development
   eslint-scope@8.1.0:
     resolution: {integrity: sha512-14dSvlhaVhKKsa9Fx1l8A17s7ah7Ef7wCakJ10LYk6+GYmP9yDti2oq2SEwcyndt6knfcZyhyxwY3i9yL78EQw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1578,6 +1587,7 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
+<<<<<<< HEAD
   prettier-plugin-tailwindcss@0.6.8:
     resolution: {integrity: sha512-dGu3kdm7SXPkiW4nzeWKCl3uoImdd5CTZEJGxyypEPL37Wj0HT2pLqjrvSei1nTeuQfO4PUfjeW5cTUNRLZ4sA==}
     engines: {node: '>=14.21.3'}
@@ -1633,6 +1643,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
+=======
+>>>>>>> origin/development
   prettier@3.3.3:
     resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
     engines: {node: '>=14'}
@@ -2943,12 +2955,15 @@ snapshots:
     dependencies:
       eslint: 9.12.0(jiti@1.21.6)
 
+<<<<<<< HEAD
   eslint-plugin-unused-imports@4.1.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6)):
     dependencies:
       eslint: 9.12.0(jiti@1.21.6)
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
 
+=======
+>>>>>>> origin/development
   eslint-scope@8.1.0:
     dependencies:
       esrecurse: 4.3.0
@@ -3343,6 +3358,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
+<<<<<<< HEAD
   prettier-plugin-tailwindcss@0.6.8(prettier@3.3.3):
     dependencies:
       prettier: 3.3.3
@@ -3357,6 +3373,18 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
+=======
+  prettier@3.3.3: {}
+
+  psl@1.9.0: {}
+
+  punycode@2.3.1: {}
+
+  querystringify@2.2.0: {}
+
+  queue-microtask@1.2.3: {}
+
+>>>>>>> origin/development
   react-dom@18.3.1(react@18.3.1):
     dependencies:
       loose-envify: 1.4.0

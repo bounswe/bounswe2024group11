@@ -1,7 +1,6 @@
 import { object, safeParse, string } from "valibot";
 import { USER } from "../constants";
 import { useToastStore } from "../store";
-import { logger } from "../utils";
 
 const userSchema = object({
     full_name: string(),
@@ -11,7 +10,7 @@ const userSchema = object({
 
 export const homeLoader = () => {
     const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
-    const { output, issues, success } = safeParse(userSchema, user);
+    const { output, success } = safeParse(userSchema, user);
 
     if (!success) {
         useToastStore.getState().add({
