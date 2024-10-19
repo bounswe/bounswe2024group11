@@ -11,6 +11,10 @@ env:
   BACKEND_IMAGE_TAG: ${{ secrets.BACKEND_IMAGE }}
   CLIENT_IMAGE_TAG: ${{ secrets.CLIENT_IMAGE }}
   NGINX_IMAGE_TAG: ${{ secrets.NGINX_IMAGE }}
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  PROJECT_DIR: ${{ secrets.PROJECT_DIR }}
   MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
   MYSQL_USER: ${{ secrets.MYSQL_USER }}
   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
@@ -47,7 +51,7 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-      - name: Build, tag, and push image to Docker Hub
+      - name: Build, tag, and push images to Docker Hub
         id: build-image
         run: |
           docker-compose -f docker-compose.dev.yml build .
@@ -74,11 +78,6 @@ jobs:
           END
 
       - name: Configure SSH
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          PROJECT_DIR: ${{ secrets.PROJECT_DIR }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/aws_dev.pem
