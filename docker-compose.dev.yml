@@ -21,10 +21,9 @@ services:
         build:
             context: ./backend
         image: meminseeker/turquiz:backend
+        platform: linux/amd64
         ports:
             - "8000:8000"
-        volumes:
-            - ./backend:/home/app/backend
         container_name: backend
         command: >
             sh -c "
@@ -40,10 +39,9 @@ services:
         build:
             context: ./client
         image: meminseeker/turquiz:client
+        platform: linux/amd64
         ports:
             - "3310:3310"
-        volumes:
-            - ./client:/home/app/client
         container_name: client
         command: >
             sh -c "serve -s dist -l 3310"
@@ -55,9 +53,8 @@ services:
         build:
             context: ./nginx
         image: meminseeker/turquiz:nginx
+        platform: linux/amd64
         restart: always
-        volumes:
-            - ./nginx:/etc/nginx/conf.d
         ports:
             - "80:80"
         depends_on:
