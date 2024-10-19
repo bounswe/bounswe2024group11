@@ -10,7 +10,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 interface Tag {
   id: string;
@@ -44,6 +44,8 @@ const API_URL = "http://10.0.2.2:3000/forum-feed";
 export const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -54,8 +56,11 @@ export const Forum: React.FC = () => {
         console.error("Error fetching questions", error);
       }
     };
-    fetchQuestions();
-  }, []);
+
+    if (isFocused) {
+      fetchQuestions();
+    }
+  }, [isFocused]);
 
   const handleCreateQuestion = () => {
     (navigation as any).navigate("CreateQuestion"); // not sure about this solution
