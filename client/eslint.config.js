@@ -23,7 +23,6 @@ export default tseslint.config(
             "react-refresh": reactRefresh,
             "unused-imports": unused,
         },
-        // projectService: "./tsconfig.json",
         rules: {
             ...reactHooks.configs.recommended.rules,
             "react-refresh/only-export-components": [
