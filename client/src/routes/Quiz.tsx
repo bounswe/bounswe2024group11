@@ -1,9 +1,6 @@
-import { Link } from "react-router-dom";
-import { useLoaderData } from "react-router-typesafe";
-import { getRelativeTime } from "../utils";
-import { quizLoader } from "./Quiz.data";
 import { useState } from "react";
-import { is } from "valibot";
+import { useLoaderData } from "react-router-typesafe";
+import { quizLoader } from "./Quiz.data";
 
 export const Quiz = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -19,7 +16,7 @@ export const Quiz = () => {
     };
     const isPrevDisabled = currentQuestion === 0;
     const isNextDisabled =
-        currentQuestion === quiz.questions.length - 1 && selectedOption === "";
+        currentQuestion === quiz.questions.length - 1 || selectedOption === "";
 
     return (
         <div className="container items-center flex flex-col py-20">
@@ -64,9 +61,12 @@ export const Quiz = () => {
                     height: "40px",
                 }}
                 disabled={isPrevDisabled}
-                onClick={() =>
-                    setCurrentQuestion((currentQuestion) => currentQuestion + 1)
-                }
+                onClick={() => {
+                    setSelectedOption("");
+                    setCurrentQuestion(
+                        (currentQuestion) => currentQuestion - 1,
+                    );
+                }}
             >
                 Previous
             </button>
@@ -82,7 +82,12 @@ export const Quiz = () => {
                     height: "40px",
                 }}
                 disabled={isNextDisabled}
-                onClick={() => setCurrentQuestion(currentQuestion + 1)}
+                onClick={() => {
+                    setSelectedOption("");
+                    setCurrentQuestion(
+                        (currentQuestion) => currentQuestion + 1,
+                    );
+                }}
             >
                 Next
             </button>
