@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'Innovator Grotesque VF';
+    src: local('Innovator Grotesque VF'), url(./innovator.woff2) format('woff');
+}
+
 @layer base {
 
     *,
@@ -24,6 +29,7 @@
     }
 
     body {
+        font-family: 'Innovator Grotesque VF', sans-serif;
         font-smooth: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
