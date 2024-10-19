@@ -95,3 +95,15 @@ class ForumQuestionTestCase(ForumQuestionSetup):
         response = self.client.post(reverse('forum-question-list'), self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_forumQuestion_pagination(self):
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+        for i in range(20):
+            ForumQuestion.objects.create(title=Faker().sentence(), question=Faker().sentence(), author=self.user)
+        response = self.client.get(reverse('forum-question-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 21)
+        self.assertEqual(len(response.data['results']), 10)
+    
+
+
