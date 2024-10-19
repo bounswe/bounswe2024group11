@@ -1,0 +1,109 @@
+name: Deploy to AWS Dev (Docker Hub + EC2)
+
+on:
+  push:
+    branches: ["development"]
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  CONTAINER_REPOSITORY: ${{ secrets.CONTAINER_REPOSITORY }}
+  IMAGE_TAG: ${{ github.sha }} #! ??
+  BACKEND_IMAGE_TAG: ${{ secrets.BACKEND_IMAGE }}
+  CLIENT_IMAGE_TAG: ${{ secrets.CLIENT_IMAGE }}
+  NGINX_IMAGE_TAG: ${{ secrets.NGINX_IMAGE }}
+  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  MYSQL_USER: ${{ secrets.MYSQL_USER }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  DB_HOST: ${{ secrets.DB_HOST }}
+  DB_PORT: ${{ secrets.DB_PORT }}
+  CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+  VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+  VITE_ENABLE_MOCKS: ${{ secrets.VITE_ENABLE_MOCKS }}
+  VITE_LOGGING: ${{ secrets.VITE_LOGGING }}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to AWS Dev
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Docker Hub
+        id: login-docker-hub
+        run: |
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Build, tag, and push image to Docker Hub
+        id: build-image
+        run: |
+          docker-compose -f docker-compose.dev.yml build .
+          docker push $CONTAINER_REPOSITORY:$BACKEND_IMAGE_TAG
+          docker push $CONTAINER_REPOSITORY:$CLIENT_IMAGE_TAG
+          docker push $CONTAINER_REPOSITORY:$NGINX_IMAGE_TAG
+          echo "image=$CONTAINER_REPOSITORY:$BACKEND_IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "image=$CONTAINER_REPOSITORY:$CLIENT_IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "image=$CONTAINER_REPOSITORY:$NGINX_IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Configure .env.dev file
+        run: |
+          cat >> .env.dev <<END
+          MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+          MYSQL_USER=$MYSQL_USER
+          MYSQL_PASSWORD=$MYSQL_PASSWORD
+          DB_NAME=$DB_NAME
+          DB_HOST=$DB_HOST
+          DB_PORT=$DB_PORT
+          CORS_ALLOWED_ORIGINS=$CORS_ALLOWED_ORIGINS
+          VITE_BACKEND_URL=$VITE_BACKEND_URL
+          VITE_ENABLE_MOCKS=$VITE_ENABLE_MOCKS
+          VITE_LOGGING=$VITE_LOGGING
+          END
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          PROJECT_DIR: ${{ secrets.PROJECT_DIR }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/aws_dev.pem
+          chmod 400 ~/.ssh/aws_dev.pem
+
+      - name: SSH to AWS EC2 and down the containers
+        run: |
+          ssh -i ~/.ssh/aws_dev.pem $SSH_USER@$SSH_HOST << 'ENDSSH'
+          cd $PROJECT_DIR
+          docker-compose -f docker-compose.dev.yml down
+          ENDSSH
+
+      - name: SCP .env.dev and docker-compose.dev.yml to AWS EC2
+        run: |
+          scp -i ~/.ssh/aws_dev.pem \
+          -r $(pwd)/{.env.dev,docker-compose.dev.yml} \
+          $SSH_USER@$SSH_HOST:$PROJECT_DIR
+
+      - name: SSH to AWS EC2 and deploy
+        run: |
+          ssh -i ~/.ssh/aws_dev.pem $SSH_USER@$SSH_HOST << 'ENDSSH'
+          cd $PROJECT_DIR
+          docker pull $CONTAINER_REPOSITORY:$BACKEND_IMAGE_TAG
+          docker pull $CONTAINER_REPOSITORY:$CLIENT_IMAGE_TAG
+          docker pull $CONTAINER_REPOSITORY/$NGINX_IMAGE_TAG
+          docker-compose -f docker-compose.staging.yml up -d
+          docker-compose -f docker-compose.staging.yml exec backend python manage.py migrate --noinput
+          ENDSSH
