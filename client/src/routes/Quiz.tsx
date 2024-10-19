@@ -17,15 +17,9 @@ export const Quiz = () => {
 
         // If you need to do something with updatedQuiz, like saving it, you can handle that here
     };
-    const isPrevDisabled = () => {
-        return currentQuestion === 0;
-    };
-    const isNextDisabled = () => {
-        return (
-            currentQuestion === quiz.questions.length - 1 &&
-            selectedOption === ""
-        );
-    };
+    const isPrevDisabled = currentQuestion === 0;
+    const isNextDisabled =
+        currentQuestion === quiz.questions.length - 1 && selectedOption === "";
 
     return (
         <div className="container items-center flex flex-col py-20">
@@ -69,8 +63,10 @@ export const Quiz = () => {
                     backgroundColor: "darkred",
                     height: "40px",
                 }}
-                disabled={isPrevDisabled()}
-                onClick={() => setCurrentQuestion(currentQuestion - 1)}
+                disabled={isPrevDisabled}
+                onClick={() =>
+                    setCurrentQuestion((currentQuestion) => currentQuestion + 1)
+                }
             >
                 Previous
             </button>
@@ -85,7 +81,7 @@ export const Quiz = () => {
                     backgroundColor: "green",
                     height: "40px",
                 }}
-                disabled={isNextDisabled()}
+                disabled={isNextDisabled}
                 onClick={() => setCurrentQuestion(currentQuestion + 1)}
             >
                 Next
