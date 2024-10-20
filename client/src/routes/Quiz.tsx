@@ -9,7 +9,7 @@ const StartQuizComponent = ({
     quiz,
     onStart,
 }: {
-    quiz: Quiz;
+    quiz: Quiz & { questions: { id: number; text: string }[] };
     onStart: () => void;
 }) => (
     <div
@@ -20,7 +20,7 @@ const StartQuizComponent = ({
         <div className="flex flex-col gap-2">
             <h1
                 id="start-quiz-heading"
-                className="font-display text-2xl font-medium text-slate-900"
+                className="font-display text-3xl font-medium text-slate-900"
             >
                 Ready to start the quiz?
             </h1>
@@ -96,14 +96,14 @@ export const QuizPage = () => {
 
     if (!isQuizStarted) {
         return (
-            <main className="container flex max-w-screen-md flex-col items-stretch gap-8 py-12">
+            <main className="container flex max-w-screen-sm flex-col items-stretch gap-8 py-12">
                 <StartQuizComponent quiz={quiz} onStart={startQuiz} />
             </main>
         );
     }
 
     return (
-        <main className="container flex max-w-screen-md flex-col items-stretch gap-8 py-12">
+        <main className="container flex max-w-screen-sm flex-col items-stretch gap-8 py-12">
             <PageHead title={quiz.title} description={quiz.description} />
             <div className="flex flex-col items-stretch gap-3">
                 <div className="h-2 w-full flex-grow rounded-full bg-slate-200">
