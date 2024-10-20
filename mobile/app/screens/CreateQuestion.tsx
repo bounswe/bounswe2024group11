@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const API_URL = "http://10.0.2.2:3000/forum-feed"; // URL to your forum-feed
 
-export const CreateQuestion: React.FC = () => {
+const CreateQuestion: React.FC = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -92,3 +92,5 @@ export const CreateQuestion: React.FC = () => {
     </View>
   );
 };
+
+export default CreateQuestion;
