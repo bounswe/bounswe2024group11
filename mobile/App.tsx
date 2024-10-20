@@ -1,15 +1,11 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "./app/screens/Home";
-import Login from "./app/screens/Login";
+import React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
-import { Question } from './app/types/forum';
-import React from 'react';
+import { Question } from "./app/types/forum";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -28,7 +24,7 @@ const App: React.FC = () => {
       </AuthProvider>
     </GestureHandlerRootView>
   );
-}
+};
 
 export const Layout = () => {
   const { authState, onLogout } = useAuth();
@@ -49,7 +45,8 @@ export const Layout = () => {
         <Stack.Screen name="Forum" component={Forum} />
         <Stack.Screen
           name="ForumQuestionDetail"
-          component={ForumQuestionDetail} />
+          component={ForumQuestionDetail}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
