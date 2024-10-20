@@ -1,4 +1,70 @@
-export const predefinedQuizzes = [
+import { QuizOverview } from "../types/quiz";
+
+export const quizOverviews: QuizOverview[] = [
+    {
+        id: "1",
+        type: 1,
+        title: "Fruits",
+        description: "Test your knowledge of various fruits.",
+        author: {
+            full_name: "Author 1",
+            username: "author1",
+            avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+        },
+        created_at: "2021-10-01T00:00:00Z",
+        difficulty: "easy",
+        is_taken: true,
+        num_taken: 100,
+        question_count: 10,
+        rating: {
+            score: 4.5,
+            count: 100,
+        },
+        tags: [
+            {
+                id: "2",
+                name: "daily life",
+            },
+            {
+                id: "3",
+                name: "food",
+            },
+        ],
+    },
+    {
+        id: "1",
+        type: 2,
+        title: "Automative Industry",
+        description:
+            "Get to know about the language of automative industry. Excellent for intermediate learners.",
+        author: {
+            full_name: "Author 1",
+            username: "author1",
+            avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+        },
+        created_at: "2024-10-20T13:23:00Z",
+        difficulty: "medium",
+        is_taken: false,
+        num_taken: 120,
+        question_count: 8,
+        rating: {
+            score: 2,
+            count: 1200,
+        },
+        tags: [
+            {
+                id: "31",
+                name: "industry",
+            },
+            {
+                id: "4",
+                name: "work",
+            },
+        ],
+    },
+];
+
+export const quizzes = [
     {
         id: "fruit-quiz-1",
         type: 3,
@@ -1186,3 +1252,92 @@ export const animalTerms = [
         sense: "A large marsupial native to Australia, known for its strong hind legs and long tail used for jumping.",
     },
 ];
+
+const generateQuiz = (type: number) => {
+    const shuffleArray = (array: any[]) =>
+        array.sort(() => Math.random() - 0.5);
+
+    const createOptions = (
+        term: any,
+        termsArray: any[],
+        correctAnswerKey: string,
+        optionKey: string,
+    ) => {
+        const shuffledTerms = shuffleArray([...termsArray]);
+        const wrongOptions = shuffledTerms
+            .filter((t) => t[correctAnswerKey] !== term[correctAnswerKey])
+            .slice(0, 3);
+
+        return shuffleArray([
+            ...wrongOptions.map((t) => ({
+                id: `${t[correctAnswerKey]}-${Math.random()}`,
+                text: t[optionKey],
+                is_correct: "false",
+            })),
+            {
+                id: `${term[correctAnswerKey]}-${Math.random()}`,
+                text: term[optionKey],
+                is_correct: "true",
+            },
+        ]);
+    };
+
+    const createQuestion = (term: any, text: string, options: any[]) => ({
+        id: `${term.en}-${Math.random()}`,
+        text,
+        options,
+        selected_option_id: "",
+    });
+
+    const getQuestions = (
+        termsArray: any[],
+        textGenerator: (term: any) => string,
+        correctAnswerKey: string,
+        optionKey: string,
+    ) =>
+        termsArray.map((term) =>
+            createQuestion(
+                term,
+                textGenerator(term),
+                createOptions(term, termsArray, correctAnswerKey, optionKey),
+            ),
+        );
+
+    if (type === 1) {
+        // Type 1: Asking for English translations of Turkish car terms
+        return shuffleArray(
+            getQuestions(
+                carTerms,
+                (term) => `What is the English translation of "${term.tr}"?`,
+                "tr",
+                "en",
+            ),
+        ).slice(0, 10);
+    } else if (type === 2) {
+        // Type 2: Asking for Turkish translations of English animal terms
+        return shuffleArray(
+            getQuestions(
+                animalTerms,
+                (term) => `What is the Turkish translation of "${term.en}"?`,
+                "en",
+                "tr",
+            ),
+        ).slice(0, 10);
+    } else if (type === 3) {
+        // Type 3: Asking for the English meaning of fruits
+        return shuffleArray(
+            getQuestions(
+                fruitTerms,
+                (term) => `What is the meaning of the word "${term.en}"?`,
+                "en",
+                "sense",
+            ),
+        ).slice(0, 10);
+    }
+
+    return [];
+};
+
+export const quizDataType1 = generateQuiz(1);
+export const quizDataType2 = generateQuiz(2);
+export const quizDataType3 = generateQuiz(3);

@@ -62,7 +62,7 @@ export const button = cva(
                     "ring-cyan-50",
                     "active:bg-cyan-700",
                     "active:ring-3",
-                    "active:ring-cyan-300",
+                    "active:ring-cyan-100",
                     "text-white",
                 ],
                 secondary: [

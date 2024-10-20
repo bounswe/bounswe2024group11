@@ -1,8 +1,12 @@
 import { faker } from "@faker-js/faker";
 import { http, HttpResponse } from "msw";
 import { BASE_URL } from "../utils";
-import { predefinedQuizzes } from "./mockQuizzes";
-import { quizDataType1, quizDataType2, quizDataType3 } from "./quiz";
+import {
+    quizDataType1,
+    quizDataType2,
+    quizDataType3,
+    quizOverviews,
+} from "./mocks.quiz";
 
 export const quizHandlers = [
     http.post(`${BASE_URL}/quizzes`, async ({ request }) => {
@@ -13,7 +17,7 @@ export const quizHandlers = [
 
         faker.seed(seed);
 
-        const quizzes = predefinedQuizzes
+        const quizzes = quizOverviews
             .slice((page - 1) * per_page, page * per_page)
             .map((quiz) => ({
                 ...quiz,
@@ -22,7 +26,7 @@ export const quizHandlers = [
     }),
     http.get(`${BASE_URL}/quizzes/:id`, async ({ params }) => {
         const { id } = params as { id: string };
-        const quizFromMockBackend = predefinedQuizzes.find(
+        const quizFromMockBackend = quizOverviews.find(
             (quiz) => quiz.id === id,
         );
         faker.seed(Number(id.split("-").join("")) % 100);
@@ -42,6 +46,15 @@ export const quizHandlers = [
             created_at: quizFromMockBackend?.created_at,
             tags: quizFromMockBackend?.tags,
             questions: quizData,
+            type: quizFromMockBackend?.type,
+            num_taken: 100,
+            is_taken: true,
+            question_count: quizData.length,
+            difficulty: "easy",
+            rating: {
+                score: 4.5,
+                count: 100,
+            },
         };
 
         // Return the single quiz data as JSON response with 200 status

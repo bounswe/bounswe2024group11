@@ -38,13 +38,11 @@ export const routes: RouteObject[] = [
                         path: "quizzes",
                         element: <Quizzes />,
                         loader: quizzesLoader,
-                        children: [
-                            {
-                                path: ":quizId",
-                                element: <Quiz />,
-                                loader: quizLoader,
-                            },
-                        ],
+                    },
+                    {
+                        path: "quizzes/:quizId",
+                        element: <Quiz />,
+                        loader: quizLoader,
                     },
                     {
                         path: "profile",
