@@ -8,7 +8,11 @@ import {
     TooltipAnchor,
     TooltipProvider,
 } from "@ariakit/react";
-import { RiArrowRightLine, RiDashboard3Line } from "@remixicon/react";
+import {
+    RiArrowRightLine,
+    RiDashboard3Line,
+    RiGroup2Line,
+} from "@remixicon/react";
 import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { Avatar } from "../components/avatar";
@@ -38,7 +42,11 @@ const scoreClass = cva(
                     "bg-emerald-50",
                     "hover:bg-emerald-100",
                 ],
-                5: ["text-cyan-800", "bg-cyan-50", "hover:bg-cyan-100"],
+                5: [
+                    "text-emerald-800",
+                    "bg-emerald-50",
+                    "hover:bg-emerald-100",
+                ],
             },
         },
         defaultVariants: {
@@ -150,42 +158,52 @@ export const QuizCard = ({ quiz }: QuizCardProps) => {
                         {getRelativeTime(new Date(quiz.created_at))}
                     </p>
                 </div>
-                <div className="flex flex-1 items-center justify-end gap-2 pt-2">
-                    {quiz.is_taken && (
+                <div className="flex flex-1 items-end justify-between gap-4 pt-2">
+                    <div className="flex items-center gap-1">
+                        <RiGroup2Line className="text-slate-500" size={18} />
+                        <span className="text-sm text-slate-700">
+                            {quiz.num_taken}
+                        </span>
+                    </div>
+                    <div className="flex flex-1 items-center justify-end gap-2">
+                        {quiz.is_taken && (
+                            <Link
+                                to={quiz.id}
+                                className={buttonClass({
+                                    intent: "tertiary",
+                                    size: "medium",
+                                    icon: "right",
+                                })}
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "tertiary",
+                                    })}
+                                />
+                                <span>Review</span>
+                            </Link>
+                        )}
                         <Link
                             to={quiz.id}
                             className={buttonClass({
-                                intent: "tertiary",
+                                intent: quiz.is_taken ? "secondary" : "primary",
                                 size: "medium",
                                 icon: "right",
                             })}
                         >
                             <span
                                 className={buttonInnerRing({
-                                    intent: "tertiary",
+                                    intent: quiz.is_taken
+                                        ? "secondary"
+                                        : "primary",
                                 })}
                             />
-                            <span>Review</span>
+                            <span>
+                                {quiz.is_taken ? "Re-attempt" : "Take Quiz"}
+                            </span>
+                            <RiArrowRightLine size={16} />
                         </Link>
-                    )}
-                    <Link
-                        to={quiz.id}
-                        className={buttonClass({
-                            intent: quiz.is_taken ? "secondary" : "primary",
-                            size: "medium",
-                            icon: "right",
-                        })}
-                    >
-                        <span
-                            className={buttonInnerRing({
-                                intent: quiz.is_taken ? "secondary" : "primary",
-                            })}
-                        />
-                        <span>
-                            {quiz.is_taken ? "Re-attempt" : "Take Quiz"}
-                        </span>
-                        <RiArrowRightLine size={16} />
-                    </Link>
+                    </div>
                 </div>
             </div>
         </div>
