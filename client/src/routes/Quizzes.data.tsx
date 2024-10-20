@@ -1,31 +1,16 @@
 import { LoaderFunction } from "react-router";
-import { array, number, object, safeParse, string } from "valibot";
+import {
+    array,
+    boolean,
+    InferInput,
+    number,
+    object,
+    safeParse,
+    string,
+} from "valibot";
 import { BASE_URL } from "../utils";
 
-export type Quiz = {
-    id: string;
-    title: string;
-    description: string;
-    author: {
-        full_name: string;
-        username: string;
-        avatar: string;
-    };
-    created_at: string; // 2021-09-01T12:00:00Z
-    tags: {
-        id: string;
-        name: string;
-    };
-    is_taken: boolean;
-    question_count: number;
-    difficulty: string;
-    type: number; // 1: English to Turkish, 2: Turkish to English, 3: English to English definition
-    num_taken: number; // Number of times the quiz has been taken by users
-    rating: {
-        score: number;
-        count: number;
-    };
-};
+export type Quiz = InferInput<typeof quizSchema>;
 
 const quizSchema = object({
     id: string(),
@@ -44,6 +29,14 @@ const quizSchema = object({
         }),
     ),
     type: number(),
+    num_taken: number(),
+    is_taken: boolean(),
+    question_count: number(),
+    difficulty: string(),
+    rating: object({
+        score: number(),
+        count: number(),
+    }),
 });
 
 const quizzesResponseSchema = object({

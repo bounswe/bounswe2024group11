@@ -19,7 +19,7 @@ export const Quiz = () => {
         currentQuestion === quiz.questions.length - 1 || selectedOption === "";
 
     return (
-        <div className="container items-center flex flex-col py-20">
+        <div className="container flex flex-col items-center py-20">
             <div>
                 <h1>{quiz.questions[currentQuestion].text}</h1>
             </div>

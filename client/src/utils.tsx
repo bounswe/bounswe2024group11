@@ -52,8 +52,6 @@ Storage.prototype.getObject = function (key: string) {
     return JSON.parse(item);
 };
 
-localStorage;
-
 export const getRelativeTime = (
     date: Date,
     rtfOptions: Intl.RelativeTimeFormatOptions = {
@@ -68,10 +66,12 @@ export const getRelativeTime = (
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
 
     if (seconds < 60) return rtf.format(-seconds, "second");
     if (minutes < 60) return rtf.format(-minutes, "minute");
     if (hours < 24) return rtf.format(-hours, "hour");
     if (days < 7) return rtf.format(-days, "day");
-    return "over a week ago";
+    if (days < 30) return rtf.format(-weeks, "month");
+    return "more than a month ago";
 };

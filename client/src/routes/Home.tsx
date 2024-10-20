@@ -9,7 +9,9 @@ export const Home = () => {
     return (
         <div>
             <Navbar user={user} />
-            <Outlet />
+            <div className="py-16">
+                <Outlet />
+            </div>
         </div>
     );
 };
