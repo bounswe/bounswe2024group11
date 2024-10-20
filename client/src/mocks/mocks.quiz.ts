@@ -1757,6 +1757,7 @@ export const animalTerms = [
         sense: "A large marsupial native to Australia, known for its strong hind legs and long tail used for jumping.",
     },
 ];
+
 type TermKey = keyof Term;
 
 const generateQuiz = (type: number) => {

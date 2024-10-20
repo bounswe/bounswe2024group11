@@ -41,7 +41,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                             className="text-2xl font-bold text-slate-900"
                         >
                             <img
-                                src="./turquiz_logo.svg"
+                                src="/turquiz_logo.svg"
                                 alt="Turquiz App Logo"
                                 className="h-8 w-auto"
                             />

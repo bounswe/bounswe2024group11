@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass } from "../components/button";
 import { inputClass } from "../components/input";
+import { PageHead } from "../components/page-head";
 import { QuizCard } from "../components/quiz-card";
 import { quizzesLoader } from "./Quizzes.data";
 
@@ -42,12 +43,10 @@ export const Quizzes = () => {
 
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <div className="flex flex-1 flex-col items-start gap-1">
-                <h1 className="font-display text-4xl font-medium">Quizzes</h1>
-                <p className="text-slate-500">
-                    Test your knowledge of various topics.
-                </p>
-            </div>
+            <PageHead
+                title="Quizzes"
+                description="Test your knowledge of various topics."
+            />
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <div>

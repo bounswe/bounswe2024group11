@@ -1,8 +1,10 @@
 import { RouteObject } from "react-router-dom";
 import { ErrorPage } from "./routes/_error";
 import { Root } from "./routes/_root";
+import { Forum } from "./routes/Forum";
 import { Home } from "./routes/Home";
 import { homeLoader } from "./routes/Home.data";
+import { HomeMain } from "./routes/Home.main";
 import { Leaderboard } from "./routes/Leaderboard";
 import { leaderboardLoader } from "./routes/Leaderboard.data";
 import { Login } from "./routes/Login";
@@ -22,12 +24,13 @@ export const routes: RouteObject[] = [
         children: [
             {
                 path: "/",
-                element: <Home />,
+                element: <HomeMain />,
                 loader: homeLoader,
                 children: [
                     {
                         path: "/",
-                        element: <div>Home</div>,
+                        element: <Home />,
+                        loader: homeLoader,
                     },
                     {
                         path: "leaderboard",
@@ -36,7 +39,7 @@ export const routes: RouteObject[] = [
                     },
                     {
                         path: "forum",
-                        element: <div>Forum</div>,
+                        element: <Forum />,
                     },
                     {
                         path: "quizzes",
