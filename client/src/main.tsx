@@ -15,8 +15,10 @@ enableMocking().then(() => {
     createRoot(document.getElementById("root")!).render(
         <StrictMode>
             <Sprite />
+            <div>
+                <RouterProvider router={router()} />
+            </div>
             <ToastWrapper />
-            <RouterProvider router={router()} />
         </StrictMode>,
     );
 });

@@ -58,6 +58,117 @@ paths:
       tags:
       - auth
     parameters: []
+  /forum-questions/:
+    get:
+      operationId: forum-questions_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    post:
+      operationId: forum-questions_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    parameters: []
+  /forum-questions/{id}/:
+    get:
+      operationId: forum-questions_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    put:
+      operationId: forum-questions_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    patch:
+      operationId: forum-questions_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumQuestion'
+      tags:
+      - forum-questions
+    delete:
+      operationId: forum-questions_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - forum-questions
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum question.
+      required: true
+      type: integer
+  /tagging/:
+    get:
+      operationId: tagging_list
+      description: ''
+      parameters:
+      - name: word
+        in: query
+        description: Word to search
+        type: string
+      - name: lang
+        in: query
+        description: Language of the word
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TaggedWord'
+      tags:
+      - tagging
+    parameters: []
   /token/refresh/:
     post:
       operationId: token_refresh_create
@@ -177,6 +288,11 @@ definitions:
         type: string
         maxLength: 100
         minLength: 1
+      avatar:
+        title: Avatar
+        type: string
+        maxLength: 1000
+        x-nullable: true
   RegisterResponse:
     required:
     - access
@@ -191,6 +307,137 @@ definitions:
         title: Refresh
         type: string
         minLength: 1
+  Tag:
+    required:
+    - name
+    - linked_data_id
+    - description
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 100
+        minLength: 1
+      linked_data_id:
+        title: Linked data id
+        type: string
+        maxLength: 100
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        maxLength: 1000
+        minLength: 1
+  UserInfo:
+    required:
+    - username
+    - email
+    - full_name
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      full_name:
+        title: Full name
+        type: string
+        maxLength: 100
+        minLength: 1
+      avatar:
+        title: Avatar
+        type: string
+        maxLength: 1000
+        x-nullable: true
+  ForumQuestion:
+    required:
+    - title
+    - question
+    - tags
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 100
+        minLength: 1
+      question:
+        title: Question
+        type: string
+        maxLength: 1000
+        minLength: 1
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/Tag'
+      author:
+        $ref: '#/definitions/UserInfo'
+      date:
+        title: Date
+        type: string
+        format: date-time
+        readOnly: true
+  WordDefinition:
+    required:
+    - id
+    - definition
+    type: object
+    properties:
+      id:
+        title: Id
+        description: Unique ID for the word definition
+        type: integer
+      definition:
+        title: Definition
+        description: Definition of the word
+        type: string
+        minLength: 1
+  TaggedWord:
+    type: object
+    properties:
+      ADV:
+        description: List of adverbs with their definitions
+        type: array
+        items:
+          $ref: '#/definitions/WordDefinition'
+      VERB:
+        description: List of verbs with their definitions
+        type: array
+        items:
+          $ref: '#/definitions/WordDefinition'
+      ADJ:
+        description: List of adjectives with their definitions
+        type: array
+        items:
+          $ref: '#/definitions/WordDefinition'
+      NOUN:
+        description: List of nouns with their definitions
+        type: array
+        items:
+          $ref: '#/definitions/WordDefinition'
   TokenRefresh:
     required:
     - refresh

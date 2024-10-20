@@ -1,5 +1,5 @@
 import { LoaderFunction } from "react-router";
-import { array, object, safeParse, string } from "valibot";
+import { array, number, object, safeParse, string } from "valibot";
 import { BASE_URL } from "../utils";
 
 export type Quiz = {
@@ -43,6 +43,7 @@ const quizSchema = object({
             name: string(),
         }),
     ),
+    type: number(),
 });
 
 const quizzesResponseSchema = object({
