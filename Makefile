@@ -71,5 +71,6 @@ dev-up:
 # Composition of the commands
 dev-bp: dev-build dev-push
 dev-dsu: dev-down dev-scp dev-up
+dev-deploy: dev-bp dev-dsu
 
-.PHONY: dev-build dev-push dev-down dev-scp dev-up dev-bp dev-dsu
+.PHONY: dev-build dev-push dev-down dev-scp dev-up dev-bp dev-dsu dev-deploy
