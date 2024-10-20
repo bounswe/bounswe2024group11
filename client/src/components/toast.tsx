@@ -14,7 +14,7 @@ export type ToastProps = {
     toast: Toast;
 };
 
-const toastBadgeClass = cva("h-8 w-1 rounded-r-full absolute left-0", {
+const toastBadgeClass = cva("absolute left-0 h-8 w-1 rounded-r-full", {
     variants: {
         type: {
             success: "bg-teal-500",
@@ -63,7 +63,7 @@ const ToastModal = ({ toast }: ToastProps) => {
             aria-modal="false"
             aria-description={toast.data.message}
             aria-live="polite"
-            className="flex gap-2 py-2 px-3 max-w-full w-[24rem] items-center ring-slate-200 overflow-hidden ring-1 rounded-2 bg-white"
+            className="flex w-[24rem] max-w-full items-center gap-2 overflow-hidden rounded-2 bg-white px-3 py-2 ring-1 ring-slate-200"
             style={{
                 transformOrigin: "top",
                 transform: `translateY(-${order * 8}px) scale(${index === length - 1 ? 1 : Math.pow(0.96, order)})`,
@@ -103,7 +103,7 @@ const ToastModal = ({ toast }: ToastProps) => {
                 disabled={order !== 0}
                 aria-roledescription="close button"
                 aria-disabled={order !== 0}
-                className="rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all focus:text-slate-700 touch-hitbox relative p-2 focus-visible:bg-slate-100 disabled:opacity-50 disabled:pointer-events-none"
+                className="touch-hitbox relative rounded-full p-2 text-slate-400 transition-all hover:bg-slate-50 hover:text-slate-700 focus:text-slate-700 focus-visible:bg-slate-100 disabled:pointer-events-none disabled:opacity-50"
                 onClick={() => {
                     useToastStore.getState().remove(toast.id);
                 }}
@@ -128,7 +128,7 @@ const ToastModal = ({ toast }: ToastProps) => {
 export const ToastWrapper = () => {
     const { toasts } = useToastStore();
     return (
-        <div className="fixed bottom-0 right-6 z-10 flex flex-col items-end pb-10 gap-2 perspective-md">
+        <div className="perspective-md fixed bottom-0 right-6 z-10 flex flex-col items-end gap-2 pb-10">
             {toasts.map((toast) => {
                 return (
                     <div
