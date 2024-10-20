@@ -108,19 +108,39 @@ export const QuizCard = ({ quiz }: QuizCardProps) => {
                     {getRelativeTime(new Date(quiz.created_at))}
                 </p>
                 <div>
-                    <button
-                        className={button({
-                            intent: "primary",
-                            size: "medium",
-                            icon: "right",
-                        })}
-                    >
-                        <span
-                            className={buttonInnerRing({ intent: "primary" })}
-                        />
-                        <span>Take Quiz</span>
-                        <RiArrowRightLine size={16} />
-                    </button>
+                    {quiz.is_taken ? (
+                        <button
+                            className={button({
+                                intent: "secondary",
+                                size: "medium",
+                                icon: "right",
+                            })}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "secondary",
+                                })}
+                            />
+                            <span>Re-attempt</span>
+                            <RiArrowRightLine size={16} />
+                        </button>
+                    ) : (
+                        <button
+                            className={button({
+                                intent: "primary",
+                                size: "medium",
+                                icon: "right",
+                            })}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "primary",
+                                })}
+                            />
+                            <span>Take Quiz</span>
+                            <RiArrowRightLine size={16} />
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
