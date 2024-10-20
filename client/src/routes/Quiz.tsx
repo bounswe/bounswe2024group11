@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
+import { PageHead } from "../components/page-head";
 import { quizLoader } from "./Quiz.data";
 
 export const Quiz = () => {
@@ -22,23 +23,18 @@ export const Quiz = () => {
         currentQuestion === quiz.questions.length - 1 || selectedOption === "";
 
     return (
-        <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <div className="flex flex-1 flex-col items-start gap-1">
-                <Link
-                    to="/quizzes"
-                    className={buttonClass({
-                        intent: "tertiary",
-                        icon: "left",
-                    })}
-                >
-                    <RiArrowLeftLine size={16} />
-                    <span>Back to Quizzes</span>
-                </Link>
-                <h1 className="font-display text-3xl font-medium">
-                    {quiz.title}
-                </h1>
-                <p className="text-slate-500">{quiz.description}</p>
-            </div>
+        <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+            <Link
+                to="/quizzes"
+                className={buttonClass({
+                    intent: "tertiary",
+                    icon: "left",
+                })}
+            >
+                <RiArrowLeftLine size={16} />
+                <span>Back to Quizzes</span>
+            </Link>
+            <PageHead title={quiz.title} description={quiz.description} />
             <div>
                 <h1>{quiz.questions[currentQuestion].text}</h1>
             </div>
@@ -105,6 +101,6 @@ export const Quiz = () => {
                     Next
                 </button>
             </div>
-        </div>
+        </main>
     );
 };

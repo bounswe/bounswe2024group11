@@ -47,7 +47,7 @@ export const Quizzes = () => {
                 title="Quizzes"
                 description="Test your knowledge of various topics."
             />
-            <div className="flex flex-col gap-6">
+            <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <div>
                         <select
@@ -126,12 +126,12 @@ export const Quizzes = () => {
                         Most Popular
                     </label>
                 </div>
-            </div>
-            <div className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            </aside>
+            <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredQuizzes.map((quiz) => (
                     <QuizCard key={quiz.id} quiz={quiz} />
                 ))}
-            </div>
+            </main>
         </div>
     );
 };
