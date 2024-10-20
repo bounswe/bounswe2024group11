@@ -1,15 +1,18 @@
-import { FlatList, TouchableOpacity, View } from "react-native";
-import React, { useState, useEffect } from "react";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from '../../App';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
-import { Question } from "../types/forum";
+import React, { useEffect, useState } from "react";
+import { FlatList, TouchableOpacity, View } from "react-native";
+import { RootStackParamList } from "../../App";
 import ForumQuestionCard from "../components/ForumQuestionCard";
+import { Question } from "../types/forum";
 
 const API_URL = "http://10.0.2.2:3000/forum-feed";
 
-type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Forum'>;
+type ForumScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Forum"
+>;
 
 const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -36,7 +39,11 @@ const Forum: React.FC = () => {
         data={questions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('ForumQuestionDetail', { question: item })}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("ForumQuestionDetail", { question: item })
+            }
+          >
             <ForumQuestionCard item={item} />
           </TouchableOpacity>
         )}

@@ -1,16 +1,19 @@
-import { View, Text } from 'react-native'
-import React, { useEffect } from 'react'
-import { RouteProp } from '@react-navigation/native'
-import { RootStackParamList } from '../../App'
-import { Question, Answer } from '../types/forum'
-import axios from 'axios'
-import ForumQuestionCard from '../components/ForumQuestionCard'
-import ForumAnswerCard from '../components/ForumAnswerCard'
-import { FlatList } from 'react-native-gesture-handler'
+import { RouteProp } from "@react-navigation/native";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import { RootStackParamList } from "../../App";
+import ForumAnswerCard from "../components/ForumAnswerCard";
+import ForumQuestionCard from "../components/ForumQuestionCard";
+import { Answer } from "../types/forum";
 
 const API_URL = "http://10.0.2.2:3000/forum-questions/";
 
-type ForumQuestionDetailScreenRouteProp = RouteProp<RootStackParamList, 'ForumQuestionDetail'>;
+type ForumQuestionDetailScreenRouteProp = RouteProp<
+  RootStackParamList,
+  "ForumQuestionDetail"
+>;
 
 type Props = {
   route: ForumQuestionDetailScreenRouteProp;
@@ -29,10 +32,10 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
       } catch (error) {
         console.error("Error fetching answers", error);
       }
-    }
+    };
 
     fetchAnswers();
-  }, [])
+  }, []);
 
   return (
     <View>
@@ -40,12 +43,10 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
       <FlatList
         data={answers}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ForumAnswerCard item={item} />
-        )}
+        renderItem={({ item }) => <ForumAnswerCard item={item} />}
       />
     </View>
-  )
-}
+  );
+};
 
-export default ForumQuestionDetail
+export default ForumQuestionDetail;
