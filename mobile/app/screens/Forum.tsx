@@ -50,7 +50,6 @@ export const Forum: React.FC = () => {
     const fetchQuestions = async () => {
       try {
         const result = await axios.get(`${API_URL}`);
-        console.log(result.data.questions);
         setQuestions(result.data.questions);
       } catch (error) {
         console.error("Error fetching questions", error);
