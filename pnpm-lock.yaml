@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
     devDependencies:
       prettier:
         specifier: ^3.3.3
@@ -16,6 +20,10 @@ importers:
         version: 0.6.8(prettier@3.3.3)
 
 packages:
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
 
   prettier-plugin-tailwindcss@0.6.8:
     resolution: {integrity: sha512-dGu3kdm7SXPkiW4nzeWKCl3uoImdd5CTZEJGxyypEPL37Wj0HT2pLqjrvSei1nTeuQfO4PUfjeW5cTUNRLZ4sA==}
@@ -78,6 +86,8 @@ packages:
     hasBin: true
 
 snapshots:
+
+  clsx@2.1.1: {}
 
   prettier-plugin-tailwindcss@0.6.8(prettier@3.3.3):
     dependencies:

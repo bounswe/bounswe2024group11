@@ -31,7 +31,7 @@ export const buttonInnerRing = cva(
     },
 );
 
-export const button = cva(
+export const buttonClass = cva(
     [
         "font-medium",
         "text-center",
@@ -47,6 +47,7 @@ export const button = cva(
         "focus-visible:ring-3",
         "focus-visible:outline-none",
         "outline-none",
+        "cursor-pointer",
     ],
     {
         variants: {
@@ -62,7 +63,7 @@ export const button = cva(
                     "ring-cyan-50",
                     "active:bg-cyan-700",
                     "active:ring-3",
-                    "active:ring-cyan-300",
+                    "active:ring-cyan-100",
                     "text-white",
                 ],
                 secondary: [
@@ -101,8 +102,8 @@ export const button = cva(
                 ],
             },
             icon: {
-                left: ["flex", "items-center", "gap-2", "pl-2"],
-                right: ["flex", "items-center", "gap-1", "pr-2"],
+                left: ["flex", "items-center", "gap-2", "pl-3"],
+                right: ["flex", "items-center", "gap-2", "pr-3"],
                 only: ["flex", "items-center", "gap-1", "p-0", "aspect-auto"],
                 none: [],
             },

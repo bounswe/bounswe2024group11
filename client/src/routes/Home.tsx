@@ -1,15 +1,14 @@
-import { Outlet } from "react-router-dom";
-import { useLoaderData } from "react-router-typesafe";
-import { Navbar } from "../components/navbar";
-import { homeLoader } from "./Home.data";
+import { PageHead } from "../components/page-head";
 
 export const Home = () => {
-    const { user } = useLoaderData<typeof homeLoader>();
-
     return (
-        <div>
-            <Navbar user={user} />
-            <Outlet />
+        <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+            <PageHead
+                title="Welcome to Turquiz"
+                description="Turquiz is a platform that helps you to get prolific in
+                    English. You can take quizzes and use forums to improve your
+                    English."
+            />
         </div>
     );
 };
