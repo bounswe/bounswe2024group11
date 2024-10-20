@@ -1,35 +1,47 @@
-import { RiArrowLeftLine } from "@remixicon/react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { PageHead } from "../components/page-head";
 import { quizLoader } from "./Quiz.data";
+import { Quiz } from "./Quizzes.data";
 
-const StartQuizComponent = ({ onStart }: { onStart: () => void }) => (
+const StartQuizComponent = ({
+    quiz,
+    onStart,
+}: {
+    quiz: Quiz;
+    onStart: () => void;
+}) => (
     <div
-        className="flex flex-col items-center justify-center gap-4"
+        className="flex flex-col justify-center gap-8"
         role="region"
         aria-labelledby="start-quiz-heading"
     >
-        <h2
-            id="start-quiz-heading"
-            className="font-display text-2xl font-medium"
-        >
-            Ready to start the quiz?
-        </h2>
+        <div className="flex flex-col gap-2">
+            <h1
+                id="start-quiz-heading"
+                className="font-display text-2xl font-medium text-slate-900"
+            >
+                Ready to start the quiz?
+            </h1>
+            <p className="text-slate-600">
+                The quiz consists of {quiz.questions.length} questions. You can
+                move the next or previous question using the buttons below. will
+                be provided 10 minutes to complete the quiz.
+            </p>
+        </div>
         <button
-            className={buttonClass({ intent: "primary", size: "medium" })}
+            className={buttonClass({ intent: "secondary", size: "medium" })}
             onClick={onStart}
             aria-describedby="start-quiz-heading"
         >
-            <span className={buttonInnerRing({ intent: "primary" })} />
+            <span className={buttonInnerRing({ intent: "secondary" })} />
             Start Quiz
         </button>
     </div>
 );
 
-export const Quiz = () => {
+export const QuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedOption, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
@@ -84,64 +96,62 @@ export const Quiz = () => {
 
     if (!isQuizStarted) {
         return (
-            <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-                <Link
-                    to="/quizzes"
-                    className={buttonClass({
-                        intent: "tertiary",
-                        icon: "left",
-                    })}
-                >
-                    <RiArrowLeftLine size={16} />
-                    <span>Back to Quizzes</span>
-                </Link>
-                <PageHead title={quiz.title} description={quiz.description} />
-                <StartQuizComponent onStart={startQuiz} />
+            <main className="container flex max-w-screen-md flex-col items-stretch gap-8 py-12">
+                <StartQuizComponent quiz={quiz} onStart={startQuiz} />
             </main>
         );
     }
 
     return (
-        <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <Link
-                to="/quizzes"
-                className={buttonClass({
-                    intent: "tertiary",
-                    icon: "left",
-                })}
-            >
-                <RiArrowLeftLine size={16} />
-                <span>Back to Quizzes</span>
-            </Link>
+        <main className="container flex max-w-screen-md flex-col items-stretch gap-8 py-12">
             <PageHead title={quiz.title} description={quiz.description} />
-            <div className="flex items-center justify-between">
-                <div className="mr-4 h-2.5 w-full flex-grow rounded-full bg-gray-200 dark:bg-gray-700">
+            <div className="flex flex-col items-stretch gap-3">
+                <div className="h-2 w-full flex-grow rounded-full bg-slate-200">
                     <div
-                        className="h-2.5 rounded-full bg-blue-600"
+                        className="h-2 rounded-full bg-blue-600"
                         style={{ width: `${progress}%` }}
                     ></div>
                 </div>
-                <div className="text-lg font-bold">
-                    Time: {formatTime(timeRemaining)}
+                <div className="flex flex-1 items-center justify-between gap-1">
+                    <div>
+                        {currentQuestion + 1} / {quiz.questions.length}
+                    </div>
+                    <div>{formatTime(timeRemaining)} mins left</div>
                 </div>
             </div>
             <div>
-                <h1>{quiz.questions[currentQuestion].text}</h1>
+                <a
+                    tabIndex={0}
+                    id="question"
+                    autoFocus={true}
+                    aria-description="Question"
+                    className="font-display text-lg font-medium tracking-tight"
+                >
+                    {quiz.questions[currentQuestion].text}
+                </a>
             </div>
             {quiz.questions[currentQuestion] && (
                 <div>
-                    <ul className="grid grid-cols-2 gap-2">
+                    <ul
+                        className="grid grid-cols-2 gap-2"
+                        role="radiogroup"
+                        aria-labelledby={`question-${currentQuestion}`}
+                    >
                         {quiz.questions[currentQuestion].options.map(
                             (option, _) => (
                                 <li key={option.id}>
                                     <label
+                                        className={`flex cursor-pointer items-center justify-center gap-2 rounded-2 px-4 py-3 text-center text-lg transition-colors duration-200 ${
+                                            answers[currentQuestion] ===
+                                            option.id
+                                                ? "bg-cyan-700 text-white"
+                                                : "bg-slate-100 text-slate-950 hover:bg-slate-200"
+                                        }`}
                                         aria-describedby="question"
                                         lang="tr"
-                                        className="flex cursor-pointer items-center justify-center gap-2 rounded-2 bg-slate-100 px-4 py-4 text-center text-lg"
                                     >
                                         <input
-                                            autoFocus={_ === 0}
-                                            hidden={true}
+                                            className="sr-only"
                                             type="radio"
                                             name="option"
                                             value={option.id}

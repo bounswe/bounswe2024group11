@@ -42,6 +42,7 @@ const config = {
         },
         fontFamily: {
             body: [
+                "Innovator Grotesque VF",
                 "Inter V",
                 "Inter",
                 "Helvetica",
@@ -50,6 +51,10 @@ const config = {
                 "sans-serif",
             ],
             display: [
+                "Innovator Grotesque VF",
+                "Innovator Grotesque",
+                "Inter V",
+                "Inter",
                 "SF Pro Display",
                 "SF Pro",
                 "apple-system",
