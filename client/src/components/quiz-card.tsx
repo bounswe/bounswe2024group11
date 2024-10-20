@@ -73,26 +73,12 @@ export const QuizCard = ({ quiz }: QuizCardProps) => {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <h3 className="font-display text-2xl font-medium">
-                            {quiz.title}
-                        </h3>
-                    </div>
+                    <h3 className="pb-1 font-display text-2xl font-medium">
+                        {quiz.title}
+                    </h3>
                     <p className="text-md line-clamp-2 flex-1 text-balance leading-6 text-slate-500">
                         {quiz.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 pt-4 tracking-wider">
-                        {quiz.tags.map(({ name }) => {
-                            return (
-                                <Link
-                                    to="#"
-                                    className="touch-hitbox relative flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-[500] text-slate-950 transition-all hover:bg-slate-200"
-                                >
-                                    {name.toLocaleUpperCase()}
-                                </Link>
-                            );
-                        })}
-                    </div>
                 </div>
                 <TooltipProvider>
                     <TooltipAnchor
@@ -118,7 +104,18 @@ export const QuizCard = ({ quiz }: QuizCardProps) => {
                     </Tooltip>
                 </TooltipProvider>
             </div>
-
+            <div className="flex flex-wrap gap-2 tracking-wider">
+                {quiz.tags.map(({ name }) => {
+                    return (
+                        <Link
+                            to="#"
+                            className="touch-hitbox relative flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-[500] text-slate-950 transition-all hover:bg-slate-200"
+                        >
+                            {name.toLocaleUpperCase()}
+                        </Link>
+                    );
+                })}
+            </div>
             <Separator className="border-slate-200" />
             <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-1">

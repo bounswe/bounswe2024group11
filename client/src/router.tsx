@@ -26,6 +26,10 @@ export const routes: RouteObject[] = [
                 loader: homeLoader,
                 children: [
                     {
+                        path: "/",
+                        element: <div>Home</div>,
+                    },
+                    {
                         path: "leaderboard",
                         element: <Leaderboard />,
                         loader: leaderboardLoader,

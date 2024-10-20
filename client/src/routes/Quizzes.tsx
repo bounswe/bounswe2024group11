@@ -48,83 +48,87 @@ export const Quizzes = () => {
                     Test your knowledge of various topics.
                 </p>
             </div>
-            <div className="flex flex-col gap-4 sm:flex-row">
-                <div>
-                    <select
-                        className={inputClass()}
-                        value={selectedTagId || ""}
-                        onChange={(e) =>
-                            setSelectedTagId(e.target.value || null)
-                        }
-                    >
-                        <option value="">All Tags</option>
-                        {allTags.map((tag) => (
-                            <option key={tag.id} value={tag.id}>
-                                {tag.name}
-                            </option>
-                        ))}
-                    </select>
+            <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 sm:flex-row">
+                    <div>
+                        <select
+                            className={inputClass()}
+                            value={selectedTagId || ""}
+                            onChange={(e) =>
+                                setSelectedTagId(e.target.value || null)
+                            }
+                        >
+                            <option value="">All Tags</option>
+                            {allTags.map((tag) => (
+                                <option key={tag.id} value={tag.id}>
+                                    {tag.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex-grow">
+                        <input
+                            type="text"
+                            placeholder="Search quizzes..."
+                            className={inputClass({
+                                className: "w-full max-w-sm",
+                            })}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <button
+                            className={buttonClass({
+                                intent: "tertiary",
+                                size: "medium",
+                                icon: "left",
+                            })}
+                            onClick={() => {
+                                setSearchTerm("");
+                                setSelectedTagId(null);
+                                setSortBy("newest");
+                            }}
+                        >
+                            <RiCloseFill size={20} />
+                            Clear All Filters
+                        </button>
+                    </div>
                 </div>
-                <div className="flex-grow">
-                    <input
-                        type="text"
-                        placeholder="Search quizzes..."
-                        className={inputClass({ className: "w-full max-w-sm" })}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <button
-                        className={buttonClass({
-                            intent: "tertiary",
-                            size: "medium",
-                            icon: "left",
-                        })}
-                        onClick={() => {
-                            setSearchTerm("");
-                            setSelectedTagId(null);
-                            setSortBy("newest");
-                        }}
-                    >
-                        <RiCloseFill size={20} />
-                        Clear All Filters
-                    </button>
+                <div className="flex gap-4">
+                    <label className="flex cursor-pointer items-center gap-2">
+                        <input
+                            type="radio"
+                            value="newest"
+                            checked={sortBy === "newest"}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="text-cyan-700 transition-all focus:ring-cyan-800"
+                        />
+                        Newest
+                    </label>
+                    <label className="flex cursor-pointer items-center gap-2">
+                        <input
+                            type="radio"
+                            value="oldest"
+                            checked={sortBy === "oldest"}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="text-cyan-700 transition-all focus:ring-cyan-800"
+                        />
+                        Oldest
+                    </label>
+                    <label className="flex cursor-pointer items-center gap-2">
+                        <input
+                            type="radio"
+                            value="popular"
+                            checked={sortBy === "popular"}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="text-cyan-700 transition-all focus:ring-cyan-800"
+                        />
+                        Most Popular
+                    </label>
                 </div>
             </div>
-            <div className="flex gap-4">
-                <label className="flex cursor-pointer items-center gap-2">
-                    <input
-                        type="radio"
-                        value="newest"
-                        checked={sortBy === "newest"}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="text-cyan-700 transition-all focus:ring-cyan-800"
-                    />
-                    Newest
-                </label>
-                <label className="flex cursor-pointer items-center gap-2">
-                    <input
-                        type="radio"
-                        value="oldest"
-                        checked={sortBy === "oldest"}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="text-cyan-700 transition-all focus:ring-cyan-800"
-                    />
-                    Oldest
-                </label>
-                <label className="flex cursor-pointer items-center gap-2">
-                    <input
-                        type="radio"
-                        value="popular"
-                        checked={sortBy === "popular"}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="text-cyan-700 transition-all focus:ring-cyan-800"
-                    />
-                    Most Popular
-                </label>
-            </div>
-            <div className="grid grid-cols-1 items-stretch justify-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredQuizzes.map((quiz) => (
                     <QuizCard key={quiz.id} quiz={quiz} />
                 ))}
