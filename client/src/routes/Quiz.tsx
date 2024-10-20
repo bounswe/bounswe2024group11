@@ -7,13 +7,21 @@ import { PageHead } from "../components/page-head";
 import { quizLoader } from "./Quiz.data";
 
 const StartQuizComponent = ({ onStart }: { onStart: () => void }) => (
-    <div className="flex flex-col items-center justify-center gap-4">
-        <h2 className="font-display text-2xl font-medium">
+    <div
+        className="flex flex-col items-center justify-center gap-4"
+        role="region"
+        aria-labelledby="start-quiz-heading"
+    >
+        <h2
+            id="start-quiz-heading"
+            className="font-display text-2xl font-medium"
+        >
             Ready to start the quiz?
         </h2>
         <button
             className={buttonClass({ intent: "primary", size: "medium" })}
             onClick={onStart}
+            aria-describedby="start-quiz-heading"
         >
             <span className={buttonInnerRing({ intent: "primary" })} />
             Start Quiz
@@ -124,10 +132,15 @@ export const Quiz = () => {
                 <div>
                     <ul className="grid grid-cols-2 gap-2">
                         {quiz.questions[currentQuestion].options.map(
-                            (option) => (
+                            (option, _) => (
                                 <li key={option.id}>
-                                    <label className="flex cursor-pointer items-center justify-center gap-2 rounded-2 bg-slate-100 px-4 py-4 text-center text-lg">
+                                    <label
+                                        aria-describedby="question"
+                                        lang="tr"
+                                        className="flex cursor-pointer items-center justify-center gap-2 rounded-2 bg-slate-100 px-4 py-4 text-center text-lg"
+                                    >
                                         <input
+                                            autoFocus={_ === 0}
                                             hidden={true}
                                             type="radio"
                                             name="option"
