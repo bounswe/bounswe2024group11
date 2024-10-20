@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
-  onRegister?: (email: string, password: string) => Promise<any>;
+  onRegister?: (username: string, fullname: string, email: string, password: string) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: (navigation: any) => Promise<void>;
 }
@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: any) => {
     loadToken();
   }, []);
 
-  const register = async (email: string, password: string) => {
-    console.log(`Registering email: '${email}' and password: '${password}'`);
+  const register = async (username: string, fullname: string, email: string, password: string) => {
+    console.log(`Registering username: '${username}', fullname:'${fullname}' email: '${email}' and password: '${password}'`);
     try {
       const result = await axios.post(`${API_URL}/users`, { email, password });
       
