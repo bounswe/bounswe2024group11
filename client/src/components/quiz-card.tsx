@@ -83,7 +83,7 @@ export const QuizCard = ({ quiz }: QuizCardProps) => {
                 <p className="text-md flex-1 leading-7 text-slate-500">
                     {quiz.description}
                 </p>
-                <div className="flex flex-wrap gap-2 pt-4">
+                <div className="flex flex-wrap gap-2 pt-4 tracking-wider">
                     {quiz.tags.map(({ name }) => {
                         return (
                             <Link
