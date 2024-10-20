@@ -34,4 +34,4 @@ export type Answer = {
   upvotes_count: number;
   is_downvoted: boolean;
   downvotes_count: number;
-}
+};

@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
@@ -9,8 +9,8 @@ interface AuthProps {
   onLogout?: () => Promise<any>;
 }
 
-const TOKEN_KEY = 'my-jwt';
-export const API_URL = 'https://api.developbetterapps.com';
+const TOKEN_KEY = "my-jwt";
+export const API_URL = "https://api.developbetterapps.com";
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -29,17 +29,17 @@ export const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     const loadToken = async () => {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      console.log('stored:', token);
+      console.log("stored:", token);
 
       if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         setAuthState({
           token: token,
           authenticated: true,
         });
       }
-    }
+    };
     loadToken();
   }, []);
 
@@ -61,12 +61,12 @@ export const AuthProvider = ({ children }: any) => {
         authenticated: true,
       });
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${result.data.token}`;
+      axios.defaults.headers.common["Authorization"] =
+        `Bearer ${result.data.token}`;
 
       await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
 
       return result;
-
     } catch (e) {
       return { error: true, message: (e as any).response.data.msg };
     }
@@ -75,13 +75,13 @@ export const AuthProvider = ({ children }: any) => {
   const logout = async () => {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
 
-    axios.defaults.headers.common["Authorization"] = '';
+    axios.defaults.headers.common["Authorization"] = "";
 
     setAuthState({
       token: null,
       authenticated: false,
-    })
-  }
+    });
+  };
 
   const value = {
     onRegister: register,
@@ -90,5 +90,5 @@ export const AuthProvider = ({ children }: any) => {
     authState,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
