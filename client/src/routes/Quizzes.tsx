@@ -5,15 +5,14 @@ import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
     const data = useLoaderData<typeof quizzesLoader>();
-    console.log(data);
     return (
-        <div className="container items-center flex flex-col py-20">
-            <div className="grid grid-cols-2 gap-4 max-w-4xl justify-stretch items-stretch">
+        <div className="container flex flex-col items-center py-20">
+            <div className="grid max-w-4xl grid-cols-2 items-stretch justify-stretch gap-4">
                 {data.quizzes.map((quiz) => (
                     <Link
                         aria-label={quiz.title}
                         to={quiz.id}
-                        className="p-8 shadow-card ring-slate-200 ring max-w-lg flex flex-col gap-2"
+                        className="flex max-w-lg flex-col gap-2 p-8 shadow-card ring ring-slate-200"
                         key={quiz.id}
                     >
                         <span>Title: {quiz.title}</span>
@@ -24,7 +23,7 @@ export const Quizzes = () => {
                         </p>
                         {quiz.tags.map(({ name }) => {
                             return (
-                                <div className="flex items-center py-1 px-2 bg-cyan-100 text-cyan-800">
+                                <div className="flex items-center bg-cyan-100 px-2 py-1 text-cyan-800">
                                     {name}
                                 </div>
                             );

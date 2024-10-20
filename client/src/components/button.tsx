@@ -42,7 +42,7 @@ export const button = cva(
         "group",
         "relative",
         "transition-all",
-        "duration-300",
+        "duration-100",
         "focus-visible:ring-slate-300",
         "focus-visible:ring-3",
         "focus-visible:outline-none",
