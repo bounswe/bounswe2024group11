@@ -6,12 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');  
+  const [fullname, setFullname] = useState('');
+  const [username, setUsername] = useState(''); 
   const { onRegister } = useAuth();
   const navigation = useNavigation();
 
   const register = async (navigation : any) => {
     
-      const result = await onRegister!(email, password);
+      const result = await onRegister!(username, fullname, email, password);
       
       if (result && result.error) {
         alert(result.message);
@@ -26,6 +28,19 @@ const Register = () => {
     <View style={styles.container}>
       <Image source={{ uri: 'https://galaxies.dev/img/logos/logo--blue.png' }} style={styles.image} />
       <View style={styles.form}>
+        
+        <TextInput
+          style={styles.input}
+          placeholder='Username'
+          onChangeText={(text) => setUsername(text)}
+          value={fullname}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Fullname'
+          onChangeText={(text) => setFullname(text)}
+          value={fullname}
+        />
         <TextInput
           style={styles.input}
           placeholder='Email'
