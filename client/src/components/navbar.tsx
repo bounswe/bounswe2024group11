@@ -1,7 +1,7 @@
 import { RiLogoutBoxRLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import type { User } from "../types/user";
-import { button, buttonInnerRing } from "./button";
+import { buttonClass, buttonInnerRing } from "./button";
 
 const routes = [
     {
@@ -33,7 +33,7 @@ export const Navbar = ({ user }: NavbarProps) => {
             aria-label="Main navigation"
             className="fixed top-0 z-10 w-full border-b border-slate-200 bg-[rgba(255,255,255,.92)] px-6 py-3 backdrop-blur-sm"
         >
-            <div className="container max-w-screen-lg">
+            <div className="container max-w-screen-xl">
                 <div className="flex items-center gap-2">
                     <div className="md:w-24">
                         <Link
@@ -52,7 +52,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                             <li key={i} className="inline-block">
                                 <Link
                                     to={route.href}
-                                    className={button({
+                                    className={buttonClass({
                                         intent: "tertiary",
                                         size: "medium",
                                     })}
@@ -66,7 +66,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                         {user ? (
                             <Link
                                 to="/logout"
-                                className={button({
+                                className={buttonClass({
                                     intent: "destructive",
                                     size: "medium",
                                     icon: "right",
@@ -85,7 +85,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                 <li>
                                     <Link
                                         to="/register"
-                                        className={button({
+                                        className={buttonClass({
                                             intent: "tertiary",
                                             size: "medium",
                                         })}
@@ -101,7 +101,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                 <li>
                                     <Link
                                         to="/login"
-                                        className={button({
+                                        className={buttonClass({
                                             intent: "secondary",
                                             size: "medium",
                                             className: "min-w-20",

@@ -31,7 +31,7 @@ export const buttonInnerRing = cva(
     },
 );
 
-export const button = cva(
+export const buttonClass = cva(
     [
         "font-medium",
         "text-center",
@@ -101,8 +101,8 @@ export const button = cva(
                 ],
             },
             icon: {
-                left: ["flex", "items-center", "gap-2", "pl-2"],
-                right: ["flex", "items-center", "gap-1", "pr-2"],
+                left: ["flex", "items-center", "gap-2", "pl-3"],
+                right: ["flex", "items-center", "gap-2", "pr-3"],
                 only: ["flex", "items-center", "gap-1", "p-0", "aspect-auto"],
                 none: [],
             },
