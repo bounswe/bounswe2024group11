@@ -1,15 +1,19 @@
+import { Term } from "../types/mockTerm";
+import { Options } from "../types/quizQuestion";
 import { animalTerms, carTerms, fruitTerms } from "./mockQuizzes";
 
+type TermKey = keyof Term;
+
 const generateQuiz = (type: number) => {
-    const shuffleArray = (array: any[]) =>
-        array.sort(() => Math.random() - 0.5);
+    const shuffleArray = <T>(array: T[]): T[] =>
+        [...array].sort(() => Math.random() - 0.5);
 
     const createOptions = (
-        term: any,
-        termsArray: any[],
-        correctAnswerKey: string,
-        optionKey: string,
-    ) => {
+        term: Term,
+        termsArray: Term[],
+        correctAnswerKey: TermKey,
+        optionKey: TermKey,
+    ): Options[] => {
         const shuffledTerms = shuffleArray([...termsArray]);
         const wrongOptions = shuffledTerms
             .filter((t) => t[correctAnswerKey] !== term[correctAnswerKey])
@@ -29,7 +33,7 @@ const generateQuiz = (type: number) => {
         ]);
     };
 
-    const createQuestion = (term: any, text: string, options: any[]) => ({
+    const createQuestion = (term: Term, text: string, options: Options[]) => ({
         id: `${term.en}-${Math.random()}`,
         text,
         options,
@@ -37,10 +41,10 @@ const generateQuiz = (type: number) => {
     });
 
     const getQuestions = (
-        termsArray: any[],
-        textGenerator: (term: any) => string,
-        correctAnswerKey: string,
-        optionKey: string,
+        termsArray: Term[],
+        textGenerator: (term: Term) => string,
+        correctAnswerKey: TermKey,
+        optionKey: TermKey,
     ) =>
         termsArray.map((term) =>
             createQuestion(
