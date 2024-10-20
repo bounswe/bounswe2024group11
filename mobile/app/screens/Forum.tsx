@@ -1,8 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Question } from "../types/forum";
@@ -18,6 +19,7 @@ const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
 
   const navigation = useNavigation<ForumScreenNavigationProp>();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -30,8 +32,14 @@ const Forum: React.FC = () => {
       }
     };
 
-    fetchQuestions();
-  }, []);
+    if (isFocused) {
+      fetchQuestions();
+    }
+  }, [isFocused]);
+
+  const handleCreateQuestion = () => {
+    (navigation as any).navigate("CreateQuestion"); // not sure about this solution
+  };
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
@@ -48,8 +56,28 @@ const Forum: React.FC = () => {
           </TouchableOpacity>
         )}
       />
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleCreateQuestion}
+      >
+        <Icon name="plus" size={24} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  floatingButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#2196F3",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 8,
+  },
+});
 export default Forum;

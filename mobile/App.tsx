@@ -4,6 +4,7 @@ import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import Forum from "./app/screens/Forum";
+import CreateQuestion from "./app/screens/CreateQuestion";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import { Question } from "./app/types/forum";
 
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   Login: undefined;
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
+  CreateQuestion: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -43,6 +45,7 @@ export const Layout = () => {
           : <Stack.Screen name='Login' component={Login}></Stack.Screen>}
           */}
         <Stack.Screen name="Forum" component={Forum} />
+        <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
         <Stack.Screen
           name="ForumQuestionDetail"
           component={ForumQuestionDetail}
