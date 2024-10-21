@@ -12,7 +12,7 @@ import {
 import { RootStackParamList } from "../../App";
 import { useAuth } from "../context/AuthContext";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Forum">;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -26,8 +26,6 @@ const Login = () => {
     if (result && result.error) {
       alert(result.message);
     }
-
-    navigation.navigate("Forum");
   };
 
   return (
@@ -63,7 +61,7 @@ const Login = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => (navigation as any).navigate("Register")}
+          onPress={() => navigation.navigate("Register")}
           style={styles.createAccountButton}
         >
           <Text style={styles.createAccountText}>Create Account</Text>

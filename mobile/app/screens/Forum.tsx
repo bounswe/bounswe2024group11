@@ -10,10 +10,7 @@ import { Question } from "../types/forum";
 
 const API_URL = "http://54.247.125.93/api/v1/forum-questions/";
 
-type ForumScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "Forum"
->;
+type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);

@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: any) => {
         username,
         password,
         email,
-        fullname,
+        full_name: fullname,
       });
     } catch (e) {
       return { error: true, message: (e as any).response.data.msg };
