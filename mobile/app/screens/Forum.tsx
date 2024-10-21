@@ -8,7 +8,7 @@ import { RootStackParamList } from "../../App";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Question } from "../types/forum";
 
-const API_URL = "http://10.0.2.2:3000/forum-feed";
+const API_URL = "http://54.247.125.93/api/v1/forum-questions/";
 
 type ForumScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,7 +26,7 @@ const Forum: React.FC = () => {
       try {
         const result = await axios.get(`${API_URL}`);
         // console.log(result.data.questions);
-        setQuestions(result.data.questions);
+        setQuestions(result.data.results);
       } catch (error) {
         console.error("Error fetching questions", error);
       }
