@@ -171,7 +171,7 @@ export const quizOverviews: QuizOverview[] = [
     },
     {
         id: "551",
-        type: 1,
+        type: 3,
         title: "Fruits",
         description:
             "In this quiz you match descriptions of the fruits with the name of the fruits. I hope you like it.",
@@ -180,7 +180,7 @@ export const quizOverviews: QuizOverview[] = [
             username: "kerem_s54",
             avatar: "https://randomuser.me/api/portraits/men/46.jpg",
         },
-        created_at: "2021-10-01T00:00:00Z",
+        created_at: "2024-11-01T00:00:00Z",
         difficulty: "easy",
         is_taken: true,
         num_taken: 100,
@@ -206,7 +206,7 @@ export const quizOverviews: QuizOverview[] = [
     },
     {
         id: "552",
-        type: 2,
+        type: 1,
         title: "Cars!",
         description:
             "Let's translate car terms to Turkish. Excellent for intermediate learners.",
@@ -215,7 +215,7 @@ export const quizOverviews: QuizOverview[] = [
             username: "umitev_07",
             avatar: "https://randomuser.me/api/portraits/men/2.jpg",
         },
-        created_at: "2024-06-20T13:23:00Z",
+        created_at: "2024-11-20T13:23:00Z",
         difficulty: "medium",
         is_taken: false,
         num_taken: 125,
@@ -237,7 +237,7 @@ export const quizOverviews: QuizOverview[] = [
     },
     {
         id: "553",
-        type: 3,
+        type: 2,
         title: "I love Dogs",
         description:
             "I like all animals but I love dogs most. If you also like animals, I believe you will enjoy this quiz.",
@@ -246,7 +246,7 @@ export const quizOverviews: QuizOverview[] = [
             username: "kemal_k_2023",
             avatar: "https://randomuser.me/api/portraits/men/3.jpg",
         },
-        created_at: "2021-10-01T00:00:00Z",
+        created_at: "2024-11-01T00:00:00Z",
         difficulty: "hard",
         is_taken: false,
         num_taken: 313,
