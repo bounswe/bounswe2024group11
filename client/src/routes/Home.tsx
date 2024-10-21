@@ -7,7 +7,9 @@ import {
     RiTranslate2,
 } from "@remixicon/react";
 import { ReactNode, useState } from "react";
+import { useRouteLoaderData } from "react-router-typesafe";
 import { PageHead } from "../components/page-head";
+import { homeLoader } from "./Home.data";
 
 const ExpandableItem = ({
     title,
@@ -345,10 +347,15 @@ const technicalDefinitionsData = [
     },
 ];
 export const Home = () => {
+    const { logged_in, user } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
+    const title = logged_in
+        ? "Welcome " + user.full_name
+        : "Welcome to Turquiz";
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <PageHead
-                title="Welcome to Turquiz"
+                title={title}
                 description="Turquiz is a platform that helps you to get prolific in
                     English. You can take quizzes and use forums to improve your
                     English."

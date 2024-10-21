@@ -26,11 +26,13 @@ export const routes: RouteObject[] = [
                 path: "/",
                 element: <HomeMain />,
                 loader: homeLoader,
+                id: "home-main",
                 children: [
                     {
                         path: "/",
                         element: <Home />,
                         loader: homeLoader,
+                        id: "home",
                     },
                     {
                         path: "leaderboard",
