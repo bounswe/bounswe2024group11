@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import {
   Image,
@@ -8,16 +9,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { RootStackParamList } from "../../App";
 import { useAuth } from "../context/AuthContext";
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { onLogin } = useAuth();
-  const navigation = useNavigation();
+
+  const navigation = useNavigation<NavigationProp>();
 
   const login = async () => {
-    const result = await onLogin!(email, password);
+    const result = await onLogin!(username, password);
     if (result && result.error) {
       alert(result.message);
     }
@@ -38,11 +43,9 @@ const Login = () => {
 
         <TextInput
           style={styles.input}
-          placeholder="Email"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          keyboardType="email-address"
-          autoCapitalize="none"
+          placeholder="Username"
+          onChangeText={(text: string) => setUsername(text)}
+          value={username}
         />
 
         <TextInput
@@ -58,7 +61,7 @@ const Login = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => (navigation as any).navigate("Register")}
+          onPress={() => navigation.navigate("Register")}
           style={styles.createAccountButton}
         >
           <Text style={styles.createAccountText}>Create Account</Text>

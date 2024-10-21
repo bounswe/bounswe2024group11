@@ -117,7 +117,6 @@ export const Layout = () => {
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}
             />
-            <Stack.Screen name="Register" component={Register} />
             {/*
             {authState?.authenticated
               ? <Stack.Screen
@@ -130,7 +129,10 @@ export const Layout = () => {
               */}
           </>
         ) : (
-          <Stack.Screen name="Login" component={Login} />
+          <>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
