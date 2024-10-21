@@ -1,23 +1,104 @@
 import { useState } from "react";
+import { Avatar } from "../components/avatar";
 import { PageHead } from "../components/page-head";
 
 export const Leaderboard = () => {
     const [leaderboardType, setLeaderboardType] = useState("quiz");
 
     const quizLeaderboardData = [
-        { rank: 1, name: "Alice", score: 1000 },
-        { rank: 2, name: "Bob", score: 950 },
-        { rank: 3, name: "Charlie", score: 900 },
-        { rank: 4, name: "David", score: 850 },
-        { rank: 5, name: "Eve", score: 800 },
+        {
+            rank: 1,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 1000,
+        },
+        {
+            rank: 2,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 950,
+        },
+        {
+            rank: 3,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 900,
+        },
+        {
+            rank: 4,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 850,
+        },
+        {
+            rank: 5,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 800,
+        },
     ];
 
     const forumLeaderboardData = [
-        { rank: 1, name: "Frank", score: 500 },
-        { rank: 2, name: "Grace", score: 450 },
-        { rank: 3, name: "Henry", score: 400 },
-        { rank: 4, name: "Ivy", score: 350 },
-        { rank: 5, name: "Jack", score: 300 },
+        {
+            rank: 1,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 500,
+        },
+        {
+            rank: 2,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 450,
+        },
+        {
+            rank: 3,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 400,
+        },
+        {
+            rank: 4,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 350,
+        },
+        {
+            rank: 5,
+            player: {
+                full_name: "Ümit Can Evleksiz",
+                username: "umitev_07",
+                avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+            },
+            points: 300,
+        },
     ];
 
     const currentLeaderboard =
@@ -58,23 +139,33 @@ export const Leaderboard = () => {
             </div>
             <table className="w-full border-collapse">
                 <thead>
-                    <tr className="bg-gray-200">
+                    <tr className="bg-slate-200">
                         <th className="border p-2">Rank</th>
                         <th className="border p-2">Name</th>
                         <th className="border p-2">
-                            {leaderboardType === "quiz" ? "Score" : "Points"}
+                            {leaderboardType === "quiz" ? "points" : "Points"}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentLeaderboard.map((player) => (
-                        <tr key={player.rank} className="hover:bg-gray-100">
+                        <tr key={player.rank} className="hover:bg-slate-100">
                             <td className="border p-2 text-center">
                                 {player.rank}
                             </td>
-                            <td className="border p-2">{player.name}</td>
+                            <td className="border px-2 py-4">
+                                <div className="flex flex-row items-start gap-4">
+                                    <Avatar author={player.player} size={40} />
+                                    <div className="flex flex-col items-start">
+                                        <span>{player.player.full_name}</span>
+                                        <p className="text-sm text-slate-500">
+                                            {player.player.username}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
                             <td className="border p-2 text-right">
-                                {player.score}
+                                {player.points}
                             </td>
                         </tr>
                     ))}
