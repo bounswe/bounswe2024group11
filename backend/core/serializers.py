@@ -19,6 +19,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password', 'email', 'full_name', "avatar")
 
+    def set_avatar(self, user):
+        unique_seed = Faker().name()  # Generate a unique seed for the avatar
+        avatar_url = f"https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed={unique_seed}"
+        user.avatar = avatar_url
+        user.save()
+
     def create(self, validated_data):
         # Use Django's User model manager to create a new user
         user = User.objects.create_user(
@@ -27,6 +33,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             full_name=validated_data['full_name'],
         )
+        self.set_avatar(user)
+
         return user
 
 
