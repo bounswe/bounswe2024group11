@@ -227,7 +227,7 @@ export const Leaderboard = () => {
                     </label>
                 ))}
             </div>
-            <table className="w-full max-w-xl border-collapse">
+            <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-slate-100">
                         <th className="border p-2">Rank</th>
