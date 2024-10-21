@@ -9,7 +9,7 @@ export const Leaderboard = () => {
         {
             rank: 1,
             player: {
-                full_name: "Arnold Jones",
+                full_name: "Salih Karakurt",
                 username: "cute_mittens",
                 avatar: "https://randomuser.me/api/portraits/men/13.jpg",
             },
@@ -18,8 +18,8 @@ export const Leaderboard = () => {
         {
             rank: 2,
             player: {
-                full_name: "Boby Carlsen",
-                username: "board_walker",
+                full_name: "Aykut Taşaltın",
+                username: "kut_ay",
                 avatar: "https://randomuser.me/api/portraits/men/57.jpg",
             },
             points: 987,
@@ -27,7 +27,7 @@ export const Leaderboard = () => {
         {
             rank: 3,
             player: {
-                full_name: "Winston Jobs",
+                full_name: "Ceyda Nurşen",
                 username: "whether_dweller",
                 avatar: "https://randomuser.me/api/portraits/women/13.jpg",
             },
@@ -37,7 +37,7 @@ export const Leaderboard = () => {
             rank: 4,
             player: {
                 full_name: "Tuana Ümraniyeli",
-                username: "tt_world",
+                username: "tu_world",
                 avatar: "https://randomuser.me/api/portraits/women/7.jpg",
             },
             points: 891,
@@ -72,8 +72,8 @@ export const Leaderboard = () => {
         {
             rank: 8,
             player: {
-                full_name: "Kemal Kaya",
-                username: "kemal_k_2023",
+                full_name: "Muhammet Çiftçi",
+                username: "ciftci_m_2023",
                 avatar: "https://randomuser.me/api/portraits/men/3.jpg",
             },
             points: 745,
@@ -90,8 +90,8 @@ export const Leaderboard = () => {
         {
             rank: 10,
             player: {
-                full_name: "Emre Kaya",
-                username: "emrek_lit",
+                full_name: "Emin Bulucu",
+                username: "eminb_lit",
                 avatar: "https://randomuser.me/api/portraits/men/16.jpg",
             },
             points: 678,
@@ -111,8 +111,8 @@ export const Leaderboard = () => {
         {
             rank: 2,
             player: {
-                full_name: "Ali Yıldız",
-                username: "yildiz_ali15",
+                full_name: "Cahit Ünlü",
+                username: "unlu_cahit15",
                 avatar: "https://randomuser.me/api/portraits/men/17.jpg",
             },
             points: 487,
@@ -129,8 +129,8 @@ export const Leaderboard = () => {
         {
             rank: 4,
             player: {
-                full_name: "Mehmet Öztürk",
-                username: "mehmet_philos27",
+                full_name: "Kağan Aydın",
+                username: "aydin_philos27",
                 avatar: "https://randomuser.me/api/portraits/men/18.jpg",
             },
             points: 418,
@@ -147,8 +147,8 @@ export const Leaderboard = () => {
         {
             rank: 6,
             player: {
-                full_name: "Cem Kaya",
-                username: "cemk",
+                full_name: "Ozan Akkaya",
+                username: "ozank",
                 avatar: "https://randomuser.me/api/portraits/men/19.jpg",
             },
             points: 356,
@@ -165,8 +165,8 @@ export const Leaderboard = () => {
         {
             rank: 8,
             player: {
-                full_name: "Ahmet Yıldırım",
-                username: "ahmety",
+                full_name: "Arda Alvur",
+                username: "aa_vur",
                 avatar: "https://randomuser.me/api/portraits/men/20.jpg",
             },
             points: 301,
@@ -183,8 +183,8 @@ export const Leaderboard = () => {
         {
             rank: 10,
             player: {
-                full_name: "Mustafa Aydın",
-                username: "mustafaa",
+                full_name: "Emre Kılıç",
+                username: "emrek",
                 avatar: "https://randomuser.me/api/portraits/men/21.jpg",
             },
             points: 254,

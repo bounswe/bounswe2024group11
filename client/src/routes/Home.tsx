@@ -261,6 +261,26 @@ const technicalDefinitionsData = [
             "XMLHttpRequest",
         ],
     },
+    {
+        title: "Midcourse Intervention",
+        fullForm: "Midcourse Intervention",
+        definition:
+            "A corrective action or adjustment made during the execution of a project or process to address issues, ensuring the final outcome meets the desired goals.",
+        example:
+            "During the implementation phase, the backend team fell behind the schedule, and a midcourse intervention to transfer new members to the team was done to meet the project deadline.",
+        categories: ["Project Management", "Project Development"],
+        relatedTerms: ["Course Correction", "Intervention"],
+    },
+    {
+        title: "Definition of Done",
+        fullForm: "Definition of Done",
+        definition:
+            "The definiton of the criteria that must be met for an artifact to be considered complete and ready",
+        example:
+            "We need to define the Definition of Done to avoid the sentence 'almost complete' which hinders the progress of the project.",
+        categories: ["Agile Development", "Software Development"],
+        relatedTerms: ["Acceptance Criteria", "Sprint Goal"],
+    },
 ];
 export const Home = () => {
     return (
