@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = "my-jwt";
-export const API_URL = "https://api.developbetterapps.com";
+export const API_URL = "http://54.247.125.93/api/v1";
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -46,25 +46,28 @@ export const AuthProvider = ({ children }: any) => {
   const register = async (email: string, password: string) => {
     console.log(`registering email: '${email}' and password: '${password}'`);
     try {
-      return await axios.post(`${API_URL}/users`, { email, password });
+      return await axios.post(`${API_URL}/auth/register/`, { email, password });
     } catch (e) {
       return { error: true, message: (e as any).response.data.msg };
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     try {
-      const result = await axios.post(`${API_URL}/auth`, { email, password });
+      const result = await axios.post(`${API_URL}/auth/login/`, {
+        username,
+        password,
+      });
 
       setAuthState({
-        token: result.data.token,
+        token: result.data.access,
         authenticated: true,
       });
 
       axios.defaults.headers.common["Authorization"] =
-        `Bearer ${result.data.token}`;
+        `Bearer ${result.data.access}`;
 
-      await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
+      await SecureStore.setItemAsync(TOKEN_KEY, result.data.access);
 
       return result;
     } catch (e) {

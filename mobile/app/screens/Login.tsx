@@ -1,21 +1,30 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Button, Image, StyleSheet, TextInput, View } from "react-native";
+import { RootStackParamList } from "../../App";
 import { useAuth } from "../context/AuthContext";
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Forum">;
+
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { onLogin, onRegister } = useAuth();
 
+  const navigation = useNavigation<NavigationProp>();
+
   const login = async () => {
-    const result = await onLogin!(email, password);
+    const result = await onLogin!(username, password);
     if (result && result.error) {
       alert(result.message);
     }
+
+    navigation.navigate("Forum");
   };
 
   const register = async () => {
-    const result = await onRegister!(email, password);
+    const result = await onRegister!(username, password);
     if (result && result.error) {
       alert(result.message);
     } else {
@@ -32,9 +41,9 @@ const Login = () => {
       <View style={styles.form}>
         <TextInput
           style={styles.input}
-          placeholder="Email"
-          onChangeText={(text: string) => setEmail(text)}
-          value={email}
+          placeholder="Username"
+          onChangeText={(text: string) => setUsername(text)}
+          value={username}
         />
         <TextInput
           style={styles.input}
