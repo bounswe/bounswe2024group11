@@ -10,7 +10,7 @@ import { leaderboardLoader } from "./routes/Leaderboard.data";
 import { Login } from "./routes/Login";
 import { loginAction, loginLoader } from "./routes/Login.data";
 import { logoutLoader } from "./routes/Logout.data";
-import { Quiz } from "./routes/Quiz";
+import { QuizPage } from "./routes/Quiz";
 import { quizLoader } from "./routes/Quiz.data";
 import { Quizzes } from "./routes/Quizzes";
 import { quizzesLoader } from "./routes/Quizzes.data";
@@ -48,7 +48,7 @@ export const routes: RouteObject[] = [
                     },
                     {
                         path: "quizzes/:quizId",
-                        element: <Quiz />,
+                        element: <QuizPage />,
                         loader: quizLoader,
                     },
                     {

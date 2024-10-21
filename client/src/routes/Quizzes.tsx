@@ -39,7 +39,7 @@ export const Quizzes = () => {
 
     const allTags = Array.from(
         new Set(data.quizzes.flatMap((quiz) => quiz.tags)),
-    ).slice(0, 16);
+    ).sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
@@ -51,7 +51,9 @@ export const Quizzes = () => {
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <div>
                         <select
-                            className={inputClass()}
+                            className={inputClass({
+                                className: "w-40 cursor-pointer",
+                            })}
                             value={selectedTagId || ""}
                             onChange={(e) =>
                                 setSelectedTagId(e.target.value || null)
@@ -94,42 +96,41 @@ export const Quizzes = () => {
                         </button>
                     </div>
                 </div>
-                <div className="flex gap-4">
-                    <label className="flex cursor-pointer items-center gap-2">
-                        <input
-                            type="radio"
-                            value="newest"
-                            checked={sortBy === "newest"}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="text-cyan-700 transition-all focus:ring-cyan-800"
-                        />
-                        Newest
-                    </label>
-                    <label className="flex cursor-pointer items-center gap-2">
-                        <input
-                            type="radio"
-                            value="oldest"
-                            checked={sortBy === "oldest"}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="text-cyan-700 transition-all focus:ring-cyan-800"
-                        />
-                        Oldest
-                    </label>
-                    <label className="flex cursor-pointer items-center gap-2">
-                        <input
-                            type="radio"
-                            value="popular"
-                            checked={sortBy === "popular"}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="text-cyan-700 transition-all focus:ring-cyan-800"
-                        />
-                        Most Popular
-                    </label>
+                <div className="flex gap-2">
+                    {["newest", "oldest", "popular"].map((option) => (
+                        <label
+                            key={option}
+                            className="flex cursor-pointer items-center gap-2"
+                        >
+                            <input
+                                type="radio"
+                                value={option}
+                                checked={sortBy === option}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="sr-only"
+                            />
+                            <span
+                                className={`rounded-full px-4 py-1.5 font-medium transition-all ${
+                                    sortBy === option
+                                        ? "bg-cyan-900 text-white"
+                                        : "bg-slate-100 text-slate-900 hover:bg-slate-200"
+                                }`}
+                            >
+                                {option === "newest" && "Newest"}
+                                {option === "oldest" && "Oldest"}
+                                {option === "popular" && "Most Popular"}
+                            </span>
+                        </label>
+                    ))}
                 </div>
             </aside>
             <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredQuizzes.map((quiz) => (
-                    <QuizCard key={quiz.id} quiz={quiz} />
+                    <QuizCard
+                        onTagClick={(tag) => setSelectedTagId(tag)}
+                        key={quiz.id}
+                        quiz={quiz}
+                    />
                 ))}
             </main>
         </div>
