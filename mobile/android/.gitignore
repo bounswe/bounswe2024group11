@@ -1,0 +1,24 @@
+# OSX
+#
+.DS_Store
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
+# Bundle artifacts
+*.jsbundle
+
+# Added by GPT
+app/build
+.settings
+.externalNativeBuild
+gradle/wrapper/gradle-wrapper.jar
+gradlew
+gradlew.bat
