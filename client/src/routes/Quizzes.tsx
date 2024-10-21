@@ -99,34 +99,34 @@ export const Quizzes = () => {
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    {["newest", "oldest", "popular", "most liked"].map(
-                        (option) => (
-                            <label
-                                key={option}
-                                className="flex cursor-pointer items-center gap-2"
+                    {(
+                        ["newest", "oldest", "popular", "most liked"] as const
+                    ).map((option) => (
+                        <label
+                            key={option}
+                            className="flex cursor-pointer items-center gap-2"
+                        >
+                            <input
+                                type="radio"
+                                value={option}
+                                checked={sortBy === option}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="sr-only"
+                            />
+                            <span
+                                className={`rounded-full px-4 py-1.5 font-medium transition-all ${
+                                    sortBy === option
+                                        ? "bg-cyan-900 text-white"
+                                        : "bg-slate-100 text-slate-900 hover:bg-slate-200"
+                                }`}
                             >
-                                <input
-                                    type="radio"
-                                    value={option}
-                                    checked={sortBy === option}
-                                    onChange={(e) => setSortBy(e.target.value)}
-                                    className="sr-only"
-                                />
-                                <span
-                                    className={`rounded-full px-4 py-1.5 font-medium transition-all ${
-                                        sortBy === option
-                                            ? "bg-cyan-900 text-white"
-                                            : "bg-slate-100 text-slate-900 hover:bg-slate-200"
-                                    }`}
-                                >
-                                    {option === "newest" && "Newest"}
-                                    {option === "oldest" && "Oldest"}
-                                    {option === "popular" && "Most Popular"}
-                                    {option === "most liked" && "Most Liked"}
-                                </span>
-                            </label>
-                        ),
-                    )}
+                                {option === "newest" && "Newest"}
+                                {option === "oldest" && "Oldest"}
+                                {option === "popular" && "Most Popular"}
+                                {option === "most liked" && "Most Liked"}
+                            </span>
+                        </label>
+                    ))}
                 </div>
             </aside>
             <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
