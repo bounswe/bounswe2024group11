@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { PageHead } from "../components/page-head";
+import { QuizDetails } from "../types/quiz";
 import { quizLoader } from "./Quiz.data";
-import { Quiz } from "./Quizzes.data";
 
 const StartQuizComponent = ({
     quiz,
     onStart,
 }: {
-    quiz: Quiz & { questions: { id: number; text: string }[] };
+    quiz: QuizDetails;
     onStart: () => void;
 }) => (
     <div
@@ -43,7 +43,7 @@ const StartQuizComponent = ({
 
 export const QuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [selectedOption, setSelectedOption] = useState("");
+    const [_, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);

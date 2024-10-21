@@ -112,7 +112,7 @@ export const Leaderboard = () => {
             />
 
             <div className="flex gap-2">
-                {["quiz", "forum"].map((option) => (
+                {(["quiz", "forum"] as const).map((option) => (
                     <label
                         key={option}
                         className="flex cursor-pointer items-center gap-2"

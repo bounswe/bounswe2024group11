@@ -1,38 +1,7 @@
 import { LoaderFunction } from "react-router";
-import { array, object, safeParse, string } from "valibot";
+import { safeParse } from "valibot";
+import { quizDetailsSchema } from "../types/quiz";
 import { BASE_URL } from "../utils";
-
-const quizSchema = object({
-    id: string(),
-    title: string(),
-    description: string(),
-    author: object({
-        full_name: string(),
-        username: string(),
-        avatar: string(),
-    }),
-    created_at: string(),
-    tags: array(
-        object({
-            id: string(),
-            name: string(),
-        }),
-    ),
-    questions: array(
-        object({
-            id: string(),
-            text: string(),
-            options: array(
-                object({
-                    id: string(),
-                    text: string(),
-                    is_correct: string(),
-                }),
-            ),
-            selected_option_id: string(),
-        }),
-    ),
-});
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
@@ -54,7 +23,7 @@ export const quizLoader = (async ({ params }) => {
 
     const data = await res.json();
     console.log(data);
-    const { output, issues, success } = safeParse(quizSchema, data);
+    const { output, issues, success } = safeParse(quizDetailsSchema, data);
     if (!success) {
         throw new Error(`Failed to parse quiz response: ${issues}`);
     }
