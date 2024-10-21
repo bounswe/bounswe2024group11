@@ -25,7 +25,7 @@ export const quizOverviews: QuizOverview[] = [
         },
         tags: [
             {
-                id: "471",
+                id: "4571",
                 name: "human",
             },
             {
@@ -99,7 +99,7 @@ export const quizOverviews: QuizOverview[] = [
                 name: "seasons",
             },
             {
-                id: "9879",
+                id: "98791",
                 name: "fun",
             },
             {

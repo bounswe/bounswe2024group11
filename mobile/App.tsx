@@ -1,23 +1,25 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
+import { Button, Image, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
-import Forum from "./app/screens/Forum";
 import CreateQuestion from "./app/screens/CreateQuestion";
+import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
-import Quiz from "./app/screens/Quiz";
-import Profile from "./app/screens/Profile";
 import Leaderboard from "./app/screens/Leaderboard";
 import Login from "./app/screens/Login";
+import Profile from "./app/screens/Profile";
+import Quiz from "./app/screens/Quiz";
+import Register from "./app/screens/Register"; // import the new Register screen
 import { Question } from "./app/types/forum";
-import { Button, View, Image } from "react-native";
-import { Icon } from "react-native-paper";
 
 export type RootStackParamList = {
   Login: undefined;
   MainTabs: undefined; // Use this for the bottom tabs
+  Register: undefined;
+  Forum: undefined;
   ForumQuestionDetail: { question: Question };
   CreateQuestion: undefined;
 };
@@ -109,11 +111,23 @@ export const Layout = () => {
               component={BottomTabNavigator}
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="Forum" component={Forum} />
             <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
             <Stack.Screen
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}
             />
+            <Stack.Screen name="Register" component={Register} />
+            {/*
+            {authState?.authenticated
+              ? <Stack.Screen
+                name='Home'
+                component={Home}
+                options={{
+                  headerRight: () => <Button onPress={onLogout} title="Sign Out" />
+                }}></Stack.Screen>
+              : <Stack.Screen name='Login' component={Login}></Stack.Screen>}
+              */}
           </>
         ) : (
           <Stack.Screen name="Login" component={Login} />

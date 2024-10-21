@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { PageHead } from "../components/page-head";
@@ -48,6 +48,10 @@ export const QuizPage = () => {
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
+
+    const ref = useRef<HTMLDivElement>(null);
+
+    // focus on the question when the current question changes
 
     useEffect(() => {
         const savedAnswers = localStorage.getItem(`quiz_${quiz.id}_answers`);
@@ -120,7 +124,8 @@ export const QuizPage = () => {
                 </div>
             </div>
             <div>
-                <a
+                <div
+                    ref={ref}
                     tabIndex={0}
                     id="question"
                     autoFocus={true}
@@ -128,7 +133,7 @@ export const QuizPage = () => {
                     className="font-display text-lg font-medium tracking-tight"
                 >
                     {quiz.questions[currentQuestion].text}
-                </a>
+                </div>
             </div>
             {quiz.questions[currentQuestion] && (
                 <div>
@@ -148,7 +153,7 @@ export const QuizPage = () => {
                                                 : "bg-slate-100 text-slate-950 hover:bg-slate-200"
                                         }`}
                                         aria-describedby="question"
-                                        lang="tr"
+                                        lang={quiz.type === 2 ? "tr" : "en"}
                                     >
                                         <input
                                             className="sr-only"
