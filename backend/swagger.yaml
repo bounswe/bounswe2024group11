@@ -62,14 +62,35 @@ paths:
     get:
       operationId: forum-questions_list
       description: ''
-      parameters: []
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
         '200':
           description: ''
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/ForumQuestion'
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ForumQuestion'
       tags:
       - forum-questions
     post:
@@ -395,10 +416,34 @@ definitions:
           $ref: '#/definitions/Tag'
       author:
         $ref: '#/definitions/UserInfo'
-      date:
-        title: Date
+      created_at:
+        title: Created at
         type: string
         format: date-time
+        readOnly: true
+      answers_count:
+        title: Answers count
+        type: string
+        readOnly: true
+      is_bookmarked:
+        title: Is bookmarked
+        type: string
+        readOnly: true
+      is_upvoted:
+        title: Is upvoted
+        type: string
+        readOnly: true
+      upvotes_count:
+        title: Upvotes count
+        type: string
+        readOnly: true
+      is_downvoted:
+        title: Is downvoted
+        type: string
+        readOnly: true
+      downvotes_count:
+        title: Downvotes count
+        type: string
         readOnly: true
   WordDefinition:
     required:

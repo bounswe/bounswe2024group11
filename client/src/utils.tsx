@@ -10,12 +10,6 @@ export async function enableMocking() {
     return worker.start();
 }
 
-/*export const logger: typeof console.log = (...params) => {
-    if (import.meta.env.VITE_LOGGING === "true") {
-        console.log(...params);
-    }
-};*/
-
 type Logger = {
     log: typeof console.log;
     error: typeof console.error;
@@ -52,8 +46,6 @@ Storage.prototype.getObject = function (key: string) {
     return JSON.parse(item);
 };
 
-localStorage;
-
 export const getRelativeTime = (
     date: Date,
     rtfOptions: Intl.RelativeTimeFormatOptions = {
@@ -73,5 +65,6 @@ export const getRelativeTime = (
     if (minutes < 60) return rtf.format(-minutes, "minute");
     if (hours < 24) return rtf.format(-hours, "hour");
     if (days < 7) return rtf.format(-days, "day");
-    return "over a week ago";
+    if (days < 30) return rtf.format(-days, "day");
+    return "more than a month ago";
 };

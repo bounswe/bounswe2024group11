@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-)&k5bn#-ew7=7n0tr7cn((()kzrdgd=y$va)+@fr65uy=3rb8m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "0.0.0.0"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "0.0.0.0"] + os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -142,3 +142,10 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'core.CustomUser'
+
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
+}
