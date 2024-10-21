@@ -155,6 +155,54 @@ const confusedWordsData = [
             { example: "The coffee is too hot to drink right now." },
         ],
     },
+    {
+        title: "Then vs. Than",
+        content: [
+            {
+                label: "Then:",
+                description: "At that time or next in order",
+                partOfSpeech: "adverb",
+            },
+            {
+                label: "Than:",
+                description:
+                    "Used to introduce the second element in a comparison",
+                partOfSpeech: "conjunction",
+            },
+            {
+                example: "I'll see you then. I'd rather have tea than coffee.",
+            },
+        ],
+    },
+    {
+        title: "Accept vs. Except vs. Expect",
+        content: [
+            {
+                label: "Accept:",
+                description: "To receive or agree to",
+                partOfSpeech: "verb",
+            },
+            {
+                label: "Except:",
+                description: "Not including or other than",
+                partOfSpeech: "preposition",
+            },
+            {
+                label: "Expect:",
+                description: "To regard something as likely to happen",
+                partOfSpeech: "verb",
+            },
+            {
+                example: "She accepted the award graciously.",
+            },
+            {
+                example: "Everyone except John is coming to the party.",
+            },
+            {
+                example: "I expect the package to arrive tomorrow.",
+            },
+        ],
+    },
 ];
 
 const dailyWordSuggestionsData = [
@@ -204,6 +252,20 @@ const dailyWordSuggestionsData = [
         partOfSpeech: "noun",
         etymology:
             "Coined by Horace Walpole in 1754 based on the Persian fairy tale 'The Three Princes of Serendip'.",
+    },
+    {
+        title: "Sonder",
+        definition:
+            "The realization that each passerby has a life as vivid and complex as your own",
+        turkish: "Başkalarının da hayatları olduğunu fark etme",
+        example:
+            "The feeling of sonder struck him as he walked through the crowded streets.",
+    },
+    {
+        title: "Slumber",
+        definition: "To sleep lightly or peacefully",
+        turkish: "Uyuklamak",
+        example: "The baby slumbered in her mother's arms.",
     },
 ];
 

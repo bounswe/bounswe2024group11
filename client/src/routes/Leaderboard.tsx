@@ -201,7 +201,7 @@ export const Leaderboard = () => {
                 description="Compete with others and see where you rank."
             />
 
-            <div className="flex gap-2">
+            <div className="flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
                 {(["quiz", "forum"] as const).map((option) => (
                     <label
                         key={option}
@@ -215,10 +215,10 @@ export const Leaderboard = () => {
                             className="sr-only"
                         />
                         <span
-                            className={`min-w-40 rounded-full px-4 py-1.5 text-center font-medium transition-all ${
+                            className={`min-w-32 rounded-full px-4 py-1.5 text-center font-medium transition-all ${
                                 leaderboardType === option
                                     ? "bg-cyan-900 text-white"
-                                    : "bg-slate-100 text-slate-900 hover:bg-slate-200"
+                                    : "bg-slate-50 text-slate-900 hover:bg-slate-200"
                             }`}
                         >
                             {option === "forum" && "Forum"}
