@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import React, { useState } from "react";
+import { Alert, Button, Text, TextInput, View } from "react-native";
 
-const API_URL = "http://10.0.2.2:3000/forum-feed"; // URL to your forum-feed
+const API_URL = "http://54.247.125.93/api/v1/forum-questions/"; // URL to your forum-feed
 
 const CreateQuestion: React.FC = () => {
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
-    if (!title || !body) {
-      Alert.alert("Error", "Please fill in both the title and body.");
+    if (!title || !question) {
+      Alert.alert("Error", "Please fill in both the title and question.");
       return;
     }
 
@@ -21,41 +21,24 @@ const CreateQuestion: React.FC = () => {
 
     // Mock new question data
     const newQuestion = {
-      id: Date.now().toString(),
       title,
-      body,
+      question,
       tags: [
         {
-          id: "1",
-          name: "English",
-          description: "English language",
+          linked_data_id: "bn:00049910n",
+          name: "language",
+          description:
+            "A systematic means of communicating by the use of sounds or conventional symbols",
         },
       ],
-      author: {
-        full_name: "Current User",
-        username: "current_user",
-        avatar: "https://example.com/avatar.jpg",
-      },
-      created_at: new Date().toISOString(),
-      answers_count: 0,
-      is_bookmarked: false,
-      is_upvoted: false,
-      upvotes_count: 0,
-      is_downvoted: false,
-      downvotes_count: 0,
     };
 
     try {
-      await axios.patch(`${API_URL}`, {
-        questions: [
-          ...(await axios.get(`${API_URL}`)).data.questions,
-          newQuestion,
-        ],
-      });
+      await axios.post(`${API_URL}`, newQuestion);
 
       Alert.alert("Success", "Your question has been submitted!");
       setTitle("");
-      setBody("");
+      setQuestion("");
       setLoading(false);
       navigation.goBack();
     } catch (error) {
@@ -79,8 +62,8 @@ const CreateQuestion: React.FC = () => {
       />
       <TextInput
         placeholder="Question Body"
-        value={body}
-        onChangeText={setBody}
+        value={question}
+        onChangeText={setQuestion}
         style={{ borderWidth: 1, marginVertical: 10, padding: 10, height: 100 }}
         multiline
       />
