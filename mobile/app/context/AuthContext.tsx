@@ -4,9 +4,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
-  onRegister?: (email: string, password: string) => Promise<any>;
+  onRegister?: (
+    username: string,
+    fullname: string,
+    email: string,
+    password: string
+  ) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
-  onLogout?: () => Promise<any>;
+  onLogout?: (navigation: any) => Promise<void>;
 }
 
 const TOKEN_KEY = "my-jwt";
@@ -43,10 +48,29 @@ export const AuthProvider = ({ children }: any) => {
     loadToken();
   }, []);
 
-  const register = async (email: string, password: string) => {
-    console.log(`registering email: '${email}' and password: '${password}'`);
+  const register = async (
+    username: string,
+    fullname: string,
+    email: string,
+    password: string
+  ) => {
+    console.log(
+      `Registering username: '${username}', fullname:'${fullname}' email: '${email}' and password: '${password}'`
+    );
     try {
-      return await axios.post(`${API_URL}/users`, { email, password });
+      const result = await axios.post(`${API_URL}/users`, { email, password });
+
+      setAuthState({
+        token: result.data.token,
+        authenticated: true,
+      });
+
+      axios.defaults.headers.common["Authorization"] =
+        `Bearer ${result.data.token}`;
+
+      await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
+
+      return result;
     } catch (e) {
       return { error: true, message: (e as any).response.data.msg };
     }
@@ -73,7 +97,18 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = async () => {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
+    try {
+      await SecureStore.deleteItemAsync(TOKEN_KEY);
+      axios.defaults.headers.common["Authorization"] = "";
+
+      setAuthState({
+        token: null,
+        authenticated: false,
+      });
+    } catch (error) {
+      console.error("Failed to logout:", error);
+      throw new Error("Logout failed.");
+    }
 
     axios.defaults.headers.common["Authorization"] = "";
 
