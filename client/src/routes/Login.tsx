@@ -1,6 +1,6 @@
 import { Form, Link } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
-import { button, buttonInnerRing } from "../components/button";
+import { buttonClass, buttonInnerRing } from "../components/button";
 
 import { inputClass, labelClass } from "../components/input";
 import { Logo } from "../components/logo";
@@ -93,7 +93,7 @@ export const Login = () => {
                     <div className="flex flex-col gap-2">
                         <button
                             type="submit"
-                            className={button({ intent: "secondary" })}
+                            className={buttonClass({ intent: "secondary" })}
                         >
                             <div
                                 className={buttonInnerRing({
@@ -104,7 +104,7 @@ export const Login = () => {
                         </button>
 
                         <Link
-                            className={button({ intent: "tertiary" })}
+                            className={buttonClass({ intent: "tertiary" })}
                             to="/register"
                         >
                             <span className="text-slate-900 transition-all">

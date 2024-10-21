@@ -9,7 +9,7 @@ export const homeLoader = () => {
 
     if (!success) {
         useToastStore.getState().add({
-            id: Math.random().toString(),
+            id: "not-logged-in",
             type: "info",
             data: {
                 message: "You are not logged in",

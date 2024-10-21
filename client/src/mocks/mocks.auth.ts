@@ -1,4 +1,4 @@
-export const data = {
+export const usersDb = {
     users: [
         {
             email: "hasan@msw.com",
