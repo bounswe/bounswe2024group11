@@ -61,8 +61,8 @@ const EndQuizComponent = ({
         <div className="flex flex-col items-center gap-8">
             <h2 className="max-w-lg text-balance text-center font-display text-3xl font-medium text-slate-900">
                 {correctAnswers > totalQuestions / 2
-                    ? `Great job ${logged_in ? user.username : "buddy"}! You scored ${correctAnswers} out of ${totalQuestions}!`
-                    : `Quiz Completed! You scored ${correctAnswers} out of ${totalQuestions}`}
+                    ? `Great job ${logged_in ? user.username : "buddy"}!`
+                    : `Quiz Completed!`}
             </h2>
             <div className="text-xl">
                 <p>Correct Answers: {correctAnswers}</p>
@@ -73,7 +73,7 @@ const EndQuizComponent = ({
                 onClick={onGoBack}
             >
                 <span className={buttonInnerRing({ intent: "primary" })} />
-                Go Back to All Quizzes
+                See All Quizzes
             </button>
         </div>
     );
