@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import ForumQuestion, Tag
+from faker import Faker
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -38,11 +39,44 @@ class TagSerializer(serializers.ModelSerializer):
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)  # For nested representation of tags
     author = UserInfoSerializer(read_only=True)
+    created_at = serializers.DateTimeField(source='date', read_only=True)  # Map 'date' field to 'created_at'
+
+    answers_count = serializers.SerializerMethodField()
+    is_bookmarked = serializers.SerializerMethodField()
+    is_upvoted = serializers.SerializerMethodField()
+    upvotes_count = serializers.SerializerMethodField()
+    is_downvoted = serializers.SerializerMethodField()
+    downvotes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = ForumQuestion
-        fields = ('id', 'title', 'question', 'tags', 'author', 'date')
-        read_only_fields = ('author',)
+        fields = (
+            'id', 'title', 'question', 'tags', 'author', 'created_at', 
+            'answers_count', 'is_bookmarked', 'is_upvoted', 
+            'upvotes_count', 'is_downvoted', 'downvotes_count'
+        )
+        read_only_fields = (
+            'author', 'created_at', 'answers_count', 'is_bookmarked', 
+            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count'
+        )
+
+    def get_answers_count(self, obj):
+        return Faker().random_int(min=0, max=100)
+
+    def get_is_bookmarked(self, obj):
+        return Faker().boolean()
+
+    def get_is_upvoted(self, obj):
+        return Faker().boolean()
+
+    def get_upvotes_count(self, obj):
+        return Faker().random_int(min=0, max=100)
+
+    def get_is_downvoted(self, obj):
+        return Faker().boolean()
+
+    def get_downvotes_count(self, obj):
+        return Faker().random_int(min=0, max=100)
 
     def create(self, validated_data):
         # Extract tags from validated_data
