@@ -34,7 +34,7 @@ const Register = () => {
           style={styles.input}
           placeholder='Username'
           onChangeText={(text) => setUsername(text)}
-          value={fullname}
+          value={username}
         />
         <TextInput
           style={styles.input}
