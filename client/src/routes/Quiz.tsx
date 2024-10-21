@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useLoaderData } from "react-router-typesafe";
+import { useNavigate } from "react-router-dom";
+import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { PageHead } from "../components/page-head";
 import { QuizDetails } from "../types/quiz";
+import { logger } from "../utils";
+import { homeLoader } from "./Home.data";
 import { quizLoader } from "./Quiz.data";
 
 const StartQuizComponent = ({
@@ -41,17 +44,57 @@ const StartQuizComponent = ({
     </div>
 );
 
+const EndQuizComponent = ({
+    correctAnswers,
+    totalQuestions,
+    onGoBack,
+}: {
+    correctAnswers: number;
+    totalQuestions: number;
+    onGoBack: () => void;
+}) => {
+    const { logged_in, user } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
+    logger.log("User is logged in: ", logged_in);
+    logger.log("User data: ", user);
+    return (
+        <div className="flex flex-col items-center gap-8">
+            <h2 className="max-w-lg text-balance text-center font-display text-3xl font-medium text-slate-900">
+                {correctAnswers > totalQuestions / 2
+                    ? `Great job ${logged_in ? user.username : "buddy"}! You scored ${correctAnswers} out of ${totalQuestions}!`
+                    : `Quiz Completed! You scored ${correctAnswers} out of ${totalQuestions}`}
+            </h2>
+            <div className="text-xl">
+                <p>Correct Answers: {correctAnswers}</p>
+                <p>Wrong Answers: {totalQuestions - correctAnswers}</p>
+            </div>
+            <button
+                className={buttonClass({ intent: "primary", size: "medium" })}
+                onClick={onGoBack}
+            >
+                <span className={buttonInnerRing({ intent: "primary" })} />
+                Go Back to All Quizzes
+            </button>
+        </div>
+    );
+};
+
 export const QuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [_, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);
+    const [isQuizEnded, setIsQuizEnded] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
+    const [correctAnswers, setCorrectAnswers] = useState(0);
 
     const ref = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
-    // focus on the question when the current question changes
+    useEffect(() => {
+        ref.current?.focus();
+    }, [currentQuestion]);
 
     useEffect(() => {
         const savedAnswers = localStorage.getItem(`quiz_${quiz.id}_answers`);
@@ -62,13 +105,19 @@ export const QuizPage = () => {
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
-        if (isQuizStarted && timeRemaining > 0) {
+        if (isQuizStarted && timeRemaining > 0 && !isQuizEnded) {
             timer = setInterval(() => {
-                setTimeRemaining((prev) => prev - 1);
+                setTimeRemaining((prev) => {
+                    if (prev <= 1) {
+                        endQuiz();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
             }, 1000);
         }
         return () => clearInterval(timer);
-    }, [isQuizStarted, timeRemaining]);
+    }, [isQuizStarted, timeRemaining, isQuizEnded]);
 
     const handleOptionChange = (optionId: string) => {
         setSelectedOption(optionId);
@@ -98,10 +147,40 @@ export const QuizPage = () => {
         setIsQuizStarted(true);
     };
 
+    const endQuiz = () => {
+        setIsQuizEnded(true);
+        let correct = 0;
+        Object.entries(answers).forEach(([index, answer]) => {
+            const correctOption = quiz.questions[Number(index)].options.find(
+                (o) => o.is_correct === "true",
+            );
+            if (correctOption && correctOption.id === answer) {
+                correct++;
+            }
+        });
+        setCorrectAnswers(correct);
+    };
+
+    const goBackToAllQuizzes = () => {
+        navigate("/quizzes");
+    };
+
     if (!isQuizStarted) {
         return (
             <main className="container flex max-w-screen-sm flex-col items-stretch gap-8 py-12">
                 <StartQuizComponent quiz={quiz} onStart={startQuiz} />
+            </main>
+        );
+    }
+
+    if (isQuizEnded) {
+        return (
+            <main className="container flex max-w-screen-sm flex-col items-stretch gap-8 py-12">
+                <EndQuizComponent
+                    correctAnswers={correctAnswers}
+                    totalQuestions={quiz.questions.length}
+                    onGoBack={goBackToAllQuizzes}
+                />
             </main>
         );
     }
@@ -178,6 +257,7 @@ export const QuizPage = () => {
             )}
             <div className="grid w-full grid-cols-2 gap-4">
                 <button
+                    tabIndex={0}
                     className={buttonClass({
                         intent: "tertiary",
                         size: "medium",
@@ -191,22 +271,39 @@ export const QuizPage = () => {
                     <span className={buttonInnerRing({ intent: "tertiary" })} />
                     Previous
                 </button>
-                <button
-                    className={buttonClass({
-                        intent: "secondary",
-                        size: "medium",
-                    })}
-                    disabled={isNextDisabled}
-                    onClick={() => {
-                        setSelectedOption(answers[currentQuestion + 1] || "");
-                        setCurrentQuestion((prev) => prev + 1);
-                    }}
-                >
-                    <span
-                        className={buttonInnerRing({ intent: "secondary" })}
-                    />
-                    Next
-                </button>
+                {currentQuestion === quiz.questions.length - 1 ? (
+                    <button
+                        className={buttonClass({
+                            intent: "primary",
+                            size: "medium",
+                        })}
+                        onClick={endQuiz}
+                    >
+                        <span
+                            className={buttonInnerRing({ intent: "primary" })}
+                        />
+                        Finish Quiz
+                    </button>
+                ) : (
+                    <button
+                        className={buttonClass({
+                            intent: "secondary",
+                            size: "medium",
+                        })}
+                        disabled={isNextDisabled}
+                        onClick={() => {
+                            setSelectedOption(
+                                answers[currentQuestion + 1] || "",
+                            );
+                            setCurrentQuestion((prev) => prev + 1);
+                        }}
+                    >
+                        <span
+                            className={buttonInnerRing({ intent: "secondary" })}
+                        />
+                        Next
+                    </button>
+                )}
             </div>
         </main>
     );
