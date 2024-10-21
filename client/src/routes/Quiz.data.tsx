@@ -1,7 +1,7 @@
 import { LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
 import { quizDetailsSchema } from "../types/quiz";
-import { BASE_URL } from "../utils";
+import { BASE_URL, logger } from "../utils";
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
@@ -22,7 +22,7 @@ export const quizLoader = (async ({ params }) => {
     }
 
     const data = await res.json();
-    console.log(data);
+    logger.log(data);
     const { output, issues, success } = safeParse(quizDetailsSchema, data);
     if (!success) {
         throw new Error(`Failed to parse quiz response: ${issues}`);

@@ -10,12 +10,6 @@ export async function enableMocking() {
     return worker.start();
 }
 
-/*export const logger: typeof console.log = (...params) => {
-    if (import.meta.env.VITE_LOGGING === "true") {
-        console.log(...params);
-    }
-};*/
-
 type Logger = {
     log: typeof console.log;
     error: typeof console.error;
