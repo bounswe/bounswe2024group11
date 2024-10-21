@@ -226,11 +226,11 @@ export const quizOverviews: QuizOverview[] = [
         },
         tags: [
             {
-                id: "5531",
+                id: "55531",
                 name: "car",
             },
             {
-                id: "554",
+                id: "55554",
                 name: "vehicle",
             },
         ],
@@ -257,15 +257,15 @@ export const quizOverviews: QuizOverview[] = [
         },
         tags: [
             {
-                id: "552",
+                id: "33332",
                 name: "dog",
             },
             {
-                id: "553",
+                id: "33333",
                 name: "animals",
             },
             {
-                id: "554",
+                id: "33334",
                 name: "cats",
             },
         ],
