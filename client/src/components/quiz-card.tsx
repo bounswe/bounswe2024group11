@@ -22,6 +22,7 @@ import { getRelativeTime } from "../utils";
 
 type QuizCardProps = {
     quiz: Quiz;
+    onTagClick: (tag: string) => void;
 };
 
 const difficultyText = cva([
@@ -58,7 +59,7 @@ const scoreClass = cva(
 const scoreToInteger = (score: number) =>
     Math.floor(score) as 0 | 1 | 2 | 3 | 4;
 
-export const QuizCard = ({ quiz }: QuizCardProps) => {
+export const QuizCard = ({ quiz, onTagClick }: QuizCardProps) => {
     return (
         <div
             aria-label={quiz.title}
@@ -105,9 +106,13 @@ export const QuizCard = ({ quiz }: QuizCardProps) => {
                 </TooltipProvider>
             </div>
             <div className="flex flex-wrap gap-2 tracking-wider">
-                {quiz.tags.map(({ name }) => {
+                {quiz.tags.map(({ name, id }) => {
                     return (
                         <Link
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onTagClick(id);
+                            }}
                             to="#"
                             className="touch-hitbox relative flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-[500] text-slate-950 transition-all hover:bg-slate-200"
                         >

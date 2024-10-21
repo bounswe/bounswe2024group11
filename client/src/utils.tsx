@@ -72,6 +72,6 @@ export const getRelativeTime = (
     if (minutes < 60) return rtf.format(-minutes, "minute");
     if (hours < 24) return rtf.format(-hours, "hour");
     if (days < 7) return rtf.format(-days, "day");
-    if (days < 30) return rtf.format(-weeks, "month");
+    if (days < 30) return rtf.format(-days, "day");
     return "more than a month ago";
 };
