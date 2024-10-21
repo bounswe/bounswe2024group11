@@ -84,14 +84,15 @@ export const QuizCard = ({ quiz, onTagClick }: QuizCardProps) => {
                 <TooltipProvider>
                     <TooltipAnchor
                         render={
-                            <a
-                                href="#"
+                            <span
+                                tabIndex={0}
+                                aria-label={`Rated by ${quiz.rating.count}`}
                                 className={scoreClass({
                                     score: scoreToInteger(quiz.rating.score),
                                 })}
                             >
                                 {quiz.rating.score.toFixed(1)}
-                            </a>
+                            </span>
                         }
                     ></TooltipAnchor>
                     <Tooltip>

@@ -1,6 +1,6 @@
 import { RiCloseFill } from "@remixicon/react";
 import { useState } from "react";
-import { useLoaderData } from "react-router-typesafe";
+import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass } from "../components/button";
 import { inputClass } from "../components/input";
 import { PageHead } from "../components/page-head";
@@ -9,6 +9,7 @@ import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
     const data = useLoaderData<typeof quizzesLoader>();
+    const homeData = useRouteLoaderData("/");
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState("newest");
