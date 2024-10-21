@@ -10,6 +10,7 @@ import { quizzesLoader } from "./Quizzes.data";
 export const Quizzes = () => {
     const data = useLoaderData<typeof quizzesLoader>();
     const homeData = useRouteLoaderData("/");
+    console.log(homeData);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState("newest");
@@ -133,8 +134,8 @@ export const Quizzes = () => {
             <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredQuizzes.map((quiz) => (
                     <QuizCard
-                        onTagClick={(tag) => setSelectedTagId(tag)}
                         key={quiz.id}
+                        onTagClick={(tag) => setSelectedTagId(tag)}
                         quiz={quiz}
                     />
                 ))}
