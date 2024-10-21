@@ -28,3 +28,10 @@ project.xcworkspace
 
 # CocoaPods
 /Pods/
+
+# Added by GPT
+Pods
+.xcuserdata
+Podfile.lock
+Pods.xcodeproj
+Pods.xcworkspace
