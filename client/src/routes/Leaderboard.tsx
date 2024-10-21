@@ -234,7 +234,7 @@ export const Leaderboard = () => {
                             Rank
                         </th>
                         <th className="min-w-32 border px-4 py-3 text-start">
-                            Name
+                            User
                         </th>
                         <th className="min-w-32 border px-4 py-3 text-end">
                             Turq Points
