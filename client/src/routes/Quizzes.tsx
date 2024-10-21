@@ -1,14 +1,17 @@
 import { RiCloseFill } from "@remixicon/react";
 import { useState } from "react";
-import { useLoaderData } from "react-router-typesafe";
+import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass } from "../components/button";
 import { inputClass } from "../components/input";
 import { PageHead } from "../components/page-head";
 import { QuizCard } from "../components/quiz-card";
+import { logger } from "../utils";
 import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
     const data = useLoaderData<typeof quizzesLoader>();
+    const homeData = useRouteLoaderData("/");
+    logger.log(homeData);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState("newest");
@@ -132,8 +135,8 @@ export const Quizzes = () => {
             <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredQuizzes.map((quiz) => (
                     <QuizCard
-                        onTagClick={(tag) => setSelectedTagId(tag)}
                         key={quiz.id}
+                        onTagClick={(tag) => setSelectedTagId(tag)}
                         quiz={quiz}
                     />
                 ))}
