@@ -215,7 +215,7 @@ export const Leaderboard = () => {
                             className="sr-only"
                         />
                         <span
-                            className={`rounded-full px-4 py-1.5 font-medium transition-all ${
+                            className={`min-w-40 rounded-full px-4 py-1.5 text-center font-medium transition-all ${
                                 leaderboardType === option
                                     ? "bg-cyan-900 text-white"
                                     : "bg-slate-100 text-slate-900 hover:bg-slate-200"
@@ -230,32 +230,55 @@ export const Leaderboard = () => {
             <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-slate-100">
-                        <th className="border p-2">Rank</th>
-                        <th className="border p-2">Name</th>
-                        <th className="w-32 border p-2">Turq Points</th>
+                        <th className="min-w-32 border px-4 py-3 text-start">
+                            Rank
+                        </th>
+                        <th className="min-w-32 border px-4 py-3 text-start">
+                            Name
+                        </th>
+                        <th className="min-w-32 border px-4 py-3 text-end">
+                            Turq Points
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentLeaderboard.map((player) => (
                         <tr
                             key={player.rank}
-                            className="transition-all hover:bg-slate-100"
+                            className="text-lg font-medium text-slate-700 transition-all hover:bg-slate-100"
                         >
                             <td className="w-12 border p-2 text-center">
                                 {player.rank}
                             </td>
-                            <td className="border px-2 py-4">
-                                <div className="flex flex-row items-start gap-4">
-                                    <Avatar author={player.player} size={40} />
-                                    <div className="flex flex-col items-start">
-                                        <span>{player.player.full_name}</span>
+                            <td className="border px-6 py-4">
+                                <div className="flex flex-row items-center gap-4">
+                                    <Avatar author={player.player} size={48} />
+                                    <div className="flex w-full max-w-48 flex-col items-start">
+                                        <span className="font-medium text-slate-900">
+                                            {player.player.full_name}
+                                        </span>
                                         <p className="text-sm text-slate-500">
-                                            {player.player.username}
+                                            @{player.player.username}
                                         </p>
                                     </div>
+                                    {player.rank === 1 && (
+                                        <span className="text-4xl font-medium text-cyan-900">
+                                            🥇{" "}
+                                        </span>
+                                    )}
+                                    {player.rank === 2 && (
+                                        <span className="text-4xl font-medium text-slate-900">
+                                            🥈{" "}
+                                        </span>
+                                    )}
+                                    {player.rank === 3 && (
+                                        <span className="text-saddlebrown text-4xl font-medium">
+                                            🥉{" "}
+                                        </span>
+                                    )}
                                 </div>
                             </td>
-                            <td className="border p-2 text-right">
+                            <td className="w-40 border p-2 text-end">
                                 {player.points}
                             </td>
                         </tr>
