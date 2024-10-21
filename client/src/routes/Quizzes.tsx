@@ -46,12 +46,13 @@ export const Quizzes = () => {
         new Set(data.quizzes.flatMap((quiz) => quiz.tags)),
     ).sort((a, b) => a.name.localeCompare(b.name));
 
+    const description = logged_in
+        ? `This is your time to shine ${user.full_name}`
+        : "Test your knowledge of various topics. Log in to track your progress.";
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead
-                title="Quizzes"
-                description="Test your knowledge of various topics."
-            />
+            <PageHead title="Quizzes" description={description} />
             <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <div>

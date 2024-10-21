@@ -112,7 +112,7 @@ export const QuizPage = () => {
             <div className="flex flex-col items-stretch gap-3">
                 <div className="h-2 w-full flex-grow rounded-full bg-slate-200">
                     <div
-                        className="h-2 rounded-full bg-blue-600"
+                        className="h-2 rounded-full bg-cyan-600"
                         style={{ width: `${progress}%` }}
                     ></div>
                 </div>

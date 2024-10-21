@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useLoaderData } from "react-router-typesafe";
 import { Avatar } from "../components/avatar";
 import { PageHead } from "../components/page-head";
+import { homeLoader } from "./Home.data";
 
 export const Leaderboard = () => {
     const [leaderboardType, setLeaderboardType] = useState("quiz");
@@ -194,12 +196,15 @@ export const Leaderboard = () => {
     const currentLeaderboard =
         leaderboardType === "quiz" ? quizLeaderboardData : forumLeaderboardData;
 
+    const { logged_in } = useLoaderData<typeof homeLoader>();
+
+    const description = logged_in
+        ? "Hey mate, let's see where you stand. Why are you lazy? Go and do some exercise."
+        : "Log in to compete with others and see where you rank.";
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead
-                title="Leaderboard"
-                description="Compete with others and see where you rank."
-            />
+            <PageHead title="Leaderboard" description={description} />
 
             <div className="flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
                 {(["quiz", "forum"] as const).map((option) => (

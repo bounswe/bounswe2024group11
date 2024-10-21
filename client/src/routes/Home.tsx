@@ -352,14 +352,13 @@ export const Home = () => {
     const title = logged_in
         ? "Welcome " + user.full_name
         : "Welcome to Turquiz";
+
+    const description = logged_in
+        ? `Good to see you back buddy. Let's get started!`
+        : "Turquiz is a platform that helps you to get prolific in English. You can take quizzes and use forums to improve your English.";
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead
-                title={title}
-                description="Turquiz is a platform that helps you to get prolific in
-                    English. You can take quizzes and use forums to improve your
-                    English."
-            />
+            <PageHead title={title} description={description} />
             <main className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
                     <h2 className="mb-4 flex items-center text-xl font-medium text-cyan-800">
