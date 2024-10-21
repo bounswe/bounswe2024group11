@@ -3,9 +3,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
-import Forum from "./app/screens/Forum";
 import CreateQuestion from "./app/screens/CreateQuestion";
+import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
+import Login from "./app/screens/Login";
 import { Question } from "./app/types/forum";
 
 export type RootStackParamList = {
@@ -33,7 +34,7 @@ export const Layout = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
         {/*
         {authState?.authenticated
           ? <Stack.Screen
@@ -44,6 +45,7 @@ export const Layout = () => {
             }}></Stack.Screen>
           : <Stack.Screen name='Login' component={Login}></Stack.Screen>}
           */}
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Forum" component={Forum} />
         <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
         <Stack.Screen
