@@ -10,33 +10,6 @@ import {
     union,
 } from "valibot";
 
-// const quizSchema = object({
-//     id: string(),
-//     title: string(),
-//     description: string(),
-//     author: object({
-//         full_name: string(),
-//         username: string(),
-//         avatar: string(),
-//     }),
-//     created_at: string(),
-//     tags: array(
-//         object({
-//             id: string(),
-//             name: string(),
-//         }),
-//     ),
-//     type: number(),
-//     num_taken: number(),
-//     is_taken: boolean(),
-//     question_count: number(),
-//     difficulty: string(),
-//     rating: object({
-//         score: number(),
-//         count: number(),
-//     }),
-// });
-
 export const quizAuthorSchema = object({
     full_name: string(),
     username: string(),
@@ -75,4 +48,25 @@ export const quizOverviewSchema = object({
     rating: ratingSchema,
 });
 
+export const questionsSchema = array(
+    object({
+        id: string(),
+        text: string(),
+        options: array(
+            object({
+                id: string(),
+                text: string(),
+                is_correct: string(),
+            }),
+        ),
+        selected_option_id: string(),
+    }),
+);
+
+export const quizDetailsSchema = object({
+    ...quizOverviewSchema.entries,
+    questions: questionsSchema,
+});
+
 export type QuizOverview = InferInput<typeof quizOverviewSchema>;
+export type QuizDetails = InferInput<typeof quizDetailsSchema>;

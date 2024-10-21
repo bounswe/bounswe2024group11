@@ -13,11 +13,11 @@ export const Leaderboard = () => {
     ];
 
     const forumLeaderboardData = [
-        { rank: 1, name: "Frank", points: 500 },
-        { rank: 2, name: "Grace", points: 450 },
-        { rank: 3, name: "Henry", points: 400 },
-        { rank: 4, name: "Ivy", points: 350 },
-        { rank: 5, name: "Jack", points: 300 },
+        { rank: 1, name: "Frank", score: 500 },
+        { rank: 2, name: "Grace", score: 450 },
+        { rank: 3, name: "Henry", score: 400 },
+        { rank: 4, name: "Ivy", score: 350 },
+        { rank: 5, name: "Jack", score: 300 },
     ];
 
     const currentLeaderboard =
@@ -31,7 +31,7 @@ export const Leaderboard = () => {
             />
 
             <div className="flex gap-2">
-                {["quiz", "forum"].map((option) => (
+                {(["quiz", "forum"] as const).map((option) => (
                     <label
                         key={option}
                         className="flex cursor-pointer items-center gap-2"
@@ -74,9 +74,7 @@ export const Leaderboard = () => {
                             </td>
                             <td className="border p-2">{player.name}</td>
                             <td className="border p-2 text-right">
-                                {leaderboardType === "quiz"
-                                    ? player.score
-                                    : player.points}
+                                {player.score}
                             </td>
                         </tr>
                     ))}

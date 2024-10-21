@@ -66,7 +66,6 @@ export const getRelativeTime = (
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
 
     if (seconds < 60) return rtf.format(-seconds, "second");
     if (minutes < 60) return rtf.format(-minutes, "minute");
