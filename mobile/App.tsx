@@ -34,7 +34,9 @@ export const Layout = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator
+        initialRouteName={authState?.authenticated ? "Forum" : "Login"}
+      >
         {/*
         {authState?.authenticated
           ? <Stack.Screen
