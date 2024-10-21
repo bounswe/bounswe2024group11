@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useLoaderData } from "react-router-typesafe";
 import { Avatar } from "../components/avatar";
 import { PageHead } from "../components/page-head";
+import { homeLoader } from "./Home.data";
 
 export const Leaderboard = () => {
     const [leaderboardType, setLeaderboardType] = useState("quiz");
@@ -9,7 +11,7 @@ export const Leaderboard = () => {
         {
             rank: 1,
             player: {
-                full_name: "Arnold Jones",
+                full_name: "Salih Karakurt",
                 username: "cute_mittens",
                 avatar: "https://randomuser.me/api/portraits/men/13.jpg",
             },
@@ -18,8 +20,8 @@ export const Leaderboard = () => {
         {
             rank: 2,
             player: {
-                full_name: "Boby Carlsen",
-                username: "board_walker",
+                full_name: "Aykut Taşaltın",
+                username: "kut_ay",
                 avatar: "https://randomuser.me/api/portraits/men/57.jpg",
             },
             points: 987,
@@ -27,7 +29,7 @@ export const Leaderboard = () => {
         {
             rank: 3,
             player: {
-                full_name: "Winston Jobs",
+                full_name: "Ceyda Nurşen",
                 username: "whether_dweller",
                 avatar: "https://randomuser.me/api/portraits/women/13.jpg",
             },
@@ -37,7 +39,7 @@ export const Leaderboard = () => {
             rank: 4,
             player: {
                 full_name: "Tuana Ümraniyeli",
-                username: "tt_world",
+                username: "tu_world",
                 avatar: "https://randomuser.me/api/portraits/women/7.jpg",
             },
             points: 891,
@@ -72,8 +74,8 @@ export const Leaderboard = () => {
         {
             rank: 8,
             player: {
-                full_name: "Kemal Kaya",
-                username: "kemal_k_2023",
+                full_name: "Muhammet Çiftçi",
+                username: "ciftci_m_2023",
                 avatar: "https://randomuser.me/api/portraits/men/3.jpg",
             },
             points: 745,
@@ -90,8 +92,8 @@ export const Leaderboard = () => {
         {
             rank: 10,
             player: {
-                full_name: "Emre Kaya",
-                username: "emrek_lit",
+                full_name: "Emin Bulucu",
+                username: "eminb_lit",
                 avatar: "https://randomuser.me/api/portraits/men/16.jpg",
             },
             points: 678,
@@ -111,8 +113,8 @@ export const Leaderboard = () => {
         {
             rank: 2,
             player: {
-                full_name: "Ali Yıldız",
-                username: "yildiz_ali15",
+                full_name: "Cahit Ünlü",
+                username: "unlu_cahit15",
                 avatar: "https://randomuser.me/api/portraits/men/17.jpg",
             },
             points: 487,
@@ -129,8 +131,8 @@ export const Leaderboard = () => {
         {
             rank: 4,
             player: {
-                full_name: "Mehmet Öztürk",
-                username: "mehmet_philos27",
+                full_name: "Kağan Aydın",
+                username: "aydin_philos27",
                 avatar: "https://randomuser.me/api/portraits/men/18.jpg",
             },
             points: 418,
@@ -147,8 +149,8 @@ export const Leaderboard = () => {
         {
             rank: 6,
             player: {
-                full_name: "Cem Kaya",
-                username: "cemk",
+                full_name: "Ozan Akkaya",
+                username: "ozank",
                 avatar: "https://randomuser.me/api/portraits/men/19.jpg",
             },
             points: 356,
@@ -165,8 +167,8 @@ export const Leaderboard = () => {
         {
             rank: 8,
             player: {
-                full_name: "Ahmet Yıldırım",
-                username: "ahmety",
+                full_name: "Arda Alvur",
+                username: "aa_vur",
                 avatar: "https://randomuser.me/api/portraits/men/20.jpg",
             },
             points: 301,
@@ -183,8 +185,8 @@ export const Leaderboard = () => {
         {
             rank: 10,
             player: {
-                full_name: "Mustafa Aydın",
-                username: "mustafaa",
+                full_name: "Emre Kılıç",
+                username: "emrek",
                 avatar: "https://randomuser.me/api/portraits/men/21.jpg",
             },
             points: 254,
@@ -194,14 +196,17 @@ export const Leaderboard = () => {
     const currentLeaderboard =
         leaderboardType === "quiz" ? quizLeaderboardData : forumLeaderboardData;
 
+    const { logged_in } = useLoaderData<typeof homeLoader>();
+
+    const description = logged_in
+        ? "Hey mate, let's see where you stand. Why are you lazy? Go and do some exercise."
+        : "Log in to compete with others and see where you rank.";
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead
-                title="Leaderboard"
-                description="Compete with others and see where you rank."
-            />
+            <PageHead title="Leaderboard" description={description} />
 
-            <div className="flex gap-2">
+            <div className="flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
                 {(["quiz", "forum"] as const).map((option) => (
                     <label
                         key={option}
@@ -215,10 +220,10 @@ export const Leaderboard = () => {
                             className="sr-only"
                         />
                         <span
-                            className={`min-w-40 rounded-full px-4 py-1.5 text-center font-medium transition-all ${
+                            className={`min-w-32 rounded-full px-4 py-1.5 text-center font-medium transition-all ${
                                 leaderboardType === option
                                     ? "bg-cyan-900 text-white"
-                                    : "bg-slate-100 text-slate-900 hover:bg-slate-200"
+                                    : "bg-slate-50 text-slate-900 hover:bg-slate-200"
                             }`}
                         >
                             {option === "forum" && "Forum"}
@@ -230,11 +235,11 @@ export const Leaderboard = () => {
             <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-slate-100">
-                        <th className="min-w-32 border px-4 py-3 text-start">
+                        <th className="min-w-32 border px-4 py-3 text-center">
                             Rank
                         </th>
                         <th className="min-w-32 border px-4 py-3 text-start">
-                            Name
+                            User
                         </th>
                         <th className="min-w-32 border px-4 py-3 text-end">
                             Turq Points

@@ -7,7 +7,9 @@ import {
     RiTranslate2,
 } from "@remixicon/react";
 import { ReactNode, useState } from "react";
+import { useRouteLoaderData } from "react-router-typesafe";
 import { PageHead } from "../components/page-head";
+import { homeLoader } from "./Home.data";
 
 const ExpandableItem = ({
     title,
@@ -155,6 +157,54 @@ const confusedWordsData = [
             { example: "The coffee is too hot to drink right now." },
         ],
     },
+    {
+        title: "Then vs. Than",
+        content: [
+            {
+                label: "Then:",
+                description: "At that time or next in order",
+                partOfSpeech: "adverb",
+            },
+            {
+                label: "Than:",
+                description:
+                    "Used to introduce the second element in a comparison",
+                partOfSpeech: "conjunction",
+            },
+            {
+                example: "I'll see you then. I'd rather have tea than coffee.",
+            },
+        ],
+    },
+    {
+        title: "Accept vs. Except vs. Expect",
+        content: [
+            {
+                label: "Accept:",
+                description: "To receive or agree to",
+                partOfSpeech: "verb",
+            },
+            {
+                label: "Except:",
+                description: "Not including or other than",
+                partOfSpeech: "preposition",
+            },
+            {
+                label: "Expect:",
+                description: "To regard something as likely to happen",
+                partOfSpeech: "verb",
+            },
+            {
+                example: "She accepted the award graciously.",
+            },
+            {
+                example: "Everyone except John is coming to the party.",
+            },
+            {
+                example: "I expect the package to arrive tomorrow.",
+            },
+        ],
+    },
 ];
 
 const dailyWordSuggestionsData = [
@@ -204,6 +254,20 @@ const dailyWordSuggestionsData = [
         partOfSpeech: "noun",
         etymology:
             "Coined by Horace Walpole in 1754 based on the Persian fairy tale 'The Three Princes of Serendip'.",
+    },
+    {
+        title: "Sonder",
+        definition:
+            "The realization that each passerby has a life as vivid and complex as your own",
+        turkish: "Başkalarının da hayatları olduğunu fark etme",
+        example:
+            "The feeling of sonder struck him as he walked through the crowded streets.",
+    },
+    {
+        title: "Slumber",
+        definition: "To sleep lightly or peacefully",
+        turkish: "Uyuklamak",
+        example: "The baby slumbered in her mother's arms.",
     },
 ];
 
@@ -261,16 +325,40 @@ const technicalDefinitionsData = [
             "XMLHttpRequest",
         ],
     },
+    {
+        title: "Midcourse Intervention",
+        fullForm: "Midcourse Intervention",
+        definition:
+            "A corrective action or adjustment made during the execution of a project or process to address issues, ensuring the final outcome meets the desired goals.",
+        example:
+            "During the implementation phase, the backend team fell behind the schedule, and a midcourse intervention to transfer new members to the team was done to meet the project deadline.",
+        categories: ["Project Management", "Project Development"],
+        relatedTerms: ["Course Correction", "Intervention"],
+    },
+    {
+        title: "Definition of Done",
+        fullForm: "Definition of Done",
+        definition:
+            "The definiton of the criteria that must be met for an artifact to be considered complete and ready",
+        example:
+            "We need to define the Definition of Done to avoid the sentence 'almost complete' which hinders the progress of the project.",
+        categories: ["Agile Development", "Software Development"],
+        relatedTerms: ["Acceptance Criteria", "Sprint Goal"],
+    },
 ];
 export const Home = () => {
+    const { logged_in, user } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
+    const title = logged_in
+        ? "Welcome " + user.full_name
+        : "Welcome to Turquiz";
+
+    const description = logged_in
+        ? `Good to see you back buddy. Let's get started!`
+        : "Turquiz is a platform that helps you to get prolific in English. You can take quizzes and use forums to improve your English.";
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead
-                title="Welcome to Turquiz"
-                description="Turquiz is a platform that helps you to get prolific in
-                    English. You can take quizzes and use forums to improve your
-                    English."
-            />
+            <PageHead title={title} description={description} />
             <main className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
                     <h2 className="mb-4 flex items-center text-xl font-medium text-cyan-800">

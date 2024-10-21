@@ -5,13 +5,13 @@ import { buttonClass } from "../components/button";
 import { inputClass } from "../components/input";
 import { PageHead } from "../components/page-head";
 import { QuizCard } from "../components/quiz-card";
-import { logger } from "../utils";
+import { homeLoader } from "./Home.data";
 import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
     const data = useLoaderData<typeof quizzesLoader>();
-    const homeData = useRouteLoaderData("/");
-    logger.log(homeData);
+    const { user, logged_in } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState("newest");
@@ -46,12 +46,13 @@ export const Quizzes = () => {
         new Set(data.quizzes.flatMap((quiz) => quiz.tags)),
     ).sort((a, b) => a.name.localeCompare(b.name));
 
+    const description = logged_in
+        ? `This is your time to shine ${user.full_name}`
+        : "Test your knowledge of various topics. Log in to track your progress.";
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead
-                title="Quizzes"
-                description="Test your knowledge of various topics."
-            />
+            <PageHead title="Quizzes" description={description} />
             <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <div>
@@ -133,13 +134,20 @@ export const Quizzes = () => {
                 </div>
             </aside>
             <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredQuizzes.map((quiz) => (
-                    <QuizCard
-                        key={quiz.id}
-                        onTagClick={(tag) => setSelectedTagId(tag)}
-                        quiz={quiz}
-                    />
-                ))}
+                {filteredQuizzes
+                    .map((quiz) => {
+                        return {
+                            ...quiz,
+                            is_taken: logged_in ? false : quiz.is_taken,
+                        };
+                    })
+                    .map((quiz) => (
+                        <QuizCard
+                            key={quiz.id}
+                            onTagClick={(tag) => setSelectedTagId(tag)}
+                            quiz={quiz}
+                        />
+                    ))}
             </main>
         </div>
     );
