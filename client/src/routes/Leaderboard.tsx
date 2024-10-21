@@ -230,7 +230,7 @@ export const Leaderboard = () => {
             <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-slate-100">
-                        <th className="min-w-32 border px-4 py-3 text-start">
+                        <th className="min-w-32 border px-4 py-3 text-center">
                             Rank
                         </th>
                         <th className="min-w-32 border px-4 py-3 text-start">
