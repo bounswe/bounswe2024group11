@@ -82,4 +82,12 @@ dev-mobile:
 	cd $(ANDROID_DIR) && \
 	./gradlew assembleDebug
 
-.PHONY: dev-build dev-push dev-down dev-scp dev-up dev-bp dev-dsu dev-deploy dev-mobile
+prod-mobile:
+	@if [ -z "$(ANDROID_DIR)" ]; then \
+		echo "Error: Please set ANDROID_BUILDER_PATH environment variable"; \
+		exit 1; \
+	fi
+	cd $(ANDROID_DIR) && \
+	./gradlew assembleRelease
+
+.PHONY: dev-build dev-push dev-down dev-scp dev-up dev-bp dev-dsu dev-deploy dev-mobile prod-mobile
