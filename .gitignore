@@ -2,3 +2,12 @@
 
 # Legacy web project
 web/
+
+.idea/
+
+# Env files
+.env
+.env.dev
+.env.stage
+.env.prod
+.env.makefile
