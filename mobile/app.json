@@ -27,13 +27,15 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-build-properties",
-      {
-        "android": {
-          "usesCleartextTraffic": true,
-          "newArchEnabled": true
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true,
+            "newArchEnabled": true
+          }
         }
-      }
+      ]
     ]
   }
 }
