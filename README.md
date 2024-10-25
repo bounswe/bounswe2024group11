@@ -19,7 +19,7 @@ Please follow this guide step by step in order to create a local build and run t
 
 ```bash
 git clone https://github.com/bounswe/bounswe2024group11.git
-cd bounswe2024group11
+cd ./bounswe2024group11
 ```
 - To have the latest changes included, it is recommended to switch to the `development` branch.
 
