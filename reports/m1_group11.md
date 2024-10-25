@@ -65,7 +65,7 @@ Since we completed all of our tasks, we did not need a plan change accordingly. 
 ## Evaluation
 
 ### Status of Deliverables
-
+All of the deliverables are completed as seen above.
 ### Changes on Our Project Plan
 
 We didn’t encounter any major changes along the way and were able to deliver everything for the first demo as planned.
@@ -404,174 +404,183 @@ We used Figma primarily for logo design, color selection, branding, and brainsto
 
 ### **Member: *Muhammed Emin Arayıcı***
 
+#### **Responsibilities**
+- I'm part of both the mobile team and the DevOps team. My main responsibilities are developingthe mobile application and deploying the full application for mobile and DevOps teams, respectively.
+- Moreover I was responsible for creating the requirments, elicitation questions, a scenario with its mockups, and the UI/UX design.
+
+---
+
+#### **Main Contributions**
+-  I was the part of the team creating the requirements and elicitation questions.
+- I created the third scenario and its mockups with Mücahit Erdoğan Ünlü.
+- I helped to Ümit Can Evleksiz for the creation of the UI/UX design.
+- Me and Yunus Kağan developed the mobile application.
+- I initialized the authentication system to manage JWT token lifecycle. (e.g., stroing token, deleting token, etc.)
+- I created a mock server using `json-server` for the mobile team to develop the forum screens before the development of related APIs by the backend team.
+- I built the forum feed screen usign the mock server.
+- I built the question detail screen with answers using the mock server.
+- I connected the mobile application to the deployed backend.
+- I developed the tagging feature for the forum questions in the mobile application.
+- I resolved the problems related to Dockerization of the applications, backend, client, and Nginx with Ozan Oytun Karakaya.
+- I initialized the CI/CD pipeline with Ozan Oytun Karakaya.
+- Me and Ozan Oytun Karakaya deployed the application to the cloud.
+
+---
+
+#### **Code-Related Significant Issues**
+- **Resolved/Reviewed Issues**:  
+  - Implement Auth Context for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/525), [PR](https://github.com/bounswe/bounswe2024group11/pull/523)
+  - Implement mock server for forum pages for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/544), [PR](https://github.com/bounswe/bounswe2024group11/pull/542)
+  - Implement Forum Question Detail screen for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/574), [PR](https://github.com/bounswe/bounswe2024group11/pull/573)
+  - Implement tagging for forum questions for mobile [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
+  - Connect mobile app to deployed backend [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
+  - Dockerize the full application and initialize the CI/CD pipeline [Issue](https://github.com/bounswe/bounswe2024group11/issues/563), [PR](https://github.com/bounswe/bounswe2024group11/pull/570)
+
+---
+
+#### **Non-Code-Related Significant Issues**
+- **Resolved/Reviewed Issues**:  
+  - Remove Old Unnecessary Artifacts [Issue](https://github.com/bounswe/bounswe2024group11/issues/461)
+  - Create Requirements [Issue](https://github.com/bounswe/bounswe2024group11/issues/471)
+  - Create Elicitation Questions  [Issue](https://github.com/bounswe/bounswe2024group11/issues/479)
+  - Create Project Plan [Issue](https://github.com/bounswe/bounswe2024group11/issues/478)
+  - Document Milestone Scopes [Issue](https://github.com/bounswe/bounswe2024group11/issues/507)
+  - Create User Scenario 3 & Its Mockups [Issue](https://github.com/bounswe/bounswe2024group11/issues/501)
+
+---
+
+#### **Pull Requests (PRs)**
+- **Created PRs**:  
+  - [Bootstrap Mobile App](https://github.com/bounswe/bounswe2024group11/pull/522)
+  - [Add Auth Context for Mobile](https://github.com/bounswe/bounswe2024group11/pull/523)
+  - [Implement Mock Servers for Forum Screens for Mobile](https://github.com/bounswe/bounswe2024group11/pull/542)
+  - [Dockerize the Full Application and Initialize CI/CD Workflow](https://github.com/bounswe/bounswe2024group11/pull/570)
+  - [Implement ForumQuestionDetail Screen for Mobile](https://github.com/bounswe/bounswe2024group11/pull/573)
+  - [Add Prettier as a Dev Dependency and Refactor the Mobile Directory](https://github.com/bounswe/bounswe2024group11/pull/577)
+  - [Build Mobile App](https://github.com/bounswe/bounswe2024group11/pull/580)
+  - [Connect Mobile to Backend and Implement Tagging for Forum Questions](https://github.com/bounswe/bounswe2024group11/pull/587)
+
+- **Reviewed & Merged PRs**:  
+  - [Bootstrap Client Application](https://github.com/bounswe/bounswe2024group11/pull/506)
+  - [Dockerize the Application](https://github.com/bounswe/bounswe2024group11/pull/555)
+  - [Implement CreateQuestion on Forum Screen](https://github.com/bounswe/bounswe2024group11/pull/576)
+  - [Add Bottom Tab (i.e., menu)](https://github.com/bounswe/bounswe2024group11/pull/584)
+  - [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585)
+
+
+
+- **Conflict Resolution**:  
+  In the [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585) PR, there are some issues arised while resolving the merge conflicts. This PR introduces the changes to the application's default navigation logic since it provides different flows for authenticated and not authenticated users. The base branch also has some newly added configurations for the same file. While combining them, some of the details of the PR are changed. Because the PR does not have the final navigation logic the app has, I didn't go it too much. I informed my colleague about it. Then
+
+<br />
+
+### **Member: *Ozan Oytun Karakaya***
 > #### **Responsibilities**
-> - I'm part of both the mobile team and the DevOps team. My main responsibilities are developingthe mobile application and deploying the full application for mobile and DevOps teams, respectively.
-> - Moreover I was responsible for creating the requirments, elicitation questions, a scenario with its mockups, and the UI/UX design.
+> - My main responsibility is leading the DevOps process of our application with all of its features such Dockerization, Deployment, CI/CD features, etc.
+> - I am also a part of the backend development team. I have contributed mostly on DevOps side since backend contributions are satisfied for this milestone.
+> - I was also responsible for creation of requirements & elicitation, scenarios, UML Diagrams and Project Plan. 
+---
+
+> #### **Main Contributions**
+> - I have generated & gathered elicitation questions for requirements and revised requirements according to their answers.
+> - I have created general Project Plan with Ceyda Nur Şen and Hasan Kerem Şeker.
+> - I have created User Scenario 4 & User Scenario 5 with Muhammet Emin Çiftçi & Yunus Kağan Aydın.
+> - I have created UML Use Case Diagram with Muhammet Emin Çiftçi.
+> - Reviewed UML Sequence Diagrams and created Take Quiz Sequence Diagram.
+> - Reviewed first PR to backend side & made onboarding for Muhammet Emin Çiftçi & Arda Vural.
+> - Created Dockerfiles for Backend, Client & Nginx services.
+> - Created Docker-Compose file for local deployment and use further in our application deployment in cloud.
+> - Configured Docker Hub Registry for our containers with Muhammed Emin Arayıcı.
+> - Configured AWS machine for our deployment with Muhammed Emin Arayıcı.
+> - Configured backend settings for database connection and updated requirements.txt file.
+> - Reviewed forum and tagging feature implementations in backend.
+> - Deployed our application with Muhammed Emin Arayici.
+> - Fixed our host machine's failure.
+---
+
+> #### **Code-Related Significant Issues**
+> - **Resolved/Reviewed Issues**:
+>   - [Dockerize the Full Application](https://github.com/bounswe/bounswe2024group11/issues/563).
+>   - [Setup a Container Registry](https://github.com/bounswe/bounswe2024group11/issues/564).
+>   - [Setup AWS for Deployment](https://github.com/bounswe/bounswe2024group11/issues/566).
+>   - [Vote Endpoint Implementation](https://github.com/bounswe/bounswe2024group11/issues/543).
+>   - [Created & Configured Database Connection](https://github.com/bounswe/bounswe2024group11/issues/529).
+>   - [Create Deployment Plan](https://github.com/bounswe/bounswe2024group11/issues/527).
+---
+
+> #### **Non-Code-Related Significant Issues**
+> - **Resolved/Reviewed Issues**:
+>   - [Create Requirements](https://github.com/bounswe/bounswe2024group11/issues/471).
+>   - [Elicitation Process](https://github.com/bounswe/bounswe2024group11/issues/479).
+>   - [Create User Scenario 4](https://github.com/bounswe/bounswe2024group11/issues/491).
+>   - [Create User Scenario 5](https://github.com/bounswe/bounswe2024group11/issues/491).
+>   - [Create UML Use Case Diagram](https://github.com/bounswe/bounswe2024group11/issues/485).
+>   - [Create UML Sequence Diagram](https://github.com/bounswe/bounswe2024group11/issues/518).
+>   - [Create README.md file for Deployment Guide](https://github.com/bounswe/bounswe2024group11/issues/588).
+---
+
+> #### **Pull Requests (PRs)**
+> - **Created PRs**:
+>   - Created the PR for [dockerization files](https://github.com/bounswe/bounswe2024group11/pull/555).
+>   - Co-Authored, Contributed to [All Deployment Files pull request](https://github.com/bounswe/bounswe2024group11/pull/570).
+> - **Merged & Reviewed PRs**:
+>   - Reviewed & Merged [forum question & tagging implementation](https://github.com/bounswe/bounswe2024group11/pull/546).
+> - **Conflict Resolution**:
+>   - I have only helped to resolve conflicts on `requirements.txt` file for newly imported packages.
+---
+
+### **Member: *Arda Vural***
+
+> #### **Responsibilities**
+> - I was in the mobile team last semester. This term, I have switched to the backend team. I have worked on endpoints.
+> - Organized New Meeting Schedule for the project was part of my responsibility.
+> - Implementing  endpoints for Forum and quiz parts wirh Muhammet Emin Çiftçi and  Mücahit Erdoğan Ünlü was part of my responsibilities for backend.
+> - Reviewing part for requirements and giving feedbacks. Also, I was responsible for creating user scenario templates and user scenarios with mockups aswell.
+> - Creating software design diagrams like class diagram, and sequence diagrams and also reviewing them was my primary responsibilities in the design process. 
+> - Refining and updating wiki also was a kind of responsibility that i helped about.
 
 ---
 
 > #### **Main Contributions**
-> -  I was the part of the team creating the requirements and elicitation questions.
-> - I created the third scenario and its mockups with Mücahit Erdoğan Ünlü.
-> - I helped to Ümit Can Evleksiz for the creation of the UI/UX design.
-> - Me and Yunus Kağan developed the mobile application.
-> - I initialized the authentication system to manage JWT token lifecycle. (e.g., stroing token, deleting token, etc.)
-> - I created a mock server using `json-server` for the mobile team to develop the forum screens before the development of related APIs by the backend team.
-> - I built the forum feed screen usign the mock server.
-> - I built the question detail screen with answers using the mock server.
-> - I connected the mobile application to the deployed backend.
-> - I developed the tagging feature for the forum questions in the mobile application.
-> - I resolved the problems related to Dockerization of the applications, backend, client, and Nginx with Ozan Oytun Karakaya.
-> - I initialized the CI/CD pipeline with Ozan Oytun Karakaya.
-> - Me and Ozan Oytun Karakaya deployed the application to the cloud.
+> - Created User Scenario 1 and drawing the mockups with Ümitcan Evleksiz. [The wiki page](https://github.com/bounswe/bounswe2024group11/wiki/Scenario-1)
+> - Created User Template for a general use and consistency with Ümitcan Evleksiz. [Template](https://github.com/bounswe/bounswe2024group11/wiki/User-Scenario-Template)
+> - Reviewed and gave feedbacks on requirements with the team. [Requirements](https://github.com/bounswe/bounswe2024group11/wiki/Requirements)
+> - Created Class Diagrams with Mücahit, decided on the design and reviewed. [Class Diagram](https://github.com/bounswe/bounswe2024group11/wiki/Class-Diagrams)
+> - Created Sequence Diagrams and also reviewed others with the backend team. [Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/wiki/Sequence-Diagrams)
+> - Created Forum Question Create and View endpoints with Mücahit.
+> - Created Forum Question Vote endpoint with Muhammet Emin and Ozan.
 
 ---
 
 > #### **Code-Related Significant Issues**
 > - **Resolved/Reviewed Issues**:  
->   - Implement Auth Context for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/525), [PR](https://github.com/bounswe/bounswe2024group11/pull/523)
->   - Implement mock server for forum pages for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/544), [PR](https://github.com/bounswe/bounswe2024group11/pull/542)
->   - Implement Forum Question Detail screen for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/574), [PR](https://github.com/bounswe/bounswe2024group11/pull/573)
->   - Implement tagging for forum questions for mobile [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
->   - Connect mobile app to deployed backend [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
->   - Dockerize the full application and initialize the CI/CD pipeline [Issue](https://github.com/bounswe/bounswe2024group11/issues/563), [PR](https://github.com/bounswe/bounswe2024group11/pull/570)
+>   - [Implement Vote Endpoints for Forum Questions](https://github.com/bounswe/bounswe2024group11/issues/543): Vote endpoint is implemented with Muhammet Emin Çiftçi and the help of Ozan. [Branch](https://github.com/bounswe/bounswe2024group11/tree/forum-question-votes)
+>   - [Implement Forum Question Create and View Endpoints](https://github.com/bounswe/bounswe2024group11/issues/526): Forum Question Create and View endpoints are implemented by me and Mücahit. [PR](https://github.com/bounswe/bounswe2024group11/pull/546)
 
 ---
 
 > #### **Non-Code-Related Significant Issues**
 > - **Resolved/Reviewed Issues**:  
->   - Remove Old Unnecessary Artifacts [Issue](https://github.com/bounswe/bounswe2024group11/issues/461)
->   - Create Requirements [Issue](https://github.com/bounswe/bounswe2024group11/issues/471)
->   - Create Elicitation Questions  [Issue](https://github.com/bounswe/bounswe2024group11/issues/479)
->   - Create Project Plan [Issue](https://github.com/bounswe/bounswe2024group11/issues/478)
->   - Document Milestone Scopes [Issue](https://github.com/bounswe/bounswe2024group11/issues/507)
->   - Create User Scenario 3 & Its Mockups [Issue](https://github.com/bounswe/bounswe2024group11/issues/501)
+>   - [Create User Scenario 1 - Explore and Register](https://github.com/bounswe/bounswe2024group11/issues/492): We have created User scnerios and mockups with Ümitcan for the project.
+>   - [Create User Scenario Template](https://github.com/bounswe/bounswe2024group11/issues/490) : With Ümitcan, we have created a user scenario template for consistency and realiability among all the scenarios.
+>   - [Organize New Meeting Schedule](https://github.com/bounswe/bounswe2024group11/issues/462) : In the beginning of the project, we have organzed a schedule for the team to be efficient.
+>   - [Create Lab Report 1](https://github.com/bounswe/bounswe2024group11/issues/468) : I have documented the first lab report in the lab.
+>   - [Research Lexvo](https://github.com/bounswe/bounswe2024group11/issues/473) : I have learnt about lexvo and we have made decisions about the design and future usage of it.
+>   - [Create Class Diagrams](https://github.com/bounswe/bounswe2024group11/issues/484) : We have created class diagrams with Mücahit and made design choices in detail.
+>   - [Create Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/issues/518) : I have created sequence diagram and reviewed other diagrams aswell.
+>   - [Refine the Wiki and Sidebar](https://github.com/bounswe/bounswe2024group11/issues/493) : I have updated the wiki for the new projects with new artifacts.
 
 ---
 
 > #### **Pull Requests (PRs)**
 > - **Created PRs**:  
->   - [Bootstrap Mobile App](https://github.com/bounswe/bounswe2024group11/pull/522)
->   - [Add Auth Context for Mobile](https://github.com/bounswe/bounswe2024group11/pull/523)
->   - [Implement Mock Servers for Forum Screens for Mobile](https://github.com/bounswe/bounswe2024group11/pull/542)
->   - [Dockerize the Full Application and Initialize CI/CD Workflow](https://github.com/bounswe/bounswe2024group11/pull/570)
->   - [Implement ForumQuestionDetail Screen for Mobile](https://github.com/bounswe/bounswe2024group11/pull/573)
->   - [Add Prettier as a Dev Dependency and Refactor the Mobile Directory](https://github.com/bounswe/bounswe2024group11/pull/577)
->   - [Build Mobile App](https://github.com/bounswe/bounswe2024group11/pull/580)
->   - [Connect Mobile to Backend and Implement Tagging for Forum Questions](https://github.com/bounswe/bounswe2024group11/pull/587)
-
-> - **Reviewed & Merged PRs**:  
->   - [Bootstrap Client Application](https://github.com/bounswe/bounswe2024group11/pull/506)
->   - [Dockerize the Application](https://github.com/bounswe/bounswe2024group11/pull/555)
->   - [Implement CreateQuestion on Forum Screen](https://github.com/bounswe/bounswe2024group11/pull/576)
->   - [Add Bottom Tab (i.e., menu)](https://github.com/bounswe/bounswe2024group11/pull/584)
->   - [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585)
-
-
-
-> - **Conflict Resolution**:  
->   In the [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585) PR, there are some issues arised while resolving the merge conflicts. This PR introduces the changes to the application's default navigation logic since it provides different flows for authenticated and not authenticated users. The base branch also has some newly added configurations for the same file. While combining them, some of the details of the PR are changed. Because the PR does not have the final navigation logic the app has, I didn't go it too much. I informed my colleague about it. Then
-
-<br />
-
-### **Member: *Ozan Oytun Karakaya***
- #### **Responsibilities**
- - My main responsibility is leading the DevOps process of our application with all of its features such Dockerization, Deployment, CI/CD features, etc.
- - I am also a part of the backend development team. I have contributed mostly on DevOps side since backend contributions are satisfied for this milestone.
- - I was also responsible for creation of requirements & elicitation, scenarios, UML Diagrams and Project Plan. 
----
-
- #### **Main Contributions**
- - I have generated & gathered elicitation questions for requirements and revised requirements according to their answers.
- - I have created general Project Plan with Ceyda Nur Şen and Hasan Kerem Şeker.
- - I have created User Scenario 4 & User Scenario 5 with Muhammet Emin 
- - I have created UML Use Cae
----
-
- #### **Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:
----
-
- #### **Non-Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:
-   - 
----
-
- #### **Pull Requests (PRs)**
- - **Created PRs**:
- - **Merged PRs**:
- - **Reviewed PRs**:
- - **Conflict Resolution**:
----
-
-
-
-
-### **Member: *Arda Vural***
-
- #### **Responsibilities**
- - I was in the mobile team last semester. This term, I have switched to the backend team. I have worked on endpoints.
- - Organized New Meeting Schedule for the project was part of my responsibility.
- - Implementing Vote Endoints for Forum Questions wih Muhammet Emin Çiftçi ,and Forum Question Create and View Endpoints with Mücahit Erdoğan Ünlü were some of my responsibilities for backend.
- - Reviewing part for requirements and giving feedbacks. Also, I was responsible for creating user scenario templates and user scenarios with mockups aswell.
- - Creating software design diagrams like class diagram, and sequence diagrams and also reviewing them was my primary responsibilities in the design process. 
- - Refining and updating wiki also was a kind of responsibility that i helped about.
-
----
-
- #### **Main Contributions**
- - Created User Scenario 1 and drawing the mockups with Ümitcan Evleksiz. [The wiki page](https://github.com/bounswe/bounswe2024group11/wiki/Scenario-1)
- - Created User Template for a general use and consistency with Ümitcan Evleksiz. [Template](https://github.com/bounswe/bounswe2024group11/wiki/User-Scenario-Template)
- - Reviewed and gave feedbacks on requirements with the team. [Requirements](https://github.com/bounswe/bounswe2024group11/wiki/Requirements)
- - Created Class Diagrams with Mücahit, decided on the design and reviewed. [Class Diagram](https://github.com/bounswe/bounswe2024group11/wiki/Class-Diagrams)
- - Created Sequence Diagrams and also reviewed others with the backend team. [Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/wiki/Sequence-Diagrams)
- - Created Forum Question Create and View endpoints with Mücahit.
- - Created Forum Question Vote endpoint with Muhammet Emin and Ozan.
-
----
-
- #### **Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:  
-   - [Implement Vote Endpoints for Forum Questions](https://github.com/bounswe/bounswe2024group11/issues/543): Vote endpoint is implemented with Muhammet Emin Çiftçi and the help of Ozan. [Branch](https://github.com/bounswe/bounswe2024group11/tree/forum-question-votes)
-   - [Implement Forum Question Create and View Endpoints](https://github.com/bounswe/bounswe2024group11/issues/526): Forum Question Create and View endpoints are implemented by me and Mücahit. [PR](https://github.com/bounswe/bounswe2024group11/pull/546)
-
----
-
- #### **Non-Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:  
-   - [Create User Scenario 1 - Explore and Register](https://github.com/bounswe/bounswe2024group11/issues/492): 
-   - [Create User Scenario Template](https://github.com/bounswe/bounswe2024group11/issues/490)
-   - [Organize New Meeting Schedule](https://github.com/bounswe/bounswe2024group11/issues/462)
-   - [Create Lab Report 1](https://github.com/bounswe/bounswe2024group11/issues/468)
-   - [Research Lexvo](https://github.com/bounswe/bounswe2024group11/issues/473)
-   - [Create Class Diagrams](https://github.com/bounswe/bounswe2024group11/issues/484)
-   - [Create Use Case Diagrams](https://github.com/bounswe/bounswe2024group11/issues/485)
-   - [Create Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/issues/518)
-   - [Create User Scenario 4 - Search Forum & Bookmark & Upvote & Answer](https://github.com/bounswe/bounswe2024group11/issues/491)
-   - [Create User Scenario 5 - View User Badge](https://github.com/bounswe/bounswe2024group11/issues/494)
-   - [Implement API for Returning Entity List from BabelNet](https://github.com/bounswe/bounswe2024group11/issues/519)
-   - [Create the Initial Database Schema](https://github.com/bounswe/bounswe2024group11/issues/529)
-   - [Create Mock Quiz Data For Clientside](https://github.com/bounswe/bounswe2024group11/issues/559)
-   - [Modify Issue Templates](https://github.com/bounswe/bounswe2024group11/issues/475)
-   - [Organize Wiki page](https://github.com/bounswe/bounswe2024group11/issues/465)
-   - [Document the Lab Meeting #2](https://github.com/bounswe/bounswe2024group11/issues/477)
-   - [Document Project Planning Meeting](https://github.com/bounswe/bounswe2024group11/issues/482)
-   - [Document the Lab Meeting #3](https://github.com/bounswe/bounswe2024group11/issues/502)
-   - [Document the Lab Meeting #4](https://github.com/bounswe/bounswe2024group11/issues/536)
-
----
-
- #### **Pull Requests (PRs)**
- - **Created PRs**:  
-   - [Implement tagging endpoint and document the swagger for it](https://github.com/bounswe/bounswe2024group11/pull/547)
- 
- - **Merged PRs**:  
-   - [Implement token obtain pair (login) and register endopints](https://github.com/bounswe/bounswe2024group11/pull/517)
- - **Reviewed PRs**:  
-   - [Implement token obtain pair (login) and register endopints](https://github.com/bounswe/bounswe2024group11/pull/517)
-
----
-
+>   - [Implement forum-question endpoint and tagging endpoint](https://github.com/bounswe/bounswe2024group11/pull/546) (Co-Authored and contributed)
+> 
+> - **Merged & Reviewed PRs**:  
+>   - [Implement token obtain pair (login) and register endopints](https://github.com/bounswe/bounswe2024group11/pull/517)
+>   - [Implement forum-question endpoint and tagging endpoint](https://github.com/bounswe/bounswe2024group11/pull/546) (Assignee)
+> - **Conflict Resolution**:
+>   - I have adressed to small issues helped to resolve some conflicts on "Implement token obtain pair (login) and register endopints" PR but in general, I have not encountered problems.
 
 <br />
 
