@@ -404,73 +404,73 @@ We used Figma primarily for logo design, color selection, branding, and brainsto
 
 ### **Member: *Muhammed Emin Arayıcı***
 
-> #### **Responsibilities**
-> - I'm part of both the mobile team and the DevOps team. My main responsibilities are developingthe mobile application and deploying the full application for mobile and DevOps teams, respectively.
-> - Moreover I was responsible for creating the requirments, elicitation questions, a scenario with its mockups, and the UI/UX design.
+#### **Responsibilities**
+- I'm part of both the mobile team and the DevOps team. My main responsibilities are developingthe mobile application and deploying the full application for mobile and DevOps teams, respectively.
+- Moreover I was responsible for creating the requirments, elicitation questions, a scenario with its mockups, and the UI/UX design.
 
 ---
 
-> #### **Main Contributions**
-> -  I was the part of the team creating the requirements and elicitation questions.
-> - I created the third scenario and its mockups with Mücahit Erdoğan Ünlü.
-> - I helped to Ümit Can Evleksiz for the creation of the UI/UX design.
-> - Me and Yunus Kağan developed the mobile application.
-> - I initialized the authentication system to manage JWT token lifecycle. (e.g., stroing token, deleting token, etc.)
-> - I created a mock server using `json-server` for the mobile team to develop the forum screens before the development of related APIs by the backend team.
-> - I built the forum feed screen usign the mock server.
-> - I built the question detail screen with answers using the mock server.
-> - I connected the mobile application to the deployed backend.
-> - I developed the tagging feature for the forum questions in the mobile application.
-> - I resolved the problems related to Dockerization of the applications, backend, client, and Nginx with Ozan Oytun Karakaya.
-> - I initialized the CI/CD pipeline with Ozan Oytun Karakaya.
-> - Me and Ozan Oytun Karakaya deployed the application to the cloud.
+#### **Main Contributions**
+-  I was the part of the team creating the requirements and elicitation questions.
+- I created the third scenario and its mockups with Mücahit Erdoğan Ünlü.
+- I helped to Ümit Can Evleksiz for the creation of the UI/UX design.
+- Me and Yunus Kağan developed the mobile application.
+- I initialized the authentication system to manage JWT token lifecycle. (e.g., stroing token, deleting token, etc.)
+- I created a mock server using `json-server` for the mobile team to develop the forum screens before the development of related APIs by the backend team.
+- I built the forum feed screen usign the mock server.
+- I built the question detail screen with answers using the mock server.
+- I connected the mobile application to the deployed backend.
+- I developed the tagging feature for the forum questions in the mobile application.
+- I resolved the problems related to Dockerization of the applications, backend, client, and Nginx with Ozan Oytun Karakaya.
+- I initialized the CI/CD pipeline with Ozan Oytun Karakaya.
+- Me and Ozan Oytun Karakaya deployed the application to the cloud.
 
 ---
 
-> #### **Code-Related Significant Issues**
-> - **Resolved/Reviewed Issues**:  
->   - Implement Auth Context for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/525), [PR](https://github.com/bounswe/bounswe2024group11/pull/523)
->   - Implement mock server for forum pages for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/544), [PR](https://github.com/bounswe/bounswe2024group11/pull/542)
->   - Implement Forum Question Detail screen for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/574), [PR](https://github.com/bounswe/bounswe2024group11/pull/573)
->   - Implement tagging for forum questions for mobile [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
->   - Connect mobile app to deployed backend [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
->   - Dockerize the full application and initialize the CI/CD pipeline [Issue](https://github.com/bounswe/bounswe2024group11/issues/563), [PR](https://github.com/bounswe/bounswe2024group11/pull/570)
+#### **Code-Related Significant Issues**
+- **Resolved/Reviewed Issues**:  
+  - Implement Auth Context for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/525), [PR](https://github.com/bounswe/bounswe2024group11/pull/523)
+  - Implement mock server for forum pages for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/544), [PR](https://github.com/bounswe/bounswe2024group11/pull/542)
+  - Implement Forum Question Detail screen for mobile [Issue](https://github.com/bounswe/bounswe2024group11/issues/574), [PR](https://github.com/bounswe/bounswe2024group11/pull/573)
+  - Implement tagging for forum questions for mobile [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
+  - Connect mobile app to deployed backend [PR](https://github.com/bounswe/bounswe2024group11/pull/587)
+  - Dockerize the full application and initialize the CI/CD pipeline [Issue](https://github.com/bounswe/bounswe2024group11/issues/563), [PR](https://github.com/bounswe/bounswe2024group11/pull/570)
 
 ---
 
-> #### **Non-Code-Related Significant Issues**
-> - **Resolved/Reviewed Issues**:  
->   - Remove Old Unnecessary Artifacts [Issue](https://github.com/bounswe/bounswe2024group11/issues/461)
->   - Create Requirements [Issue](https://github.com/bounswe/bounswe2024group11/issues/471)
->   - Create Elicitation Questions  [Issue](https://github.com/bounswe/bounswe2024group11/issues/479)
->   - Create Project Plan [Issue](https://github.com/bounswe/bounswe2024group11/issues/478)
->   - Document Milestone Scopes [Issue](https://github.com/bounswe/bounswe2024group11/issues/507)
->   - Create User Scenario 3 & Its Mockups [Issue](https://github.com/bounswe/bounswe2024group11/issues/501)
+#### **Non-Code-Related Significant Issues**
+- **Resolved/Reviewed Issues**:  
+  - Remove Old Unnecessary Artifacts [Issue](https://github.com/bounswe/bounswe2024group11/issues/461)
+  - Create Requirements [Issue](https://github.com/bounswe/bounswe2024group11/issues/471)
+  - Create Elicitation Questions  [Issue](https://github.com/bounswe/bounswe2024group11/issues/479)
+  - Create Project Plan [Issue](https://github.com/bounswe/bounswe2024group11/issues/478)
+  - Document Milestone Scopes [Issue](https://github.com/bounswe/bounswe2024group11/issues/507)
+  - Create User Scenario 3 & Its Mockups [Issue](https://github.com/bounswe/bounswe2024group11/issues/501)
 
 ---
 
-> #### **Pull Requests (PRs)**
-> - **Created PRs**:  
->   - [Bootstrap Mobile App](https://github.com/bounswe/bounswe2024group11/pull/522)
->   - [Add Auth Context for Mobile](https://github.com/bounswe/bounswe2024group11/pull/523)
->   - [Implement Mock Servers for Forum Screens for Mobile](https://github.com/bounswe/bounswe2024group11/pull/542)
->   - [Dockerize the Full Application and Initialize CI/CD Workflow](https://github.com/bounswe/bounswe2024group11/pull/570)
->   - [Implement ForumQuestionDetail Screen for Mobile](https://github.com/bounswe/bounswe2024group11/pull/573)
->   - [Add Prettier as a Dev Dependency and Refactor the Mobile Directory](https://github.com/bounswe/bounswe2024group11/pull/577)
->   - [Build Mobile App](https://github.com/bounswe/bounswe2024group11/pull/580)
->   - [Connect Mobile to Backend and Implement Tagging for Forum Questions](https://github.com/bounswe/bounswe2024group11/pull/587)
+#### **Pull Requests (PRs)**
+- **Created PRs**:  
+  - [Bootstrap Mobile App](https://github.com/bounswe/bounswe2024group11/pull/522)
+  - [Add Auth Context for Mobile](https://github.com/bounswe/bounswe2024group11/pull/523)
+  - [Implement Mock Servers for Forum Screens for Mobile](https://github.com/bounswe/bounswe2024group11/pull/542)
+  - [Dockerize the Full Application and Initialize CI/CD Workflow](https://github.com/bounswe/bounswe2024group11/pull/570)
+  - [Implement ForumQuestionDetail Screen for Mobile](https://github.com/bounswe/bounswe2024group11/pull/573)
+  - [Add Prettier as a Dev Dependency and Refactor the Mobile Directory](https://github.com/bounswe/bounswe2024group11/pull/577)
+  - [Build Mobile App](https://github.com/bounswe/bounswe2024group11/pull/580)
+  - [Connect Mobile to Backend and Implement Tagging for Forum Questions](https://github.com/bounswe/bounswe2024group11/pull/587)
 
-> - **Reviewed & Merged PRs**:  
->   - [Bootstrap Client Application](https://github.com/bounswe/bounswe2024group11/pull/506)
->   - [Dockerize the Application](https://github.com/bounswe/bounswe2024group11/pull/555)
->   - [Implement CreateQuestion on Forum Screen](https://github.com/bounswe/bounswe2024group11/pull/576)
->   - [Add Bottom Tab (i.e., menu)](https://github.com/bounswe/bounswe2024group11/pull/584)
->   - [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585)
+- **Reviewed & Merged PRs**:  
+  - [Bootstrap Client Application](https://github.com/bounswe/bounswe2024group11/pull/506)
+  - [Dockerize the Application](https://github.com/bounswe/bounswe2024group11/pull/555)
+  - [Implement CreateQuestion on Forum Screen](https://github.com/bounswe/bounswe2024group11/pull/576)
+  - [Add Bottom Tab (i.e., menu)](https://github.com/bounswe/bounswe2024group11/pull/584)
+  - [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585)
 
 
 
-> - **Conflict Resolution**:  
->   In the [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585) PR, there are some issues arised while resolving the merge conflicts. This PR introduces the changes to the application's default navigation logic since it provides different flows for authenticated and not authenticated users. The base branch also has some newly added configurations for the same file. While combining them, some of the details of the PR are changed. Because the PR does not have the final navigation logic the app has, I didn't go it too much. I informed my colleague about it. Then
+- **Conflict Resolution**:  
+  In the [Update Navigation and Add Register Screen](https://github.com/bounswe/bounswe2024group11/pull/585) PR, there are some issues arised while resolving the merge conflicts. This PR introduces the changes to the application's default navigation logic since it provides different flows for authenticated and not authenticated users. The base branch also has some newly added configurations for the same file. While combining them, some of the details of the PR are changed. Because the PR does not have the final navigation logic the app has, I didn't go it too much. I informed my colleague about it. Then
 
 <br />
 
