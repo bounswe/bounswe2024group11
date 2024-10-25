@@ -475,36 +475,59 @@ We used Figma primarily for logo design, color selection, branding, and brainsto
 <br />
 
 ### **Member: *Ozan Oytun Karakaya***
- #### **Responsibilities**
- - My main responsibility is leading the DevOps process of our application with all of its features such Dockerization, Deployment, CI/CD features, etc.
- - I am also a part of the backend development team. I have contributed mostly on DevOps side since backend contributions are satisfied for this milestone.
- - I was also responsible for creation of requirements & elicitation, scenarios, UML Diagrams and Project Plan. 
+> #### **Responsibilities**
+> - My main responsibility is leading the DevOps process of our application with all of its features such Dockerization, Deployment, CI/CD features, etc.
+> - I am also a part of the backend development team. I have contributed mostly on DevOps side since backend contributions are satisfied for this milestone.
+> - I was also responsible for creation of requirements & elicitation, scenarios, UML Diagrams and Project Plan. 
 ---
 
- #### **Main Contributions**
- - I have generated & gathered elicitation questions for requirements and revised requirements according to their answers.
- - I have created general Project Plan with Ceyda Nur Şen and Hasan Kerem Şeker.
- - I have created User Scenario 4 & User Scenario 5 with Muhammet Emin 
- - I have created UML Use Cae
+> #### **Main Contributions**
+> - I have generated & gathered elicitation questions for requirements and revised requirements according to their answers.
+> - I have created general Project Plan with Ceyda Nur Şen and Hasan Kerem Şeker.
+> - I have created User Scenario 4 & User Scenario 5 with Muhammet Emin Çiftçi & Yunus Kağan Aydın.
+> - I have created UML Use Case Diagram with Muhammet Emin Çiftçi.
+> - Reviewed UML Sequence Diagrams and created Take Quiz Sequence Diagram.
+> - Reviewed first PR to backend side & made onboarding for Muhammet Emin Çiftçi & Arda Vural.
+> - Created Dockerfiles for Backend, Client & Nginx services.
+> - Created Docker-Compose file for local deployment and use further in our application deployment in cloud.
+> - Configured Docker Hub Registry for our containers with Muhammed Emin Arayıcı.
+> - Configured AWS machine for our deployment with Muhammed Emin Arayıcı.
+> - Configured backend settings for database connection and updated requirements.txt file.
+> - Reviewed forum and tagging feature implementations in backend.
+> - Deployed our application with Muhammed Emin Arayici.
+> - Fixed our host machine's failure.
 ---
 
- #### **Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:
+> #### **Code-Related Significant Issues**
+> - **Resolved/Reviewed Issues**:
+>   - [Dockerize the Full Application](https://github.com/bounswe/bounswe2024group11/issues/563).
+>   - [Setup a Container Registry](https://github.com/bounswe/bounswe2024group11/issues/564).
+>   - [Setup AWS for Deployment](https://github.com/bounswe/bounswe2024group11/issues/566).
+>   - [Vote Endpoint Implementation](https://github.com/bounswe/bounswe2024group11/issues/543).
+>   - [Created & Configured Database Connection](https://github.com/bounswe/bounswe2024group11/issues/529).
+>   - [Create Deployment Plan](https://github.com/bounswe/bounswe2024group11/issues/527).
 ---
 
- #### **Non-Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:
-   - 
+> #### **Non-Code-Related Significant Issues**
+> - **Resolved/Reviewed Issues**:
+>   - [Create Requirements](https://github.com/bounswe/bounswe2024group11/issues/471).
+>   - [Elicitation Process](https://github.com/bounswe/bounswe2024group11/issues/479).
+>   - [Create User Scenario 4](https://github.com/bounswe/bounswe2024group11/issues/491).
+>   - [Create User Scenario 5](https://github.com/bounswe/bounswe2024group11/issues/491).
+>   - [Create UML Use Case Diagram](https://github.com/bounswe/bounswe2024group11/issues/485).
+>   - [Create UML Sequence Diagram](https://github.com/bounswe/bounswe2024group11/issues/518).
+>   - [Create README.md file for Deployment Guide](https://github.com/bounswe/bounswe2024group11/issues/588).
 ---
 
- #### **Pull Requests (PRs)**
- - **Created PRs**:
- - **Merged PRs**:
- - **Reviewed PRs**:
- - **Conflict Resolution**:
+> #### **Pull Requests (PRs)**
+> - **Created PRs**:
+>   - Created the PR for [dockerization files](https://github.com/bounswe/bounswe2024group11/pull/555).
+>   - Co-Authored, Contributed to [All Deployment Files pull request](https://github.com/bounswe/bounswe2024group11/pull/570).
+> - **Merged & Reviewed PRs**:
+>   - Reviewed & Merged [forum question & tagging implementation](https://github.com/bounswe/bounswe2024group11/pull/546).
+> - **Conflict Resolution**:
+>   - I have only helped to resolve conflicts on `requirements.txt` file for newly imported packages.
 ---
-
-
 
 
 ### **Member: *Arda Vural***
