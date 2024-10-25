@@ -138,7 +138,7 @@ export const Quizzes = () => {
                     .map((quiz) => {
                         return {
                             ...quiz,
-                            is_taken: logged_in ? false : quiz.is_taken,
+                            is_taken: !logged_in ? false : quiz.is_taken,
                         };
                     })
                     .map((quiz) => (
