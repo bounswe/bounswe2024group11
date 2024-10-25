@@ -65,7 +65,7 @@ Since we completed all of our tasks, we did not need a plan change accordingly. 
 ## Evaluation
 
 ### Status of Deliverables
-
+All of the deliverables are completed as seen above.
 ### Changes on Our Project Plan
 
 We didn’t encounter any major changes along the way and were able to deliver everything for the first demo as planned.
