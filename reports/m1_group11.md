@@ -529,72 +529,58 @@ We used Figma primarily for logo design, color selection, branding, and brainsto
 >   - I have only helped to resolve conflicts on `requirements.txt` file for newly imported packages.
 ---
 
-
 ### **Member: *Arda Vural***
 
- #### **Responsibilities**
- - I was in the mobile team last semester. This term, I have switched to the backend team. I have worked on endpoints.
- - Organized New Meeting Schedule for the project was part of my responsibility.
- - Implementing Vote Endoints for Forum Questions wih Muhammet Emin Çiftçi ,and Forum Question Create and View Endpoints with Mücahit Erdoğan Ünlü were some of my responsibilities for backend.
- - Reviewing part for requirements and giving feedbacks. Also, I was responsible for creating user scenario templates and user scenarios with mockups aswell.
- - Creating software design diagrams like class diagram, and sequence diagrams and also reviewing them was my primary responsibilities in the design process. 
- - Refining and updating wiki also was a kind of responsibility that i helped about.
+> #### **Responsibilities**
+> - I was in the mobile team last semester. This term, I have switched to the backend team. I have worked on endpoints.
+> - Organized New Meeting Schedule for the project was part of my responsibility.
+> - Implementing  endpoints for Forum and quiz parts wirh Muhammet Emin Çiftçi and  Mücahit Erdoğan Ünlü was part of my responsibilities for backend.
+> - Reviewing part for requirements and giving feedbacks. Also, I was responsible for creating user scenario templates and user scenarios with mockups aswell.
+> - Creating software design diagrams like class diagram, and sequence diagrams and also reviewing them was my primary responsibilities in the design process. 
+> - Refining and updating wiki also was a kind of responsibility that i helped about.
 
 ---
 
- #### **Main Contributions**
- - Created User Scenario 1 and drawing the mockups with Ümitcan Evleksiz. [The wiki page](https://github.com/bounswe/bounswe2024group11/wiki/Scenario-1)
- - Created User Template for a general use and consistency with Ümitcan Evleksiz. [Template](https://github.com/bounswe/bounswe2024group11/wiki/User-Scenario-Template)
- - Reviewed and gave feedbacks on requirements with the team. [Requirements](https://github.com/bounswe/bounswe2024group11/wiki/Requirements)
- - Created Class Diagrams with Mücahit, decided on the design and reviewed. [Class Diagram](https://github.com/bounswe/bounswe2024group11/wiki/Class-Diagrams)
- - Created Sequence Diagrams and also reviewed others with the backend team. [Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/wiki/Sequence-Diagrams)
- - Created Forum Question Create and View endpoints with Mücahit.
- - Created Forum Question Vote endpoint with Muhammet Emin and Ozan.
+> #### **Main Contributions**
+> - Created User Scenario 1 and drawing the mockups with Ümitcan Evleksiz. [The wiki page](https://github.com/bounswe/bounswe2024group11/wiki/Scenario-1)
+> - Created User Template for a general use and consistency with Ümitcan Evleksiz. [Template](https://github.com/bounswe/bounswe2024group11/wiki/User-Scenario-Template)
+> - Reviewed and gave feedbacks on requirements with the team. [Requirements](https://github.com/bounswe/bounswe2024group11/wiki/Requirements)
+> - Created Class Diagrams with Mücahit, decided on the design and reviewed. [Class Diagram](https://github.com/bounswe/bounswe2024group11/wiki/Class-Diagrams)
+> - Created Sequence Diagrams and also reviewed others with the backend team. [Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/wiki/Sequence-Diagrams)
+> - Created Forum Question Create and View endpoints with Mücahit.
+> - Created Forum Question Vote endpoint with Muhammet Emin and Ozan.
 
 ---
 
- #### **Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:  
-   - [Implement Vote Endpoints for Forum Questions](https://github.com/bounswe/bounswe2024group11/issues/543): Vote endpoint is implemented with Muhammet Emin Çiftçi and the help of Ozan. [Branch](https://github.com/bounswe/bounswe2024group11/tree/forum-question-votes)
-   - [Implement Forum Question Create and View Endpoints](https://github.com/bounswe/bounswe2024group11/issues/526): Forum Question Create and View endpoints are implemented by me and Mücahit. [PR](https://github.com/bounswe/bounswe2024group11/pull/546)
+> #### **Code-Related Significant Issues**
+> - **Resolved/Reviewed Issues**:  
+>   - [Implement Vote Endpoints for Forum Questions](https://github.com/bounswe/bounswe2024group11/issues/543): Vote endpoint is implemented with Muhammet Emin Çiftçi and the help of Ozan. [Branch](https://github.com/bounswe/bounswe2024group11/tree/forum-question-votes)
+>   - [Implement Forum Question Create and View Endpoints](https://github.com/bounswe/bounswe2024group11/issues/526): Forum Question Create and View endpoints are implemented by me and Mücahit. [PR](https://github.com/bounswe/bounswe2024group11/pull/546)
 
 ---
 
- #### **Non-Code-Related Significant Issues**
- - **Resolved/Reviewed Issues**:  
-   - [Create User Scenario 1 - Explore and Register](https://github.com/bounswe/bounswe2024group11/issues/492): 
-   - [Create User Scenario Template](https://github.com/bounswe/bounswe2024group11/issues/490)
-   - [Organize New Meeting Schedule](https://github.com/bounswe/bounswe2024group11/issues/462)
-   - [Create Lab Report 1](https://github.com/bounswe/bounswe2024group11/issues/468)
-   - [Research Lexvo](https://github.com/bounswe/bounswe2024group11/issues/473)
-   - [Create Class Diagrams](https://github.com/bounswe/bounswe2024group11/issues/484)
-   - [Create Use Case Diagrams](https://github.com/bounswe/bounswe2024group11/issues/485)
-   - [Create Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/issues/518)
-   - [Create User Scenario 4 - Search Forum & Bookmark & Upvote & Answer](https://github.com/bounswe/bounswe2024group11/issues/491)
-   - [Create User Scenario 5 - View User Badge](https://github.com/bounswe/bounswe2024group11/issues/494)
-   - [Implement API for Returning Entity List from BabelNet](https://github.com/bounswe/bounswe2024group11/issues/519)
-   - [Create the Initial Database Schema](https://github.com/bounswe/bounswe2024group11/issues/529)
-   - [Create Mock Quiz Data For Clientside](https://github.com/bounswe/bounswe2024group11/issues/559)
-   - [Modify Issue Templates](https://github.com/bounswe/bounswe2024group11/issues/475)
-   - [Organize Wiki page](https://github.com/bounswe/bounswe2024group11/issues/465)
-   - [Document the Lab Meeting #2](https://github.com/bounswe/bounswe2024group11/issues/477)
-   - [Document Project Planning Meeting](https://github.com/bounswe/bounswe2024group11/issues/482)
-   - [Document the Lab Meeting #3](https://github.com/bounswe/bounswe2024group11/issues/502)
-   - [Document the Lab Meeting #4](https://github.com/bounswe/bounswe2024group11/issues/536)
+> #### **Non-Code-Related Significant Issues**
+> - **Resolved/Reviewed Issues**:  
+>   - [Create User Scenario 1 - Explore and Register](https://github.com/bounswe/bounswe2024group11/issues/492): We have created User scnerios and mockups with Ümitcan for the project.
+>   - [Create User Scenario Template](https://github.com/bounswe/bounswe2024group11/issues/490) : With Ümitcan, we have created a user scenario template for consistency and realiability among all the scenarios.
+>   - [Organize New Meeting Schedule](https://github.com/bounswe/bounswe2024group11/issues/462) : In the beginning of the project, we have organzed a schedule for the team to be efficient.
+>   - [Create Lab Report 1](https://github.com/bounswe/bounswe2024group11/issues/468) : I have documented the first lab report in the lab.
+>   - [Research Lexvo](https://github.com/bounswe/bounswe2024group11/issues/473) : I have learnt about lexvo and we have made decisions about the design and future usage of it.
+>   - [Create Class Diagrams](https://github.com/bounswe/bounswe2024group11/issues/484) : We have created class diagrams with Mücahit and made design choices in detail.
+>   - [Create Sequence Diagrams](https://github.com/bounswe/bounswe2024group11/issues/518) : I have created sequence diagram and reviewed other diagrams aswell.
+>   - [Refine the Wiki and Sidebar](https://github.com/bounswe/bounswe2024group11/issues/493) : I have updated the wiki for the new projects with new artifacts.
 
 ---
 
- #### **Pull Requests (PRs)**
- - **Created PRs**:  
-   - [Implement tagging endpoint and document the swagger for it](https://github.com/bounswe/bounswe2024group11/pull/547)
- 
- - **Merged PRs**:  
-   - [Implement token obtain pair (login) and register endopints](https://github.com/bounswe/bounswe2024group11/pull/517)
- - **Reviewed PRs**:  
-   - [Implement token obtain pair (login) and register endopints](https://github.com/bounswe/bounswe2024group11/pull/517)
-
----
-
+> #### **Pull Requests (PRs)**
+> - **Created PRs**:  
+>   - [Implement forum-question endpoint and tagging endpoint](https://github.com/bounswe/bounswe2024group11/pull/546) (Co-Authored and contributed)
+> 
+> - **Merged & Reviewed PRs**:  
+>   - [Implement token obtain pair (login) and register endopints](https://github.com/bounswe/bounswe2024group11/pull/517)
+>   - [Implement forum-question endpoint and tagging endpoint](https://github.com/bounswe/bounswe2024group11/pull/546) (Assignee)
+> - **Conflict Resolution**:
+>   - I have adressed to small issues helped to resolve some conflicts on "Implement token obtain pair (login) and register endopints" PR but in general, I have not encountered problems.
 
 <br />
 
