@@ -1,37 +1,14 @@
-import { Link } from "react-router-dom";
-import { useLoaderData } from "react-router-typesafe";
-import { useToastStore } from "../store";
-import { homeLoader } from "./Home.data";
+import { PageHead } from "../components/page-head";
 
 export const Home = () => {
-    const { user } = useLoaderData<typeof homeLoader>();
-    if (!user) {
-        return (
-            <div>
-                <div>Not logged in</div>
-                <Link to="/login">Login</Link>
-            </div>
-        );
-    }
     return (
-        <div>
-            <div> Welcome {user.username}</div>
-            <button
-                onClick={() => {
-                    useToastStore.getState().add({
-                        id: Math.random().toString(),
-                        type: "info",
-                        data: {
-                            message: "This is a toast",
-                            description:
-                                "You can add toasts to your app. If they are 2 lines, it's perfect",
-                        },
-                    });
-                }}
-            >
-                Add a toast
-            </button>
-            <Link to="/logout">Logout</Link>
+        <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+            <PageHead
+                title="Welcome to Turquiz"
+                description="Turquiz is a platform that helps you to get prolific in
+                    English. You can take quizzes and use forums to improve your
+                    English."
+            />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import { Form, Link } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
-import { button, buttonInnerRing } from "../components/button";
+import { buttonClass, buttonInnerRing } from "../components/button";
 
 import { inputClass, labelClass } from "../components/input";
 import { Logo } from "../components/logo";
@@ -11,21 +11,17 @@ export const Login = () => {
     const isAuthError = actionData && "error" in actionData;
 
     return (
-        <div className="flex flex-col items-center md:py-16 py-1 relative dot-pattern min-h-[100dvh] gap-6">
-            <div className="flex flex-col items-stretch justify-center min-h-12 gap-6 bg-white w-full max-w-md shadow-card border rounded-2xl border-slate-100 rounded-4 p-6">
+        <div className="dot-pattern relative flex min-h-[100dvh] flex-col items-center gap-6 py-1 md:py-16">
+            <div className="rounded-2xl flex min-h-12 w-full max-w-md flex-col items-stretch justify-center gap-6 rounded-4 border border-slate-100 bg-white p-6 shadow-card">
                 <div className="flex flex-col items-center gap-2">
-                    <Link
-                        to={"/"}
-                        aria-description="App Home Page"
-                        className="hover:bg-slate-50 border-slate-100 items-center p-4 aspect-square bg-gradient-to-b from-[rgba(228,229,231,.48)] to-[rgba(228,229,231,0)] rounded-full ring-1 ring-slate-100"
-                    >
+                    <div className="aspect-square items-center rounded-full border-slate-100 bg-gradient-to-b from-[rgba(228,229,231,.48)] to-[rgba(228,229,231,0)] p-4 ring-1 ring-slate-100 hover:bg-slate-50">
                         <Logo size={40} />
-                    </Link>
+                    </div>
                     <div className="flex flex-col items-center gap-1">
-                        <h1 className="text-2xl font-medium font-display text-slate-950">
+                        <h1 className="font-display text-2xl font-medium text-slate-950">
                             Login to your account
                         </h1>
-                        <p className="text-center text-slate-500 text-balance">
+                        <p className="text-balance text-center text-slate-500">
                             Pick up where you left off with your quizzes and
                             discussions.
                         </p>
@@ -33,7 +29,7 @@ export const Login = () => {
                 </div>
                 <hr className="border-slate-100" />
                 <Form
-                    className="w-full flex flex-col gap-6"
+                    className="flex w-full flex-col gap-6"
                     method="POST"
                     action="/login"
                 >
@@ -78,16 +74,18 @@ export const Login = () => {
                         <div className="flex items-center">
                             <label
                                 htmlFor="keep_me_logged_in"
-                                className="text-slate-600 cursor-pointer"
+                                className="flex cursor-pointer text-slate-600"
                             >
                                 <input
                                     type="checkbox"
                                     id="keep_me_logged_in"
                                     name="keep_me_logged_in"
-                                    className="m-0 p-0"
+                                    className="m-0 rounded-[3px] border-slate-200 p-0 text-cyan-700 ring-0 ring-transparent ring-offset-2 transition-all focus:ring-cyan-700 focus-visible:ring-cyan-700 focus-visible:ring-offset-2"
                                     aria-label="Keep me logged in"
                                 />
-                                Keep me logged in
+                                <span className="inline-flex h-4 -translate-y-1 pl-2 text-sm leading-6">
+                                    Keep me logged in
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -95,7 +93,7 @@ export const Login = () => {
                     <div className="flex flex-col gap-2">
                         <button
                             type="submit"
-                            className={button({ intent: "secondary" })}
+                            className={buttonClass({ intent: "secondary" })}
                         >
                             <div
                                 className={buttonInnerRing({
@@ -106,7 +104,7 @@ export const Login = () => {
                         </button>
 
                         <Link
-                            className={button({ intent: "tertiary" })}
+                            className={buttonClass({ intent: "tertiary" })}
                             to="/register"
                         >
                             <span className="text-slate-900 transition-all">
@@ -116,11 +114,11 @@ export const Login = () => {
                     </div>
                 </Form>
             </div>
-            <div className="px-6 flex flex-col items-center w-full max-w-md rounded-2xl rounded-4 gap-0">
+            <div className="rounded-2xl flex w-full max-w-md flex-col items-center gap-0 rounded-4 px-6">
                 <span className="text-slate-500"> Just looking around?</span>
                 <Link
                     to="/"
-                    className="text-cyan-800 font-medium hover:text-cyan-950 ml-1 hover:underline underline-offset-2"
+                    className="ml-1 font-medium text-cyan-800 underline-offset-2 hover:text-cyan-950 hover:underline"
                 >
                     Use Turquiz as a guest
                 </Link>

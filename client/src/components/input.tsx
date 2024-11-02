@@ -1,11 +1,11 @@
 import { cva } from "cva";
 
 export const inputClass = cva(
-    "py-2 px-3 rounded-md ring-1 border-none leading-6 text-cyan-900 tracking-tight carret-cyan-900 outline-none font-normal text-cya focus:ring-2  focus:outline-none transition-all duration-300 rounded-1",
+    "rounded-md carret-cyan-900 font-normal text-cya rounded-1 border-none px-3 py-2 leading-6 tracking-tight text-cyan-900 outline-none ring-1 transition-all duration-300 focus:outline-none focus:ring-2",
     {
         variants: {
             invalid: {
-                true: "ring-red-500 focus:ring-cyan-700 after:content-[attr(aria-description)] after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-red-500 after:transition-all after:duration-300 after:rounded-t-md",
+                true: "after:rounded-t-md ring-red-500 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-red-500 after:transition-all after:duration-300 after:content-[attr(aria-description)] focus:ring-cyan-700",
                 false: "ring-slate-200 hover:ring-slate-400 focus:ring-cyan-700",
             },
         },
@@ -16,7 +16,7 @@ export const inputClass = cva(
 );
 
 export const labelClass = cva(
-    "text-slate-900 duration-100 transition-colors text-sm tracking-tight font-medium",
+    "text-sm font-medium tracking-tight text-slate-900 transition-colors duration-100",
     {
         variants: {
             wrapper: {

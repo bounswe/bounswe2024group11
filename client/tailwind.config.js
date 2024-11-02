@@ -42,6 +42,7 @@ const config = {
         },
         fontFamily: {
             body: [
+                "Innovator Grotesque VF",
                 "Inter V",
                 "Inter",
                 "Helvetica",
@@ -50,8 +51,12 @@ const config = {
                 "sans-serif",
             ],
             display: [
-                "SF Pro Display",
-                "SF Pro",
+                "'Innovator Grotesque VF'",
+                "'Innovator Grotesque'",
+                "'Inter V'",
+                "Inter",
+                "'SF Pro Display'",
+                "'SF Pro'",
                 "apple-system",
                 "Helvetica",
                 "Inter V",
@@ -121,8 +126,14 @@ const config = {
                 lg: "3200px",
             },
         },
-        plugins: [require("@xpd/tailwind-3dtransforms")],
     },
+    plugins: [
+        "prettier-plugin-tailwindcss",
+        require("@tailwindcss/typography"),
+        require("@tailwindcss/forms"),
+        require("@tailwindcss/aspect-ratio"),
+        require("@tailwindcss/container-queries"),
+    ],
 };
 
 export default config;
