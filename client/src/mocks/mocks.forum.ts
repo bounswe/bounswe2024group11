@@ -291,7 +291,7 @@ export const forumOverview: PostOverview[] = [
 
 export const forumDetails: PostDetails[] = [
     {
-        ...forumOverview[0],
+        post: forumOverview[0],
         answers: [
             {
                 id: "1001",
@@ -299,7 +299,7 @@ export const forumDetails: PostDetails[] = [
                 author: {
                     full_name: "Fatma Öztürk",
                     username: "fatma_ozturk",
-                    avatar: "https://example.com/answer_avatar1.png",
+                    avatar: "https://randomuser.me/api/portraits/women/9.jpg",
                 },
                 created_at: "2024-03-01T11:00:00Z",
                 num_likes: 30,
@@ -311,16 +311,232 @@ export const forumDetails: PostDetails[] = [
                 author: {
                     full_name: "Ali Kara",
                     username: "ali_kara",
-                    avatar: "https://example.com/answer_avatar2.png",
+                    avatar: "https://randomuser.me/api/portraits/men/9.jpg",
                 },
                 created_at: "2024-03-01T12:30:00Z",
                 num_likes: 25,
                 num_dislikes: 3,
             },
+            {
+                id: "1003",
+                text: "Watching English movies with subtitles is a fun way to learn vocabulary and pronunciation.",
+                author: {
+                    full_name: "Emily Johnson",
+                    username: "emily_johnson",
+                    avatar: "https://randomuser.me/api/portraits/women/10.jpg",
+                },
+                created_at: "2024-03-02T14:00:00Z",
+                num_likes: 40,
+                num_dislikes: 1,
+            },
+            {
+                id: "1004",
+                text: "Joining online forums or communities where people discuss topics in English can improve your language skills.",
+                author: {
+                    full_name: "Michael Smith",
+                    username: "michael_smith",
+                    avatar: "https://randomuser.me/api/portraits/men/10.jpg",
+                },
+                created_at: "2024-03-02T15:00:00Z",
+                num_likes: 18,
+                num_dislikes: 0,
+            },
+            {
+                id: "1005",
+                text: "Using a dictionary app to look up words you don’t know can help you expand your vocabulary quickly.",
+                author: {
+                    full_name: "Sophia Lee",
+                    username: "sophia_lee",
+                    avatar: "https://randomuser.me/api/portraits/women/11.jpg",
+                },
+                created_at: "2024-03-03T09:00:00Z",
+                num_likes: 35,
+                num_dislikes: 4,
+            },
+            {
+                id: "1006",
+                text: "Learning root words and prefixes can make it easier to understand new words.",
+                author: {
+                    full_name: "James Brown",
+                    username: "james_brown",
+                    avatar: "https://randomuser.me/api/portraits/men/11.jpg",
+                },
+                created_at: "2024-03-03T11:15:00Z",
+                num_likes: 22,
+                num_dislikes: 3,
+            },
+            {
+                id: "1007",
+                text: "Writing down new words and using them in sentences can reinforce your memory.",
+                author: {
+                    full_name: "Olivia Garcia",
+                    username: "olivia_garcia",
+                    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+                },
+                created_at: "2024-03-04T10:30:00Z",
+                num_likes: 27,
+                num_dislikes: 2,
+            },
+            {
+                id: "1008",
+                text: "Practicing English with native speakers can improve your vocabulary and fluency.",
+                author: {
+                    full_name: "William Martinez",
+                    username: "william_martinez",
+                    avatar: "https://randomuser.me/api/portraits/men/12.jpg",
+                },
+                created_at: "2024-03-04T13:45:00Z",
+                num_likes: 45,
+                num_dislikes: 1,
+            },
+            {
+                id: "1009",
+                text: "Listening to English podcasts can expose you to new words and idioms.",
+                author: {
+                    full_name: "Isabella Rodriguez",
+                    username: "isabella_rodriguez",
+                    avatar: "https://randomuser.me/api/portraits/women/13.jpg",
+                },
+                created_at: "2024-03-05T08:00:00Z",
+                num_likes: 20,
+                num_dislikes: 0,
+            },
+            {
+                id: "1010",
+                text: "Reading aloud can help with pronunciation and retention of new words.",
+                author: {
+                    full_name: "Lucas Gonzalez",
+                    username: "lucas_gonzalez",
+                    avatar: "https://randomuser.me/api/portraits/men/13.jpg",
+                },
+                created_at: "2024-03-05T09:30:00Z",
+                num_likes: 32,
+                num_dislikes: 1,
+            },
+            {
+                id: "1011",
+                text: "Using vocabulary games and quizzes can make learning more enjoyable.",
+                author: {
+                    full_name: "Mia Wilson",
+                    username: "mia_wilson",
+                    avatar: "https://randomuser.me/api/portraits/women/14.jpg",
+                },
+                created_at: "2024-03-06T07:45:00Z",
+                num_likes: 28,
+                num_dislikes: 2,
+            },
+            {
+                id: "1012",
+                text: "Setting vocabulary learning goals can help you stay motivated.",
+                author: {
+                    full_name: "Benjamin Anderson",
+                    username: "benjamin_anderson",
+                    avatar: "https://randomuser.me/api/portraits/men/14.jpg",
+                },
+                created_at: "2024-03-06T10:30:00Z",
+                num_likes: 34,
+                num_dislikes: 1,
+            },
+            {
+                id: "1013",
+                text: "Using flashcard apps with spaced repetition helps reinforce learning over time.",
+                author: {
+                    full_name: "Ella Thomas",
+                    username: "ella_thomas",
+                    avatar: "https://randomuser.me/api/portraits/women/15.jpg",
+                },
+                created_at: "2024-03-07T12:00:00Z",
+                num_likes: 29,
+                num_dislikes: 2,
+            },
+            {
+                id: "1014",
+                text: "Watching English YouTube videos on topics of interest can build your vocabulary.",
+                author: {
+                    full_name: "Jack Martinez",
+                    username: "jack_martinez",
+                    avatar: "https://randomuser.me/api/portraits/men/15.jpg",
+                },
+                created_at: "2024-03-07T14:45:00Z",
+                num_likes: 33,
+                num_dislikes: 1,
+            },
+            {
+                id: "1015",
+                text: "Engaging in language exchange programs can boost your vocabulary.",
+                author: {
+                    full_name: "Grace Lee",
+                    username: "grace_lee",
+                    avatar: "https://randomuser.me/api/portraits/women/16.jpg",
+                },
+                created_at: "2024-03-08T08:15:00Z",
+                num_likes: 31,
+                num_dislikes: 3,
+            },
+            {
+                id: "1016",
+                text: "Using mnemonic devices for difficult words can help with retention.",
+                author: {
+                    full_name: "Daniel Kim",
+                    username: "daniel_kim",
+                    avatar: "https://randomuser.me/api/portraits/men/16.jpg",
+                },
+                created_at: "2024-03-08T09:45:00Z",
+                num_likes: 24,
+                num_dislikes: 2,
+            },
+            {
+                id: "1017",
+                text: "Keeping a vocabulary journal can track progress and highlight areas to improve.",
+                author: {
+                    full_name: "Amelia Lopez",
+                    username: "amelia_lopez",
+                    avatar: "https://randomuser.me/api/portraits/women/17.jpg",
+                },
+                created_at: "2024-03-09T10:00:00Z",
+                num_likes: 26,
+                num_dislikes: 2,
+            },
+            {
+                id: "1018",
+                text: "Participating in online English quizzes is a fun way to reinforce vocabulary.",
+                author: {
+                    full_name: "Henry Scott",
+                    username: "henry_scott",
+                    avatar: "https://randomuser.me/api/portraits/men/17.jpg",
+                },
+                created_at: "2024-03-09T13:30:00Z",
+                num_likes: 37,
+                num_dislikes: 1,
+            },
+            {
+                id: "1019",
+                text: "Joining English-speaking clubs can help you apply new words in conversation.",
+                author: {
+                    full_name: "Charlotte Green",
+                    username: "charlotte_green",
+                    avatar: "https://randomuser.me/api/portraits/women/18.jpg",
+                },
+                created_at: "2024-03-10T07:30:00Z",
+                num_likes: 30,
+                num_dislikes: 3,
+            },
+            {
+                id: "1020",
+                text: "Listening to English music and reading lyrics can make vocabulary learning enjoyable.",
+                author: {
+                    full_name: "Ethan Wright",
+                    username: "ethan_wright",
+                    avatar: "https://randomuser.me/api/portraits/men/18.jpg",
+                },
+                created_at: "2024-03-10T12:00:00Z",
+                num_likes: 35,
+                num_dislikes: 2,
+            },
         ],
     },
     {
-        ...forumOverview[1],
+        post: forumOverview[1],
         answers: [
             {
                 id: "1003",
@@ -328,7 +544,7 @@ export const forumDetails: PostDetails[] = [
                 author: {
                     full_name: "Buse Aslan",
                     username: "buse_aslan",
-                    avatar: "https://example.com/answer_avatar3.png",
+                    avatar: "https://randomuser.me/api/portraits/women/9.jpg",
                 },
                 created_at: "2024-03-05T15:00:00Z",
                 num_likes: 40,
@@ -340,7 +556,7 @@ export const forumDetails: PostDetails[] = [
                 author: {
                     full_name: "Can Yılmaz",
                     username: "can_yilmaz",
-                    avatar: "https://example.com/answer_avatar4.png",
+                    avatar: "https://randomuser.me/api/portraits/men/9.jpg",
                 },
                 created_at: "2024-03-05T16:00:00Z",
                 num_likes: 35,
@@ -349,7 +565,7 @@ export const forumDetails: PostDetails[] = [
         ],
     },
     {
-        ...forumOverview[2],
+        post: forumOverview[2],
         answers: [
             {
                 id: "1005",
@@ -357,7 +573,7 @@ export const forumDetails: PostDetails[] = [
                 author: {
                     full_name: "Derya Aksoy",
                     username: "derya_aksoy",
-                    avatar: "https://example.com/answer_avatar5.png",
+                    avatar: "https://randomuser.me/api/portraits/women/9.jpg",
                 },
                 created_at: "2024-03-12T19:00:00Z",
                 num_likes: 50,
@@ -369,7 +585,7 @@ export const forumDetails: PostDetails[] = [
                 author: {
                     full_name: "Ege Şahin",
                     username: "ege_sahin",
-                    avatar: "https://example.com/answer_avatar6.png",
+                    avatar: "https://randomuser.me/api/portraits/men/9.jpg",
                 },
                 created_at: "2024-03-12T20:00:00Z",
                 num_likes: 45,
