@@ -11,15 +11,14 @@ import { Avatar } from "./avatar";
 
 type forumCardProps = {
     post: Post;
-    onClick: () => void;
     key: string;
 };
 
-export const ForumCard = ({ post, onClick, key }: forumCardProps) => {
+export const ForumCard = ({ post, key }: forumCardProps) => {
     return (
         <div
             onClick={() => {
-                onClick();
+                window.location.href = `/forum/${post.id}`;
             }}
             key={key}
             aria-label={post.title}

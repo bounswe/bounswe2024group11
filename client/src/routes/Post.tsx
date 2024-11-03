@@ -29,11 +29,7 @@ export const PostPage = () => {
     return (
         <div className="container flex w-full max-w-screen-xl flex-col items-center gap-8 py-12">
             <main className="flex flex-col items-stretch justify-center gap-10">
-                <ForumCard
-                    onClick={() => {}}
-                    key={data.post.id}
-                    post={data.post}
-                ></ForumCard>
+                <ForumCard key={data.post.id} post={data.post}></ForumCard>
                 <RadioProvider>
                     <RadioGroup>
                         <label className="label">
