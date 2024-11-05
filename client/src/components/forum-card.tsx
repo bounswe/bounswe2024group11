@@ -13,7 +13,7 @@ type forumCardProps = {
     post: Post;
     key: string;
 };
-
+//coauthored
 export const ForumCard = ({ post, key }: forumCardProps) => {
     return (
         <Link
