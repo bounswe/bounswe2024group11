@@ -17,8 +17,9 @@ type forumCardProps = {
 export const ForumCard = ({ post, key }: forumCardProps) => {
     return (
         <Link
+            to={`forum/${post.id}`}
             key={key}
-            aria-label={post.title}
+            aria-label={`${post.title} by ${post.author.full_name}`}
             className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200"
         >
             <div className="flex flex-col gap-3 pb-3">
@@ -72,7 +73,10 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">
-                    <Button className="flex size-8 items-center justify-center rounded-2 bg-slate-100">
+                    <Button
+                        aria-roledescription="Upvote"
+                        className="flex size-8 items-center justify-center rounded-2 bg-slate-100"
+                    >
                         <RiArrowUpLine
                             className="size-5 text-slate-900"
                             onClick={() => {
@@ -85,6 +89,7 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                     </p>
                     <Button className="flex size-8 items-center justify-center rounded-2 border border-slate-200">
                         <RiArrowDownLine
+                            aria-roledescription="Downvote"
                             className="size-5 text-slate-900"
                             onClick={() => {
                                 logger.log("downvoted");
