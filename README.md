@@ -67,6 +67,6 @@ docker-compose -f docker-compose.dev.yml --build up -d
 
 #### Standards
 
-In LAB-5, the team put significant effort to document & follow the standards of the project.
+In LAB-5, the team made significant efforts to document and adhere to the project's standards, namely WAI-ARIA, WCAG, and SVG.
 
-Responsible people: Arda Vural,Hasan Kerem Seker, M. Emin Ciftci, Umit Can Evleksiz,
+Responsible individuals: Arda Vural, Hasan Kerem Seker, M. Emin Ciftci, Umit Can Evleksiz.
