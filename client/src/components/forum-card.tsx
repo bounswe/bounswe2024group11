@@ -16,10 +16,7 @@ type forumCardProps = {
 
 export const ForumCard = ({ post, key }: forumCardProps) => {
     return (
-        <div
-            onClick={() => {
-                window.location.href = `/forum/${post.id}`;
-            }}
+        <Link
             key={key}
             aria-label={post.title}
             className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200"
@@ -96,6 +93,6 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                     </Button>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };
