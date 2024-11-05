@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import ForumQuestion, Tag
+from .models import ForumQuestion, Tag, Quiz, QuizQuestion
 from faker import Faker
 
 User = get_user_model()
@@ -111,3 +111,71 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             instance.tags.add(tag)
 
         return instance
+
+
+class QuizQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizQuestion
+        fields = ('id', 'question_text', 'choices', 'correct_answer', 'quiz')
+        read_only_fields = ('quiz',)
+
+        def create(self, validated_data):
+            # Assuming 'quiz' is passed as an ID
+            quiz_id = validated_data.pop('quiz')  
+            quiz = Quiz.objects.get(id=quiz_id)  # Fetch the corresponding Quiz instance
+            quiz_question = QuizQuestion.objects.create(quiz=quiz, **validated_data)  
+            return quiz_question  
+        
+        def update(self, instance, validated_data):
+            instance.question_text = validated_data.get('question_text', instance.question_text)
+            instance.choices = validated_data.get('choices', instance.choices)
+            instance.correct_answer = validated_data.get('correct_answer', instance.correct_answer)
+            instance.save()
+            return instance 
+
+
+class QuizSerializer(serializers.ModelSerializer):
+    questions = QuizQuestionSerializer(many=True, read_only=True)  # Nested serializer for questions
+    author = UserInfoSerializer(read_only=True)
+    tags = TagSerializer(many=True)
+    created_at = serializers.DateTimeField(source='date', read_only=True)
+
+    class Meta:
+        model = Quiz
+        fields = ('id', 'title', 'description', 'author', 'proficiency_level', 'tags', 'quiz_type', 'created_at', "questions")
+        read_only_fields = ('author', 'created_at')
+    
+    def create(self, validated_data):
+        # Extract tags from validated_data
+        tags_data = validated_data.pop('tags')
+        quiz = Quiz.objects.create(**validated_data)
+
+        # Add tags to the Quiz instance
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(**tag_data)
+            quiz.tags.add(tag)
+
+        return quiz
+    
+    def update(self, instance, validated_data):
+        tags_data = validated_data.pop('tags')
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.proficiency_level = validated_data.get('proficiency_level', instance.proficiency_level)
+        instance.save()
+
+        # Update tags
+        instance.tags.clear()
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(**tag_data)
+            instance.tags.add(tag)
+
+        return instance
+    
+    
+
+
+
+
+
+    
