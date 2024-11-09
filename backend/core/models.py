@@ -45,8 +45,7 @@ class Quiz(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES)
     tags = models.ManyToManyField('Tag')
-    type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)
-    ## num_taken = models.IntegerField(default=0)
+    type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)    
     
     def __str__(self):
         return self.title

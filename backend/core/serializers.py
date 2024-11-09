@@ -120,18 +120,28 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'question_text', 'choices', 'answer')
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
+class RatingSerializer(serializers.Serializer):
+    score = serializers.FloatField(default=0.2, read_only=True)
+    count = serializers.IntegerField(default=3, read_only=True)
+
+
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuizQuestionSerializer(many=True)  # Allow nested questions creation
     author = UserInfoSerializer(read_only=True)  # Assuming UserInfoSerializer is defined
     tags = TagSerializer(many=True)  # Assuming TagSerializer is defined
 
+    num_taken = serializers.IntegerField(default=0, read_only=True)
+    is_taken = serializers.BooleanField(default=False, read_only=True)
+    rating = RatingSerializer(read_only=True, default={"score": 0.2, "count": 3})
+    
+
     class Meta:
         model = Quiz
         fields = (
             'id', 'title', 'description', 'author', 'difficulty', 
-            'tags', 'type', 'created_at', 'questions'
+            'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating"
         )
-        read_only_fields = ('author', "difficulty", 'created_at')
+        read_only_fields = ('author', "difficulty", 'created_at', 'num_taken', 'is_taken', 'rating')
 
     def create(self, validated_data):
         # Extract nested questions and tags from validated_data
