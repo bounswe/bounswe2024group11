@@ -4,6 +4,7 @@ from rest_framework import permissions
 from ..serializers import QuizQuestionSerializer
 from ..permissions import IsAuthorOrReadOnly
 
+# WE PLAN TO NOT USE IT. MAY DELETE LATER
 class QuizQuestionViewSet(viewsets.ModelViewSet):
     queryset = QuizQuestion.objects.all()
     serializer_class = QuizQuestionSerializer
