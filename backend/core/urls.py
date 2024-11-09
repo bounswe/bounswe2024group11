@@ -28,7 +28,6 @@ schema_view = get_schema_view(
 router = DefaultRouter()
 router.register(r'forum-questions', ForumQuestionViewSet, basename='forum-question')
 router.register(r'quizzes', QuizViewSet, basename='quiz')
-router.register(r'quiz-questions', QuizQuestionViewSet, basename='quiz-question')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -46,7 +46,8 @@ class Quiz(models.Model):
     proficiency_level = models.IntegerField(choices=PROFICIENCY_LEVEL_CHOICES)
     tags = models.ManyToManyField('Tag')
     quiz_type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)
-     
+   ## num_taken = models.IntegerField(default=0)
+    
     def __str__(self):
         return self.title
     
