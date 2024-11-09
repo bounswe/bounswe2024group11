@@ -11,7 +11,7 @@ class ForumQuestion(models.Model):
     title = models.CharField(max_length=100)
     question = models.CharField(max_length=1000)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField('Tag')
 
     def __str__(self):
@@ -32,7 +32,7 @@ class Quiz(models.Model):
         (3, "English word to Sense"),
     ]
 
-    PROFICIENCY_LEVEL_CHOICES = [
+    DIFFICULTY_CHOICES = [
         (1, "Beginner"),
         (2, "Intermediate"),
         (3, "Advanced"),
@@ -42,11 +42,11 @@ class Quiz(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField() 
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
-    proficiency_level = models.IntegerField(choices=PROFICIENCY_LEVEL_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES)
     tags = models.ManyToManyField('Tag')
-    quiz_type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)
-   ## num_taken = models.IntegerField(default=0)
+    type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)
+    ## num_taken = models.IntegerField(default=0)
     
     def __str__(self):
         return self.title
@@ -54,7 +54,7 @@ class Quiz(models.Model):
 class QuizQuestion(models.Model):
     question_text = models.CharField(max_length=1000)
     choices = models.JSONField()
-    correct_answer = models.CharField(max_length=255)
+    answer = models.CharField(max_length=255)
     quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
     
     def __str__(self):

@@ -10,6 +10,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', "full_name", "avatar")  # Include relevant fields
+        read_only_fields = ('id', 'username', 'email', "full_name", "avatar")  # Make these fields read-only
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -41,13 +42,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'linked_data_id', 'description')
+        fields = ('name', 'linked_data_id', 'description')
 
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)  # For nested representation of tags
     author = UserInfoSerializer(read_only=True)
-    created_at = serializers.DateTimeField(source='date', read_only=True)  # Map 'date' field to 'created_at'
 
     answers_count = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
@@ -117,22 +117,21 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
 class QuizQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizQuestion
-        fields = ('id', 'question_text', 'choices', 'correct_answer')
+        fields = ('id', 'question_text', 'choices', 'answer')
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuizQuestionSerializer(many=True)  # Allow nested questions creation
     author = UserInfoSerializer(read_only=True)  # Assuming UserInfoSerializer is defined
     tags = TagSerializer(many=True)  # Assuming TagSerializer is defined
-    created_at = serializers.DateTimeField(source='date', read_only=True)
 
     class Meta:
         model = Quiz
         fields = (
-            'id', 'title', 'description', 'author', 'proficiency_level', 
-            'tags', 'quiz_type', 'created_at', 'questions'
+            'id', 'title', 'description', 'author', 'difficulty', 
+            'tags', 'type', 'created_at', 'questions'
         )
-        read_only_fields = ('author', 'created_at')
+        read_only_fields = ('author', "difficulty", 'created_at')
 
     def create(self, validated_data):
         # Extract nested questions and tags from validated_data
@@ -161,7 +160,7 @@ class QuizSerializer(serializers.ModelSerializer):
         # Update quiz fields
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
-        instance.proficiency_level = validated_data.get('proficiency_level', instance.proficiency_level)
+        instance.difficulty = validated_data.get('difficulty', instance.difficulty)
         instance.save()
 
         # Update tags
@@ -182,7 +181,7 @@ class QuizSerializer(serializers.ModelSerializer):
 # class QuizQuestionSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = QuizQuestion
-#         fields = ('id', 'question_text', 'choices', 'correct_answer')
+#         fields = ('id', 'question_text', 'choices', 'answer')
         
 
 #     #     def create(self, validated_data):
@@ -196,7 +195,7 @@ class QuizSerializer(serializers.ModelSerializer):
 #     # def update(self, instance, validated_data):
 #     #     instance.question_text = validated_data.get('question_text', instance.question_text)
 #     #     instance.choices = validated_data.get('choices', instance.choices)
-#     #     instance.correct_answer = validated_data.get('correct_answer', instance.correct_answer)
+#     #     instance.answer = validated_data.get('answer', instance.answer)
 #     #     instance.save()
 #     #     return instance
 
@@ -210,8 +209,8 @@ class QuizSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Quiz
 #         fields = (
-#             'id', 'title', 'description', 'author', 'proficiency_level', 
-#             'tags', 'quiz_type', 'created_at', 'questions'
+#             'id', 'title', 'description', 'author', 'difficult', 
+#             'tags', 'type', 'created_at', 'questions'
 #         )
 #         read_only_fields = ('author', 'created_at')
 
@@ -231,7 +230,7 @@ class QuizSerializer(serializers.ModelSerializer):
 #         tags_data = validated_data.pop('tags', [])
 #         instance.title = validated_data.get('title', instance.title)
 #         instance.description = validated_data.get('description', instance.description)
-#         instance.proficiency_level = validated_data.get('proficiency_level', instance.proficiency_level)
+#         instance.difficult = validated_data.get('difficult', instance.difficult)
 #         instance.save()
 
 #         # Update tags
