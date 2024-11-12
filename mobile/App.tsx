@@ -12,6 +12,7 @@ import Leaderboard from "./app/screens/Leaderboard";
 import Login from "./app/screens/Login";
 import Profile from "./app/screens/Profile";
 import Quiz from "./app/screens/Quiz";
+import QuizDetail from "./app/screens/QuizDetail";
 import Register from "./app/screens/Register"; // import the new Register screen
 import { Question } from "./app/types/forum";
 
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   Register: undefined;
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
+  QuizDetail: undefined;
   CreateQuestion: undefined;
 };
 
@@ -117,6 +119,7 @@ export const Layout = () => {
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}
             />
+            <Stack.Screen name="QuizDetail" component={QuizDetail} />
             {/*
             {authState?.authenticated
               ? <Stack.Screen
