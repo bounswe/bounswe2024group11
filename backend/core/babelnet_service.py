@@ -1,7 +1,7 @@
 import requests
 
 BASE_URL = "https://babelnet.io/v6"
-API_KEY = "e5252315-c71f-461e-89cf-93e938db15c6"  # Replace with your BabelNet API key
+API_KEY = ""  # Replace with your BabelNet API key
 
 def get_hint(word ,language="EN", targetLang="EN"):
     """Fetch a hint (synonym or example) from BabelNet for a given word."""
