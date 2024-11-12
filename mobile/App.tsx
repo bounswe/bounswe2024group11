@@ -15,6 +15,7 @@ import Quiz from "./app/screens/Quiz";
 import QuizDetail from "./app/screens/QuizDetail";
 import Register from "./app/screens/Register"; // import the new Register screen
 import { Question } from "./app/types/forum";
+import { QuizOverview } from "./app/types/quiz";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -22,7 +23,7 @@ export type RootStackParamList = {
   Register: undefined;
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
-  QuizDetail: undefined;
+  QuizDetail: { quiz: QuizOverview };
   CreateQuestion: undefined;
 };
 

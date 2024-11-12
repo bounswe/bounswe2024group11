@@ -50,7 +50,7 @@ const Quiz: React.FC = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("QuizDetail");
+              navigation.navigate("QuizDetail", { quiz: item });
             }}
           >
             <QuizCard item={item} />
