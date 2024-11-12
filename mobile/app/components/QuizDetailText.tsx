@@ -21,10 +21,22 @@ const QuizDetailText: React.FC<QuizDetailTextProps> = ({ item }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  title: {},
-  description: {},
-  info: {},
+  container: {
+    padding: 24,
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: "bold",
+    paddingVertical: 12,
+  },
+  description: {
+    fontSize: 20,
+    paddingVertical: 12,
+  },
+  info: {
+    paddingTop: 80,
+    fontSize: 16,
+  },
 });
 
 export default QuizDetailText;
