@@ -22,5 +22,5 @@ class Tag(models.Model):
     linked_data_id = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
 
-    def __str__(self):
+    def __str__(self):          # 
         return self.name
