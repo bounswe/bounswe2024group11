@@ -1,15 +1,7 @@
-import {
-    Button,
-    Dialog,
-    DialogHeading,
-    Form,
-    FormError,
-    FormInput,
-    FormLabel,
-    FormSubmit,
-} from "@ariakit/react";
+import { Button, Dialog, DialogHeading } from "@ariakit/react";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
+import { Form } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { ForumCard } from "../components/forum-card";
 import { PageHead } from "../components/page-head";
@@ -25,9 +17,6 @@ export const Forum = () => {
     const description = logged_in
         ? `This is your time to shine ${user.full_name}`
         : "Test your knowledge of various topics. Log in to track your progress.";
-    form.useSubmit(async (state) => {
-        alert(JSON.stringify(state.values));
-    });
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <PageHead title="Forum" description={description} />
@@ -53,45 +42,34 @@ export const Forum = () => {
                 <DialogHeading className="heading">
                     Create New Question
                 </DialogHeading>
-                <Form
-                    store={form}
-                    aria-labelledby="add-new-participant"
-                    className="wrapper"
-                >
+                <Form aria-labelledby="add-new-post" className="wrapper">
                     <div>
-                        <FormInput
+                        <input
                             type="text"
-                            name={form.names.title}
+                            name="title"
                             placeholder="Post Title"
                             className="input"
                             required
                         />
-                        <FormError name={form.names.title} className="error" />
                     </div>
                     <div>
-                        <textarea name={form.names.body}></textarea>
-                        <FormError name={form.names.title} className="error" />
+                        <textarea
+                            name="body"
+                            placeholder="Question Body"
+                        ></textarea>
                     </div>
                     <div>
                         <span>Tags:</span>
                     </div>
                     <div>
-                        <FormLabel name={form.names.title}>Email</FormLabel>
-                        <FormInput
-                            type="text"
-                            name={form.names.title}
-                            placeholder="johndoe@example.com"
-                            className="input"
-                            required
-                        />
-                        <FormError name={form.names.title} className="error" />
+                        <select name="tags" className="input" required />
                     </div>
-                    <FormSubmit
+                    <button
                         className="flex h-10 w-40 items-center justify-center rounded-4 bg-blue-500 hover:shadow-md"
                         onClick={() => setCreatingPost(false)}
                     >
                         Post
-                    </FormSubmit>
+                    </button>
                 </Form>
             </Dialog>
         </div>
