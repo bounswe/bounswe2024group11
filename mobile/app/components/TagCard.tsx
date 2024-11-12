@@ -18,7 +18,7 @@ const TagCard: React.FC<TagCardProps> = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#EF5354",
+    backgroundColor: "#E5E7EB",
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
