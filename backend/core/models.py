@@ -8,6 +8,7 @@ class CustomUser(AbstractUser):
     avatar = models.CharField(max_length=1000, blank=True, null=True)
 
 class ForumQuestion(models.Model):
+    parent_question_id = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='answers')
     title = models.CharField(max_length=100)
     question = models.CharField(max_length=1000)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

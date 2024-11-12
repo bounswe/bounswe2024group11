@@ -1,4 +1,5 @@
 from ..models import ForumQuestion
+from django.db import models
 from rest_framework import viewsets
 from rest_framework import permissions
 from ..serializers import ForumQuestionSerializer
@@ -18,5 +19,9 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         if self.action == 'list':  # If listing, allow anyone
             return [permissions.AllowAny()]
         return super().get_permissions()
-
-
+    def get_queryset(self):
+        pk = self.kwargs.get('pk', None)
+        if pk is not None:
+            return ForumQuestion.objects.filter(models.Q(id=pk) | models.Q(parent_question_id=pk))
+        else:
+            return ForumQuestion.objects.filter(parent_question_id__isnull=True).order_by('-date')
