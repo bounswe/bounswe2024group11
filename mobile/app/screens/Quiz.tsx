@@ -15,12 +15,12 @@ import { QuizOverview } from "../types/quiz";
 
 const API_URL = "http://10.0.2.2:3000/quiz-feed";
 
-type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type QuizScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Quiz: React.FC = () => {
   const [quizzes, setQuizzes] = useState<QuizOverview[]>([]);
 
-  const navigation = useNavigation<ForumScreenNavigationProp>();
+  const navigation = useNavigation<QuizScreenNavigationProp>();
   const isFocused = useIsFocused();
 
   useEffect(() => {
