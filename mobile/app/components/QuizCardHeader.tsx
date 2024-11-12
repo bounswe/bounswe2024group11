@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     margin: 4,
-    backgroundColor: "#5DA3FA",
+    backgroundColor: "#E5E7EB",
     elevation: 4,
   },
   difficulty_text: {
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   rating_score_card: {
     borderRadius: 4,
     padding: 4,
-    backgroundColor: "#50DBB4",
+    backgroundColor: "#ECFDF5",
     elevation: 4,
   },
   rating_score_text: {

@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   created_at: {},
   num_taken: {},
   take_quiz_button: {
-    backgroundColor: "#5DA3FA",
+    backgroundColor: "#22D3EE",
     padding: 4,
     borderRadius: 8,
     elevation: 8,
