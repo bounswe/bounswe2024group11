@@ -1,6 +1,7 @@
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class CustomUser(AbstractUser):
     email = models.EmailField()
@@ -59,4 +60,9 @@ class QuizQuestion(models.Model):
     def __str__(self):
         return self.question_text
 
-
+class TakeQuiz(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quiz_taker_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )

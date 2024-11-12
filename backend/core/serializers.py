@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import ForumQuestion, Tag, Quiz, QuizQuestion
+from .models import ForumQuestion, Tag, Quiz, QuizQuestion, TakeQuiz, CustomUser
 from faker import Faker
 
 User = get_user_model()
@@ -251,7 +251,34 @@ class QuizSerializer(serializers.ModelSerializer):
 
 #         return instance
     
-    
+
+class TakeQuizSerializer(serializers.ModelSerializer):
+    # Define ID fields
+    quiz_id = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all(), source='quiz')
+    quiz_taker_user_id = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), source='quiz_taker_user')
+
+    class Meta:
+        model = TakeQuiz
+        fields = ('id', 'quiz_id', "rating")
+
+    def create(self, validated_data):
+        # Assuming 'quiz' and 'user' are passed as IDs
+        print(validated_data)
+        quiz_id = validated_data.pop('quiz_id')  
+        user_id = validated_data.pop('quiz_taker_user_id')
+        quiz = Quiz.objects.get(id=quiz_id)  # Fetch the corresponding Quiz instance
+        user = User.objects.get(id=user_id)  # Fetch the corresponding User instance
+        take_quiz = TakeQuizModel.objects.create(quiz=quiz, user=user)
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")  
+        return take_quiz  # Return the created TakeQuizModel instance
+
+
+    def update(self, instance, validated_data):
+        instance.quiz = validated_data.get('quiz', instance.quiz)
+        instance.user = validated_data.get('quiz_taker_user', instance.user)
+        instance.save()
+        return instance
+
 
 
 
