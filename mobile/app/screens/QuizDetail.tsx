@@ -3,6 +3,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
 import QuizDetailText from "../components/QuizDetailText";
+import ViewQuizButton from "../components/ViewQuizButton";
 
 type QuizDetailScreenRouteProp = RouteProp<RootStackParamList, "QuizDetail">;
 
@@ -16,6 +17,7 @@ const QuizDetail: React.FC<Props> = ({ route }) => {
   return (
     <View>
       <QuizDetailText item={quiz} />
+      <ViewQuizButton item={{ id: quiz.id, is_taken: quiz.is_taken }} />
     </View>
   );
 };
