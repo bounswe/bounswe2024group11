@@ -1,7 +1,8 @@
 import { RouteProp } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
+import QuizDetailText from "../components/QuizDetailText";
 
 type QuizDetailScreenRouteProp = RouteProp<RootStackParamList, "QuizDetail">;
 
@@ -14,7 +15,7 @@ const QuizDetail: React.FC<Props> = ({ route }) => {
 
   return (
     <View>
-      <Text>{quiz.title}</Text>
+      <QuizDetailText item={quiz} />
     </View>
   );
 };
