@@ -48,7 +48,11 @@ const Quiz: React.FC = () => {
         data={quizzes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("QuizDetail");
+            }}
+          >
             <QuizCard item={item} />
           </TouchableOpacity>
         )}
