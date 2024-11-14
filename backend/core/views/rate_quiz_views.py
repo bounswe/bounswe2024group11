@@ -5,7 +5,7 @@ from ..serializers import RateQuizSerializer
 from ..permissions import IsAuthorOrReadOnly
 
 class RateQuizViewSet(viewsets.ModelViewSet):
-    queryset = RateQuiz.objects.all()
+    queryset = RateQuiz.objects.all().order_by('id')
     serializer_class = RateQuizSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
