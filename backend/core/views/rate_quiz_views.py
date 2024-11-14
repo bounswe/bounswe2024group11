@@ -11,10 +11,11 @@ class RateQuizViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Set the author to the current authenticated user
-        print("INSIDE PERFORM CREATE")
-        print("self.request.user",self.request.user)
-        serializer.save(quiz_rater_user_id=self.request.user.id)
-        print(serializer.data)
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        # Set the author to the current authenticated user
+        serializer.save(user=self.request.user)
 
     def get_permissions(self):
         if self.action == 'list':

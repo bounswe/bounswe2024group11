@@ -62,7 +62,10 @@ class QuizQuestion(models.Model):
 
 class RateQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    quiz_rater_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
+    # unique together
+    class Meta:
+        unique_together = ['quiz', 'user']

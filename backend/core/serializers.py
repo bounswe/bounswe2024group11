@@ -254,28 +254,26 @@ class QuizSerializer(serializers.ModelSerializer):
 
 class RateQuizSerializer(serializers.ModelSerializer):
     # Define ID fields
-    quiz_id = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all(), source='quiz')
-    quiz_rater_user_id = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), source='quiz_rater_user')
 
     class Meta:
         model = RateQuiz
-        fields = ('id', 'quiz_id', "rating")
+        fields = ('id', 'quiz', "rating", "user")
+        read_only_fields = ('id', "user")
 
     def create(self, validated_data):
+        # Example condition: Check if the user has already rated the quiz
+        if RateQuiz.objects.filter(quiz=validated_data["quiz"], user=validated_data["user"]).exists():
+            raise serializers.ValidationError({
+                "quiz": "You have already rated this quiz."
+            })
         # Assuming 'quiz' and 'user' are passed as IDs
-        print(validated_data)
-        quiz_id = validated_data.pop('quiz_id')  
-        user_id = validated_data.pop('quiz_rater_user_id')
-        quiz = Quiz.objects.get(id=quiz_id)  # Fetch the corresponding Quiz instance
-        user = User.objects.get(id=user_id)  # Fetch the corresponding User instance
-        rate_quiz = RateQuiz.objects.create(quiz=quiz, user=user)
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")  
+        rate_quiz = RateQuiz.objects.create(**validated_data)
+
         return rate_quiz  # Return the created RateQuiz instance
 
 
     def update(self, instance, validated_data):
-        instance.quiz = validated_data.get('quiz', instance.quiz)
-        instance.user = validated_data.get('quiz_rater_user', instance.user)
+        instance.rating = validated_data.get('rating', instance.rating)
         instance.save()
         return instance
 
