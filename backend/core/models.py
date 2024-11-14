@@ -60,9 +60,9 @@ class QuizQuestion(models.Model):
     def __str__(self):
         return self.question_text
 
-class TakeQuiz(models.Model):
+class RateQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    quiz_taker_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    quiz_rater_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
