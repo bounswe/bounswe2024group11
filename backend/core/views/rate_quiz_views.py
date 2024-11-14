@@ -4,7 +4,7 @@ from rest_framework import permissions
 from ..serializers import RateQuizSerializer
 from ..permissions import IsAuthorOrReadOnly
 
-class TakeQuizViewSet(viewsets.ModelViewSet):
+class RateQuizViewSet(viewsets.ModelViewSet):
     queryset = RateQuiz.objects.all()
     serializer_class = RateQuizSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]

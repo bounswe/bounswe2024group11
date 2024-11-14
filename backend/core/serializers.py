@@ -258,7 +258,7 @@ class RateQuizSerializer(serializers.ModelSerializer):
     quiz_rater_user_id = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), source='quiz_rater_user')
 
     class Meta:
-        model = TakeQuiz
+        model = RateQuiz
         fields = ('id', 'quiz_id', "rating")
 
     def create(self, validated_data):
@@ -268,9 +268,9 @@ class RateQuizSerializer(serializers.ModelSerializer):
         user_id = validated_data.pop('quiz_rater_user_id')
         quiz = Quiz.objects.get(id=quiz_id)  # Fetch the corresponding Quiz instance
         user = User.objects.get(id=user_id)  # Fetch the corresponding User instance
-        take_quiz = TakeQuizModel.objects.create(quiz=quiz, user=user)
+        rate_quiz = RateQuiz.objects.create(quiz=quiz, user=user)
         print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")  
-        return take_quiz  # Return the created TakeQuizModel instance
+        return rate_quiz  # Return the created RateQuiz instance
 
 
     def update(self, instance, validated_data):
