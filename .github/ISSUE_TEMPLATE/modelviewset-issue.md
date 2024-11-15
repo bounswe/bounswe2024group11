@@ -2,9 +2,11 @@
 name: ModelViewset and Model
 about: Create an issue for implementing ModelViewset and Model for Django REST
 ---
-
+# Put these in related fields and delete this part
 ## Title: Implement <YOUR MODEL> Model and a ModelViewSet for it in Django REST Framework
-
+## Tags: `app: be`, `pri: high`
+## Project: Turquiz
+## Milestone: Current Milestone
 ---
 
 #### To be reviewed by: @username
@@ -42,16 +44,16 @@ We need to create <YOUR MODEL> and `ModelViewSet` for it to efficiently handle C
 
 ## Acceptance Criteria
 
-1. A working API with the following endpoints:
+-[] A working API with the following endpoints:
    - `GET /api/v1/[view-path]/` - List all objects
    - `GET /api/v1/[view-path]/<id>/` - Retrieve an object by ID
    - `POST /api/v1/[view-path]/` - Create a new object
    - `PUT /api/v1/[view-path]/<id>/` - Update an object
    - `DELETE /api/v1/[view-path]/<id>/` - Delete an object
 
-2. Proper validations and error handling implemented.
-3. Swagger API documentation updated.
-4. Comprehensive unit tests with at least 80% test coverage.
+-[] Proper validations and error handling implemented.
+-[] Swagger API documentation updated.
+-[] Comprehensive unit tests with at least 80% test coverage.
 
 ---
 
