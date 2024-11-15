@@ -29,8 +29,24 @@ class QuizSetup(APITestCase):
             "questions": [
                 {
                     "question_text": "What is Django?",
-                    "choices": ["A web framework", "A programming language", "A database", "A server"],
-                    "answer": "A web framework"
+                    "choices": [
+                        {
+                            "choice_text": "A web framework",
+                            "is_correct": True
+                        }, 
+                        {
+                            "choice_text": "A programming language",
+                            "is_correct": False
+                        }, 
+                        {
+                            "choice_text": "A database",
+                            "is_correct": False
+                        }, 
+                        {
+                            "choice_text": "A server",
+                            "is_correct": False
+                        }
+                    ],
                 }
             ]
         }
@@ -48,6 +64,10 @@ class QuizTestCase(QuizSetup):
         self.assertEqual(response.data["title"], self.data['title'])
         self.assertEqual(response.data["description"], self.data['description'])
         self.assertDictEqual(response.data["tags"][0], self.data['tags'][0])
+        self.assertEqual(response.data["questions"][0]["question_text"], self.data['questions'][0]['question_text'])
+        self.assertEqual(response.data["questions"][0]["choices"][0]["choice_text"], self.data['questions'][0]['choices'][0]['choice_text'])
+        self.assertEqual(response.data["rating"]["score"], None)
+        self.assertEqual(response.data["rating"]["count"], 0)
 
     
     def test_quiz_update(self):
@@ -62,8 +82,24 @@ class QuizTestCase(QuizSetup):
             "questions": [
                 {
                     "question_text": "What is Django?",
-                    "choices": ["A web framework", "A programming language", "A database", "A server"],
-                    "answer": "A web framework"
+                    "choices": [
+                        {
+                            "choice_text": "A web framework",
+                            "is_correct": True
+                        }, 
+                        {
+                            "choice_text": "A programming language",
+                            "is_correct": False
+                        }, 
+                        {
+                            "choice_text": "A database",
+                            "is_correct": False
+                        }, 
+                        {
+                            "choice_text": "A server",
+                            "is_correct": False
+                        }
+                    ],
                 }
             ]
         }

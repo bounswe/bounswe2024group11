@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 from rest_framework import serializers
 
-from .models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, RateQuiz,
+from .models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
                      Tag)
 
 User = get_user_model()
@@ -114,27 +114,53 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
 
         return instance
 
+class QuizQuestionChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizQuestionChoice
+        fields = ('id', 'choice_text', 'is_correct')
+        # No need for 'question' field here, as it will be assigned in the QuizQuestion serializer
 
 
 class QuizQuestionSerializer(serializers.ModelSerializer):
+    choices = QuizQuestionChoiceSerializer(many=True)  # Allow nested choices creation
     class Meta:
         model = QuizQuestion
-        fields = ('id', 'question_text', 'choices', 'answer')
+        fields = ('id', 'question_text', 'choices')
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
-class RatingSerializer(serializers.Serializer):
-    score = serializers.FloatField(default=0.2, read_only=True)
-    count = serializers.IntegerField(default=3, read_only=True)
+    def create(self, validated_data):
+        # Extract nested choices from validated_data
+        choices_data = validated_data.pop('choices', [])
+        question = QuizQuestion.objects.create(**validated_data)
+
+        # Create and associate each QuizQuestionChoice with the QuizQuestion
+        for choice_data in choices_data:
+            QuizQuestionChoice.objects.create(question=question, **choice_data)
+
+        return question
+
+    def update(self, instance, validated_data):
+        # Handle updating nested choices
+        choices_data = validated_data.pop('choices', [])
+
+        # Update question fields
+        instance.question_text = validated_data.get('question_text', instance.question_text)
+        instance.save()
+
+        # Update or create associated choices
+        instance.choices.all().delete()
+        for choice_data in choices_data:
+            QuizQuestionChoice.objects.create(question=instance, **choice_data)
 
 
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuizQuestionSerializer(many=True)  # Allow nested questions creation
     author = UserInfoSerializer(read_only=True)  # Assuming UserInfoSerializer is defined
     tags = TagSerializer(many=True)  # Assuming TagSerializer is defined
+    rating = serializers.SerializerMethodField()
 
     num_taken = serializers.IntegerField(default=0, read_only=True)
     is_taken = serializers.BooleanField(default=False, read_only=True)
-    rating = RatingSerializer(read_only=True, default={"score": 0.2, "count": 3})
     
 
     class Meta:
@@ -145,23 +171,48 @@ class QuizSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author")
 
+    def get_rating(self, obj):
+        from django.db.models import Avg, Count
+
+        # Use aggregate to calculate average score and count in a single query
+        result = RateQuiz.objects.filter(quiz=obj).aggregate(
+            avg_score=Avg('rating'),
+            count=Count('id')
+        )
+
+        if result['count'] == 0:  # Check if no ratings exist
+            return {"score": None, "count": 0}
+
+        # Round the average score to 1 decimal place
+        return {"score": round(result['avg_score'], 1), "count": result['count']}
+
+    
+    def calculate_difficulty(self, questions):
+        # implement this method to calculate the difficulty of a quiz via external api
+        return Faker().random_int(min=1, max=4)
+
     def create(self, validated_data):
         # Extract nested questions and tags from validated_data
         questions_data = validated_data.pop('questions', [])
         tags_data = validated_data.pop('tags', [])
 
+        # Calculate the difficulty of the quiz  
+        validated_data["difficulty"] = self.calculate_difficulty(questions_data)
         # Create the Quiz instance
         quiz = Quiz.objects.create(**validated_data)
-
-        # Create and associate each QuizQuestion with the Quiz
-        for question_data in questions_data:
-            QuizQuestion.objects.create(quiz=quiz, **question_data)
 
         # Add tags to the Quiz instance
         for tag_data in tags_data:
             tag, created = Tag.objects.get_or_create(**tag_data)
             quiz.tags.add(tag)
 
+        # Create and associate each QuizQuestion with the Quiz
+        for question_data in questions_data:
+            choices_data = question_data.pop('choices', [])
+            question = QuizQuestion.objects.create(quiz=quiz, **question_data)
+            for choice_data in choices_data:
+                QuizQuestionChoice.objects.create(question=question, **choice_data)
+            
         return quiz
 
     def update(self, instance, validated_data):
@@ -172,7 +223,7 @@ class QuizSerializer(serializers.ModelSerializer):
         # Update quiz fields
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
-        instance.difficulty = validated_data.get('difficulty', instance.difficulty)
+        instance.difficulty = self.calculate_difficulty(questions_data)  # Update difficulty
         instance.save()
 
         # Update tags
@@ -184,9 +235,13 @@ class QuizSerializer(serializers.ModelSerializer):
         # Update or create associated questions
         instance.questions.all().delete()  # Optionally clear existing questions if not updating
         for question_data in questions_data:
-            QuizQuestion.objects.create(quiz=instance, **question_data)
-
-        return instance    
+            choices_data = question_data.pop('choices', [])
+            question = QuizQuestion.objects.create(quiz=instance, **question_data)
+            for choice_data in choices_data:
+                QuizQuestionChoice.objects.create(question=question, **choice_data)
+        
+        return instance
+        
 
 class RateQuizSerializer(serializers.ModelSerializer):
     # Define ID fields
