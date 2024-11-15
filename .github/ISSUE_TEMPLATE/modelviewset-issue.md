@@ -3,10 +3,10 @@ name: ModelViewset and Model
 about: Create an issue for implementing ModelViewset and Model for Django REST
 ---
 # Put these in related fields and delete this part
-## Title: Implement <YOUR MODEL> Model and a ModelViewSet for it in Django REST Framework
-## Tags: `app: be`, `pri: high`
-## Project: Turquiz
-## Milestone: Current Milestone
+Title: Implement <YOUR MODEL> Model and a ModelViewSet for it in Django REST Framework
+Tags: `app: be`, `pri: high`
+Project: Turquiz
+Milestone: Current Milestone
 ---
 
 #### To be reviewed by: @username
