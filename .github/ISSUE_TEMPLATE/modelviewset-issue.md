@@ -51,9 +51,9 @@ We need to create <YOUR MODEL> and `ModelViewSet` for it to efficiently handle C
    - `PUT /api/v1/[view-path]/<id>/` - Update an object
    - `DELETE /api/v1/[view-path]/<id>/` - Delete an object
 
--[] Proper validations and error handling implemented.
--[] Swagger API documentation updated.
--[] Comprehensive unit tests with at least 80% test coverage.
+- [ ] Proper validations and error handling implemented.
+- [ ] Swagger API documentation updated.
+- [ ] Comprehensive unit tests with at least 80% test coverage.
 
 ---
 
