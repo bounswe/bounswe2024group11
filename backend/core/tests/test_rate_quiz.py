@@ -30,8 +30,24 @@ class RateQuizSetup(APITestCase):
             "questions": [
                 {
                     "question_text": "What is Django?",
-                    "choices": ["A web framework", "A programming language", "A database", "A server"],
-                    "answer": "A web framework"
+                    "choices": [
+                        {
+                            "choice_text": "A web framework",
+                            "is_correct": True
+                        }, 
+                        {
+                            "choice_text": "A programming language",
+                            "is_correct": False
+                        }, 
+                        {
+                            "choice_text": "A database",
+                            "is_correct": False
+                        }, 
+                        {
+                            "choice_text": "A server",
+                            "is_correct": False
+                        }
+                    ],
                 }
             ]
         }
@@ -51,6 +67,12 @@ class RateQuizTestCase(RateQuizSetup):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["user"], self.user.id)
         self.assertIn("id", response.data)
+        self.assertIn("rating", response.data)
+        # get the average from the quiz endpoint
+        response = self.client.get(reverse('quiz-list'), format='json')
+        self.assertEqual(response.data["results"][0]["rating"]["score"], data["rating"])
+        self.assertEqual(response.data["count"], 1)
+
 
     def test_rate_quiz_for_the_second_time(self):
         data = {
