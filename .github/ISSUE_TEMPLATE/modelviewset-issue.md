@@ -44,7 +44,7 @@ We need to create <YOUR MODEL> and `ModelViewSet` for it to efficiently handle C
 
 ## Acceptance Criteria
 
--[] A working API with the following endpoints:
+- [ ] A working API with the following endpoints:
    - `GET /api/v1/[view-path]/` - List all objects
    - `GET /api/v1/[view-path]/<id>/` - Retrieve an object by ID
    - `POST /api/v1/[view-path]/` - Create a new object
