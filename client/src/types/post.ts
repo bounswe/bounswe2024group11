@@ -48,6 +48,9 @@ const answerSchema = object({
     created_at: string(),
     num_likes: number(),
     num_dislikes: number(),
+    userVote: optional(
+        nullable(union([literal("upvote"), literal("downvote")])),
+    ),
 });
 export const postDetailsSchema = object({
     post: postOverviewSchema,

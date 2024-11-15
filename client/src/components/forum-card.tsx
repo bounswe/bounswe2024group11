@@ -6,6 +6,8 @@ import {
 } from "@remixicon/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-typesafe";
+import { homeLoader } from "../routes/Home.data";
 import { PostOverview } from "../types/post";
 import { BASE_URL, logger } from "../utils";
 import { Avatar } from "./avatar";
@@ -13,21 +15,23 @@ import { Avatar } from "./avatar";
 type ForumCardProps = {
     post: PostOverview;
     key: string;
-    logged_in: boolean;
 };
 
-export const ForumCard = ({ post, key, logged_in }: ForumCardProps) => {
+export const ForumCard = ({ post, key }: ForumCardProps) => {
     const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(
         post.userVote || null,
     );
-
+    const [numVotes, setNumVotes] = useState(
+        post.num_likes - post.num_dislikes,
+    );
+    const { user, logged_in } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
     const handleVote = async (
         e: React.MouseEvent,
         voteType: "upvote" | "downvote",
     ) => {
         e.preventDefault(); // Prevent link navigation
         e.stopPropagation(); // Stop event bubbling
-
         if (!logged_in) return;
 
         try {
@@ -42,6 +46,7 @@ export const ForumCard = ({ post, key, logged_in }: ForumCardProps) => {
                 setUserVote(
                     voteType === updatedPost.userVote ? voteType : null,
                 );
+                setNumVotes(updatedPost.num_likes - updatedPost.num_dislikes);
             }
         } catch (error) {
             console.error("Vote failed:", error);
@@ -114,16 +119,14 @@ export const ForumCard = ({ post, key, logged_in }: ForumCardProps) => {
                             className={`size-5 ${userVote === "upvote" ? "text-orange-500" : "text-slate-900"}`}
                         />
                     </Button>
-                    <p className="text-sm text-slate-900">
-                        {post.num_likes - post.num_dislikes}
-                    </p>
+                    <p className="text-slate- w-6 text-sm">{numVotes}</p>
                     <Button
                         aria-label="Downvote"
                         onClick={(e) => handleVote(e, "downvote")}
                         className="flex size-8 items-center justify-center rounded-2 border border-slate-200"
                     >
                         <RiArrowDownLine
-                            className={`size-5 ${userVote === "downvote" ? "text-indigo-900" : "text-slate-900"}`}
+                            className={`size-5 ${userVote === "downvote" ? "text-purple-800" : "text-slate-900"}`}
                         />
                     </Button>
                 </div>

@@ -142,4 +142,61 @@ export const forumHandlers = [
 
         return HttpResponse.json(forumOverview[postIndex], { status: 200 });
     }),
+    http.post(`${BASE_URL}/answers/:id/vote`, async ({ params, request }) => {
+        const { id } = params;
+        const { voteType } = (await request.json()) as {
+            voteType: "upvote" | "downvote";
+        };
+
+        let targetAnswer = null;
+        let detailIndex = -1;
+        let answerIndex = -1;
+
+        // Find the answer in forumDetails
+        for (let i = 0; i < forumDetails.length; i++) {
+            answerIndex = forumDetails[i].answers.findIndex(
+                (answer) => answer.id === id,
+            );
+            if (answerIndex !== -1) {
+                detailIndex = i;
+                targetAnswer = forumDetails[i].answers[answerIndex];
+                break;
+            }
+        }
+
+        if (!targetAnswer) {
+            return HttpResponse.json(
+                { error: "Answer not found" },
+                { status: 404 },
+            );
+        }
+
+        if (!targetAnswer.userVote) {
+            targetAnswer.userVote = voteType;
+            if (voteType === "upvote") {
+                targetAnswer.num_likes++;
+            } else {
+                targetAnswer.num_dislikes++;
+            }
+        } else if (targetAnswer.userVote !== voteType) {
+            if (voteType === "upvote") {
+                targetAnswer.num_likes++;
+                targetAnswer.num_dislikes--;
+            } else {
+                targetAnswer.num_dislikes++;
+                targetAnswer.num_likes--;
+            }
+            targetAnswer.userVote = voteType;
+        } else {
+            if (voteType === "upvote") {
+                targetAnswer.num_likes--;
+            } else {
+                targetAnswer.num_dislikes--;
+            }
+            targetAnswer.userVote = null;
+        }
+
+        forumDetails[detailIndex].answers[answerIndex] = targetAnswer;
+        return HttpResponse.json(targetAnswer, { status: 200 });
+    }),
 ];

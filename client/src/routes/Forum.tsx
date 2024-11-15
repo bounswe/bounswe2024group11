@@ -43,11 +43,7 @@ export const Forum = () => {
             <main className="items-stretch justify-stretch">
                 <div className="flex w-full flex-col items-center gap-6">
                     {data.posts.map((post) => (
-                        <ForumCard
-                            key={post.id}
-                            post={post}
-                            logged_in={logged_in}
-                        />
+                        <ForumCard key={post.id} post={post} />
                     ))}
                 </div>
             </main>

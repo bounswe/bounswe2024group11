@@ -1,15 +1,58 @@
 import { Button, Separator } from "@ariakit/react";
 import { RiArrowDownLine, RiArrowUpLine } from "@remixicon/react";
+import { useState } from "react";
+import { useRouteLoaderData } from "react-router-typesafe";
+import { homeLoader } from "../routes/Home.data";
 import { Answer } from "../types/post";
-import { getRelativeTime, logger } from "../utils";
+import { BASE_URL, getRelativeTime, logger } from "../utils";
 import { Avatar } from "./avatar";
 
-type forumAnswerCardProps = {
+type ForumAnswerCardProps = {
     answer: Answer;
     key: string;
 };
 
-export const ForumAnswerCard = ({ answer, key }: forumAnswerCardProps) => {
+export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
+    const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(
+        answer.userVote || null,
+    );
+    const [numVotes, setNumVotes] = useState(
+        answer.num_likes - answer.num_dislikes,
+    );
+    const { user, logged_in } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
+    const handleVote = async (
+        e: React.MouseEvent,
+        voteType: "upvote" | "downvote",
+    ) => {
+        e.preventDefault();
+        logger.log("Vote clicked");
+        if (!logged_in) return;
+
+        try {
+            const response = await fetch(
+                `${BASE_URL}/answers/${answer.id}/vote`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ voteType }),
+                },
+            );
+
+            if (response.ok) {
+                const updatedAnswer = await response.json();
+                setUserVote(
+                    voteType === updatedAnswer.userVote ? voteType : null,
+                );
+                setNumVotes(
+                    updatedAnswer.num_likes - updatedAnswer.num_dislikes,
+                );
+            }
+        } catch (error) {
+            console.error("Vote failed:", error);
+        }
+    };
+
     return (
         <div
             key={key}
@@ -38,23 +81,23 @@ export const ForumAnswerCard = ({ answer, key }: forumAnswerCardProps) => {
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-end">
                 <div className="flex flex-row items-center gap-2">
-                    <Button className="flex size-8 items-center justify-center rounded-2 bg-slate-100">
+                    <Button
+                        aria-label="Upvote"
+                        onClick={(e) => handleVote(e, "upvote")}
+                        className="flex size-8 items-center justify-center rounded-2 bg-slate-100"
+                    >
                         <RiArrowUpLine
-                            className="size-5 text-slate-900"
-                            onClick={() => {
-                                logger.log("upvoted");
-                            }}
+                            className={`size-5 ${userVote === "upvote" ? "text-orange-500" : "text-slate-900"}`}
                         />
                     </Button>
-                    <p className="text-sm text-slate-900">
-                        {answer.num_likes - answer.num_dislikes}
-                    </p>
-                    <Button className="flex size-8 items-center justify-center rounded-2 border border-slate-200">
+                    <p className="w-6 text-sm text-slate-900">{numVotes}</p>
+                    <Button
+                        aria-label="Downvote"
+                        onClick={(e) => handleVote(e, "downvote")}
+                        className="flex size-8 items-center justify-center rounded-2 border border-slate-200"
+                    >
                         <RiArrowDownLine
-                            className="size-5 text-slate-900"
-                            onClick={() => {
-                                logger.log("downvoted");
-                            }}
+                            className={`size-5 ${userVote === "downvote" ? "text-indigo-900" : "text-slate-900"}`}
                         />
                     </Button>
                 </div>
