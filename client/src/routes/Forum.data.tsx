@@ -1,35 +1,8 @@
 import { LoaderFunction } from "react-router";
 import { redirect } from "react-router-typesafe";
-import { array, InferInput, number, object, safeParse, string } from "valibot";
-import { postDetailsSchema } from "../types/post";
+import { safeParse } from "valibot";
+import { forumResponseSchema, postDetailsSchema } from "../types/post";
 import { BASE_URL, logger } from "../utils";
-
-export type Post = InferInput<typeof postSchema>;
-
-const postSchema = object({
-    id: string(),
-    title: string(),
-    description: string(),
-    author: object({
-        full_name: string(),
-        username: string(),
-        avatar: string(),
-    }),
-    created_at: string(),
-    tags: array(
-        object({
-            id: string(),
-            name: string(),
-        }),
-    ),
-    num_comments: number(),
-    num_likes: number(),
-    num_dislikes: number(),
-});
-
-const forumResponseSchema = object({
-    posts: array(postSchema),
-});
 
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);

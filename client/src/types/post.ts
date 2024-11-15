@@ -1,4 +1,14 @@
-import { array, InferInput, number, object, string } from "valibot";
+import {
+    array,
+    InferInput,
+    literal,
+    nullable,
+    number,
+    object,
+    optional,
+    string,
+    union,
+} from "valibot";
 
 export type Answer = InferInput<typeof answerSchema>;
 
@@ -6,8 +16,9 @@ const Tagschema = object({
     id: string(),
     name: string(),
 });
+export type ForumResponse = InferInput<typeof forumResponseSchema>;
 
-const postOverviewSchema = object({
+export const postOverviewSchema = object({
     id: string(),
     title: string(),
     description: string(),
@@ -21,6 +32,9 @@ const postOverviewSchema = object({
     num_comments: number(),
     num_likes: number(),
     num_dislikes: number(),
+    userVote: optional(
+        nullable(union([literal("upvote"), literal("downvote")])),
+    ),
 });
 
 const answerSchema = object({
@@ -39,7 +53,9 @@ export const postDetailsSchema = object({
     post: postOverviewSchema,
     answers: array(answerSchema),
 });
-
+export const forumResponseSchema = object({
+    posts: array(postOverviewSchema),
+});
 export type PostOverview = InferInput<typeof postOverviewSchema>;
 export type PostDetails = InferInput<typeof postDetailsSchema>;
 export type Tag = InferInput<typeof Tagschema>;

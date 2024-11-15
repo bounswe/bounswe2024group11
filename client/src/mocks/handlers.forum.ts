@@ -1,5 +1,4 @@
 import { http, HttpResponse } from "msw";
-import { Post } from "../routes/Forum.data";
 import { PostDetails, PostOverview } from "../types/post";
 import { BASE_URL } from "../utils";
 import { forumDetails, forumOverview } from "./mocks.forum";
@@ -66,7 +65,7 @@ export const forumHandlers = [
     }),
     http.post(`${BASE_URL}/forum`, async ({ request }) => {
         const formData = await request.formData();
-        const post: Post = {
+        const post: PostOverview = {
             id: (forumOverview.length + 1).toString(),
             title: formData.get("title") as string,
             description: formData.get("body") as string,
@@ -99,5 +98,48 @@ export const forumHandlers = [
         forumDetails.unshift(postDetail);
 
         return HttpResponse.json({ ...postDetail }, { status: 201 });
+    }),
+    http.post(`${BASE_URL}/forum/:id/vote`, async ({ params, request }) => {
+        const { id } = params as { id: string };
+        const { voteType } = (await request.json()) as {
+            voteType: "upvote" | "downvote";
+        };
+        const postIndex = forumOverview.findIndex((post) => post.id === id);
+        if (postIndex === -1) {
+            return HttpResponse.json(
+                { error: "Post not found" },
+                { status: 404 },
+            );
+        }
+
+        // Store vote state in mock database
+        if (!forumOverview[postIndex].userVote) {
+            forumOverview[postIndex].userVote = voteType;
+            if (voteType === "upvote") {
+                forumOverview[postIndex].num_likes++;
+            } else {
+                forumOverview[postIndex].num_dislikes++;
+            }
+        } else if (forumOverview[postIndex].userVote !== voteType) {
+            // Change vote
+            if (voteType === "upvote") {
+                forumOverview[postIndex].num_likes++;
+                forumOverview[postIndex].num_dislikes--;
+            } else {
+                forumOverview[postIndex].num_dislikes++;
+                forumOverview[postIndex].num_likes--;
+            }
+            forumOverview[postIndex].userVote = voteType;
+        } else {
+            // Cancel vote
+            if (voteType === "upvote") {
+                forumOverview[postIndex].num_likes--;
+            } else {
+                forumOverview[postIndex].num_dislikes--;
+            }
+            forumOverview[postIndex].userVote = null;
+        }
+
+        return HttpResponse.json(forumOverview[postIndex], { status: 200 });
     }),
 ];
