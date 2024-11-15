@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import ForumQuestion, Tag, Quiz, QuizQuestion
+from .models import ForumQuestion, Tag, Quiz, QuizQuestion, RateQuiz, CustomUser
 from faker import Faker
 
 User = get_user_model()
@@ -251,7 +251,32 @@ class QuizSerializer(serializers.ModelSerializer):
 
 #         return instance
     
-    
+
+class RateQuizSerializer(serializers.ModelSerializer):
+    # Define ID fields
+
+    class Meta:
+        model = RateQuiz
+        fields = ('id', 'quiz', "rating", "user")
+        read_only_fields = ('id', "user")
+
+    def create(self, validated_data):
+        # Example condition: Check if the user has already rated the quiz
+        if RateQuiz.objects.filter(quiz=validated_data["quiz"], user=validated_data["user"]).exists():
+            raise serializers.ValidationError({
+                "quiz": "You have already rated this quiz."
+            })
+        # Assuming 'quiz' and 'user' are passed as IDs
+        rate_quiz = RateQuiz.objects.create(**validated_data)
+
+        return rate_quiz  # Return the created RateQuiz instance
+
+
+    def update(self, instance, validated_data):
+        instance.rating = validated_data.get('rating', instance.rating)
+        instance.save()
+        return instance
+
 
 
 

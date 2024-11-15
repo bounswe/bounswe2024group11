@@ -10,4 +10,4 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         # Write permissions are only allowed to the author of the forum question
-        return obj.author == request.user
+        return obj.user == request.user

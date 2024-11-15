@@ -2,6 +2,7 @@ from django.urls import path
 from .views.forum_views import ForumQuestionViewSet
 from .views.quiz_views import QuizViewSet
 from .views.quiz_question_views import QuizQuestionViewSet
+from .views.rate_quiz_views import RateQuizViewSet
 from rest_framework.routers import DefaultRouter
 from .views import views
 from .views.tagging_views import TaggingView
@@ -28,6 +29,7 @@ schema_view = get_schema_view(
 router = DefaultRouter()
 router.register(r'forum-questions', ForumQuestionViewSet, basename='forum-question')
 router.register(r'quizzes', QuizViewSet, basename='quiz')
+router.register(r'rate-quiz', RateQuizViewSet, basename='rate-quiz')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
