@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useRouteLoaderData } from "react-router-typesafe";
 import { homeLoader } from "../routes/Home.data";
 import { PostOverview } from "../types/post";
-import { BASE_URL, logger } from "../utils";
+import { BASE_URL } from "../utils";
 import { Avatar } from "./avatar";
 
 type ForumCardProps = {
@@ -21,6 +21,7 @@ export const ForumCard = ({ post, key }: ForumCardProps) => {
     const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(
         post.userVote || null,
     );
+    const [bookmark, setBookmark] = useState(post.bookmark);
     const [numVotes, setNumVotes] = useState(
         post.num_likes - post.num_dislikes,
     );
@@ -52,11 +53,27 @@ export const ForumCard = ({ post, key }: ForumCardProps) => {
             console.error("Vote failed:", error);
         }
     };
+    const handleBookmark = async (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent link navigation
+        e.stopPropagation(); // Stop event bubbling
+        if (!logged_in) return;
 
-    const handleBookmark = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        logger.log(post.id);
+        try {
+            const response = await fetch(
+                `${BASE_URL}/forum/${post.id}/bookmark`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                },
+            );
+
+            if (response.ok) {
+                const updatedPost = await response.json();
+                setBookmark(updatedPost.bookmark);
+            }
+        } catch (error) {
+            console.error("Bookmark failed:", error);
+        }
     };
 
     return (
@@ -75,10 +92,15 @@ export const ForumCard = ({ post, key }: ForumCardProps) => {
                         </p>
                     </div>
                     <Button
-                        onClick={handleBookmark}
+                        onClick={(e) => {
+                            handleBookmark(e);
+                        }}
                         className="flex size-9 items-center justify-center rounded-1 bg-slate-100"
                     >
-                        <RiBookmark2Line className="size-5 text-slate-500" />
+                        <RiBookmark2Line
+                            color={bookmark ? "gold" : "text-slate-500"}
+                            className="size-5"
+                        />
                     </Button>
                 </div>
 

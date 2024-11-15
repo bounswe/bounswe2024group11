@@ -47,19 +47,20 @@ export const Forum = () => {
                     ))}
                 </div>
             </main>
-
-            <button
-                onClick={() => setCreatingPost(true)}
-                className={`${buttonClass({ intent: "primary", rounded: "full", position: "fixed" })} bottom-8 right-8 size-12`}
-            >
-                <div
-                    className={buttonInnerRing({
-                        intent: "primary",
-                        rounded: "full",
-                    })}
-                />
-                <RiAddLine color="white" size="24px"></RiAddLine>
-            </button>
+            <div hidden={!logged_in}>
+                <button
+                    onClick={() => setCreatingPost(true)}
+                    className={`${buttonClass({ intent: "primary", rounded: "full", position: "fixed" })} bottom-8 right-8 size-12`}
+                >
+                    <div
+                        className={buttonInnerRing({
+                            intent: "primary",
+                            rounded: "full",
+                        })}
+                    />
+                    <RiAddLine color="white" size="24px"></RiAddLine>
+                </button>
+            </div>
             <Dialog
                 open={creatingPost}
                 onClose={() => setCreatingPost(false)}

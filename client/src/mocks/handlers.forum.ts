@@ -86,6 +86,7 @@ export const forumHandlers = [
             num_comments: 0,
             num_likes: 0,
             num_dislikes: 0,
+            bookmark: false,
         };
         const postDetail: PostDetails = {
             post,
@@ -198,5 +199,17 @@ export const forumHandlers = [
 
         forumDetails[detailIndex].answers[answerIndex] = targetAnswer;
         return HttpResponse.json(targetAnswer, { status: 200 });
+    }),
+    http.post(`${BASE_URL}/forum/:id/bookmark`, async ({ params }) => {
+        const { id } = params;
+        const postIndex = forumOverview.findIndex((post) => post.id === id);
+        if (postIndex === -1) {
+            return HttpResponse.json(
+                { error: "Post not found" },
+                { status: 404 },
+            );
+        }
+        forumOverview[postIndex].bookmark = !forumOverview[postIndex].bookmark;
+        return HttpResponse.json(forumOverview[postIndex], { status: 200 });
     }),
 ];

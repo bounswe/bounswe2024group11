@@ -1,5 +1,6 @@
 import {
     array,
+    boolean,
     InferInput,
     literal,
     nullable,
@@ -35,6 +36,7 @@ export const postOverviewSchema = object({
     userVote: optional(
         nullable(union([literal("upvote"), literal("downvote")])),
     ),
+    bookmark: boolean(),
 });
 
 const answerSchema = object({
