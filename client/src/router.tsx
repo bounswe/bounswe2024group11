@@ -2,7 +2,7 @@ import { RouteObject } from "react-router-dom";
 import { ErrorPage } from "./routes/_error";
 import { Root } from "./routes/_root";
 import { Forum } from "./routes/Forum";
-import { forumLoader } from "./routes/Forum.data";
+import { createPostAction, forumLoader } from "./routes/Forum.data";
 import { Home } from "./routes/Home";
 import { homeLoader } from "./routes/Home.data";
 import { HomeMain } from "./routes/Home.main";
@@ -46,6 +46,7 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
+                        action: createPostAction,
                     },
                     {
                         path: "forum/:postId",

@@ -1,9 +1,11 @@
 import { http, HttpResponse } from "msw";
+import { Post } from "../routes/Forum.data";
+import { PostDetails, PostOverview } from "../types/post";
 import { BASE_URL } from "../utils";
 import { forumDetails, forumOverview } from "./mocks.forum";
 
 export const forumHandlers = [
-    http.post(`${BASE_URL}/forum`, async ({ request }) => {
+    http.get(`${BASE_URL}/forum`, async ({ request }) => {
         const url = new URL(request.url);
         const page = Number(url.searchParams.get("page")) || 1;
         const per_page = Number(url.searchParams.get("per_page")) || 10;
@@ -61,5 +63,41 @@ export const forumHandlers = [
         };
 
         return HttpResponse.json(post, { status: 200 });
+    }),
+    http.post(`${BASE_URL}/forum`, async ({ request }) => {
+        const formData = await request.formData();
+        const post: Post = {
+            id: (forumOverview.length + 1).toString(),
+            title: formData.get("title") as string,
+            description: formData.get("body") as string,
+            author: {
+                full_name: "Current User", // Replace with actual user data from auth
+                username: "current_user",
+                avatar: "https://randomuser.me/api/portraits/men/31.jpg",
+            },
+            created_at: new Date().toISOString(),
+            tags:
+                formData
+                    .get("tags")
+                    ?.toString()
+                    .split(",")
+                    .map((tag, index) => {
+                        return { name: tag, id: String(index) };
+                    }) || [],
+            num_comments: 0,
+            num_likes: 0,
+            num_dislikes: 0,
+        };
+        const postDetail: PostDetails = {
+            post,
+            answers: [],
+        };
+        const postOverview: PostOverview = {
+            ...post,
+        };
+        forumOverview.unshift(postOverview);
+        forumDetails.unshift(postDetail);
+
+        return HttpResponse.json({ ...postDetail }, { status: 201 });
     }),
 ];

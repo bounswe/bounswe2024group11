@@ -1,16 +1,36 @@
-import { Button, Dialog, DialogHeading } from "@ariakit/react";
+import { Dialog, DialogHeading } from "@ariakit/react";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
 import { Form } from "react-router-dom";
-import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
+import {
+    useActionData,
+    useLoaderData,
+    useRouteLoaderData,
+} from "react-router-typesafe";
+import { buttonClass, buttonInnerRing } from "../components/button";
 import { ForumCard } from "../components/forum-card";
+import { inputClass } from "../components/input";
 import { PageHead } from "../components/page-head";
-import { forumLoader } from "./Forum.data";
+import AutocompleteTag from "../components/tagselect";
+import { Tag } from "../types/post";
+import { createPostAction, forumLoader } from "./Forum.data";
 import { homeLoader } from "./Home.data";
+
 import "./styles.css";
 
+const availableTags: Tag[] = [
+    { id: "Writing", name: "Writing" },
+    { id: "Grammar", name: "Grammar" },
+    { id: "Word", name: "Word" },
+    { id: "Vocabulary", name: "Vocabulary" },
+    { id: "English", name: "English" },
+    // Add more tags as needed
+];
+
 export const Forum = () => {
+    const actionData = useActionData<typeof createPostAction>();
     const [creatingPost, setCreatingPost] = useState(false);
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const data = useLoaderData<typeof forumLoader>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
@@ -27,12 +47,19 @@ export const Forum = () => {
                     ))}
                 </div>
             </main>
-            <Button
+
+            <button
                 onClick={() => setCreatingPost(true)}
-                className="fixed bottom-8 right-8 flex size-12 items-center justify-center rounded-full bg-blue-500 hover:shadow-md"
+                className={`${buttonClass({ intent: "primary", rounded: "full", position: "fixed" })} bottom-8 right-8 size-12`}
             >
+                <div
+                    className={buttonInnerRing({
+                        intent: "primary",
+                        rounded: "full",
+                    })}
+                />
                 <RiAddLine color="white" size="24px"></RiAddLine>
-            </Button>
+            </button>
             <Dialog
                 open={creatingPost}
                 onClose={() => setCreatingPost(false)}
@@ -42,34 +69,50 @@ export const Forum = () => {
                 <DialogHeading className="heading">
                     Create New Question
                 </DialogHeading>
-                <Form aria-labelledby="add-new-post" className="wrapper">
-                    <div>
+                <Form
+                    aria-labelledby="add-new-post"
+                    className="w-full"
+                    method="POST"
+                    action="/forum"
+                >
+                    <div className="flex w-full flex-col gap-4">
                         <input
                             type="text"
                             name="title"
                             placeholder="Post Title"
-                            className="input"
+                            className={`${inputClass()} w-full`}
                             required
                         />
-                    </div>
-                    <div>
+
                         <textarea
                             name="body"
                             placeholder="Question Body"
+                            className={`${inputClass()} w-full`}
                         ></textarea>
+                        <div className="flex flex-col gap-2">
+                            <div>
+                                <span>Tags:</span>
+                            </div>
+
+                            <AutocompleteTag
+                                availableTags={availableTags}
+                                onTagsChange={setSelectedTags}
+                                initialTags={selectedTags}
+                            ></AutocompleteTag>
+                        </div>
+                        <button
+                            type="submit"
+                            className={buttonClass({ intent: "primary" })}
+                            onClick={() => setCreatingPost(false)}
+                        >
+                            <div
+                                className={buttonInnerRing({
+                                    intent: "primary",
+                                })}
+                            />
+                            <span>Post</span>
+                        </button>
                     </div>
-                    <div>
-                        <span>Tags:</span>
-                    </div>
-                    <div>
-                        <select name="tags" className="input" required />
-                    </div>
-                    <button
-                        className="flex h-10 w-40 items-center justify-center rounded-4 bg-blue-500 hover:shadow-md"
-                        onClick={() => setCreatingPost(false)}
-                    >
-                        Post
-                    </button>
                 </Form>
             </Dialog>
         </div>

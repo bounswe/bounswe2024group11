@@ -28,7 +28,7 @@ export const PostPage = () => {
         : "Test your knowledge of various topics. Log in to track your progress.";
     return (
         <div className="container flex w-full max-w-screen-xl flex-col items-center gap-8 py-12">
-            <main className="flex flex-col items-stretch justify-center gap-10">
+            <main className="flex w-full flex-col items-center justify-center gap-10">
                 <ForumCard key={data.post.id} post={data.post}></ForumCard>
                 <RadioProvider>
                     <RadioGroup>
@@ -70,7 +70,7 @@ export const PostPage = () => {
                         </label>
                     </RadioGroup>
                 </RadioProvider>
-                <div className="flex w-full flex-col">
+                <div className="flex w-full flex-col items-center justify-center">
                     {data.answers.map((answer) => {
                         return (
                             <ForumAnswerCard

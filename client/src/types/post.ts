@@ -2,6 +2,11 @@ import { array, InferInput, number, object, string } from "valibot";
 
 export type Answer = InferInput<typeof answerSchema>;
 
+const Tagschema = object({
+    id: string(),
+    name: string(),
+});
+
 const postOverviewSchema = object({
     id: string(),
     title: string(),
@@ -12,12 +17,7 @@ const postOverviewSchema = object({
         avatar: string(),
     }),
     created_at: string(),
-    tags: array(
-        object({
-            id: string(),
-            name: string(),
-        }),
-    ),
+    tags: array(Tagschema),
     num_comments: number(),
     num_likes: number(),
     num_dislikes: number(),
@@ -42,3 +42,4 @@ export const postDetailsSchema = object({
 
 export type PostOverview = InferInput<typeof postOverviewSchema>;
 export type PostDetails = InferInput<typeof postDetailsSchema>;
+export type Tag = InferInput<typeof Tagschema>;
