@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError  # Import ValidationError
 
 class CustomUser(AbstractUser):
     email = models.EmailField()
@@ -65,6 +66,37 @@ class QuizQuestionChoice(models.Model):
     
     def __str__(self):
         return self.choice_text
+
+class TakeQuiz(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['quiz', 'user']
+
+class UserAnswer(models.Model):
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
+    take_quiz = models.ForeignKey(TakeQuiz, related_name='answers', on_delete=models.CASCADE, null=True)
+    answer = models.ForeignKey(QuizQuestionChoice, on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ['question', 'take_quiz']
+
+    def clean(self):
+        # Ensure that the question belongs to the same quiz
+        if self.question.quiz.id != self.take_quiz.quiz.id:
+            raise ValidationError("The question must belong to the same quiz.")
+        if self.answer.question.id != self.question.id:
+            raise ValidationError("The answer must belong to the same question.")
+    
+    def save(self, *args, **kwargs):
+        # Perform custom validation before saving
+        self.clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.answer.choice_text
 
 class RateQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)

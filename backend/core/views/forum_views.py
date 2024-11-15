@@ -1,7 +1,7 @@
 from ..models import ForumQuestion
 from rest_framework import viewsets
 from rest_framework import permissions
-from ..serializers import ForumQuestionSerializer
+from ..serializers.serializers import ForumQuestionSerializer
 from ..permissions import IsAuthorOrReadOnly
 
 

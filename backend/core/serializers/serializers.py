@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 from rest_framework import serializers
 
-from .models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
+from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
                      Tag)
 
 User = get_user_model()
