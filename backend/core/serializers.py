@@ -1,7 +1,9 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import ForumQuestion, Tag
 from faker import Faker
+from rest_framework import serializers
+
+from .models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, RateQuiz,
+                     Tag)
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -10,6 +12,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', "full_name", "avatar")  # Include relevant fields
+        read_only_fields = ('id', 'username', 'email', "full_name", "avatar")  # Make these fields read-only
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -41,13 +44,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'linked_data_id', 'description')
+        fields = ('name', 'linked_data_id', 'description')
 
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)  # For nested representation of tags
     author = UserInfoSerializer(read_only=True)
-    created_at = serializers.DateTimeField(source='date', read_only=True)  # Map 'date' field to 'created_at'
 
     answers_count = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
@@ -111,3 +113,109 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             instance.tags.add(tag)
 
         return instance
+
+
+
+class QuizQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizQuestion
+        fields = ('id', 'question_text', 'choices', 'answer')
+        # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
+
+class RatingSerializer(serializers.Serializer):
+    score = serializers.FloatField(default=0.2, read_only=True)
+    count = serializers.IntegerField(default=3, read_only=True)
+
+
+class QuizSerializer(serializers.ModelSerializer):
+    questions = QuizQuestionSerializer(many=True)  # Allow nested questions creation
+    user = UserInfoSerializer(read_only=True)  # Assuming UserInfoSerializer is defined
+    tags = TagSerializer(many=True)  # Assuming TagSerializer is defined
+
+    num_taken = serializers.IntegerField(default=0, read_only=True)
+    is_taken = serializers.BooleanField(default=False, read_only=True)
+    rating = RatingSerializer(read_only=True, default={"score": 0.2, "count": 3})
+    
+
+    class Meta:
+        model = Quiz
+        fields = (
+            'id', 'title', 'description', 'user', 'difficulty', 
+            'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating"
+        )
+        read_only_fields = ('user', "difficulty", 'created_at', 'num_taken', 'is_taken', 'rating')
+
+    def create(self, validated_data):
+        # Extract nested questions and tags from validated_data
+        questions_data = validated_data.pop('questions', [])
+        tags_data = validated_data.pop('tags', [])
+
+        # Create the Quiz instance
+        quiz = Quiz.objects.create(**validated_data)
+
+        # Create and associate each QuizQuestion with the Quiz
+        for question_data in questions_data:
+            QuizQuestion.objects.create(quiz=quiz, **question_data)
+
+        # Add tags to the Quiz instance
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(**tag_data)
+            quiz.tags.add(tag)
+
+        return quiz
+
+    def update(self, instance, validated_data):
+        # Handle updating nested tags and questions
+        tags_data = validated_data.pop('tags', [])
+        questions_data = validated_data.pop('questions', [])
+
+        # Update quiz fields
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.difficulty = validated_data.get('difficulty', instance.difficulty)
+        instance.save()
+
+        # Update tags
+        instance.tags.clear()
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(**tag_data)
+            instance.tags.add(tag)
+
+        # Update or create associated questions
+        instance.questions.all().delete()  # Optionally clear existing questions if not updating
+        for question_data in questions_data:
+            QuizQuestion.objects.create(quiz=instance, **question_data)
+
+        return instance    
+
+class RateQuizSerializer(serializers.ModelSerializer):
+    # Define ID fields
+
+    class Meta:
+        model = RateQuiz
+        fields = ('id', 'quiz', "rating", "user")
+        read_only_fields = ('id', "user")
+
+    def create(self, validated_data):
+        # Example condition: Check if the user has already rated the quiz
+        if RateQuiz.objects.filter(quiz=validated_data["quiz"], user=validated_data["user"]).exists():
+            raise serializers.ValidationError({
+                "quiz": "You have already rated this quiz."
+            })
+        # Assuming 'quiz' and 'user' are passed as IDs
+        rate_quiz = RateQuiz.objects.create(**validated_data)
+
+        return rate_quiz  # Return the created RateQuiz instance
+
+
+    def update(self, instance, validated_data):
+        instance.rating = validated_data.get('rating', instance.rating)
+        instance.save()
+        return instance
+
+
+
+
+
+
+    

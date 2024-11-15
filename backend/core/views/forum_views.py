@@ -6,7 +6,7 @@ from ..permissions import IsAuthorOrReadOnly
 
 
 class ForumQuestionViewSet(viewsets.ModelViewSet):
-    queryset = ForumQuestion.objects.all().order_by('-date')
+    queryset = ForumQuestion.objects.all().order_by('-created_at')
     serializer_class = ForumQuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
