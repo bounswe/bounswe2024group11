@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 from ..models import ForumBookmark
-from ..serializers import ForumBookmarkSerializer
+from ..serializers.serializers import ForumBookmarkSerializer
 
 class ForumBookmarkViewSet(viewsets.ModelViewSet):
     queryset = ForumBookmark.objects.all()

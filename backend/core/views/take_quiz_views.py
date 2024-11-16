@@ -1,12 +1,12 @@
-from ..models import RateQuiz
+from ..models import TakeQuiz
 from rest_framework import viewsets
 from rest_framework import permissions
-from ..serializers.serializers import RateQuizSerializer
+from ..serializers.take_quiz_serializer import TakeQuizSerializer
 from ..permissions import IsAuthorOrReadOnly
 
-class RateQuizViewSet(viewsets.ModelViewSet):
-    queryset = RateQuiz.objects.all().order_by('id')
-    serializer_class = RateQuizSerializer
+class TakeQuizViewSet(viewsets.ModelViewSet):
+    queryset = TakeQuiz.objects.all().order_by('id')
+    serializer_class = TakeQuizSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def perform_create(self, serializer):
@@ -21,4 +21,3 @@ class RateQuizViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [permissions.AllowAny()]
         return super().get_permissions()
-        
