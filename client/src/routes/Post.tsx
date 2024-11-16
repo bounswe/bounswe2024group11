@@ -1,8 +1,10 @@
 import { Radio, RadioGroup, RadioProvider, useFormStore } from "@ariakit/react";
-import { useSearchParams } from "react-router-dom";
+import { Form, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
+import { buttonClass } from "../components/button";
 import { ForumAnswerCard } from "../components/forum-answer-card";
 import { ForumCard } from "../components/forum-card";
+import { inputClass } from "../components/input";
 import { homeLoader } from "./Home.data";
 import { postLoader } from "./Post.data";
 
@@ -80,6 +82,26 @@ export const PostPage = () => {
                         );
                     })}
                 </div>
+                <Form
+                    action={`/forum/${data.post.id}`}
+                    method="POST"
+                    aria-labelledby="add-new-answer"
+                    className="flex w-full max-w-xl flex-col items-center justify-center gap-4"
+                    hidden={!logged_in}
+                >
+                    <textarea
+                        name="body"
+                        placeholder="Comment"
+                        className={`${inputClass()} w-full`}
+                        required
+                    ></textarea>
+                    <button
+                        type="submit"
+                        className={`${buttonClass({ intent: "primary" })} w-full`}
+                    >
+                        Post Comment
+                    </button>
+                </Form>
             </main>
         </div>
     );

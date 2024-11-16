@@ -12,7 +12,7 @@ import { Login } from "./routes/Login";
 import { loginAction, loginLoader } from "./routes/Login.data";
 import { logoutLoader } from "./routes/Logout.data";
 import { PostPage } from "./routes/Post";
-import { postLoader } from "./routes/Post.data";
+import { postAction, postLoader } from "./routes/Post.data";
 import { QuizPage } from "./routes/Quiz";
 import { quizLoader } from "./routes/Quiz.data";
 import { Quizzes } from "./routes/Quizzes";
@@ -52,6 +52,7 @@ export const routes: RouteObject[] = [
                         path: "forum/:postId",
                         element: <PostPage />,
                         loader: postLoader,
+                        action: postAction,
                     },
                     {
                         path: "quizzes",

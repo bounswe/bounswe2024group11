@@ -39,7 +39,7 @@ export const postOverviewSchema = object({
     bookmark: boolean(),
 });
 
-const answerSchema = object({
+export const answerSchema = object({
     id: string(),
     text: string(),
     author: object({

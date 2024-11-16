@@ -6,7 +6,15 @@ export interface AutocompleteTagProps {
 }
 
 // AutocompleteTag.tsx
-import React, { ChangeEvent, useCallback, useState } from "react";
+import { Button } from "@ariakit/react";
+import React, {
+    ChangeEvent,
+    KeyboardEvent,
+    RefObject,
+    useCallback,
+    useRef,
+    useState,
+} from "react";
 import { Tag } from "../types/post";
 import { inputClass } from "./input";
 
@@ -19,43 +27,93 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
     const [inputValue, setInputValue] = useState<string>("");
     const [selectedTags, setSelectedTags] = useState<Tag[]>(initialTags);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+
+    const inputRef: RefObject<HTMLInputElement> = useRef(null);
+    const optionsRef: RefObject<HTMLDivElement> = useRef(null);
 
     // Filter options based on input value and exclude already selected tags
-    const filteredOptions = availableTags.filter(
-        (option) =>
+    const filteredOptions: Tag[] = availableTags.filter(
+        (option: Tag) =>
             option.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-            !selectedTags.some((tag) => tag.id === option.id),
+            !selectedTags.some((tag: Tag) => tag.id === option.id),
     );
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
         setInputValue(e.target.value);
         setIsOpen(true);
+        setHighlightedIndex(-1);
     };
 
     const handleOptionClick = useCallback(
-        (option: Tag) => {
-            const newTags = [...selectedTags, option];
+        (option: Tag): void => {
+            const newTags: Tag[] = [...selectedTags, option];
             setSelectedTags(newTags);
             setInputValue("");
             setIsOpen(false);
+            setHighlightedIndex(-1);
             onTagsChange?.(newTags);
-            (document.activeElement as HTMLElement).blur();
+            inputRef.current?.blur();
         },
         [selectedTags, onTagsChange],
     );
 
     const removeTag = useCallback(
-        (tagId: string) => {
-            const newTags = selectedTags.filter((tag) => tag.id !== tagId);
+        (tagId: string): void => {
+            const newTags: Tag[] = selectedTags.filter(
+                (tag) => tag.id !== tagId,
+            );
             setSelectedTags(newTags);
             onTagsChange?.(newTags);
         },
         [selectedTags, onTagsChange],
     );
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+        if (!isOpen || filteredOptions.length === 0) return;
+
+        switch (e.key) {
+            case "ArrowDown": {
+                e.preventDefault();
+                setHighlightedIndex((prev) =>
+                    prev < filteredOptions.length - 1 ? prev + 1 : 0,
+                );
+                break;
+            }
+            case "ArrowUp": {
+                e.preventDefault();
+                setHighlightedIndex((prev) =>
+                    prev > 0 ? prev - 1 : filteredOptions.length - 1,
+                );
+                break;
+            }
+            case "Enter": {
+                e.preventDefault();
+                if (highlightedIndex >= 0) {
+                    handleOptionClick(filteredOptions[highlightedIndex]);
+                }
+                break;
+            }
+            case "Escape": {
+                e.preventDefault();
+                setIsOpen(false);
+                setHighlightedIndex(-1);
+                break;
+            }
+            case "Tab": {
+                if (highlightedIndex >= 0) {
+                    e.preventDefault();
+                    handleOptionClick(filteredOptions[highlightedIndex]);
+                }
+                break;
+            }
+        }
+    };
+
     // Handle click outside to close dropdown
-    const handleClickOutside = useCallback(() => {
+    const handleClickOutside = useCallback((): void => {
         setIsOpen(false);
+        setHighlightedIndex(-1);
     }, []);
 
     return (
@@ -67,7 +125,8 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
             />
             <div className="mb-2 flex flex-wrap gap-2">
                 {selectedTags.map((tag) => (
-                    <div
+                    <Button
+                        aria-label={tag.name}
                         key={tag.id}
                         className="rounded-md flex items-center gap-1 rounded-2 bg-slate-200 px-2 py-1"
                     >
@@ -76,32 +135,57 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
                             type="button"
                             onClick={() => removeTag(tag.id)}
                             className="bg-slate-200"
+                            aria-label={`Remove ${tag.name}`}
                         >
                             ×
                         </button>
-                    </div>
+                    </Button>
                 ))}
             </div>
             <div className="relative">
                 <input
+                    ref={inputRef}
+                    aria-label="Add tag"
                     type="text"
                     value={inputValue}
                     onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
                     onFocus={() => setIsOpen(true)}
                     onBlur={() => {
-                        handleClickOutside();
+                        setTimeout(handleClickOutside, 200);
                     }}
                     className={`${inputClass()} w-full`}
                     placeholder={placeholder}
+                    role="combobox"
+                    aria-expanded={isOpen}
+                    aria-controls="tag-listbox"
+                    aria-activedescendant={
+                        highlightedIndex >= 0
+                            ? `option-${filteredOptions[highlightedIndex].id}`
+                            : undefined
+                    }
                 />
                 {isOpen && filteredOptions.length > 0 && (
-                    <div className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto border bg-white shadow-lg">
-                        {filteredOptions.map((option) => (
+                    <div
+                        ref={optionsRef}
+                        className="rounded-md absolute z-10 mt-1 max-h-60 w-full overflow-auto border bg-white shadow-lg"
+                        role="listbox"
+                        id="tag-listbox"
+                    >
+                        {filteredOptions.map((option, index) => (
                             <div
+                                id={`option-${option.id}`}
                                 key={option.id}
-                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                role="option"
+                                aria-selected={index === highlightedIndex}
+                                className={`cursor-pointer px-4 py-2 ${
+                                    index === highlightedIndex
+                                        ? "bg-blue-100"
+                                        : "hover:bg-gray-100"
+                                }`}
                                 onClick={() => handleOptionClick(option)}
-                                onMouseDown={(e) => e.preventDefault()} // Prevent input blur
+                                onMouseEnter={() => setHighlightedIndex(index)}
+                                onMouseDown={(e) => e.preventDefault()}
                             >
                                 {option.name}
                             </div>

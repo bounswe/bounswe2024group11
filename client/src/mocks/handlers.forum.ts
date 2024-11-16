@@ -212,4 +212,52 @@ export const forumHandlers = [
         forumOverview[postIndex].bookmark = !forumOverview[postIndex].bookmark;
         return HttpResponse.json(forumOverview[postIndex], { status: 200 });
     }),
+    http.post(
+        `${BASE_URL}/forum/:postId/answers`,
+        async ({ params, request }) => {
+            const { postId } = params;
+            const { body } = (await request.json()) as { body: string };
+
+            // Find the post in forumDetails
+            const detailIndex = forumDetails.findIndex(
+                (detail) => detail.post.id === postId,
+            );
+            if (detailIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Post not found" },
+                    { status: 404 },
+                );
+            }
+
+            // Create new answer
+            const newAnswer = {
+                id: `answer_${Date.now()}`, // Generate unique ID
+                text: body,
+                author: {
+                    // This would normally come from the authenticated user
+                    full_name: "Current User",
+                    username: "current_user",
+                    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+                },
+                created_at: new Date().toISOString(),
+                num_likes: 0,
+                num_dislikes: 0,
+                userVote: null as "upvote" | "downvote" | null,
+            };
+
+            // Add answer to the post
+            forumDetails[detailIndex].answers.unshift(newAnswer);
+
+            // Update comment count in both forumDetails and forumOverview
+            forumDetails[detailIndex].post.num_comments++;
+            const postIndex = forumOverview.findIndex(
+                (post) => post.id === postId,
+            );
+            if (postIndex !== -1) {
+                forumOverview[postIndex].num_comments++;
+            }
+
+            return HttpResponse.json(newAnswer, { status: 201 });
+        },
+    ),
 ];

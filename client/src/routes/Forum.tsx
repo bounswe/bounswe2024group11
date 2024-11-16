@@ -1,4 +1,4 @@
-import { Dialog, DialogHeading } from "@ariakit/react";
+import { Button, Dialog, DialogHeading } from "@ariakit/react";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
 import { Form } from "react-router-dom";
@@ -48,7 +48,8 @@ export const Forum = () => {
                 </div>
             </main>
             <div hidden={!logged_in}>
-                <button
+                <Button
+                    aria-labelledby="add-new-post"
                     onClick={() => setCreatingPost(true)}
                     className={`${buttonClass({ intent: "primary", rounded: "full", position: "fixed" })} bottom-8 right-8 size-12`}
                 >
@@ -59,7 +60,7 @@ export const Forum = () => {
                         })}
                     />
                     <RiAddLine color="white" size="24px"></RiAddLine>
-                </button>
+                </Button>
             </div>
             <Dialog
                 open={creatingPost}
@@ -78,6 +79,7 @@ export const Forum = () => {
                 >
                     <div className="flex w-full flex-col gap-4">
                         <input
+                            aria-label="Title"
                             type="text"
                             name="title"
                             placeholder="Post Title"
@@ -87,6 +89,7 @@ export const Forum = () => {
 
                         <textarea
                             name="body"
+                            aria-label="Question Body"
                             placeholder="Question Body"
                             className={`${inputClass()} w-full`}
                         ></textarea>
@@ -102,6 +105,7 @@ export const Forum = () => {
                             ></AutocompleteTag>
                         </div>
                         <button
+                            aria-label="Post"
                             type="submit"
                             className={buttonClass({ intent: "primary" })}
                             onClick={() => setCreatingPost(false)}
