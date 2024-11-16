@@ -216,7 +216,14 @@ export const forumHandlers = [
         `${BASE_URL}/forum/:postId/answers`,
         async ({ params, request }) => {
             const { postId } = params;
-            const { body } = (await request.json()) as { body: string };
+            const formData = await request.formData();
+            const body = formData.get("body");
+            if (!body || typeof body !== "string") {
+                return HttpResponse.json(
+                    { error: "Comment body is required" },
+                    { status: 400 },
+                );
+            }
 
             // Find the post in forumDetails
             const detailIndex = forumDetails.findIndex(

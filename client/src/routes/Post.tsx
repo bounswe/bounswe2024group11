@@ -91,13 +91,16 @@ export const PostPage = () => {
                 >
                     <textarea
                         name="body"
-                        placeholder="Comment"
-                        className={`${inputClass()} w-full`}
+                        placeholder="Write your comment..."
+                        className={`${inputClass()} min-h-[100px] w-full resize-y`}
                         required
-                    ></textarea>
+                        minLength={1}
+                        aria-label="Comment text"
+                    />
                     <button
                         type="submit"
                         className={`${buttonClass({ intent: "primary" })} w-full`}
+                        disabled={!logged_in}
                     >
                         Post Comment
                     </button>

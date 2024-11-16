@@ -90,7 +90,9 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
                             className={`size-5 ${userVote === "upvote" ? "text-orange-500" : "text-slate-900"}`}
                         />
                     </Button>
-                    <p className="w-6 text-sm text-slate-900">{numVotes}</p>
+                    <p className="w-6 text-center text-sm text-slate-900">
+                        {numVotes}
+                    </p>
                     <Button
                         aria-label="Downvote"
                         onClick={(e) => handleVote(e, "downvote")}
