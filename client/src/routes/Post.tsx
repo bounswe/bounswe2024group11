@@ -33,7 +33,7 @@ export const PostPage = () => {
             <main className="flex w-full flex-col items-center justify-center gap-10">
                 <ForumCard key={data.post.id} post={data.post}></ForumCard>
                 <RadioProvider>
-                    <RadioGroup>
+                    <RadioGroup className="flex flex-row gap-4">
                         <label className="label">
                             <Radio
                                 className="radio"
