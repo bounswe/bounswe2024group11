@@ -3,7 +3,7 @@ from faker import Faker
 from rest_framework import serializers
 
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag)
+                     Tag, ForumBookmark)
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -74,7 +74,10 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         return Faker().random_int(min=0, max=100)
 
     def get_is_bookmarked(self, obj):
-        return Faker().boolean()
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return ForumBookmark.objects.filter(user=user, forum_question=obj).exists()
 
     def get_is_upvoted(self, obj):
         return Faker().boolean()
@@ -267,10 +270,18 @@ class RateQuizSerializer(serializers.ModelSerializer):
         instance.rating = validated_data.get('rating', instance.rating)
         instance.save()
         return instance
-
-
-
-
-
-
     
+class ForumBookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForumBookmark
+        fields = ("id", "user", "forum_question", "created_at")
+        read_only_fields = ("id", "user", "created_at")
+
+    def validate(self, attrs):
+        user = self.context["request"].user
+        forum_question = attrs["forum_question"]
+
+        if ForumBookmark.objects.filter(user=user, forum_question=forum_question).exists():
+            raise serializers.ValidationError("You have already bookmarked this forum question.")
+
+        return attrs
