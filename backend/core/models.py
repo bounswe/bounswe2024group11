@@ -4,6 +4,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError  # Import ValidationError
 
+
 class CustomUser(AbstractUser):
     email = models.EmailField()
     full_name = models.CharField(max_length=100)
@@ -118,3 +119,38 @@ class ForumBookmark(models.Model):
 
     def __str__(self):
         return f"{self.user} bookmarked {self.forum_question}"
+
+class ForumUpvote(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "forum_question")
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        if ForumDownvote.objects.filter(user=self.user, forum_question=self.forum_question).exists():
+            raise ValidationError("A user cannot upvote and downvote the same forum question at the same time.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user} upvoted {self.forum_question}"
+
+
+class ForumDownvote(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "forum_question")
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        if ForumUpvote.objects.filter(user=self.user, forum_question=self.forum_question).exists():
+            raise ValidationError("A user cannot upvote and downvote the same forum question at the same time.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user} downvoted {self.forum_question}"
