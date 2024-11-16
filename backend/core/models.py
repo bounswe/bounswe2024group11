@@ -118,3 +118,15 @@ class ForumBookmark(models.Model):
 
     def __str__(self):
         return f"{self.user} bookmarked {self.forum_question}"
+    
+class ForumUpvote(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ("user", "forum_question")  
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user} upvoted {self.forum_question}"
+    

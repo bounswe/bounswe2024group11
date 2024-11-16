@@ -4,6 +4,7 @@ from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
 from .views.take_quiz_views import TakeQuizViewSet
 from .views.forum_bookmark_views import ForumBookmarkViewSet
+from .views.forum_vote_views import ForumUpvoteViewSet
 from rest_framework.routers import DefaultRouter
 from .views import views
 from .views.tagging_views import TaggingView
@@ -33,6 +34,7 @@ router.register(r'quizzes', QuizViewSet, basename='quiz')
 router.register(r'rate-quiz', RateQuizViewSet, basename='rate-quiz')
 router.register(r'take-quiz', TakeQuizViewSet, basename='take-quiz')
 router.register(r'forum-bookmarks', ForumBookmarkViewSet, basename='forumbookmark')
+router.register(r'forum-upvote', ForumUpvoteViewSet, basename='forum-upvote')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
