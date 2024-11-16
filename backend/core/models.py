@@ -53,12 +53,18 @@ class Quiz(models.Model):
     
 class QuizQuestion(models.Model):
     question_text = models.CharField(max_length=1000)
-    choices = models.JSONField()
-    answer = models.CharField(max_length=255)
     quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
     
     def __str__(self):
         return self.question_text
+
+class QuizQuestionChoice(models.Model):
+    question = models.ForeignKey(QuizQuestion, related_name="choices", on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.choice_text
 
 class RateQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
