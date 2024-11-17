@@ -1,6 +1,7 @@
 from django.urls import path
-from .views.forum_views import ForumQuestionViewSet
+from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 from .views import views
 from .views.tagging_views import TaggingView
 from .views.jwt_views import DecoratedTokenObtainPairView, DecoratedTokenRefreshView, DecoratedTokenVerifyView, RegisterView
@@ -26,6 +27,10 @@ schema_view = get_schema_view(
 router = DefaultRouter()
 router.register(r'forum-questions', ForumQuestionViewSet, basename='forum-question')
 
+# Nested router for forum answers
+forum_question_router = routers.NestedDefaultRouter(router, r'forum-questions', lookup='forum_question')
+forum_question_router.register(r'answers', ForumAnswerViewSet, basename='forum-question-answers')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
@@ -42,3 +47,4 @@ urlpatterns = [
 ]
 
 urlpatterns += router.urls
+urlpatterns += forum_question_router.urls

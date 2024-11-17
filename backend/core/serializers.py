@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import ForumQuestion, Tag
+from .models import ForumQuestion, Tag, ForumAnswer
 from faker import Faker
 
 User = get_user_model()
@@ -43,12 +43,23 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name', 'linked_data_id', 'description')
 
+class ForumAnswerSerializer(serializers.ModelSerializer):
+    author = UserInfoSerializer(read_only=True)
+    created_at = serializers.DateTimeField(source='date', read_only=True)
+
+    class Meta:
+        model = ForumAnswer
+        fields = ('id', 'forum_question', 'answer', 'author', 'created_at')
+        read_only_fields = ('author', 'created_at')
+
+    def create(self, validated_data):
+        return ForumAnswer.objects.create(**validated_data)
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)  # For nested representation of tags
     author = UserInfoSerializer(read_only=True)
+    answers = ForumAnswerSerializer(many=True, read_only=True, required=False)
     created_at = serializers.DateTimeField(source='date', read_only=True)  # Map 'date' field to 'created_at'
-
     answers_count = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
     is_upvoted = serializers.SerializerMethodField()
@@ -61,15 +72,15 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
-            'upvotes_count', 'is_downvoted', 'downvotes_count'
+            'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers'
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
-            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count'
+            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers'
         )
 
     def get_answers_count(self, obj):
-        return Faker().random_int(min=0, max=100)
+        return obj.answers.count()
 
     def get_is_bookmarked(self, obj):
         return Faker().boolean()
