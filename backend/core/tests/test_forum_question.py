@@ -102,7 +102,6 @@ class ForumQuestionTestCase(ForumQuestionSetup):
             ForumQuestion.objects.create(title=Faker().sentence(), question=Faker().sentence(), author=self.user)
         response = self.client.get(reverse('forum-question-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        print(response.data)
         self.assertEqual(response.data['count'], 21)
         self.assertEqual(len(response.data['results']), 10)
     
