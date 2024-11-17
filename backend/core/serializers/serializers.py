@@ -3,7 +3,9 @@ from faker import Faker
 from rest_framework import serializers
 
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer)
+                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz)
+from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
+from .take_quiz_serializer import TakeQuizSerializer
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -90,16 +92,22 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         return ForumBookmark.objects.filter(user=user, forum_question=obj).exists()
 
     def get_is_upvoted(self, obj):
-        return Faker().boolean()
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return ForumUpvote.objects.filter(user=user, forum_question=obj).exists()
 
     def get_upvotes_count(self, obj):
-        return Faker().random_int(min=0, max=100)
+        return obj.upvotes.count()
 
     def get_is_downvoted(self, obj):
-        return Faker().boolean()
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return ForumDownvote.objects.filter(user=user, forum_question=obj).exists()
 
     def get_downvotes_count(self, obj):
-        return Faker().random_int(min=0, max=100)
+        return obj.downvotes.count()
 
     def create(self, validated_data):
         # Extract tags from validated_data
@@ -171,9 +179,8 @@ class QuizSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)  # Assuming UserInfoSerializer is defined
     tags = TagSerializer(many=True)  # Assuming TagSerializer is defined
     rating = serializers.SerializerMethodField()
-
-    num_taken = serializers.IntegerField(default=0, read_only=True)
-    is_taken = serializers.BooleanField(default=False, read_only=True)
+    is_taken = serializers.SerializerMethodField()
+    num_taken = serializers.SerializerMethodField()
     
 
     class Meta:
@@ -183,6 +190,15 @@ class QuizSerializer(serializers.ModelSerializer):
             'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating"
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author")
+
+    def get_is_taken(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return TakeQuiz.objects.filter(quiz=obj, user=user).exists()
+
+    def get_num_taken(self, obj):
+        return obj.takes.count()
 
     def get_rating(self, obj):
         from django.db.models import Avg, Count

@@ -23,6 +23,11 @@ class TakeQuizTestCase(QuizSetup):
                 }
             ]
         }
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 0)
+
         response = self.client.post(reverse('take-quiz-list'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["user"], self.user.id)
@@ -31,8 +36,16 @@ class TakeQuizTestCase(QuizSetup):
         self.assertIn("date", response.data)
         self.assertEqual(response.data["answers"][0]["question"], data["answers"][0]["question"])
         self.assertEqual(response.data["answers"][0]["answer"], data["answers"][0]["answer"])
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 1)
 
     def test_take_quiz_already_taken(self):
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 0)
 
         data = {
             "quiz": self.quiz.id,
@@ -44,9 +57,18 @@ class TakeQuizTestCase(QuizSetup):
             ]
         }
         self.client.post(reverse('take-quiz-list'), data, format='json')
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 1)
+
         response = self.client.post(reverse('take-quiz-list'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data[0], "You have already taken this quiz.")
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 1)
 
     def test_take_quiz_invalid_answer(self):
     
@@ -101,6 +123,9 @@ class TakeQuizTestCase(QuizSetup):
             str(response.data[0]),
             "['The answer must belong to the same question.']"
         )
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["is_taken"])
 
 
     def test_take_quiz_invalid_question(self):
@@ -155,8 +180,19 @@ class TakeQuizTestCase(QuizSetup):
             str(response.data[0]),
             "['The question must belong to the same quiz.']"
         )
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 0)
+
 
     def test_take_quiz_delete(self):
+
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 0)
+
         data = {
             "quiz": self.quiz.id,
             "answers": [
@@ -167,9 +203,20 @@ class TakeQuizTestCase(QuizSetup):
             ]
         }
         response = self.client.post(reverse('take-quiz-list'), data, format='json')
+        response_id = response.data['id']
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        response = self.client.delete(reverse('take-quiz-detail', kwargs={'pk': response.data['id']}))
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 1)
+
+        response = self.client.delete(reverse('take-quiz-detail', kwargs={'pk': response_id}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.get(reverse('quiz-detail', kwargs={'pk': self.quiz.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data["is_taken"])
+        self.assertEqual(response.data["num_taken"], 0)
+
 
     def test_take_quiz_patch(self):
         data = {

@@ -43,7 +43,8 @@ class ForumBookmarkAPITest(APITestCase):
         """Test creating a forum bookmark"""
         # Delete the existing bookmark to test creation
         self.forum_bookmark.delete()
-
+        response = self.client.get(reverse('forum-question-detail', args=[self.forum_question.id]), format='json')
+        self.assertFalse(response.data['is_bookmarked']) 
         # Send POST request to create a new bookmark
         response = self.client.post(reverse('forumbookmark-list'), self.data, format='json')
 
@@ -51,14 +52,19 @@ class ForumBookmarkAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(ForumBookmark.objects.filter(user=self.user, forum_question=self.forum_question).exists())
 
+        response = self.client.get(reverse('forum-question-detail', args=[self.forum_question.id]), format='json')
+        self.assertTrue(response.data['is_bookmarked'])
+
+
     def test_delete_forum_bookmark(self):
         """Test deleting a forum bookmark"""
         # Send DELETE request to remove the bookmark
+        self.assertTrue(self.client.get(reverse('forum-question-detail', args=[self.forum_question.id]), format='json').data['is_bookmarked'])
         response = self.client.delete(reverse('forumbookmark-detail', args=[self.forum_bookmark.id]))
-
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(ForumBookmark.objects.filter(id=self.forum_bookmark.id).exists())
+        self.assertFalse(self.client.get(reverse('forum-question-detail', args=[self.forum_question.id]), format='json').data['is_bookmarked'])
 
     def test_cannot_bookmark_same_forum_question_twice(self):
         """Test that the same forum question cannot be bookmarked twice"""

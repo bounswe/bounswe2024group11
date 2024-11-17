@@ -26,31 +26,46 @@ class ForumUpvoteAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
 
         # Create a ForumQuestion
-        self.forum_question = ForumQuestion.objects.create(
-            title="Test Forum Question",
-            question="This is a test question for votes.",
-            author=self.user
-        )
+        # self.forum_question = ForumQuestion.objects.create(
+        #     title="Test Forum Question",
+        #     question="This is a test question for votes.",
+        #     author=self.user
+        # )
+        self.forum_question_response = self.client.post(reverse('forum-question-list'), {
+            "title": "Test Forum Question",
+            "question": "This is a test question for votes.",
+            "tags": [
+                {"name": "Django", "linked_data_id": "123", "description": "A web framework."},
+                {"name": "DRF", "linked_data_id": "456", "description": "Django Rest Framework."}
+            ]
+        }, format='json').data
 
+
+        self.forum_question = ForumQuestion.objects.get(title='Test Forum Question')
         # Vote data
         self.data = {"forum_question": self.forum_question.id}  
 
     def test_create_forum_upvote(self):
+        question_response = self.client.get(reverse("forum-question-detail", args=[self.forum_question.id]))
+        upvotes_count = question_response.data['upvotes_count']
         """Test creating a forum vote"""
         # Send POST request to create a new vote
         response = self.client.post(reverse('forum-upvote-list'), self.data, format='json')
-
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(ForumUpvote.objects.filter(user=self.user, forum_question=self.forum_question).exists())
         self.assertIn("id", response.data)
         self.assertIn("user", response.data)
         self.assertIn("forum_question", response.data)
+        response = self.client.get(reverse("forum-question-detail", args=[self.forum_question.id]))
+        self.assertEqual(upvotes_count + 1, response.data['upvotes_count'])
 
     def test_delete_forum_upvote(self):
         """Test deleting a forum vote"""
         # Create a vote to delete
         self.client.post(reverse('forum-upvote-list'), self.data, format='json')
+        response = self.client.get(reverse("forum-question-detail", args=[self.forum_question.id]))
+        upvotes_count = response.data['upvotes_count']
         forum_vote = ForumUpvote.objects.get(user=self.user, forum_question=self.forum_question)
 
         # Send DELETE request to remove the vote
@@ -59,6 +74,10 @@ class ForumUpvoteAPITest(APITestCase):
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(ForumUpvote.objects.filter(id=forum_vote.id).exists())
+
+        response = self.client.get(reverse("forum-question-detail", args=[self.forum_question.id]))
+        self.assertEqual(response.data['upvotes_count'], upvotes_count - 1)
+
 
     def test_cannot_upvote_same_forum_question_twice(self):
         """Test that the same forum question cannot be voted twice"""

@@ -69,7 +69,7 @@ class QuizQuestionChoice(models.Model):
         return self.choice_text
 
 class TakeQuiz(models.Model):
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='takes')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     
@@ -122,7 +122,7 @@ class ForumBookmark(models.Model):
 
 class ForumUpvote(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE)
+    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE, related_name='upvotes')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -140,7 +140,7 @@ class ForumUpvote(models.Model):
 
 class ForumDownvote(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE)
+    forum_question = models.ForeignKey(ForumQuestion, on_delete=models.CASCADE, related_name='downvotes')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
