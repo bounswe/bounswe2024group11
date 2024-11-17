@@ -48,7 +48,6 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
-    created_at = serializers.DateTimeField(source='date', read_only=True)
 
     class Meta:
         model = ForumAnswer
