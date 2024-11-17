@@ -32,7 +32,7 @@ class ForumAnswerSetup(APITestCase):
         self.data = {
             "answer": "You can use the serializers.ModelSerializer and set the many=True parameter.",
         }
-        self.client.post(reverse('forum-answer-list', args=[self.forum_question.id]), self.data, format='json')
+        self.client.post(reverse('forum-question-answers-list', args=[self.forum_question.id]), self.data, format='json')
         self.forum_answer = ForumAnswer.objects.get(answer='You can use the serializers.ModelSerializer and set the many=True parameter.')
 
 class ForumAnswerTestCase(ForumAnswerSetup):
@@ -41,7 +41,7 @@ class ForumAnswerTestCase(ForumAnswerSetup):
         data = {
             "answer": "You can use the serializers.ModelSerializer and set the many=True parameter.",
         }
-        response = self.client.post(reverse('forum-answer-list', args=[self.forum_question.id]), data, format='json')
+        response = self.client.post(reverse('forum-question-answers-list', args=[self.forum_question.id]), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ForumAnswer.objects.count(), 2)
         self.assertEqual(ForumAnswer.objects.all()[1].answer, data['answer'])
@@ -51,14 +51,14 @@ class ForumAnswerTestCase(ForumAnswerSetup):
         data = {
             "answer": "You can use the serializers.ModelSerializer and set the many=True parameter.",
         }
-        response = self.client.put(reverse('forum-answer-detail', args=[self.forum_question.id, self.forum_answer.id]),
+        response = self.client.put(reverse('forum-question-answers-detail', args=[self.forum_question.id, self.forum_answer.id]),
                                 data, format='json'
                                 )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['answer'], data['answer'])
 
     def test_forum_answer_delete(self):
-        response = self.client.delete(reverse('forum-answer-detail', args=[self.forum_question.id, self.forum_answer.id]))
+        response = self.client.delete(reverse('forum-question-answers-detail', args=[self.forum_question.id, self.forum_answer.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_cannot_modify_other_users_answers(self):
@@ -66,18 +66,31 @@ class ForumAnswerTestCase(ForumAnswerSetup):
                                         email=Faker().email(), full_name=Faker().name())
         refresh = RefreshToken.for_user(user2)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
-        response = self.client.put(reverse('forum-answer-detail', args=[self.forum_question.id, self.forum_answer.id]),
+        response = self.client.put(reverse('forum-question-answers-detail', args=[self.forum_question.id, self.forum_answer.id]),
                                 {'answer': 'Updated Answer'}
                                 )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.delete(reverse('forum-answer-detail', args=[self.forum_question.id, self.forum_answer.id]))
+        response = self.client.delete(reverse('forum-question-answers-detail', args=[self.forum_question.id, self.forum_answer.id]))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_unlogged_user_cannot_create_answer(self):
         self.client.credentials()
-        response = self.client.post(reverse('forum-answer-list', args=[self.forum_question.id]), self.data, format='json')
+        response = self.client.post(reverse('forum-question-answers-list', args=[self.forum_question.id]), self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_forumAnswer_pagination(self):
         refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+        for i in range(10):
+            data = {
+                "answer": f"Answer {i}",
+            }
+            self.client.post(reverse('forum-question-answers-list', args=[self.forum_question.id]), data, format='json')
+        response = self.client.get(reverse('forum-question-answers-list', args=[self.forum_question.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 11)
+        self.assertEqual(response.data["results"][0]["author"]["id"], self.user.id)
+        self.assertEqual(len(response.data['results']), 10)
+        self.assertEqual(response.data['results'][0]['answer'], 'You can use the serializers.ModelSerializer and set the many=True parameter.')
+        self.assertEqual(response.data['results'][1]['answer'], 'Answer 0')
