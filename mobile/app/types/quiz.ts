@@ -25,3 +25,17 @@ export type QuizCardHeaderType = {
   difficulty: string;
   rating_score: number;
 };
+
+export type QuizQuestionOptionsType = {
+  A: string;
+  B: string;
+  C: string;
+  D: string;
+};
+
+export type QuizQuestionType = {
+  id: string;
+  text: string;
+  options: QuizQuestionOptionsType;
+  correct_answer: string;
+};
