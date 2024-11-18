@@ -17,7 +17,15 @@ const QuizDetail: React.FC<Props> = ({ route }) => {
   return (
     <View>
       <QuizDetailText item={quiz} />
-      <ViewQuizButton item={{ id: quiz.id, is_taken: quiz.is_taken }} />
+      <ViewQuizButton
+        item={{
+          id: quiz.id,
+          type: quiz.type,
+          title: quiz.title,
+          description: quiz.description,
+          is_taken: quiz.is_taken,
+        }}
+      />
     </View>
   );
 };
