@@ -1,0 +1,13 @@
+[
+    {
+        "model": "core.forumanswer",
+        "pk": 1,
+        "fields": {
+            "forum_question": 2,
+            "author": 2,
+            "answer": "The word 'clutch' has several meanings: as a car part, it's a device that connects the engine to the wheels; as a verb, it means to grip tightly; in sports, it refers to performing well under pressure; and as a noun, it can also mean a small handbag.",
+            "created_at": "2024-11-01T00:00:00Z"
+        }
+    }
+
+]
