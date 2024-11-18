@@ -11,9 +11,10 @@ import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
 import Login from "./app/screens/Login";
 import Profile from "./app/screens/Profile";
-import Quiz from "./app/screens/Quiz";
 import QuizDetail from "./app/screens/QuizDetail";
+import QuizFeed from "./app/screens/QuizFeed";
 import Register from "./app/screens/Register"; // import the new Register screen
+import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
 import { QuizOverview } from "./app/types/quiz";
 
@@ -24,6 +25,12 @@ export type RootStackParamList = {
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
   QuizDetail: { quiz: QuizOverview };
+  ViewQuiz: {
+    id: string;
+    type: number;
+    title: string;
+    description: string;
+  };
   CreateQuestion: undefined;
 };
 
@@ -62,8 +69,8 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Quiz"
-        component={Quiz}
+        name="QuizFeed"
+        component={QuizFeed}
         options={{
           tabBarIcon: () => (
             <Image
@@ -121,6 +128,7 @@ export const Layout = () => {
               component={ForumQuestionDetail}
             />
             <Stack.Screen name="QuizDetail" component={QuizDetail} />
+            <Stack.Screen name="ViewQuiz" component={ViewQuiz} />
             {/*
             {authState?.authenticated
               ? <Stack.Screen
