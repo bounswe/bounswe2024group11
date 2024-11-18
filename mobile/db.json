@@ -427,5 +427,122 @@
                 }
             ]
         }
+    ],
+    "quiz-questions": [
+        {
+            "id": "13",
+            "questions": [
+                {
+                    "id": "1",
+                    "text": "bagaj",
+                    "options": {
+                        "A": "hood",
+                        "B": "ignition",
+                        "C": "dashboard",
+                        "D": "trunk"
+                    },
+                    "correct_answer": "D"
+                },
+                {
+                    "id": "2",
+                    "text": "debriyaj",
+                    "options": {
+                        "A": "clutch",
+                        "B": "seat belt",
+                        "C": "fuel tank",
+                        "D": "steering wheel"
+                    },
+                    "correct_answer": "A"
+                },
+                {
+                    "id": "3",
+                    "text": "kaput",
+                    "options": {
+                        "A": "brake pedal",
+                        "B": "hood",
+                        "C": "tire",
+                        "D": "gear lever"
+                    },
+                    "correct_answer": "B"
+                },
+                {
+                    "id": "4",
+                    "text": "ateşleme",
+                    "options": {
+                        "A": "ignition",
+                        "B": "windshield",
+                        "C": "engine",
+                        "D": "fuel tank"
+                    },
+                    "correct_answer": "A"
+                },
+                {
+                    "id": "5",
+                    "text": "emniyet kemeri",
+                    "options": {
+                        "A": "brakes",
+                        "B": "steering wheel",
+                        "C": "seat belt",
+                        "D": "exhaust"
+                    },
+                    "correct_answer": "C"
+                },
+                {
+                    "id": "6",
+                    "text": "vites kutusu",
+                    "options": {
+                        "A": "engine",
+                        "B": "brakes",
+                        "C": "mirror",
+                        "D": "gearbox"
+                    },
+                    "correct_answer": "D"
+                },
+                {
+                    "id": "7",
+                    "text": "lastik",
+                    "options": {
+                        "A": "tire",
+                        "B": "ignition",
+                        "C": "brake pedal",
+                        "D": "trunk"
+                    },
+                    "correct_answer": "A"
+                },
+                {
+                    "id": "8",
+                    "text": "direksiyon",
+                    "options": {
+                        "A": "trunk",
+                        "B": "fuel tank",
+                        "C": "steering wheel",
+                        "D": "gearbox"
+                    },
+                    "correct_answer": "C"
+                },
+                {
+                    "id": "9",
+                    "text": "vites kolu",
+                    "options": {
+                        "A": "gear lever",
+                        "B": "fuel tank",
+                        "C": "brakes",
+                        "D": "clutch"
+                    },
+                    "correct_answer": "A"
+                },
+                {
+                    "id": "10",
+                    "text": "egzoz",
+                    "options": {
+                        "A": "radiator",
+                        "B": "trunk",
+                        "C": "exhaust",
+                        "D": "hood"
+                    },
+                    "correct_answer": "C"
+                }
+            ]
+        }
     ]
 }
