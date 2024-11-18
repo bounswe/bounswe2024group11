@@ -17,7 +17,7 @@ const API_URL = "http://10.0.2.2:3000/quiz-feed";
 
 type QuizScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const Quiz: React.FC = () => {
+const QuizFeed: React.FC = () => {
   const [quizzes, setQuizzes] = useState<QuizOverview[]>([]);
 
   const navigation = useNavigation<QuizScreenNavigationProp>();
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Quiz;
+export default QuizFeed;
