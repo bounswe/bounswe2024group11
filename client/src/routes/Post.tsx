@@ -26,6 +26,7 @@ export const PostPage = () => {
     const description = logged_in
         ? `This is your time to shine ${user.full_name}`
         : "Test your knowledge of various topics. Log in to track your progress.";
+    console.log(description);
     return (
         <div className="container flex w-full max-w-screen-xl flex-col items-center gap-8 py-12">
             <main className="flex flex-col items-stretch justify-center gap-10">
