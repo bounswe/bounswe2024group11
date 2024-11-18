@@ -31,6 +31,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ item }) => {
           item={{
             author: item.author,
             num_taken: item.num_taken,
+            is_taken: item.is_taken,
             created_at: item.created_at,
           }}
         />
