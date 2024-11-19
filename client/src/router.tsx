@@ -48,12 +48,46 @@ export const routes: RouteObject[] = [
                         element: <Forum />,
                         loader: forumLoader,
                         action: createPostAction,
+                        children: [
+                            {
+                                path: "create",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                        ],
                     },
                     {
                         path: "forum/:postId",
                         element: <ForumQuestion />,
                         loader: forumQuestionLoader,
                         action: postAction,
+                        children: [
+                            {
+                                path: "bookmark",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                            {
+                                path: "upvote",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                            {
+                                path: "downvote",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                            {
+                                path: "answer",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                        ],
                     },
                     {
                         path: "quizzes",
