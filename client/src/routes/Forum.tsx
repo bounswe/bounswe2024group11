@@ -2,33 +2,27 @@ import { Button, Dialog, DialogHeading } from "@ariakit/react";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
 import { Form } from "react-router-dom";
-import {
-    useActionData,
-    useLoaderData,
-    useRouteLoaderData,
-} from "react-router-typesafe";
+import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { ForumCard } from "../components/forum-card";
 import { inputClass } from "../components/input";
 import { PageHead } from "../components/page-head";
 import AutocompleteTag from "../components/tagselect";
-import { Tag } from "../types/post";
-import { createPostAction, forumLoader } from "./Forum.data";
+import { Tag } from "../types/forum";
+import { forumLoader } from "./Forum.data";
 import { homeLoader } from "./Home.data";
 
 import "./styles.css";
 
 const availableTags: Tag[] = [
-    { id: "Writing", name: "Writing" },
-    { id: "Grammar", name: "Grammar" },
-    { id: "Word", name: "Word" },
-    { id: "Vocabulary", name: "Vocabulary" },
-    { id: "English", name: "English" },
-    // Add more tags as needed
+    { linked_data_id: "1", description: "Writing", name: "Writing" },
+    { linked_data_id: "2", description: "Grammar", name: "Grammar" },
+    { linked_data_id: "3", description: "Word", name: "Word" },
+    { linked_data_id: "4", description: "Vocabulary", name: "Vocabulary" },
+    { linked_data_id: "5", description: "English", name: "English" },
 ];
 
 export const Forum = () => {
-    const actionData = useActionData<typeof createPostAction>();
     const [creatingPost, setCreatingPost] = useState(false);
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const data = useLoaderData<typeof forumLoader>();
@@ -42,7 +36,7 @@ export const Forum = () => {
             <PageHead title="Forum" description={description} />
             <main className="items-stretch justify-stretch">
                 <div className="flex w-full flex-col items-center gap-6">
-                    {data.posts.map((post) => (
+                    {data.results.map((post) => (
                         <ForumCard key={post.id} post={post} />
                     ))}
                 </div>

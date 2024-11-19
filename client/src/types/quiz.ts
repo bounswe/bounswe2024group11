@@ -9,12 +9,7 @@ import {
     string,
     union,
 } from "valibot";
-
-export const quizAuthorSchema = object({
-    full_name: string(),
-    username: string(),
-    avatar: string(),
-});
+import { authorSchema } from "./forum";
 
 const quizTagSchema = object({
     id: string(),
@@ -38,7 +33,7 @@ export const quizOverviewSchema = object({
     type: union([literal(1), literal(2), literal(3)]),
     title: string(),
     description: string(),
-    author: quizAuthorSchema,
+    author: authorSchema,
     created_at: string(),
     tags: array(quizTagSchema),
     num_taken: number(),

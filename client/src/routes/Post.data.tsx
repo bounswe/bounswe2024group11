@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
-import { answerSchema, postDetailsSchema } from "../types/post";
+import { answerSchema, postDetailsSchema } from "../types/forum";
 import { BASE_URL } from "../utils";
 
 export const postLoader = (async ({ params, request }) => {

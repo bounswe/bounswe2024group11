@@ -1,7 +1,7 @@
 import { LoaderFunction } from "react-router";
 import { redirect } from "react-router-typesafe";
 import { safeParse } from "valibot";
-import { forumResponseSchema, postDetailsSchema } from "../types/post";
+import { forumResponseSchema, postDetailsSchema } from "../types/forum";
 import { BASE_URL, logger } from "../utils";
 
 export const forumLoader = (async ({ request }) => {
@@ -9,7 +9,7 @@ export const forumLoader = (async ({ request }) => {
     const page = Number(url.searchParams.get("page")) || 1;
     const per_page = Number(url.searchParams.get("per_page")) || 10;
     const res = await fetch(
-        `${BASE_URL}/forum/?page=${page}&per_page=${per_page}`,
+        `${BASE_URL}/forum-questions/?page=${page}&per_page=${per_page}`,
         {
             method: "GET",
             headers: {
@@ -19,8 +19,9 @@ export const forumLoader = (async ({ request }) => {
     );
     const data = await res.json();
     const { output, issues, success } = safeParse(forumResponseSchema, data);
+    console.log(issues);
     if (!success) {
-        throw new Error(`Failed to parse quizzes response: ${issues}`);
+        throw new Error("Failed to parse quizzes response");
     }
     return output;
 }) satisfies LoaderFunction;

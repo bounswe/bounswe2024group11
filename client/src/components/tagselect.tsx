@@ -15,7 +15,7 @@ import React, {
     useRef,
     useState,
 } from "react";
-import { Tag } from "../types/post";
+import { Tag } from "../types/forum";
 import { inputClass } from "./input";
 
 const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
