@@ -11,7 +11,7 @@ queryset = User.objects.all()
 class UserAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAnswer
-        fields = ['id', 'take_quiz', 'question', 'answer']
+        fields = ['id', 'take_quiz', 'question', 'answer', 'is_hint_taken']
         read_only_fields = ['take_quiz']
 
 class TakeQuizSerializer(serializers.ModelSerializer):
@@ -30,7 +30,10 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         correct_answers = 0
         for answer in obj.answers.all():
             if answer.answer.is_correct:
-                correct_answers += 1
+                if answer.is_hint_taken:
+                    correct_answers += 0.5
+                else:
+                    correct_answers += 1
         return correct_answers
 
     def create(self, validated_data):

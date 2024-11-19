@@ -80,6 +80,7 @@ class UserAnswer(models.Model):
     question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
     take_quiz = models.ForeignKey(TakeQuiz, related_name='answers', on_delete=models.CASCADE, null=True)
     answer = models.ForeignKey(QuizQuestionChoice, on_delete=models.CASCADE)
+    is_hint_taken = models.BooleanField(default=False)
     
     class Meta:
         unique_together = ['question', 'take_quiz']
