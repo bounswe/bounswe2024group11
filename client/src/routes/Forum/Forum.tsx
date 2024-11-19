@@ -1,40 +1,73 @@
 import { Button, Dialog, DialogHeading } from "@ariakit/react";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
-import { buttonClass, buttonInnerRing } from "../components/button";
-import { ForumCard } from "../components/forum-card";
-import { inputClass } from "../components/input";
-import { PageHead } from "../components/page-head";
-import AutocompleteTag from "../components/tagselect";
-import { Tag } from "../types/forum";
+import { buttonClass, buttonInnerRing } from "../../components/button";
+import { ForumCard } from "../../components/forum-card";
+import { inputClass } from "../../components/input";
+import { PageHead } from "../../components/page-head";
+
 import { forumLoader } from "./Forum.data";
-import { homeLoader } from "./Home.data";
 
-import "./styles.css";
-
-const availableTags: Tag[] = [
-    { linked_data_id: "1", description: "Writing", name: "Writing" },
-    { linked_data_id: "2", description: "Grammar", name: "Grammar" },
-    { linked_data_id: "3", description: "Word", name: "Word" },
-    { linked_data_id: "4", description: "Vocabulary", name: "Vocabulary" },
-    { linked_data_id: "5", description: "English", name: "English" },
-];
+import { homeLoader } from "../Home/Home.data";
 
 export const Forum = () => {
     const [creatingPost, setCreatingPost] = useState(false);
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
     const data = useLoaderData<typeof forumLoader>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
     const description = logged_in
         ? `This is your time to shine ${user.full_name}`
         : "Test your knowledge of various topics. Log in to track your progress.";
+
+    const currentPage = parseInt(searchParams.get("page") || "1");
+    const perPage = parseInt(searchParams.get("per_page") || "10");
+    const totalPages = Math.ceil(data.count / perPage);
+
+    const handlePageChange = (page: number) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("page", page.toString());
+        if (perPage !== 10) {
+            newParams.set("per_page", perPage.toString());
+        }
+        setSearchParams(newParams);
+    };
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <PageHead title="Forum" description={description} />
-            <main className="items-stretch justify-stretch">
+            <main className="flex flex-col items-stretch justify-stretch gap-10">
+                <div className="mt-8 flex justify-center gap-4">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={!data.previous}
+                        aria-disabled={!data.previous}
+                        className={buttonClass({
+                            intent: "secondary",
+                        })}
+                    >
+                        <div
+                            className={buttonInnerRing({ intent: "secondary" })}
+                        />
+                        Previous
+                    </button>
+                    <span className="flex items-center">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={!data.next}
+                        aria-disabled={!data.next}
+                        className={buttonClass({ intent: "secondary" })}
+                    >
+                        <div
+                            className={buttonInnerRing({ intent: "secondary" })}
+                        />
+                        Next
+                    </button>
+                </div>
                 <div className="flex w-full flex-col items-center gap-6">
                     {data.results.map((post) => (
                         <ForumCard key={post.id} post={post} />
@@ -91,12 +124,6 @@ export const Forum = () => {
                             <div>
                                 <span>Tags:</span>
                             </div>
-
-                            <AutocompleteTag
-                                availableTags={availableTags}
-                                onTagsChange={setSelectedTags}
-                                initialTags={selectedTags}
-                            ></AutocompleteTag>
                         </div>
                         <button
                             aria-label="Post"

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLoaderData } from "react-router-typesafe";
-import { Avatar } from "../components/avatar";
-import { PageHead } from "../components/page-head";
+import { Avatar } from "../../components/avatar";
+import { PageHead } from "../../components/page-head";
 import { homeLoader } from "./Home.data";
 
 export const Leaderboard = () => {

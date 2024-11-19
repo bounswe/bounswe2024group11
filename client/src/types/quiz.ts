@@ -3,13 +3,21 @@ import {
     boolean,
     InferInput,
     literal,
+    nullable,
     number,
     object,
     optional,
     string,
     union,
 } from "valibot";
-import { authorSchema } from "./forum";
+
+export const authorSchema = object({
+    id: number(),
+    full_name: string(),
+    username: string(),
+    avatar: nullable(string()),
+    email: string(),
+});
 
 const quizTagSchema = object({
     id: string(),

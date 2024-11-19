@@ -8,7 +8,7 @@ import {
 } from "@remixicon/react";
 import { ReactNode, useState } from "react";
 import { useRouteLoaderData } from "react-router-typesafe";
-import { PageHead } from "../components/page-head";
+import { PageHead } from "../../components/page-head";
 import { homeLoader } from "./Home.data";
 
 const ExpandableItem = ({

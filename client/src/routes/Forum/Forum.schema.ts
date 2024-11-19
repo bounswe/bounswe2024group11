@@ -15,7 +15,7 @@ const Tagschema = object({
     linked_data_id: string(),
     description: string(),
 });
-export type ForumResponse = InferInput<typeof forumResponseSchema>;
+export type ForumResponse = InferInput<typeof forumSchema>;
 
 export const authorSchema = object({
     id: number(),
@@ -36,7 +36,7 @@ export const answerSchema = object({
     downvotes_count: nullable(number()),
 });
 
-export const postOverviewSchema = object({
+export const forumQuestionSchema = object({
     id: number(),
     title: string(),
     question: string(),
@@ -52,16 +52,12 @@ export const postOverviewSchema = object({
     answers: array(answerSchema),
 });
 
-export const postDetailsSchema = object({
-    post: postOverviewSchema,
-    answers: array(answerSchema),
-});
-export const forumResponseSchema = object({
+export const forumSchema = object({
     count: number(),
     next: nullable(string()),
     previous: nullable(string()),
-    results: array(postOverviewSchema),
+    results: array(forumQuestionSchema),
 });
-export type PostOverview = InferInput<typeof postOverviewSchema>;
-export type PostDetails = InferInput<typeof postDetailsSchema>;
+
 export type Tag = InferInput<typeof Tagschema>;
+export type ForumQuestion = InferInput<typeof forumQuestionSchema>;

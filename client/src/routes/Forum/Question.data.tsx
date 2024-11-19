@@ -1,9 +1,9 @@
 import { ActionFunctionArgs, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
-import { answerSchema, postDetailsSchema } from "../types/forum";
-import { BASE_URL } from "../utils";
+import { BASE_URL } from "../../utils";
+import { answerSchema, forumQuestionSchema } from "./Forum.schema";
 
-export const postLoader = (async ({ params, request }) => {
+export const forumQuestionLoader = (async ({ params, request }) => {
     const url = new URL(request.url);
     const postId = params.postId;
     const sort = url.searchParams.get("sort") || "upvote";
@@ -15,7 +15,7 @@ export const postLoader = (async ({ params, request }) => {
     }
 
     const res = await fetch(
-        `${BASE_URL}/forum/${postId}?sort=${sort}&page=${page}&per_page=${per_page}`,
+        `${BASE_URL}/forum-questions/${postId}?sort=${sort}&page=${page}&per_page=${per_page}`,
         {
             method: "GET",
             headers: {
@@ -29,7 +29,7 @@ export const postLoader = (async ({ params, request }) => {
     }
 
     const data = await res.json();
-    const { output, issues, success } = safeParse(postDetailsSchema, data);
+    const { output, issues, success } = safeParse(forumQuestionSchema, data);
     if (!success) {
         throw new Error(`Failed to parse post response: ${issues}`);
     }

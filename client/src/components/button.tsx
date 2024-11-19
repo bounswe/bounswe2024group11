@@ -50,6 +50,10 @@ export const buttonClass = cva(
         "focus-visible:outline-none",
         "outline-none",
         "cursor-pointer",
+        "disabled:hover:bg-slate-800",
+        "disabled:active:ring-0",
+        "disabled:cursor-default",
+        "disabled:opacity-50",
     ],
     {
         variants: {

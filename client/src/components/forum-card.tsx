@@ -5,21 +5,20 @@ import {
     RiBookmark2Line,
 } from "@remixicon/react";
 import { Link } from "react-router-dom";
-import { PostOverview } from "../types/forum";
+import { ForumQuestion } from "../routes/Forum/Forum.schema";
 import { pluralize } from "../utils";
 import { Avatar } from "./avatar";
 
 type ForumCardProps = {
-    post: PostOverview;
+    post: ForumQuestion;
 };
 
 export const ForumCard = ({ post }: ForumCardProps) => {
-    console.log(post);
     return (
         <Link
             to={`/forum/${post.id}`}
             aria-label={`${post.title} by ${post.author.full_name}`}
-            className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200"
+            className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300"
         >
             <div className="flex flex-col gap-3 pb-3">
                 <div className="flex w-full items-center justify-between gap-3">
@@ -29,8 +28,8 @@ export const ForumCard = ({ post }: ForumCardProps) => {
                             {post.author.username}
                         </p>
                     </div>
-                    <Button className="flex size-9 items-center justify-center rounded-1 bg-slate-100">
-                        <RiBookmark2Line className="size-5" />
+                    <Button className="flex size-10 items-center justify-center rounded-2 bg-slate-100 hover:bg-orange-100 hover:text-orange-700">
+                        <RiBookmark2Line className="size-4" />
                     </Button>
                 </div>
 

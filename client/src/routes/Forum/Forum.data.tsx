@@ -1,8 +1,8 @@
 import { LoaderFunction } from "react-router";
 import { redirect } from "react-router-typesafe";
 import { safeParse } from "valibot";
-import { forumResponseSchema, postDetailsSchema } from "../types/forum";
-import { BASE_URL, logger } from "../utils";
+import { BASE_URL, logger } from "../../utils";
+import { forumQuestionSchema, forumSchema } from "./Forum.schema";
 
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
@@ -18,8 +18,7 @@ export const forumLoader = (async ({ request }) => {
         },
     );
     const data = await res.json();
-    const { output, issues, success } = safeParse(forumResponseSchema, data);
-    console.log(issues);
+    const { output, issues, success } = safeParse(forumSchema, data);
     if (!success) {
         throw new Error("Failed to parse quizzes response");
     }
@@ -37,7 +36,7 @@ export const createPostAction = async ({ request }: { request: Request }) => {
     }
 
     const data = await res.json();
-    const { output, issues, success } = safeParse(postDetailsSchema, data);
+    const { output, issues, success } = safeParse(forumQuestionSchema, data);
     if (!success) {
         logger.log(data);
         throw new Error(`Failed to create post: ${issues}`);

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
-import { buttonClass, buttonInnerRing } from "../components/button";
-import { PageHead } from "../components/page-head";
-import { QuizDetails } from "../types/quiz";
-import { logger } from "../utils";
-import { homeLoader } from "./Home.data";
+import { buttonClass, buttonInnerRing } from "../../components/button";
+import { PageHead } from "../../components/page-head";
+import { QuizDetails } from "../../types/quiz";
+import { logger } from "../../utils";
+import { homeLoader } from "../Home/Home.data";
 import { quizLoader } from "./Quiz.data";
 
 const StartQuizComponent = ({
