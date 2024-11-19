@@ -55,7 +55,10 @@ class Quiz(models.Model):
     
 class QuizQuestion(models.Model):
     question_text = models.CharField(max_length=1000)
+    #returned from BabelNet
+    tags = models.ManyToManyField('Tag')
     quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
+    babelnet_id = models.CharField(max_length=100)
     
     def __str__(self):
         return self.question_text

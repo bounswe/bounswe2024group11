@@ -1,3 +1,4 @@
+from requests import Response
 from ..models import Quiz
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -21,3 +22,8 @@ class QuizViewSet(viewsets.ModelViewSet):
         if self.action == 'list':  # If listing, allow anyone
             return [permissions.AllowAny()]
         return super().get_permissions()
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = QuizSerializer(instance, context={'request': request})
+        return Response(serializer.data)

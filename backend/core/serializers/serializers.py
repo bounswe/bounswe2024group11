@@ -146,23 +146,58 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
     choices = QuizQuestionChoiceSerializer(many=True)  # Allow nested choices creation
     class Meta:
         model = QuizQuestion
-        fields = ('id', 'question_text', 'choices')
+        fields = ('id', 'question_text', 'choices', 'babelnet_id')
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
     def create(self, validated_data):
-        # Extract nested choices from validated_data
+        # Extract nested choices and tags from validated_data
         choices_data = validated_data.pop('choices', [])
-        question = QuizQuestion.objects.create(**validated_data)
+        tags_data = validated_data.pop('tags', [])
+        question_text = validated_data.get('question_text', "")
+        dynamic_tags = self.extract_tags_from_text(question_text)
 
-        # Create and associate each QuizQuestionChoice with the QuizQuestion
+        # Create or get tags from the dynamic extraction and associate them with the QuizQuestion
+        for tag_name in dynamic_tags:
+            tag, created = Tag.objects.get_or_create(name=tag_name)
+            question.tags.add(tag)
+
+        # Extract the babelnet_id from the tags_data (assuming it exists in the tags_data)
+        babelnet_id = None
+        for tag in tags_data:
+            if 'babelnet_id' in tag:
+                babelnet_id = tag['babelnet_id']
+                break  # Assuming there's only one babelnet_id or you want the first one
+
+        # Extract tags dynamically from the question_text (based on your needs)
+        
+
+        # Create the QuizQuestion instance, including babelnet_id
+        question = QuizQuestion.objects.create(babelnet_id=babelnet_id, **validated_data)
+
+        # Create choices if provided
         for choice_data in choices_data:
-            QuizQuestionChoice.objects.create(question=question, **choice_data)
+            choice_data['quiz_question'] = question  # Assign the created question to the choice
+            QuizQuestionChoice.objects.create(**choice_data)
 
         return question
+
+    def extract_tags_from_text(self, text):
+        """
+        A simple method to extract tags from the `question_text`.
+        You can adjust this method to use more complex logic.
+        """
+        # Example: Extract words that are at least 3 characters long and not stop words
+        words = re.findall(r'\b\w{3,}\b', text.lower())  # Regex to get words of 3+ characters
+        return set(words)  # Return unique tags
+
+    
+    
+
 
     def update(self, instance, validated_data):
         # Handle updating nested choices
         choices_data = validated_data.pop('choices', [])
+        tags_data = validated_data.pop('tags')
 
         # Update question fields
         instance.question_text = validated_data.get('question_text', instance.question_text)
@@ -172,6 +207,14 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
         instance.choices.all().delete()
         for choice_data in choices_data:
             QuizQuestionChoice.objects.create(question=instance, **choice_data)
+
+        # Update tags
+        instance.tags.clear()
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(**tag_data)
+            instance.tags.add(tag)
+
+        return instance
 
 
 class QuizSerializer(serializers.ModelSerializer):
