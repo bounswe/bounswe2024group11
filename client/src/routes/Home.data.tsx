@@ -6,7 +6,6 @@ import { userSchema } from "../types/user";
 export const homeLoader = () => {
     const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
     const { output, success } = safeParse(userSchema, user);
-
     if (!success) {
         useToastStore.getState().add({
             id: "not-logged-in",

@@ -2,7 +2,7 @@ import { RouteObject } from "react-router-dom";
 import { ErrorPage } from "./routes/_error";
 import { Root } from "./routes/_root";
 import { Forum } from "./routes/Forum";
-import { forumLoader } from "./routes/Forum.data";
+import { createPostAction, forumLoader } from "./routes/Forum.data";
 import { Home } from "./routes/Home";
 import { homeLoader } from "./routes/Home.data";
 import { HomeMain } from "./routes/Home.main";
@@ -12,7 +12,7 @@ import { Login } from "./routes/Login";
 import { loginAction, loginLoader } from "./routes/Login.data";
 import { logoutLoader } from "./routes/Logout.data";
 import { PostPage } from "./routes/Post";
-import { postLoader } from "./routes/Post.data";
+import { postAction, postLoader } from "./routes/Post.data";
 import { QuizPage } from "./routes/Quiz";
 import { quizLoader } from "./routes/Quiz.data";
 import { Quizzes } from "./routes/Quizzes";
@@ -46,11 +46,13 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
+                        action: createPostAction,
                     },
                     {
                         path: "forum/:postId",
                         element: <PostPage />,
                         loader: postLoader,
+                        action: postAction,
                     },
                     {
                         path: "quizzes",

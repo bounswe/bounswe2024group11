@@ -1,6 +1,6 @@
-import { LoaderFunction } from "react-router";
+import { ActionFunctionArgs, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
-import { postDetailsSchema } from "../types/post";
+import { answerSchema, postDetailsSchema } from "../types/post";
 import { BASE_URL } from "../utils";
 
 export const postLoader = (async ({ params, request }) => {
@@ -36,3 +36,22 @@ export const postLoader = (async ({ params, request }) => {
 
     return output;
 }) satisfies LoaderFunction;
+
+export const postAction = async ({ params, request }: ActionFunctionArgs) => {
+    const formData = await request.formData();
+    const postId = params.postId;
+    const res = await fetch(`${BASE_URL}/forum/${postId}/answers`, {
+        method: "POST",
+        body: formData,
+    });
+    if (!res.ok) {
+        throw new Error(`Failed to answer post`);
+    }
+
+    const data = await res.json();
+    const { output, issues, success } = safeParse(answerSchema, data);
+    if (!success) {
+        throw new Error(`Failed to create post: ${issues}`);
+    }
+    return redirect(`/forum/${postId}`);
+};

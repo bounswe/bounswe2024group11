@@ -1,8 +1,10 @@
 import { Radio, RadioGroup, RadioProvider, useFormStore } from "@ariakit/react";
-import { useSearchParams } from "react-router-dom";
+import { Form, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
+import { buttonClass } from "../components/button";
 import { ForumAnswerCard } from "../components/forum-answer-card";
 import { ForumCard } from "../components/forum-card";
+import { inputClass } from "../components/input";
 import { homeLoader } from "./Home.data";
 import { postLoader } from "./Post.data";
 
@@ -29,10 +31,10 @@ export const PostPage = () => {
     console.log(description);
     return (
         <div className="container flex w-full max-w-screen-xl flex-col items-center gap-8 py-12">
-            <main className="flex flex-col items-stretch justify-center gap-10">
+            <main className="flex w-full flex-col items-center justify-center gap-10">
                 <ForumCard key={data.post.id} post={data.post}></ForumCard>
                 <RadioProvider>
-                    <RadioGroup>
+                    <RadioGroup className="flex flex-row gap-4">
                         <label className="label">
                             <Radio
                                 className="radio"
@@ -71,7 +73,7 @@ export const PostPage = () => {
                         </label>
                     </RadioGroup>
                 </RadioProvider>
-                <div className="flex w-full flex-col">
+                <div className="flex w-full flex-col items-center justify-center">
                     {data.answers.map((answer) => {
                         return (
                             <ForumAnswerCard
@@ -81,6 +83,29 @@ export const PostPage = () => {
                         );
                     })}
                 </div>
+                <Form
+                    action={`/forum/${data.post.id}`}
+                    method="POST"
+                    aria-labelledby="add-new-answer"
+                    className="flex w-full max-w-xl flex-col items-center justify-center gap-4"
+                    hidden={!logged_in}
+                >
+                    <textarea
+                        name="body"
+                        placeholder="Write your comment..."
+                        className={`${inputClass()} min-h-[100px] w-full resize-y`}
+                        required
+                        minLength={1}
+                        aria-label="Comment text"
+                    />
+                    <button
+                        type="submit"
+                        className={`${buttonClass({ intent: "primary" })} w-full`}
+                        disabled={!logged_in}
+                    >
+                        Post Comment
+                    </button>
+                </Form>
             </main>
         </div>
     );

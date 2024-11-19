@@ -1,33 +1,8 @@
 import { LoaderFunction } from "react-router";
-import { array, InferInput, number, object, safeParse, string } from "valibot";
-import { BASE_URL } from "../utils";
-
-export type Post = InferInput<typeof postSchema>;
-
-const postSchema = object({
-    id: string(),
-    title: string(),
-    description: string(),
-    author: object({
-        full_name: string(),
-        username: string(),
-        avatar: string(),
-    }),
-    created_at: string(),
-    tags: array(
-        object({
-            id: string(),
-            name: string(),
-        }),
-    ),
-    num_comments: number(),
-    num_likes: number(),
-    num_dislikes: number(),
-});
-
-const forumResponseSchema = object({
-    posts: array(postSchema),
-});
+import { redirect } from "react-router-typesafe";
+import { safeParse } from "valibot";
+import { forumResponseSchema, postDetailsSchema } from "../types/post";
+import { BASE_URL, logger } from "../utils";
 
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
@@ -36,7 +11,7 @@ export const forumLoader = (async ({ request }) => {
     const res = await fetch(
         `${BASE_URL}/forum/?page=${page}&per_page=${per_page}`,
         {
-            method: "POST",
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -49,3 +24,22 @@ export const forumLoader = (async ({ request }) => {
     }
     return output;
 }) satisfies LoaderFunction;
+
+export const createPostAction = async ({ request }: { request: Request }) => {
+    const formData = await request.formData();
+    const res = await fetch(`${BASE_URL}/forum`, {
+        method: "POST",
+        body: formData,
+    });
+    if (!res.ok) {
+        throw new Error(`Failed to create post`);
+    }
+
+    const data = await res.json();
+    const { output, issues, success } = safeParse(postDetailsSchema, data);
+    if (!success) {
+        logger.log(data);
+        throw new Error(`Failed to create post: ${issues}`);
+    }
+    return redirect("/forum");
+};
