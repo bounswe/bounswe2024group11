@@ -3,14 +3,13 @@ from rest_framework import status
 from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 from faker import Faker
-from core.models import ForumUpvote, ForumDownvote, ForumQuestion
+from core.models import ForumUpvote, ForumDownvote, ForumQuestion, ForumAnswer, ForumAnswerUpvote, ForumAnswerDownvote
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 fake = Faker()
 
-
-class ForumUpvoteAPITest(APITestCase):
+class ForumSetup(APITestCase):
     def setUp(self):
         # Create a test user
         self.user = User.objects.create_user(
@@ -26,24 +25,27 @@ class ForumUpvoteAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
 
         # Create a ForumQuestion
-        # self.forum_question = ForumQuestion.objects.create(
-        #     title="Test Forum Question",
-        #     question="This is a test question for votes.",
-        #     author=self.user
-        # )
-        self.forum_question_response = self.client.post(reverse('forum-question-list'), {
-            "title": "Test Forum Question",
-            "question": "This is a test question for votes.",
-            "tags": [
-                {"name": "Django", "linked_data_id": "123", "description": "A web framework."},
-                {"name": "DRF", "linked_data_id": "456", "description": "Django Rest Framework."}
-            ]
-        }, format='json').data
-
+        self.forum_question = ForumQuestion.objects.create(
+            title="Test Forum Question",
+            question="This is a test question for votes.",
+            author=self.user
+        )
 
         self.forum_question = ForumQuestion.objects.get(title='Test Forum Question')
         # Vote data
-        self.data = {"forum_question": self.forum_question.id}  
+        self.data = {"forum_question": self.forum_question.id} 
+
+        # Create a ForumAnswer
+        self.forum_answer = ForumAnswer.objects.create(
+            forum_question=self.forum_question,
+            author=self.user,
+            answer="This is a test answer for votes."
+        ) 
+        response = self.client.get(reverse('forum-question-answers-list', args=[self.forum_question.id]))
+        self.forum_answer = response.data['results'][0]
+
+
+class ForumUpvoteAPITest(ForumSetup):
 
     def test_create_forum_upvote(self):
         question_response = self.client.get(reverse("forum-question-detail", args=[self.forum_question.id]))
@@ -133,30 +135,7 @@ class ForumUpvoteAPITest(APITestCase):
         self.assertIn("created_at", response.data['results'][0])
 
 
-class ForumDownvoteAPITest(APITestCase):
-    def setUp(self):
-        # Create a test user
-        self.user = User.objects.create_user(
-            username=fake.user_name(),
-            password="testpassword",
-            email=fake.email(),
-            full_name=fake.name()
-        )
-
-        # Authenticate the test client
-        self.client = APIClient()
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
-
-        # Create a ForumQuestion
-        self.forum_question = ForumQuestion.objects.create(
-            title="Test Forum Question",
-            question="This is a test question for votes.",
-            author=self.user
-        )
-
-        # Vote data
-        self.data = {"forum_question": self.forum_question.id}
+class ForumDownvoteAPITest(ForumSetup):
 
     def test_create_forum_downvote(self):
         """Test creating a forum downvote"""
@@ -235,4 +214,57 @@ class ForumDownvoteAPITest(APITestCase):
         self.assertIn("user", response.data['results'][0])
         self.assertIn("forum_question", response.data['results'][0])
         self.assertIn("created_at", response.data['results'][0])
-        
+    
+
+class ForumAnswerUpvoteAPITest(ForumSetup):
+
+    def test_create_forum_answer_upvote(self):
+        """Test creating a forum answer upvote"""
+        print(self.forum_answer)
+        upvote_count = self.forum_answer["upvotes_count"]
+
+        # Vote data
+        data = {"forum_answer": self.forum_answer["id"]}
+
+        # Send POST request to create a new vote
+        response = self.client.post(reverse('forum-answer-upvote-list'), data=data, format='json')
+
+        # Assertions
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(ForumAnswerUpvote.objects.filter(user=self.user, forum_answer=self.forum_answer["id"]).exists())
+        self.assertIn("id", response.data)
+        self.assertIn("user", response.data)
+        self.assertIn("forum_answer", response.data)
+        response = self.client.get(reverse('forum-question-answers-detail', args=[self.forum_question.id, self.forum_answer["id"]]))
+        print(response.data)
+        self.assertEqual(response.data["upvotes_count"], upvote_count + 1)
+
+    def test_delete_forum_answer_upvote(self):
+        """Test deleting a forum answer upvote"""
+        # Create a forum answer and upvote to delete
+        forum_answer = ForumAnswer.objects.create(
+            forum_question=self.forum_question,
+            author=self.user,
+            answer="This is a test answer for votes."
+        )
+        self.client.post(reverse('forum-answer-upvote-list', args=[self.forum_question.id]), {"forum_answer": forum_answer.id}, format='json')
+        forum_vote = ForumAnswerUpvote.objects.get(user=self.user, forum_answer=forum_answer)
+
+        # Send DELETE request to remove the upvote
+        response = self.client.delete(reverse('forum-answer-upvote-detail', args=[self.forum_question.id, forum_vote.id]))
+
+        # Assertions
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(ForumAnswerUpvote.objects.filter(id=forum_vote.id).exists())
+
+    def test_cannot_upvote_same_forum_answer_twice(self):
+        """Test that the same forum answer cannot be upvoted twice"""
+        # Create the first upvote
+        forum_answer = ForumAnswer.objects.create(
+            forum_question=self.forum_question,
+            author=self.user,
+            answer="This is a test answer for votes."
+        )
+        self.client.post(reverse('forum-answer-upvote-list', args=[self.forum_question.id]), {"forum_answer": forum_answer.id}, format='json')
+
+        # Attempt to create a duplicate upvote     

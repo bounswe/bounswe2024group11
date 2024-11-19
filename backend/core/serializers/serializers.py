@@ -3,7 +3,7 @@ from faker import Faker
 from rest_framework import serializers
 
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz)
+                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerUpvote, ForumAnswerDownvote)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 
@@ -50,14 +50,44 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
+    upvotes_count = serializers.SerializerMethodField()
+    is_upvoted = serializers.SerializerMethodField()
+    downvotes_count = serializers.SerializerMethodField()
+    is_downvoted = serializers.SerializerMethodField()
+
 
     class Meta:
         model = ForumAnswer
-        fields = ('id', 'answer', 'author', 'created_at')
-        read_only_fields = ('author', 'created_at')
+        fields = ('id', 'answer', 'author', 'created_at', 'upvotes_count', 'is_upvoted', 'downvotes_count', 'is_downvoted')
+        read_only_fields = ('author', 'created_at', 'upvotes_count', 'is_upvoted', 'downvotes_count', 'is_downvoted')
 
     def create(self, validated_data):
         return ForumAnswer.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.answer = validated_data.get('answer', instance.answer)
+        instance.save()
+        return instance
+    
+    def get_upvotes_count(self, obj):
+        return obj.upvotes.count()
+    
+    def get_is_upvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return ForumAnswerUpvote.objects.filter(user=user, forum_answer=obj).exists()
+    
+    def get_downvotes_count(self, obj):
+        return obj.downvotes.count()
+    
+    def get_is_downvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return ForumAnswerDownvote.objects.filter(user=user, forum_answer=obj).exists()
+    
+
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)  # For nested representation of tags
