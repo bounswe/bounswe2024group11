@@ -4,20 +4,81 @@ import {
     RiArrowUpLine,
     RiBookmark2Line,
 } from "@remixicon/react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Post } from "../routes/Forum.data";
-import { logger } from "../utils";
+import { useRouteLoaderData } from "react-router-typesafe";
+import { homeLoader } from "../routes/Home.data";
+import { PostOverview } from "../types/post";
+import { BASE_URL } from "../utils";
 import { Avatar } from "./avatar";
 
-type forumCardProps = {
-    post: Post;
+type ForumCardProps = {
+    post: PostOverview;
     key: string;
 };
 
-export const ForumCard = ({ post, key }: forumCardProps) => {
+export const ForumCard = ({ post, key }: ForumCardProps) => {
+    const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(
+        post.userVote || null,
+    );
+    const [bookmark, setBookmark] = useState(post.bookmark);
+    const [numVotes, setNumVotes] = useState(
+        post.num_likes - post.num_dislikes,
+    );
+    const { user, logged_in } =
+        useRouteLoaderData<typeof homeLoader>("home-main");
+    const handleVote = async (
+        e: React.MouseEvent,
+        voteType: "upvote" | "downvote",
+    ) => {
+        e.preventDefault(); // Prevent link navigation
+        e.stopPropagation(); // Stop event bubbling
+        if (!logged_in) return;
+
+        try {
+            const response = await fetch(`${BASE_URL}/forum/${post.id}/vote`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ voteType }),
+            });
+
+            if (response.ok) {
+                const updatedPost = await response.json();
+                setUserVote(
+                    voteType === updatedPost.userVote ? voteType : null,
+                );
+                setNumVotes(updatedPost.num_likes - updatedPost.num_dislikes);
+            }
+        } catch (error) {
+            console.error("Vote failed:", error);
+        }
+    };
+    const handleBookmark = async (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent link navigation
+        e.stopPropagation(); // Stop event bubbling
+        if (!logged_in) return;
+
+        try {
+            const response = await fetch(
+                `${BASE_URL}/forum/${post.id}/bookmark`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                },
+            );
+
+            if (response.ok) {
+                const updatedPost = await response.json();
+                setBookmark(updatedPost.bookmark);
+            }
+        } catch (error) {
+            console.error("Bookmark failed:", error);
+        }
+    };
+
     return (
         <Link
-            to={`forum/${post.id}`}
+            to={`/forum/${post.id}`}
             key={key}
             aria-label={`${post.title} by ${post.author.full_name}`}
             className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200"
@@ -31,12 +92,15 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                         </p>
                     </div>
                     <Button
-                        onClick={() => {
-                            logger.log(post.id);
+                        onClick={(e) => {
+                            handleBookmark(e);
                         }}
                         className="flex size-9 items-center justify-center rounded-1 bg-slate-100"
                     >
-                        <RiBookmark2Line className="size-5 text-slate-500" />
+                        <RiBookmark2Line
+                            color={bookmark ? "gold" : "text-slate-500"}
+                            className="size-5"
+                        />
                     </Button>
                 </div>
 
@@ -50,16 +114,11 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                         </p>
                     </div>
                     <div className="flex flex-row gap-4">
-                        {post.tags.map(({ name }) => {
-                            return (
-                                <Link
-                                    to="#"
-                                    className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500"
-                                >
-                                    {name.toLocaleUpperCase()}
-                                </Link>
-                            );
-                        })}
+                        {post.tags.map(({ name }) => (
+                            <span className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500">
+                                {name.toLocaleUpperCase()}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -74,26 +133,22 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                 </div>
                 <div className="flex flex-row items-center gap-2">
                     <Button
-                        aria-roledescription="Upvote"
+                        aria-label="Upvote"
+                        onClick={(e) => handleVote(e, "upvote")}
                         className="flex size-8 items-center justify-center rounded-2 bg-slate-100"
                     >
                         <RiArrowUpLine
-                            className="size-5 text-slate-900"
-                            onClick={() => {
-                                logger.log("upvoted");
-                            }}
+                            className={`size-5 ${userVote === "upvote" ? "text-orange-500" : "text-slate-900"}`}
                         />
                     </Button>
-                    <p className="text-sm text-slate-900">
-                        {post.num_likes - post.num_dislikes}
-                    </p>
-                    <Button className="flex size-8 items-center justify-center rounded-2 border border-slate-200">
+                    <p className="text-slate- w-6 text-sm">{numVotes}</p>
+                    <Button
+                        aria-label="Downvote"
+                        onClick={(e) => handleVote(e, "downvote")}
+                        className="flex size-8 items-center justify-center rounded-2 border border-slate-200"
+                    >
                         <RiArrowDownLine
-                            aria-roledescription="Downvote"
-                            className="size-5 text-slate-900"
-                            onClick={() => {
-                                logger.log("downvoted");
-                            }}
+                            className={`size-5 ${userVote === "downvote" ? "text-purple-800" : "text-slate-900"}`}
                         />
                     </Button>
                 </div>

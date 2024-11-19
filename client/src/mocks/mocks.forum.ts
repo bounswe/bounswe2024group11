@@ -19,6 +19,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 15,
         num_likes: 120,
         num_dislikes: 8,
+        bookmark: false,
     },
     {
         id: "2",
@@ -38,6 +39,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 27,
         num_likes: 95,
         num_dislikes: 10,
+        bookmark: false,
     },
     {
         id: "3",
@@ -57,6 +59,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 40,
         num_likes: 230,
         num_dislikes: 12,
+        bookmark: false,
     },
     {
         id: "4",
@@ -76,6 +79,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 30,
         num_likes: 180,
         num_dislikes: 14,
+        bookmark: false,
     },
     {
         id: "5",
@@ -95,6 +99,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 22,
         num_likes: 150,
         num_dislikes: 7,
+        bookmark: false,
     },
     {
         id: "6",
@@ -114,6 +119,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 18,
         num_likes: 98,
         num_dislikes: 5,
+        bookmark: false,
     },
     {
         id: "7",
@@ -133,6 +139,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 12,
         num_likes: 85,
         num_dislikes: 3,
+        bookmark: false,
     },
     {
         id: "8",
@@ -152,6 +159,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 14,
         num_likes: 75,
         num_dislikes: 4,
+        bookmark: false,
     },
     {
         id: "9",
@@ -171,6 +179,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 23,
         num_likes: 140,
         num_dislikes: 9,
+        bookmark: false,
     },
     {
         id: "10",
@@ -190,6 +199,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 35,
         num_likes: 190,
         num_dislikes: 11,
+        bookmark: false,
     },
     {
         id: "11",
@@ -209,6 +219,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 20,
         num_likes: 110,
         num_dislikes: 6,
+        bookmark: false,
     },
     {
         id: "12",
@@ -228,6 +239,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 18,
         num_likes: 105,
         num_dislikes: 5,
+        bookmark: false,
     },
     {
         id: "13",
@@ -247,6 +259,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 29,
         num_likes: 130,
         num_dislikes: 7,
+        bookmark: false,
     },
     {
         id: "14",
@@ -266,6 +279,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 32,
         num_likes: 210,
         num_dislikes: 13,
+        bookmark: false,
     },
     {
         id: "15",
@@ -285,6 +299,7 @@ export const forumOverview: PostOverview[] = [
         num_comments: 22,
         num_likes: 140,
         num_dislikes: 6,
+        bookmark: false,
     },
     // ... additional posts up to 30
 ];
