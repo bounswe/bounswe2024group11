@@ -17,6 +17,7 @@ class UserAnswerSerializer(serializers.ModelSerializer):
 class TakeQuizSerializer(serializers.ModelSerializer):
     # Define a nested serializer for UserAnswers (many=True)
     answers = UserAnswerSerializer(many=True)
+    # implement view score here as a read-only field computed on the fly
 
     class Meta:
         model = TakeQuiz
