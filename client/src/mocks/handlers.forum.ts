@@ -4,7 +4,7 @@ import { BASE_URL } from "../utils";
 import { forumDetails, forumOverview } from "./mocks.forum";
 
 export const forumHandlers = [
-    http.get(`${BASE_URL}/forum`, async ({ request }) => {
+    http.get(`${BASE_URL}/forum-questions`, async ({ request }) => {
         const url = new URL(request.url);
         const page = Number(url.searchParams.get("page")) || 1;
         const per_page = Number(url.searchParams.get("per_page")) || 10;
@@ -15,7 +15,7 @@ export const forumHandlers = [
             }));
         return HttpResponse.json({ posts }, { status: 200 });
     }),
-    http.get(`${BASE_URL}/forum/:id`, async ({ params, request }) => {
+    http.get(`${BASE_URL}/forum-questions/:id`, async ({ params, request }) => {
         const { id } = params as { id: string };
         const url = new URL(request.url);
         const page = Number(url.searchParams.get("page")) || 1;
@@ -63,7 +63,7 @@ export const forumHandlers = [
 
         return HttpResponse.json(post, { status: 200 });
     }),
-    http.post(`${BASE_URL}/forum`, async ({ request }) => {
+    http.post(`${BASE_URL}/forum-questions`, async ({ request }) => {
         const formData = await request.formData();
         const post: PostOverview = {
             id: (forumOverview.length + 1).toString(),
@@ -100,7 +100,7 @@ export const forumHandlers = [
 
         return HttpResponse.json({ ...postDetail }, { status: 201 });
     }),
-    http.post(`${BASE_URL}/forum/:id/vote`, async ({ params, request }) => {
+    http.post(`${BASE_URL}/forum-upvote/:id/`, async ({ params, request }) => {
         const { id } = params as { id: string };
         const { voteType } = (await request.json()) as {
             voteType: "upvote" | "downvote";
@@ -143,63 +143,173 @@ export const forumHandlers = [
 
         return HttpResponse.json(forumOverview[postIndex], { status: 200 });
     }),
-    http.post(`${BASE_URL}/answers/:id/vote`, async ({ params, request }) => {
-        const { id } = params;
-        const { voteType } = (await request.json()) as {
-            voteType: "upvote" | "downvote";
-        };
-
-        let targetAnswer = null;
-        let detailIndex = -1;
-        let answerIndex = -1;
-
-        // Find the answer in forumDetails
-        for (let i = 0; i < forumDetails.length; i++) {
-            answerIndex = forumDetails[i].answers.findIndex(
-                (answer) => answer.id === id,
-            );
-            if (answerIndex !== -1) {
-                detailIndex = i;
-                targetAnswer = forumDetails[i].answers[answerIndex];
-                break;
+    http.post(
+        `${BASE_URL}/forum-downvote/:id/`,
+        async ({ params, request }) => {
+            const { id } = params as { id: string };
+            const { voteType } = (await request.json()) as {
+                voteType: "upvote" | "downvote";
+            };
+            const postIndex = forumOverview.findIndex((post) => post.id === id);
+            if (postIndex === -1) {
+                return HttpResponse.json(
+                    { error: "Post not found" },
+                    { status: 404 },
+                );
             }
-        }
 
-        if (!targetAnswer) {
-            return HttpResponse.json(
-                { error: "Answer not found" },
-                { status: 404 },
-            );
-        }
-
-        if (!targetAnswer.userVote) {
-            targetAnswer.userVote = voteType;
-            if (voteType === "upvote") {
-                targetAnswer.num_likes++;
+            // Store vote state in mock database
+            if (!forumOverview[postIndex].userVote) {
+                forumOverview[postIndex].userVote = voteType;
+                if (voteType === "upvote") {
+                    forumOverview[postIndex].num_likes++;
+                } else {
+                    forumOverview[postIndex].num_dislikes++;
+                }
+            } else if (forumOverview[postIndex].userVote !== voteType) {
+                // Change vote
+                if (voteType === "upvote") {
+                    forumOverview[postIndex].num_likes++;
+                    forumOverview[postIndex].num_dislikes--;
+                } else {
+                    forumOverview[postIndex].num_dislikes++;
+                    forumOverview[postIndex].num_likes--;
+                }
+                forumOverview[postIndex].userVote = voteType;
             } else {
-                targetAnswer.num_dislikes++;
+                // Cancel vote
+                if (voteType === "upvote") {
+                    forumOverview[postIndex].num_likes--;
+                } else {
+                    forumOverview[postIndex].num_dislikes--;
+                }
+                forumOverview[postIndex].userVote = null;
             }
-        } else if (targetAnswer.userVote !== voteType) {
-            if (voteType === "upvote") {
-                targetAnswer.num_likes++;
-                targetAnswer.num_dislikes--;
-            } else {
-                targetAnswer.num_dislikes++;
-                targetAnswer.num_likes--;
-            }
-            targetAnswer.userVote = voteType;
-        } else {
-            if (voteType === "upvote") {
-                targetAnswer.num_likes--;
-            } else {
-                targetAnswer.num_dislikes--;
-            }
-            targetAnswer.userVote = null;
-        }
 
-        forumDetails[detailIndex].answers[answerIndex] = targetAnswer;
-        return HttpResponse.json(targetAnswer, { status: 200 });
-    }),
+            return HttpResponse.json(forumOverview[postIndex], { status: 200 });
+        },
+    ),
+    http.post(
+        `${BASE_URL}/forum-answers-downvote/:id/`,
+        async ({ params, request }) => {
+            const { id } = params;
+            const { voteType } = (await request.json()) as {
+                voteType: "upvote" | "downvote";
+            };
+
+            let targetAnswer = null;
+            let detailIndex = -1;
+            let answerIndex = -1;
+
+            // Find the answer in forumDetails
+            for (let i = 0; i < forumDetails.length; i++) {
+                answerIndex = forumDetails[i].answers.findIndex(
+                    (answer) => answer.id === id,
+                );
+                if (answerIndex !== -1) {
+                    detailIndex = i;
+                    targetAnswer = forumDetails[i].answers[answerIndex];
+                    break;
+                }
+            }
+
+            if (!targetAnswer) {
+                return HttpResponse.json(
+                    { error: "Answer not found" },
+                    { status: 404 },
+                );
+            }
+
+            if (!targetAnswer.userVote) {
+                targetAnswer.userVote = voteType;
+                if (voteType === "upvote") {
+                    targetAnswer.num_likes++;
+                } else {
+                    targetAnswer.num_dislikes++;
+                }
+            } else if (targetAnswer.userVote !== voteType) {
+                if (voteType === "upvote") {
+                    targetAnswer.num_likes++;
+                    targetAnswer.num_dislikes--;
+                } else {
+                    targetAnswer.num_dislikes++;
+                    targetAnswer.num_likes--;
+                }
+                targetAnswer.userVote = voteType;
+            } else {
+                if (voteType === "upvote") {
+                    targetAnswer.num_likes--;
+                } else {
+                    targetAnswer.num_dislikes--;
+                }
+                targetAnswer.userVote = null;
+            }
+
+            forumDetails[detailIndex].answers[answerIndex] = targetAnswer;
+            return HttpResponse.json(targetAnswer, { status: 200 });
+        },
+    ),
+    http.post(
+        `${BASE_URL}/forum-answers-upvote/:id/`,
+        async ({ params, request }) => {
+            const { id } = params;
+            const { voteType } = (await request.json()) as {
+                voteType: "upvote" | "downvote";
+            };
+
+            let targetAnswer = null;
+            let detailIndex = -1;
+            let answerIndex = -1;
+
+            // Find the answer in forumDetails
+            for (let i = 0; i < forumDetails.length; i++) {
+                answerIndex = forumDetails[i].answers.findIndex(
+                    (answer) => answer.id === id,
+                );
+                if (answerIndex !== -1) {
+                    detailIndex = i;
+                    targetAnswer = forumDetails[i].answers[answerIndex];
+                    break;
+                }
+            }
+
+            if (!targetAnswer) {
+                return HttpResponse.json(
+                    { error: "Answer not found" },
+                    { status: 404 },
+                );
+            }
+
+            if (!targetAnswer.userVote) {
+                targetAnswer.userVote = voteType;
+                if (voteType === "upvote") {
+                    targetAnswer.num_likes++;
+                } else {
+                    targetAnswer.num_dislikes++;
+                }
+            } else if (targetAnswer.userVote !== voteType) {
+                if (voteType === "upvote") {
+                    targetAnswer.num_likes++;
+                    targetAnswer.num_dislikes--;
+                } else {
+                    targetAnswer.num_dislikes++;
+                    targetAnswer.num_likes--;
+                }
+                targetAnswer.userVote = voteType;
+            } else {
+                if (voteType === "upvote") {
+                    targetAnswer.num_likes--;
+                } else {
+                    targetAnswer.num_dislikes--;
+                }
+                targetAnswer.userVote = null;
+            }
+
+            forumDetails[detailIndex].answers[answerIndex] = targetAnswer;
+            return HttpResponse.json(targetAnswer, { status: 200 });
+        },
+    ),
+    // This is implemented differently in backend
     http.post(`${BASE_URL}/forum/:id/bookmark`, async ({ params }) => {
         const { id } = params;
         const postIndex = forumOverview.findIndex((post) => post.id === id);
@@ -213,7 +323,7 @@ export const forumHandlers = [
         return HttpResponse.json(forumOverview[postIndex], { status: 200 });
     }),
     http.post(
-        `${BASE_URL}/forum/:postId/answers`,
+        `${BASE_URL}/forum-questions/:postId/answers/`,
         async ({ params, request }) => {
             const { postId } = params;
             const formData = await request.formData();

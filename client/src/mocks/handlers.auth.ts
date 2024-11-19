@@ -6,7 +6,7 @@ import { BASE_URL, logger } from "../utils";
 import { usersDb } from "./mocks.auth";
 
 export const authHandlers = [
-    http.post(`${BASE_URL}/token`, async ({ request }) => {
+    http.post(`${BASE_URL}/auth/login`, async ({ request }) => {
         const requestBody = await request.json();
         const { output, issues, success } = safeParse(
             loginRequestSchema,
@@ -44,7 +44,7 @@ export const authHandlers = [
             );
         }
     }),
-    http.post(`${BASE_URL}/register/`, async ({ request }) => {
+    http.post(`${BASE_URL}/auth/register/`, async ({ request }) => {
         const requestBody = await request.json();
         const { output, issues, success } = safeParse(
             registerRequestSchema,
