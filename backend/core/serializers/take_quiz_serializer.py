@@ -18,11 +18,20 @@ class TakeQuizSerializer(serializers.ModelSerializer):
     # Define a nested serializer for UserAnswers (many=True)
     answers = UserAnswerSerializer(many=True)
     # implement view score here as a read-only field computed on the fly
+    score = serializers.SerializerMethodField()
 
     class Meta:
         model = TakeQuiz
-        fields = ['id', 'quiz', 'user', 'date', 'answers']
-        read_only_fields = ['user', 'date']
+        fields = ['id', 'quiz', 'user', 'date', 'answers', 'score']
+        read_only_fields = ['user', 'date', 'score']
+
+    def get_score(self, obj):
+        # Calculate the score for the TakeQuiz instance
+        correct_answers = 0
+        for answer in obj.answers.all():
+            if answer.answer.is_correct:
+                correct_answers += 1
+        return correct_answers
 
     def create(self, validated_data):
         # Extract the answers from the validated data
