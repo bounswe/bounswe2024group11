@@ -88,14 +88,16 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_is_bookmarked(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumBookmark.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        bookmark = ForumBookmark.objects.filter(user=user, forum_question=obj).first()
+        return bookmark.id if bookmark else None
 
     def get_is_upvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumUpvote.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        upvote = ForumUpvote.objects.filter(user=user, forum_question=obj).first()
+        return upvote.id if upvote else None
 
     def get_upvotes_count(self, obj):
         return obj.upvotes.count()
@@ -103,8 +105,9 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_is_downvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumDownvote.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        downvote = ForumDownvote.objects.filter(user=user, forum_question=obj).first()
+        return downvote.id if downvote else None
 
     def get_downvotes_count(self, obj):
         return obj.downvotes.count()

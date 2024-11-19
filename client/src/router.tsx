@@ -13,7 +13,12 @@ import { Login } from "./routes/Auth/Login";
 import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
-import { createPostAction, forumLoader } from "./routes/Forum/Forum.data";
+import {
+    bookmarkForumAction,
+    downvoteForumAction,
+    forumLoader,
+    upvoteForumAction,
+} from "./routes/Forum/Forum.data";
 import { forumQuestionLoader, postAction } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { QuizPage } from "./routes/Quiz/Quiz";
@@ -47,7 +52,6 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
-                        action: createPostAction,
                         children: [
                             {
                                 path: "create",
@@ -58,28 +62,22 @@ export const routes: RouteObject[] = [
                         ],
                     },
                     {
-                        path: "forum/:postId",
+                        path: "forum/:questionId",
                         element: <ForumQuestion />,
                         loader: forumQuestionLoader,
                         action: postAction,
                         children: [
                             {
                                 path: "bookmark",
-                                action: () => {
-                                    return true;
-                                },
+                                action: bookmarkForumAction,
                             },
                             {
                                 path: "upvote",
-                                action: () => {
-                                    return true;
-                                },
+                                action: upvoteForumAction,
                             },
                             {
                                 path: "downvote",
-                                action: () => {
-                                    return true;
-                                },
+                                action: downvoteForumAction,
                             },
                             {
                                 path: "answer",

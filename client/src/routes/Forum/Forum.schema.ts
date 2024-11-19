@@ -1,12 +1,4 @@
-import {
-    array,
-    boolean,
-    InferInput,
-    nullable,
-    number,
-    object,
-    string,
-} from "valibot";
+import { array, InferInput, nullable, number, object, string } from "valibot";
 
 export type Answer = InferInput<typeof answerSchema>;
 
@@ -30,7 +22,7 @@ export const answerSchema = object({
     answer: string(),
     author: authorSchema,
     created_at: string(),
-    is_upvoted: nullable(boolean()),
+    is_upvoted: nullable(number()),
     is_downvoted: nullable(number()),
     upvotes_count: nullable(number()),
     downvotes_count: nullable(number()),
@@ -44,9 +36,9 @@ export const forumQuestionSchema = object({
     author: authorSchema,
     created_at: string(),
     answers_count: number(),
-    is_bookmarked: boolean(),
-    is_upvoted: boolean(),
-    is_downvoted: boolean(),
+    is_bookmarked: nullable(number()),
+    is_upvoted: nullable(number()),
+    is_downvoted: nullable(number()),
     upvotes_count: number(),
     downvotes_count: number(),
     answers: array(answerSchema),

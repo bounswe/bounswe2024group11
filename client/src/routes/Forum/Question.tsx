@@ -28,7 +28,7 @@ export const ForumQuestion = () => {
     return (
         <div className="container flex w-full max-w-screen-xl flex-col items-center gap-8 py-12">
             <main className="flex w-full flex-col items-center justify-center gap-10">
-                <ForumCard key={data.id} post={data}></ForumCard>
+                <ForumCard key={data.id} question={data}></ForumCard>
                 <RadioProvider>
                     <RadioGroup className="flex flex-row gap-4">
                         <label className="label">

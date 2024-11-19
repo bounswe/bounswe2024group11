@@ -70,7 +70,7 @@ export const Forum = () => {
                 </div>
                 <div className="flex w-full flex-col items-center gap-6">
                     {data.results.map((post) => (
-                        <ForumCard key={post.id} post={post} />
+                        <ForumCard key={post.id} question={post} />
                     ))}
                 </div>
             </main>

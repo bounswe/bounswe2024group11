@@ -1,57 +1,66 @@
 import { ActionFunctionArgs, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
-import { BASE_URL } from "../../utils";
+import apiClient from "../../api";
+import { logger } from "../../utils";
 import { answerSchema, forumQuestionSchema } from "./Forum.schema";
 
-export const forumQuestionLoader = (async ({ params, request }) => {
-    const url = new URL(request.url);
-    const postId = params.postId;
-    const sort = url.searchParams.get("sort") || "upvote";
-    const page = Number(url.searchParams.get("page")) || 1;
-    const per_page = Number(url.searchParams.get("per_page")) || 10;
+export const forumQuestionLoader = (async ({ params }) => {
+    const postId = params.questionId;
 
     if (!postId) {
         throw new Error("Post ID is required.");
     }
 
-    const res = await fetch(
-        `${BASE_URL}/forum-questions/${postId}?sort=${sort}&page=${page}&per_page=${per_page}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        },
-    );
+    try {
+        const response = await apiClient.get(`/forum-questions/${postId}`);
 
-    if (!res.ok) {
+        const { output, issues, success } = safeParse(
+            forumQuestionSchema,
+            response.data,
+        );
+
+        if (!success) {
+            throw new Error(`Failed to parse post response: ${issues}`);
+        }
+
+        return output;
+    } catch (error) {
+        logger.error(`Error fetching post with ID: ${postId}`, error);
         throw new Error(`Failed to fetch post with ID: ${postId}`);
     }
-
-    const data = await res.json();
-    const { output, issues, success } = safeParse(forumQuestionSchema, data);
-    if (!success) {
-        throw new Error(`Failed to parse post response: ${issues}`);
-    }
-
-    return output;
 }) satisfies LoaderFunction;
 
 export const postAction = async ({ params, request }: ActionFunctionArgs) => {
     const formData = await request.formData();
     const postId = params.postId;
-    const res = await fetch(`${BASE_URL}/forum/${postId}/answers`, {
-        method: "POST",
-        body: formData,
-    });
-    if (!res.ok) {
-        throw new Error(`Failed to answer post`);
+
+    if (!postId) {
+        throw new Error("Post ID is required.");
     }
 
-    const data = await res.json();
-    const { output, issues, success } = safeParse(answerSchema, data);
-    if (!success) {
-        throw new Error(`Failed to create post: ${issues}`);
+    try {
+        const response = await apiClient.post(
+            `/forum/${postId}/answers`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Handle FormData correctly
+                },
+            },
+        );
+
+        const { output, issues, success } = safeParse(
+            answerSchema,
+            response.data,
+        );
+
+        if (!success) {
+            throw new Error(`Failed to create post: ${issues}`);
+        }
+
+        return redirect(`/forum/${postId}`);
+    } catch (error) {
+        logger.error(`Error posting answer to post ID: ${postId}`, error);
+        throw new Error(`Failed to answer post`);
     }
-    return redirect(`/forum/${postId}`);
 };
