@@ -128,7 +128,13 @@ export const Layout = () => {
               component={ForumQuestionDetail}
             />
             <Stack.Screen name="QuizDetail" component={QuizDetail} />
-            <Stack.Screen name="ViewQuiz" component={ViewQuiz} />
+            <Stack.Screen
+              name="ViewQuiz"
+              component={ViewQuiz}
+              options={({ route }) => ({
+                title: route.params?.title ? route.params.title : "Quiz",
+              })}
+            />
             {/*
             {authState?.authenticated
               ? <Stack.Screen
