@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native";
 import { QuizQuestionType } from "../types/quiz";
 import QuizQuestionBody from "./QuizQuestionBody";
 import QuizQuestionButtons from "./QuizQuestionButtons";
-import QuizQuestionHeader from "./QuizQuestionHeader";
 
 interface QuizQuestionProps {
   title: string;
@@ -32,7 +31,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <QuizQuestionHeader title={title} description={description} />
+      {/* <QuizQuestionHeader title={title} description={description} /> */}
       <QuizQuestionBody
         question={question}
         quiz_type={quiz_type}

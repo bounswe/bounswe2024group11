@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface QuizQuestionButtonsProps {
   currentQuestionIndex: number;
@@ -14,23 +20,32 @@ const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
   goToNextQuestion,
   goToPreviousQuestion,
 }) => {
+  const screenWidth = Dimensions.get("window").width;
+  const cardWidth = screenWidth / 2 - 40;
+
   return (
     <View style={styles.container}>
       {currentQuestionIndex > 0 && (
-        <Text
-          style={[styles.button, styles.previousButton]}
+        <TouchableOpacity
+          style={[styles.button, styles.previousButton, { width: cardWidth }]}
           onPress={goToPreviousQuestion}
         >
-          Previous
-        </Text>
+          <Text style={styles.previousButtonText}>Previous</Text>
+        </TouchableOpacity>
       )}
-      {currentQuestionIndex < questions_length - 1 && (
-        <Text
-          style={[styles.button, styles.nextButton]}
+      {currentQuestionIndex < questions_length - 1 ? (
+        <TouchableOpacity
+          style={[styles.button, styles.nextButton, { width: cardWidth }]}
           onPress={goToNextQuestion}
         >
-          Next
-        </Text>
+          <Text style={styles.nextButtonText}>Next</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={[styles.button, styles.submitButton, { width: cardWidth }]}
+        >
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -43,6 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
+    marginTop: 48,
   },
   button: {
     padding: 16,
@@ -51,16 +67,32 @@ const styles = StyleSheet.create({
   },
   previousButton: {
     position: "absolute",
-    left: 16,
-    bottom: 16,
+    left: 8,
+    marginRight: 8,
     backgroundColor: "#FFFFFF",
   },
   nextButton: {
     position: "absolute",
-    right: 16,
-    bottom: 16,
+    right: 8,
+    marginLeft: 8,
     backgroundColor: "#020617",
+  },
+  submitButton: {
+    position: "absolute",
+    right: 8,
+    marginLeft: 8,
+    backgroundColor: "#22D3EE",
+  },
+  previousButtonText: {
+    alignSelf: "center",
+  },
+  nextButtonText: {
     color: "#FFFFFF",
+    alignSelf: "center",
+  },
+  submitButtonText: {
+    color: "#FFFFFF",
+    alignSelf: "center",
   },
 });
 

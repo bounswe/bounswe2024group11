@@ -12,7 +12,7 @@ const QuizQuestionOption: React.FC<QuizQuestionOptionProps> = ({
 }) => {
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
-  const cardHeight = screenHeight / 5;
+  const cardHeight = screenHeight / 4;
   const cardWidth = screenWidth / 2 - 40;
 
   return (
