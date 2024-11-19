@@ -1,0 +1,38 @@
+[
+    {
+        "model": "core.takequiz",
+        "pk": 1,
+        "fields": {
+            "quiz": 2,
+            "user": 4,
+            "date": "2024-11-02T02:30:20Z"
+        }
+    },
+    {
+        "model": "core.useranswer",
+        "pk": 1,
+        "fields": {
+            "take_quiz": 1,
+            "question": 6,
+            "answer": 22
+        }
+    },
+    {
+        "model": "core.useranswer",
+        "pk": 2,
+        "fields": {
+            "take_quiz": 1,
+            "question": 7,
+            "answer": 25
+        }
+    },
+    {
+        "model": "core.useranswer",
+        "pk": 3,
+        "fields": {
+            "take_quiz": 1,
+            "question": 8,
+            "answer": 30
+        }
+    }
+]
