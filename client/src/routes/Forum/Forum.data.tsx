@@ -1,4 +1,4 @@
-import { LoaderFunction } from "react-router";
+import { ActionFunction, LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
 import apiClient from "../../api";
 import { logger } from "../../utils";
@@ -30,3 +30,40 @@ export const forumLoader = (async ({ request }) => {
         throw new Error("Failed to load forum questions");
     }
 }) satisfies LoaderFunction;
+
+export const forumCreateAction = (async ({ request }) => {
+    try {
+        const formData = await request.formData();
+        const formEntries = Object.fromEntries(formData);
+
+        // Get the select element
+        const selectElement = document.getElementById(
+            "tags",
+        ) as HTMLSelectElement;
+
+        // Get all selected options and transform them into the required format
+        const transformedTags = Array.from(selectElement.selectedOptions).map(
+            (option) => ({
+                name: option.text,
+                linked_data_id: option.dataset.linkedId,
+                description: option.dataset.description,
+            }),
+        );
+
+        // Create a new object without the original tags
+        const { tags: _, ...restEntries } = formEntries;
+
+        // Create the final payload with the transformed tags
+        const payload = {
+            ...restEntries,
+            tags: transformedTags,
+        };
+
+        const response = await apiClient.post("/forum-questions/", payload);
+
+        return response;
+    } catch (error) {
+        logger.error("Error creating forum question", error);
+        throw new Error("Failed to create forum question");
+    }
+}) satisfies ActionFunction;

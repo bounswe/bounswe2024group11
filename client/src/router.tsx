@@ -14,10 +14,11 @@ import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
 
-import { forumLoader } from "./routes/Forum/Forum.data";
+import { forumCreateAction, forumLoader } from "./routes/Forum/Forum.data";
 import {
     answerForumAction,
     bookmarkForumAction,
+    deleteForumAction,
     downvoteForumAction,
     downvoteForumAnswerAction,
     forumQuestionLoader,
@@ -56,14 +57,7 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
-                        children: [
-                            {
-                                path: "create",
-                                action: () => {
-                                    return true;
-                                },
-                            },
-                        ],
+                        action: forumCreateAction,
                     },
                     {
                         path: "forum/:questionId",
@@ -85,6 +79,10 @@ export const routes: RouteObject[] = [
                             {
                                 path: "answer",
                                 action: answerForumAction,
+                            },
+                            {
+                                path: "delete",
+                                action: deleteForumAction,
                             },
                             {
                                 path: "upvoteAnswer",

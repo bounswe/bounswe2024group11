@@ -3,12 +3,14 @@ import {
     RiArrowDownLine,
     RiArrowUpLine,
     RiBookmark2Line,
+    RiDeleteBin4Line,
 } from "@remixicon/react";
 import { Link, useFetcher } from "react-router-dom";
 
 import { ForumQuestion } from "../routes/Forum/Forum.schema";
 import {
     bookmarkForumAction,
+    deleteForumAction,
     downvoteForumAction,
     upvoteForumAction,
 } from "../routes/Forum/Question.data";
@@ -23,6 +25,7 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
     const upvoteFetcher = useFetcher<typeof upvoteForumAction>();
     const downvoteFetcher = useFetcher<typeof downvoteForumAction>();
     const bookmarkFetcher = useFetcher<typeof bookmarkForumAction>();
+    const deleteFetcher = useFetcher<typeof deleteForumAction>();
 
     return (
         <div className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
@@ -34,31 +37,62 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                             {question.author.username}
                         </p>
                     </div>
-                    <bookmarkFetcher.Form
-                        method="POST"
-                        action={`/forum/${question.id}/bookmark`}
-                    >
-                        <input
-                            type="hidden"
-                            name="post_id"
-                            value={question.id}
-                        />
-                        <input
-                            type="hidden"
-                            name="is_bookmarked"
-                            value={question.is_bookmarked || 0}
-                        />
-                        <Button
-                            type="submit"
-                            aria-label="Bookmark"
-                            className={toggleButtonClass({
-                                intent: "bookmark",
-                                state: question.is_bookmarked ? "on" : "off",
-                            })}
+                    <div className="flex flex-row items-center justify-end gap-3">
+                        {question.is_bookmarked && (
+                            <deleteFetcher.Form
+                                method="POST"
+                                action={`/forum/${question.id}/delete`}
+                            >
+                                <input
+                                    type="hidden"
+                                    name="post_id"
+                                    value={question.id}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="is_bookmarked"
+                                    value={question.is_bookmarked || 0}
+                                />
+                                <Button
+                                    type="submit"
+                                    aria-label="Bookmark"
+                                    className={toggleButtonClass({
+                                        intent: "delete",
+                                        state: "on",
+                                    })}
+                                >
+                                    <RiDeleteBin4Line size={16} />
+                                </Button>
+                            </deleteFetcher.Form>
+                        )}
+                        <bookmarkFetcher.Form
+                            method="POST"
+                            action={`/forum/${question.id}/bookmark`}
                         >
-                            <RiBookmark2Line size={16} />
-                        </Button>
-                    </bookmarkFetcher.Form>
+                            <input
+                                type="hidden"
+                                name="post_id"
+                                value={question.id}
+                            />
+                            <input
+                                type="hidden"
+                                name="is_bookmarked"
+                                value={question.is_bookmarked || 0}
+                            />
+                            <Button
+                                type="submit"
+                                aria-label="Bookmark"
+                                className={toggleButtonClass({
+                                    intent: "bookmark",
+                                    state: question.is_bookmarked
+                                        ? "on"
+                                        : "off",
+                                })}
+                            >
+                                <RiBookmark2Line size={16} />
+                            </Button>
+                        </bookmarkFetcher.Form>
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-4">

@@ -78,9 +78,8 @@ export const upvoteForumAction = (async ({ request }: { request: Request }) => {
                 id: `upvote-success-${currentUpvote}`,
                 type: "success",
                 data: {
-                    message: "Goodbye friend!",
-                    description:
-                        "No this is not the end, lift up your head. Somewhere we'll meet again.",
+                    message: "Upvoted successfully",
+                    description: "You've upvoted this question",
                 },
             });
 
@@ -94,9 +93,9 @@ export const upvoteForumAction = (async ({ request }: { request: Request }) => {
                 id: `upvote-delete-success-${currentUpvote}`,
                 type: "info",
                 data: {
-                    message: "Goodbye friend!",
+                    message: "Upvote removed",
                     description:
-                        "No this is not the end, lift up your head. Somewhere we'll meet again.",
+                        "You've removed your upvote from this question",
                 },
             });
         }
@@ -146,11 +145,30 @@ export const downvoteForumAction = (async ({
                 throw new Error("Invalid response from downvote creation");
             }
 
+            useToastStore.getState().add({
+                id: `downvote-success-${currentDownvote}`,
+                type: "success",
+                data: {
+                    message: "Downvoted successfully",
+                    description: "You've downvoted this question",
+                },
+            });
+
             return output;
         } else {
             response = await apiClient.delete(
                 `/forum-downvote/${currentDownvote}/`,
             );
+
+            useToastStore.getState().add({
+                id: `downvote-delete-success-${currentDownvote}`,
+                type: "info",
+                data: {
+                    message: "Downvote removed",
+                    description:
+                        "You've removed your downvote from this question",
+                },
+            });
         }
 
         return null;
@@ -197,11 +215,29 @@ export const bookmarkForumAction = (async ({
                 logger.error("Response validation failed", issues);
                 throw new Error("Invalid response from bookmark creation");
             }
+
+            useToastStore.getState().add({
+                id: `bookmark-success-${currentBookmark}`,
+                type: "success",
+                data: {
+                    message: "Question bookmarked",
+                    description: "You can find this question in your bookmarks",
+                },
+            });
         } else {
             // Perform DELETE request to delete bookmark
             response = await apiClient.delete(
                 `/forum-bookmarks/${currentBookmark}/`,
             );
+
+            useToastStore.getState().add({
+                id: `bookmark-delete-success-${currentBookmark}`,
+                type: "info",
+                data: {
+                    message: "Bookmark removed",
+                    description: "Question removed from your bookmarks",
+                },
+            });
         }
         return null;
     } catch (error) {
@@ -220,8 +256,8 @@ export const answerForumAction = (async ({ request, params }) => {
             id: "not-logged-in",
             type: "info",
             data: {
-                message: "Log in to answer forum question",
-                description: "You need to log in to answer forum questions.",
+                message: "Authentication required",
+                description: "Please log in to answer questions",
             },
         });
         return redirect("/login");
@@ -250,8 +286,8 @@ export const answerForumAction = (async ({ request, params }) => {
             id: `answer-success-${postId}`,
             type: "success",
             data: {
-                message: "Answer created successfully",
-                description: "Your answer has been posted.",
+                message: "Answer posted",
+                description: "Your answer has been shared successfully",
             },
         });
 
@@ -271,8 +307,8 @@ export const upvoteForumAnswerAction = (async ({ request }) => {
             id: "not-logged-in",
             type: "info",
             data: {
-                message: "Log in to vote",
-                description: "You need to log in to vote on answers.",
+                message: "Authentication required",
+                description: "Please log in to vote on answers",
             },
         });
         return redirect("/login");
@@ -300,7 +336,7 @@ export const upvoteForumAnswerAction = (async ({ request }) => {
                 type: "info",
                 data: {
                     message: "Upvote removed",
-                    description: "Your upvote has been removed.",
+                    description: "You've removed your upvote from this answer",
                 },
             });
         } else {
@@ -323,8 +359,8 @@ export const upvoteForumAnswerAction = (async ({ request }) => {
                 id: `upvote-success-${answerId}`,
                 type: "success",
                 data: {
-                    message: "Upvote created successfully",
-                    description: "Your upvote has been posted.",
+                    message: "Answer upvoted",
+                    description: "You've upvoted this answer",
                 },
             });
         }
@@ -336,8 +372,8 @@ export const upvoteForumAnswerAction = (async ({ request }) => {
             id: `vote-error-${answerId}`,
             type: "error",
             data: {
-                message: "Failed to process vote",
-                description: "Something went wrong while processing your vote.",
+                message: "Action failed",
+                description: "Unable to process your vote. Please try again.",
             },
         });
         throw new Error("Failed to process vote action.");
@@ -353,8 +389,8 @@ export const downvoteForumAnswerAction = (async ({ request }) => {
             id: "not-logged-in",
             type: "info",
             data: {
-                message: "Log in to vote",
-                description: "You need to log in to vote on answers.",
+                message: "Authentication required",
+                description: "Please log in to vote on answers",
             },
         });
         return redirect("/login");
@@ -382,7 +418,8 @@ export const downvoteForumAnswerAction = (async ({ request }) => {
                 type: "info",
                 data: {
                     message: "Downvote removed",
-                    description: "Your downvote has been removed.",
+                    description:
+                        "You've removed your downvote from this answer",
                 },
             });
         } else {
@@ -405,8 +442,8 @@ export const downvoteForumAnswerAction = (async ({ request }) => {
                 id: `downvote-success-${answerId}`,
                 type: "success",
                 data: {
-                    message: "Downvote created successfully",
-                    description: "Your downvote has been recorded.",
+                    message: "Answer downvoted",
+                    description: "You've downvoted this answer",
                 },
             });
         }
@@ -418,11 +455,43 @@ export const downvoteForumAnswerAction = (async ({ request }) => {
             id: `vote-error-${answerId}`,
             type: "error",
             data: {
-                message: "Failed to process vote",
+                message: "Action failed",
                 description:
-                    "Something went wrong while processing your downvote.",
+                    "Unable to process your downvote. Please try again.",
             },
         });
         throw new Error("Failed to process downvote action.");
+    }
+}) satisfies ActionFunction;
+
+export const deleteForumAction = (async ({ params }) => {
+    const postId = params.questionId;
+
+    try {
+        const response = await apiClient.delete(`/forum-questions/${postId}/`);
+
+        if (response.status === 204) {
+            useToastStore.getState().add({
+                id: `delete-success-${postId}`,
+                type: "success",
+                data: {
+                    message: "Question deleted",
+                    description: "The question has been removed successfully",
+                },
+            });
+        }
+
+        return response;
+    } catch (error) {
+        logger.error("Error in deleteForumAction", error);
+        useToastStore.getState().add({
+            id: `delete-error-${postId}`,
+            type: "error",
+            data: {
+                message: "Failed to delete question",
+                description: "Unable to remove the question. Please try again.",
+            },
+        });
+        throw new Error("Failed to delete question");
     }
 }) satisfies ActionFunction;

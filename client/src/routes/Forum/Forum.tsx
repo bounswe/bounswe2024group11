@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogHeading } from "@ariakit/react";
+import { Button } from "@ariakit/react";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
 import { Form, useSearchParams } from "react-router-dom";
@@ -42,6 +42,80 @@ export const Forum = () => {
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <PageHead title="Forum" description={description} />
+            <aside className="max-w-lg">
+                <Form
+                    aria-labelledby="add-new-post"
+                    className="w-full"
+                    method="POST"
+                >
+                    <div className="flex w-full flex-col gap-4">
+                        <input
+                            aria-label="Title"
+                            type="text"
+                            name="title"
+                            placeholder="Question Title"
+                            className={inputClass()}
+                            required
+                            maxLength={100}
+                            minLength={1}
+                        />
+                        <textarea
+                            name="question"
+                            aria-label="Question"
+                            placeholder="Write your question here..."
+                            className={inputClass()}
+                            required
+                            maxLength={1000}
+                            minLength={1}
+                            rows={4}
+                        />
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="tags">Tags</label>
+                            <select
+                                id="tags"
+                                name="tags"
+                                multiple
+                                className={`${inputClass()} w-full`}
+                                required
+                            >
+                                <option
+                                    value="tag1"
+                                    data-linked-id="ld_tag1"
+                                    data-description="Description for tag 1"
+                                >
+                                    Tag 1
+                                </option>
+                                <option
+                                    value="tag2"
+                                    data-linked-id="ld_tag2"
+                                    data-description="Description for tag 2"
+                                >
+                                    Tag 2
+                                </option>
+                                <option
+                                    value="tag3"
+                                    data-linked-id="ld_tag3"
+                                    data-description="Description for tag 3"
+                                >
+                                    Tag 3
+                                </option>
+                            </select>
+                        </div>
+                        <button
+                            type="submit"
+                            className={buttonClass({ intent: "primary" })}
+                            onClick={() => setCreatingPost(false)}
+                        >
+                            <div
+                                className={buttonInnerRing({
+                                    intent: "primary",
+                                })}
+                            />
+                            <span>Post</span>
+                        </button>
+                    </div>
+                </Form>
+            </aside>
             <main className="flex flex-col items-stretch justify-stretch gap-10">
                 <div className="flex flex-col gap-4">
                     {/* Pagination Controls */}
@@ -129,52 +203,6 @@ export const Forum = () => {
                     <RiAddLine color="white" size="24px"></RiAddLine>
                 </Button>
             </div>
-            {/* Dialog for Creating Post */}
-            <Dialog
-                open={creatingPost}
-                onClose={() => setCreatingPost(false)}
-                backdrop={<div className="backdrop" />}
-                className="dialog"
-            >
-                <DialogHeading className="heading">
-                    Create New Question
-                </DialogHeading>
-                <Form
-                    aria-labelledby="add-new-post"
-                    className="w-full"
-                    method="POST"
-                    action="/forum"
-                >
-                    <div className="flex w-full flex-col gap-4">
-                        <input
-                            aria-label="Title"
-                            type="text"
-                            name="title"
-                            placeholder="Post Title"
-                            className={`${inputClass()} w-full`}
-                            required
-                        />
-                        <textarea
-                            name="body"
-                            aria-label="Question Body"
-                            placeholder="Question Body"
-                            className={`${inputClass()} w-full`}
-                        ></textarea>
-                        <button
-                            type="submit"
-                            className={buttonClass({ intent: "primary" })}
-                            onClick={() => setCreatingPost(false)}
-                        >
-                            <div
-                                className={buttonInnerRing({
-                                    intent: "primary",
-                                })}
-                            />
-                            <span>Post</span>
-                        </button>
-                    </div>
-                </Form>
-            </Dialog>
         </div>
     );
 };
