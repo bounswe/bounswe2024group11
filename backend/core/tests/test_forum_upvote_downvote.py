@@ -220,7 +220,6 @@ class ForumAnswerUpvoteAPITest(ForumSetup):
 
     def test_create_forum_answer_upvote(self):
         """Test creating a forum answer upvote"""
-        print(self.forum_answer)
         upvote_count = self.forum_answer["upvotes_count"]
 
         # Vote data
@@ -236,7 +235,6 @@ class ForumAnswerUpvoteAPITest(ForumSetup):
         self.assertIn("user", response.data)
         self.assertIn("forum_answer", response.data)
         response = self.client.get(reverse('forum-question-answers-detail', args=[self.forum_question.id, self.forum_answer["id"]]))
-        print(response.data)
         self.assertEqual(response.data["upvotes_count"], upvote_count + 1)
 
     def test_delete_forum_answer_upvote(self):
