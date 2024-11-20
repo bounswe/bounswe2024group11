@@ -481,7 +481,7 @@ export const deleteForumAction = (async ({ params }) => {
             });
         }
 
-        return response;
+        return redirect("/forum");
     } catch (error) {
         logger.error("Error in deleteForumAction", error);
         useToastStore.getState().add({
