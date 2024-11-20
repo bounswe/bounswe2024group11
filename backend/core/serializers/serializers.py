@@ -50,11 +50,33 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
-
+    is_my_answer = serializers.SerializerMethodField()
+    is_upvoted = serializers.SerializerMethodField()
+    is_downvoted = serializers.SerializerMethodField()
     class Meta:
         model = ForumAnswer
-        fields = ('id', 'answer', 'author', 'created_at')
+        fields = ('id', 'answer', 'author', 'created_at', 'is_my_answer', 'is_upvoted', 'is_downvoted')
         read_only_fields = ('author', 'created_at')
+
+    def get_is_my_answer(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return obj.author == user
+
+    def get_is_upvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        upvote = ForumUpvote.objects.filter(user=user, forum_answer=obj).first()
+        return upvote.id if upvote else None
+
+    def get_is_downvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        downvote = ForumDownvote.objects.filter(user=user, forum_answer=obj).first()
+        return downvote.id if downvote else None
 
     def create(self, validated_data):
         return ForumAnswer.objects.create(**validated_data)

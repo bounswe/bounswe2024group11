@@ -33,9 +33,6 @@ export const ForumCard = ({ question }: ForumCardProps) => {
                             {question.author.username}
                         </p>
                     </div>
-                    {/* <Button className="flex size-10 items-center justify-center rounded-2 bg-slate-100 hover:bg-orange-100 hover:text-orange-700">
-                        <RiBookmark2Line className="size-4" />
-                    </Button> */}
                     <bookmarkFetcher.Form
                         method="POST"
                         action={`/forum/${question.id}/bookmark`}
