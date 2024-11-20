@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
-import { QuizDetails } from "../../types/quiz";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
 import { quizLoader } from "./Quiz.data";
+import { QuizDetails } from "./Quiz.schema";
 
 const StartQuizComponent = ({
     quiz,
@@ -151,7 +151,7 @@ export const QuizPage = () => {
         setIsQuizEnded(true);
         let correct = 0;
         Object.entries(answers).forEach(([index, answer]) => {
-            const correctOption = quiz.questions[Number(index)].options.find(
+            const correctOption = quiz.results[Number(index)].options.find(
                 (o) => o.is_correct === "true",
             );
             if (correctOption && correctOption.id === answer) {

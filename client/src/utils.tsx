@@ -1,15 +1,5 @@
 export const BASE_URL = "http://localhost:8000/api/v1";
 
-export async function enableMocking() {
-    if (import.meta.env.VITE_ENABLE_MOCKS === "false") {
-        return;
-    }
-
-    const { worker } = await import("./mocks/browser");
-
-    return worker.start();
-}
-
 type Logger = {
     log: typeof console.log;
     error: typeof console.error;

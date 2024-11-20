@@ -118,7 +118,6 @@ export const Forum = () => {
             </aside>
             <main className="flex flex-col items-stretch justify-stretch gap-10">
                 <div className="flex flex-col gap-4">
-                    {/* Pagination Controls */}
                     <div className="flex items-center justify-between">
                         <div>
                             <label htmlFor="perPage" className="mr-2">

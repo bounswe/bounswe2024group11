@@ -17,7 +17,7 @@ import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { Avatar } from "../components/avatar";
 import { buttonClass, buttonInnerRing } from "../components/button";
-import { Quiz } from "../routes/Quizzes.data";
+import { Quiz } from "../routes/Quiz/Quizzes.data";
 import { getRelativeTime } from "../utils";
 
 type QuizCardProps = {

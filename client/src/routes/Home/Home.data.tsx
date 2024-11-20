@@ -1,7 +1,7 @@
 import { safeParse } from "valibot";
 import { USER } from "../../constants";
+import { userSchema } from "../../schemas";
 import { useToastStore } from "../../store";
-import { userSchema } from "../../types/user";
 
 export const homeLoader = () => {
     const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
