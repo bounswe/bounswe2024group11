@@ -1,6 +1,7 @@
 from faker import Faker
 from rest_framework import serializers
 
+from django.contrib.auth import get_user_model
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
                      Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
