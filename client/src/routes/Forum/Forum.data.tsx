@@ -1,8 +1,16 @@
-import { LoaderFunction } from "react-router";
-import { number, object, safeParse, string } from "valibot";
+import { ActionFunction, LoaderFunction } from "react-router";
+import { safeParse } from "valibot";
 import apiClient from "../../api";
+import { USER } from "../../constants";
+import { useToastStore } from "../../store";
 import { logger } from "../../utils";
-import { forumSchema } from "./Forum.schema";
+import {
+    forumAnswerSchema,
+    forumBookmarkSchema,
+    forumDownvoteSchema,
+    forumSchema,
+    forumUpvoteSchema,
+} from "./Forum.schema";
 
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
@@ -14,8 +22,12 @@ export const forumLoader = (async ({ request }) => {
             params: { page, per_page },
         });
 
-        const { output, success } = safeParse(forumSchema, response.data);
-
+        const { output, success, issues } = safeParse(
+            forumSchema,
+            response.data,
+        );
+        console.log(issues);
+        console.log(output);
         if (!success) {
             throw new Error("Failed to parse forum response");
         }
@@ -27,21 +39,7 @@ export const forumLoader = (async ({ request }) => {
     }
 }) satisfies LoaderFunction;
 
-const forumUpvoteSchema = object({
-    id: number(),
-    user: number(),
-    forum_question: number(),
-    created_at: string(), // ISO date string
-});
-
-const forumDownvoteSchema = object({
-    id: number(),
-    user: number(),
-    forum_question: number(),
-    created_at: string(), // ISO date string
-});
-
-export const upvoteForumAction = async ({ request }: { request: Request }) => {
+export const upvoteForumAction = (async ({ request }: { request: Request }) => {
     try {
         console.log("Processing upvote action...");
 
@@ -87,9 +85,9 @@ export const upvoteForumAction = async ({ request }: { request: Request }) => {
         logger.error("Error in upvoteForumAction", error);
         throw new Error("Failed to process upvote action");
     }
-};
+}) satisfies ActionFunction;
 
-export const downvoteForumAction = async ({
+export const downvoteForumAction = (async ({
     request,
 }: {
     request: Request;
@@ -139,16 +137,9 @@ export const downvoteForumAction = async ({
         logger.error("Error in downvoteForumAction", error);
         throw new Error("Failed to process downvote action");
     }
-};
+}) satisfies ActionFunction;
 
-const forumBookmarkSchema = object({
-    id: number(),
-    user: number(),
-    forum_question: number(),
-    created_at: string(), // ISO date string
-});
-
-export const bookmarkForumAction = async ({
+export const bookmarkForumAction = (async ({
     request,
 }: {
     request: Request;
@@ -196,4 +187,54 @@ export const bookmarkForumAction = async ({
         logger.error("Error in bookmarkForumAction", error);
         throw new Error("Failed to process bookmark action");
     }
-};
+}) satisfies ActionFunction;
+
+export const answerForumAction = (async ({ request, params }) => {
+    // if not logged in, redirect to login page and add a toast
+
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+    if (!user) {
+        useToastStore.getState().add({
+            id: "not-logged-in",
+            type: "info",
+            data: {
+                message: "Log in to answer forum question",
+                description: "You need to log in to answer forum questions.",
+            },
+        });
+    }
+
+    const formData = await request.formData();
+    const answer = formData.get("answer");
+    const questionId = params.questionId;
+
+    try {
+        const response = await apiClient.post(
+            `forum-questions/${questionId}/answers/`,
+            {
+                answer,
+            },
+        );
+
+        const { issues, success } = safeParse(forumAnswerSchema, response.data);
+
+        if (!success) {
+            logger.error("Response validation failed", issues);
+            throw new Error("Invalid response from answer creation");
+        }
+
+        useToastStore.getState().add({
+            id: `answer-success-${postId}`,
+            type: "success",
+            data: {
+                message: "Answer created successfully",
+                description: "Your answer has been posted.",
+            },
+        });
+
+        return response;
+    } catch (error) {
+        logger.error("Error in answerForumAction", error);
+        throw new Error("Failed to process answer action");
+    }
+}) satisfies ActionFunction;

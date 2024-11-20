@@ -2,7 +2,7 @@ import { array, InferInput, nullable, number, object, string } from "valibot";
 
 export type Answer = InferInput<typeof answerSchema>;
 
-const Tagschema = object({
+const tagSchema = object({
     name: string(),
     linked_data_id: string(),
     description: string(),
@@ -18,7 +18,7 @@ export const authorSchema = object({
 });
 
 export const answerSchema = object({
-    id: string(),
+    id: number(),
     answer: string(),
     author: authorSchema,
     created_at: string(),
@@ -32,7 +32,7 @@ export const forumQuestionSchema = object({
     id: number(),
     title: string(),
     question: string(),
-    tags: array(Tagschema),
+    tags: array(tagSchema),
     author: authorSchema,
     created_at: string(),
     answers_count: number(),
@@ -51,5 +51,30 @@ export const forumSchema = object({
     results: array(forumQuestionSchema),
 });
 
-export type Tag = InferInput<typeof Tagschema>;
+export const forumBookmarkSchema = object({
+    id: number(),
+    user: number(),
+    forum_question: number(),
+    created_at: string(), // ISO date string
+});
+
+export const forumUpvoteSchema = object({
+    id: number(),
+    user: number(),
+    forum_question: number(),
+    created_at: string(), // ISO date string
+});
+
+export const forumDownvoteSchema = object({
+    id: number(),
+    user: number(),
+    forum_question: number(),
+    created_at: string(), // ISO date string
+});
+
+export const forumAnswerSchema = object({
+    answer: string(),
+});
+
+export type Tag = InferInput<typeof tagSchema>;
 export type ForumQuestion = InferInput<typeof forumQuestionSchema>;

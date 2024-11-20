@@ -22,7 +22,7 @@ const loginResponseSuccessSchema = object({
 });
 
 const loginResponseErrorSchema = object({
-    error: string(),
+    detail: string(),
 });
 
 const loginResponseSchema = union([
@@ -58,16 +58,16 @@ export const loginAction = async ({ request }: { request: Request }) => {
             return { error: "Invalid response" };
         }
 
-        if ("error" in responseOutput) {
+        if ("detail" in responseOutput) {
             useToastStore.getState().add({
                 id: `login-error-${requestOutput.username}-${requestOutput.password}`,
                 type: "error",
                 data: {
-                    message: responseOutput.error,
+                    message: responseOutput.detail,
                     description: "What do you do when you forget your keys?",
                 },
             });
-            return { error: responseOutput.error };
+            return { error: responseOutput.detail };
         }
 
         const options = persistentLogin ? { expires: 30 } : undefined;

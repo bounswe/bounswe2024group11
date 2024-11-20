@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunction, redirect } from "react-router";
+import { ActionFunctionArgs, LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
 import apiClient from "../../api";
 import { logger } from "../../utils";
@@ -49,16 +49,15 @@ export const postAction = async ({ params, request }: ActionFunctionArgs) => {
             },
         );
 
-        const { output, issues, success } = safeParse(
-            answerSchema,
-            response.data,
-        );
+        const { issues, success } = safeParse(answerSchema, response.data);
 
         if (!success) {
             throw new Error(`Failed to create post: ${issues}`);
         }
 
-        return redirect(`/forum/${postId}`);
+        console.log("here");
+
+        return null;
     } catch (error) {
         logger.error(`Error posting answer to post ID: ${postId}`, error);
         throw new Error(`Failed to answer post`);
