@@ -1,24 +1,30 @@
 import { RouteObject } from "react-router-dom";
 import { ErrorPage } from "./routes/_error";
 import { Root } from "./routes/_root";
-import { Forum } from "./routes/Forum";
-import { forumLoader } from "./routes/Forum.data";
-import { Home } from "./routes/Home";
-import { homeLoader } from "./routes/Home.data";
-import { HomeMain } from "./routes/Home.main";
-import { Leaderboard } from "./routes/Leaderboard";
-import { leaderboardLoader } from "./routes/Leaderboard.data";
-import { Login } from "./routes/Login";
-import { loginAction, loginLoader } from "./routes/Login.data";
-import { logoutLoader } from "./routes/Logout.data";
-import { PostPage } from "./routes/Post";
-import { postLoader } from "./routes/Post.data";
-import { QuizPage } from "./routes/Quiz";
-import { quizLoader } from "./routes/Quiz.data";
-import { Quizzes } from "./routes/Quizzes";
-import { quizzesLoader } from "./routes/Quizzes.data";
-import { Register } from "./routes/Register";
-import { registerAction } from "./routes/Register.data";
+import { Register } from "./routes/Auth/Register";
+import { Forum } from "./routes/Forum/Forum";
+import { ForumQuestion } from "./routes/Forum/Question";
+import { Home } from "./routes/Home/Home";
+import { HomeMain } from "./routes/Home/Home.main";
+import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
+import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
+
+import { Login } from "./routes/Auth/Login";
+import { loginAction, loginLoader } from "./routes/Auth/Login.data";
+import { logoutLoader } from "./routes/Auth/Logout.data";
+import { registerAction } from "./routes/Auth/Register.data";
+import {
+    bookmarkForumAction,
+    downvoteForumAction,
+    forumLoader,
+    upvoteForumAction,
+} from "./routes/Forum/Forum.data";
+import { forumQuestionLoader, postAction } from "./routes/Forum/Question.data";
+import { homeLoader } from "./routes/Home/Home.data";
+import { QuizPage } from "./routes/Quiz/Quiz";
+import { quizLoader } from "./routes/Quiz/Quiz.data";
+import { Quizzes } from "./routes/Quiz/Quizzes";
+import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
 
 export const routes: RouteObject[] = [
     {
@@ -46,11 +52,40 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
+                        children: [
+                            {
+                                path: "create",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                        ],
                     },
                     {
-                        path: "forum/:postId",
-                        element: <PostPage />,
-                        loader: postLoader,
+                        path: "forum/:questionId",
+                        element: <ForumQuestion />,
+                        loader: forumQuestionLoader,
+                        action: postAction,
+                        children: [
+                            {
+                                path: "bookmark",
+                                action: bookmarkForumAction,
+                            },
+                            {
+                                path: "upvote",
+                                action: upvoteForumAction,
+                            },
+                            {
+                                path: "downvote",
+                                action: downvoteForumAction,
+                            },
+                            {
+                                path: "answer",
+                                action: () => {
+                                    return true;
+                                },
+                            },
+                        ],
                     },
                     {
                         path: "quizzes",

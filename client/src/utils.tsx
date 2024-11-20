@@ -68,3 +68,7 @@ export const getRelativeTime = (
     if (days < 30) return rtf.format(-days, "day");
     return "more than a month ago";
 };
+
+export const pluralize = (count: number, singular: string, plural: string) => {
+    return count === 1 ? "1 " + singular : count + " " + plural;
+};

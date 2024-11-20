@@ -7,7 +7,6 @@ export const buttonInnerRing = cva(
         "inset-[1px]",
         "width-full",
         "height-full",
-        "rounded-[7px]",
         "border",
         "transition-all",
     ],
@@ -24,9 +23,14 @@ export const buttonInnerRing = cva(
                 tertiary: ["border-white/50"],
                 destructive: ["border-red-400"],
             },
+            rounded: {
+                default: ["rounded-[7px]"],
+                full: ["rounded-full"],
+            },
         },
         defaultVariants: {
             intent: "primary",
+            rounded: "default",
         },
     },
 );
@@ -38,9 +42,7 @@ export const buttonClass = cva(
         "flex",
         "items-center",
         "justify-center",
-        "rounded-2",
         "group",
-        "relative",
         "transition-all",
         "duration-100",
         "focus-visible:ring-slate-300",
@@ -48,6 +50,10 @@ export const buttonClass = cva(
         "focus-visible:outline-none",
         "outline-none",
         "cursor-pointer",
+        "disabled:hover:bg-slate-800",
+        "disabled:active:ring-0",
+        "disabled:cursor-default",
+        "disabled:opacity-50",
     ],
     {
         variants: {
@@ -111,11 +117,96 @@ export const buttonClass = cva(
                 small: ["text-xs", "py-1", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
             },
+            rounded: {
+                default: ["rounded-2"],
+                full: ["rounded-full"],
+            },
+            position: {
+                fixed: ["fixed"],
+                relative: ["relative"],
+            },
         },
         defaultVariants: {
             intent: "primary",
             size: "medium",
             icon: "none",
+            rounded: "default",
+            position: "relative",
         },
+    },
+);
+
+//bookmark: orange]
+//upvote: cyan
+//downvote: red
+
+export const toggleButtonClass = cva(
+    [
+        "flex",
+        "items-center",
+        "justify-center",
+        "rounded-2",
+        "transition-all",
+        "duration-100",
+        "focus-visible:ring-slate-300",
+        "focus-visible:ring-3",
+        "focus-visible:outline-none",
+        "outline-none",
+        "cursor-pointer",
+        "disabled:hover:bg-slate-800",
+        "disabled:active:ring-0",
+        "disabled:cursor-default",
+        "disabled:opacity-50",
+        "p-3",
+    ],
+    {
+        variants: {
+            intent: {
+                bookmark: [],
+                upvote: [],
+                downvote: [],
+            },
+            state: {
+                on: [],
+                off: [],
+            },
+        },
+        compoundVariants: [
+            {
+                intent: "bookmark",
+                state: "on",
+                class: ["bg-orange-200", "text-orange-800"],
+            },
+            {
+                intent: "bookmark",
+                state: "off",
+                class: [
+                    "bg-slate-100",
+                    "hover:bg-orange-100",
+                    "hover:text-orange-800",
+                    "text-slate-700",
+                ],
+            },
+            {
+                intent: "upvote",
+                state: "on",
+                class: ["bg-cyan-500", "text-white"],
+            },
+            {
+                intent: "upvote",
+                state: "off",
+                class: ["bg-slate-100", "text-slate-800"],
+            },
+            {
+                intent: "downvote",
+                state: "on",
+                class: ["bg-red-100", "text-red-800"],
+            },
+            {
+                intent: "downvote",
+                state: "off",
+                class: ["bg-slate-100", "text-slate-800"],
+            },
+        ],
     },
 );

@@ -4,62 +4,81 @@ import {
     RiArrowUpLine,
     RiBookmark2Line,
 } from "@remixicon/react";
-import { Link } from "react-router-dom";
-import { Post } from "../routes/Forum.data";
-import { logger } from "../utils";
+import { Link, useFetcher } from "react-router-dom";
+import {
+    bookmarkForumAction,
+    downvoteForumAction,
+    upvoteForumAction,
+} from "../routes/Forum/Forum.data";
+import { ForumQuestion } from "../routes/Forum/Forum.schema";
+import { pluralize } from "../utils";
 import { Avatar } from "./avatar";
-
-type forumCardProps = {
-    post: Post;
-    key: string;
+import { toggleButtonClass } from "./button";
+type ForumCardProps = {
+    question: ForumQuestion;
 };
 
-export const ForumCard = ({ post, key }: forumCardProps) => {
+export const ForumCard = ({ question }: ForumCardProps) => {
+    const upvoteFetcher = useFetcher<typeof upvoteForumAction>();
+    const downvoteFetcher = useFetcher<typeof downvoteForumAction>();
+    const bookmarkFetcher = useFetcher<typeof bookmarkForumAction>();
+
     return (
-        <Link
-            to={`forum/${post.id}`}
-            key={key}
-            aria-label={`${post.title} by ${post.author.full_name}`}
-            className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200"
-        >
+        <div className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
             <div className="flex flex-col gap-3 pb-3">
                 <div className="flex w-full items-center justify-between gap-3">
                     <div className="flex flex-row items-center justify-start gap-3">
-                        <Avatar author={post.author} size={24} />
+                        <Avatar author={question.author} size={24} />
                         <p className="text-sm text-slate-500">
-                            {post.author.username}
+                            {question.author.username}
                         </p>
                     </div>
-                    <Button
-                        onClick={() => {
-                            logger.log(post.id);
-                        }}
-                        className="flex size-9 items-center justify-center rounded-1 bg-slate-100"
+                    <bookmarkFetcher.Form
+                        method="POST"
+                        action={`/forum/${question.id}/bookmark`}
                     >
-                        <RiBookmark2Line className="size-5 text-slate-500" />
-                    </Button>
+                        <input
+                            type="hidden"
+                            name="post_id"
+                            value={question.id}
+                        />
+                        <input
+                            type="hidden"
+                            name="is_bookmarked"
+                            value={question.is_bookmarked || 0}
+                        />
+                        <Button
+                            type="submit"
+                            aria-label="Bookmark"
+                            className={toggleButtonClass({
+                                intent: "bookmark",
+                                state: question.is_bookmarked ? "on" : "off",
+                            })}
+                        >
+                            <RiBookmark2Line size={16} />
+                        </Button>
+                    </bookmarkFetcher.Form>
                 </div>
 
                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
-                        <h2 className="text-xl font-semibold text-slate-900">
-                            {post.title}
+                    <Link
+                        to={`/forum/${question.id}`}
+                        aria-label={`${question.title} by ${question.author.full_name}`}
+                        className="group flex flex-col gap-2"
+                    >
+                        <h2 className="text-xl font-semibold text-slate-900 underline-offset-2 group-hover:underline">
+                            {question.title}
                         </h2>
                         <p className="text-sm text-slate-500">
-                            {post.description}
+                            {question.question}
                         </p>
-                    </div>
+                    </Link>
                     <div className="flex flex-row gap-4">
-                        {post.tags.map(({ name }) => {
-                            return (
-                                <Link
-                                    to="#"
-                                    className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500"
-                                >
-                                    {name.toLocaleUpperCase()}
-                                </Link>
-                            );
-                        })}
+                        {question.tags.map(({ name }) => (
+                            <span className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500">
+                                {name.toLocaleUpperCase()}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -68,36 +87,65 @@ export const ForumCard = ({ post, key }: forumCardProps) => {
                 <div className="flex flex-row items-center gap-1">
                     <RiBookmark2Line className="size-5 text-slate-500" />
                     <p className="text-xs text-slate-500">
-                        {post.num_comments}{" "}
-                        {post.num_comments === 1 ? "comment" : "comments"}
+                        {pluralize(question.answers_count, "answer", "answers")}
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">
-                    <Button
-                        aria-roledescription="Upvote"
-                        className="flex size-8 items-center justify-center rounded-2 bg-slate-100"
+                    <upvoteFetcher.Form
+                        method="POST"
+                        action={`/forum/${question.id}/upvote`}
                     >
-                        <RiArrowUpLine
-                            className="size-5 text-slate-900"
-                            onClick={() => {
-                                logger.log("upvoted");
-                            }}
+                        <input
+                            type="hidden"
+                            name="post_id"
+                            value={question.id}
                         />
-                    </Button>
-                    <p className="text-sm text-slate-900">
-                        {post.num_likes - post.num_dislikes}
+                        <input
+                            type="hidden"
+                            name="is_upvoted"
+                            value={question.is_upvoted || 0}
+                        />
+                        <Button
+                            type="submit"
+                            aria-label="Upvote"
+                            className={toggleButtonClass({
+                                intent: "upvote",
+                                state: question.is_upvoted ? "on" : "off",
+                            })}
+                        >
+                            <RiArrowUpLine size={16} />
+                        </Button>
+                    </upvoteFetcher.Form>
+                    <p className="text-slate- w-6 text-center text-sm">
+                        {question.upvotes_count - question.downvotes_count}
                     </p>
-                    <Button className="flex size-8 items-center justify-center rounded-2 border border-slate-200">
-                        <RiArrowDownLine
-                            aria-roledescription="Downvote"
-                            className="size-5 text-slate-900"
-                            onClick={() => {
-                                logger.log("downvoted");
-                            }}
+                    <downvoteFetcher.Form
+                        method="POST"
+                        action={`/forum/${question.id}/downvote`}
+                    >
+                        <input
+                            type="hidden"
+                            name="post_id"
+                            value={question.id}
                         />
-                    </Button>
+                        <input
+                            type="hidden"
+                            name="is_downvoted"
+                            value={question.is_downvoted || 0}
+                        />
+                        <Button
+                            type="submit"
+                            aria-label="Downvote"
+                            className={toggleButtonClass({
+                                intent: "downvote",
+                                state: question.is_downvoted ? "on" : "off",
+                            })}
+                        >
+                            <RiArrowDownLine size={16} />
+                        </Button>
+                    </downvoteFetcher.Form>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 };

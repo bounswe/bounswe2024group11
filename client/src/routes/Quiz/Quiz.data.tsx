@@ -1,7 +1,7 @@
 import { LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
-import { quizDetailsSchema } from "../types/quiz";
-import { BASE_URL, logger } from "../utils";
+import { quizDetailsSchema } from "../../types/quiz";
+import { BASE_URL, logger } from "../../utils";
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;

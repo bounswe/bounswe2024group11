@@ -1,0 +1,235 @@
+[
+    {
+        "model": "core.quiz",
+        "pk": 1,
+        "fields": {
+            "title": "Technology Quiz",
+            "description": "Test your knowledge about technology",
+            "author": 2,
+            "created_at": "2024-11-02T02:30:20Z",
+            "difficulty": 1,
+            "tags": [1],
+            "type": 1
+        }
+    },
+    {
+        "model": "core.quizquestion",
+        "pk": 1,
+        "fields": {
+            "question_text": "Algorithm",
+            "quiz": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 1,
+        "fields": {
+            "choice_text": "Algoritma",
+            "is_correct": true,
+            "question": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 2,
+        "fields": {
+            "choice_text": "Yazılım",
+            "is_correct": false,
+            "question": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 3,
+        "fields": {
+            "choice_text": "Veri",
+            "is_correct": false,
+            "question": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 4,
+        "fields": {
+            "choice_text": "Ağ",
+            "is_correct": false,
+            "question": 1
+        }
+    },
+    {
+        "model": "core.quizquestion",
+        "pk": 2,
+        "fields": {
+            "question_text": "Cloud Computing",
+            "quiz": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 5,
+        "fields": {
+            "choice_text": "Bulut Bilişim",
+            "is_correct": true,
+            "question": 2
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 6,
+        "fields": {
+            "choice_text": "Veritabanı",
+            "is_correct": false,
+            "question": 2
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 7,
+        "fields": {
+            "choice_text": "Ağ",
+            "is_correct": false,
+            "question": 2
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 8,
+        "fields": {
+            "choice_text": "Sunucu",
+            "is_correct": false,
+            "question": 2
+        }
+    },
+    {
+        "model": "core.quizquestion",
+        "pk": 3,
+        "fields": {
+            "question_text": "Artificial Intelligence",
+            "quiz": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 9,
+        "fields": {
+            "choice_text": "Yapay Zeka",
+            "is_correct": true,
+            "question": 3
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 10,
+        "fields": {
+            "choice_text": "Robot",
+            "is_correct": false,
+            "question": 3
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 11,
+        "fields": {
+            "choice_text": "Bilişim",
+            "is_correct": false,
+            "question": 3
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 12,
+        "fields": {
+            "choice_text": "Veri Tabanı",
+            "is_correct": false,
+            "question": 3
+        }
+    },
+    {
+        "model": "core.quizquestion",
+        "pk": 4,
+        "fields": {
+            "question_text": "Cybersecurity",
+            "quiz": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 13,
+        "fields": {
+            "choice_text": "Siber Güvenlik",
+            "is_correct": true,
+            "question": 4
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 14,
+        "fields": {
+            "choice_text": "Firewall",
+            "is_correct": false,
+            "question": 4
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 15,
+        "fields": {
+            "choice_text": "Yazılım",
+            "is_correct": false,
+            "question": 4
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 16,
+        "fields": {
+            "choice_text": "Donanım",
+            "is_correct": false,
+            "question": 4
+        }
+    },
+    {
+        "model": "core.quizquestion",
+        "pk": 5,
+        "fields": {
+            "question_text": "Virtual Reality",
+            "quiz": 1
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 17,
+        "fields": {
+            "choice_text": "Sanal Gerçeklik",
+            "is_correct": true,
+            "question": 5
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 18,
+        "fields": {
+            "choice_text": "Gerçek Zeka",
+            "is_correct": false,
+            "question": 5
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 19,
+        "fields": {
+            "choice_text": "Fiziksel Gerçeklik",
+            "is_correct": false,
+            "question": 5
+        }
+    },
+    {
+        "model": "core.quizquestionchoice",
+        "pk": 20,
+        "fields": {
+            "choice_text": "Dijital Dünya",
+            "is_correct": false,
+            "question": 5
+        }
+    }
+]

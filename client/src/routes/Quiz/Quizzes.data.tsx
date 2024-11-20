@@ -8,7 +8,7 @@ import {
     safeParse,
     string,
 } from "valibot";
-import { BASE_URL } from "../utils";
+import { BASE_URL } from "../../utils";
 
 export type Quiz = InferInput<typeof quizSchema>;
 

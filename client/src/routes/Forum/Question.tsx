@@ -1,15 +1,16 @@
 import { Radio, RadioGroup, RadioProvider, useFormStore } from "@ariakit/react";
-import { useSearchParams } from "react-router-dom";
+import { Form, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
-import { ForumAnswerCard } from "../components/forum-answer-card";
-import { ForumCard } from "../components/forum-card";
-import { homeLoader } from "./Home.data";
-import { postLoader } from "./Post.data";
+import { buttonClass } from "../../components/button";
+import { ForumAnswerCard } from "../../components/forum-answer-card";
+import { ForumCard } from "../../components/forum-card";
+import { inputClass } from "../../components/input";
+import { homeLoader } from "../Home/Home.data";
+import { forumQuestionLoader } from "./Question.data";
 
-export const PostPage = () => {
-    const data = useLoaderData<typeof postLoader>();
-    const { user, logged_in } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+export const ForumQuestion = () => {
+    const data = useLoaderData<typeof forumQuestionLoader>();
+    const { logged_in } = useRouteLoaderData<typeof homeLoader>("home-main");
     const [searchParams, setSearchParams] = useSearchParams();
     const formStore = useFormStore({
         defaultValues: {
@@ -23,16 +24,13 @@ export const PostPage = () => {
         newSearchParams.set("sort", value);
         setSearchParams(newSearchParams);
     };
-    const description = logged_in
-        ? `This is your time to shine ${user.full_name}`
-        : "Test your knowledge of various topics. Log in to track your progress.";
-    console.log(description);
+
     return (
         <div className="container flex w-full max-w-screen-xl flex-col items-center gap-8 py-12">
-            <main className="flex flex-col items-stretch justify-center gap-10">
-                <ForumCard key={data.post.id} post={data.post}></ForumCard>
+            <main className="flex w-full flex-col items-center justify-center gap-10">
+                <ForumCard key={data.id} question={data}></ForumCard>
                 <RadioProvider>
-                    <RadioGroup>
+                    <RadioGroup className="flex flex-row gap-4">
                         <label className="label">
                             <Radio
                                 className="radio"
@@ -71,7 +69,7 @@ export const PostPage = () => {
                         </label>
                     </RadioGroup>
                 </RadioProvider>
-                <div className="flex w-full flex-col">
+                <div className="flex w-full flex-col items-center justify-center">
                     {data.answers.map((answer) => {
                         return (
                             <ForumAnswerCard
@@ -81,6 +79,29 @@ export const PostPage = () => {
                         );
                     })}
                 </div>
+                <Form
+                    action={`/forum/${data.id}`}
+                    method="POST"
+                    aria-labelledby="add-new-answer"
+                    className="flex w-full max-w-xl flex-col items-center justify-center gap-4"
+                    hidden={!logged_in}
+                >
+                    <textarea
+                        name="body"
+                        placeholder="Write your comment..."
+                        className={`${inputClass()} min-h-[100px] w-full resize-y`}
+                        required
+                        minLength={1}
+                        aria-label="Comment text"
+                    />
+                    <button
+                        type="submit"
+                        className={`${buttonClass({ intent: "primary" })} w-full`}
+                        disabled={!logged_in}
+                    >
+                        Post Comment
+                    </button>
+                </Form>
             </main>
         </div>
     );
