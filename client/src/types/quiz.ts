@@ -3,6 +3,7 @@ import {
     boolean,
     InferInput,
     literal,
+    nullable,
     number,
     object,
     optional,
@@ -10,10 +11,12 @@ import {
     union,
 } from "valibot";
 
-export const quizAuthorSchema = object({
+export const authorSchema = object({
+    id: number(),
     full_name: string(),
     username: string(),
-    avatar: string(),
+    avatar: nullable(string()),
+    email: string(),
 });
 
 const quizTagSchema = object({
@@ -38,7 +41,7 @@ export const quizOverviewSchema = object({
     type: union([literal(1), literal(2), literal(3)]),
     title: string(),
     description: string(),
-    author: quizAuthorSchema,
+    author: authorSchema,
     created_at: string(),
     tags: array(quizTagSchema),
     num_taken: number(),

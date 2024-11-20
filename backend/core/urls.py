@@ -4,8 +4,7 @@ from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
 from .views.take_quiz_views import TakeQuizViewSet
 from .views.forum_bookmark_views import ForumBookmarkViewSet
-from .views.forum_vote_views import ForumUpvoteViewSet
-from .views.forum_vote_views import ForumDownvoteViewSet
+from .views.forum_vote_views import ForumUpvoteViewSet, ForumDownvoteViewSet, ForumAnswerUpvoteViewSet, ForumAnswerDownvoteViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
 from .views import views
@@ -37,6 +36,8 @@ router.register(r'take-quiz', TakeQuizViewSet, basename='take-quiz')
 router.register(r'forum-bookmarks', ForumBookmarkViewSet, basename='forumbookmark')
 router.register(r'forum-upvote', ForumUpvoteViewSet, basename='forum-upvote')
 router.register(r'forum-downvote', ForumDownvoteViewSet, basename='forum-downvote')
+router.register(r'forum-answer-upvote', ForumAnswerUpvoteViewSet, basename='forum-answer-upvote')
+router.register(r'forum-answer-downvote', ForumAnswerDownvoteViewSet, basename='forum-answer-downvote')
 
 forum_question_router = routers.NestedDefaultRouter(router, r'forum-questions', lookup='forum_question')
 forum_question_router.register(r'answers', ForumAnswerViewSet, basename='forum-question-answers')

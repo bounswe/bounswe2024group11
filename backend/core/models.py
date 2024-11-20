@@ -130,8 +130,7 @@ class ForumUpvote(models.Model):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        if ForumDownvote.objects.filter(user=self.user, forum_question=self.forum_question).exists():
-            raise ValidationError("A user cannot upvote and downvote the same forum question at the same time.")
+        ForumDownvote.objects.filter(user=self.user, forum_question=self.forum_question).delete()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -148,8 +147,7 @@ class ForumDownvote(models.Model):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        if ForumUpvote.objects.filter(user=self.user, forum_question=self.forum_question).exists():
-            raise ValidationError("A user cannot upvote and downvote the same forum question at the same time.")
+        ForumUpvote.objects.filter(user=self.user, forum_question=self.forum_question).delete()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -163,3 +161,35 @@ class ForumAnswer(models.Model):
 
     def __str__(self):
         return self.answer
+    
+class ForumAnswerUpvote(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    forum_answer = models.ForeignKey(ForumAnswer, on_delete=models.CASCADE, related_name='upvotes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "forum_answer")
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        ForumAnswerDownvote.objects.filter(user=self.user, forum_answer=self.forum_answer).delete()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user} upvoted {self.forum_answer}"
+    
+class ForumAnswerDownvote(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    forum_answer = models.ForeignKey(ForumAnswer, on_delete=models.CASCADE, related_name='downvotes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "forum_answer")
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        ForumAnswerUpvote.objects.filter(user=self.user, forum_answer=self.forum_answer).delete()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user} downvoted {self.forum_answer}"

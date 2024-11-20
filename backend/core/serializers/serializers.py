@@ -3,7 +3,7 @@ from faker import Faker
 from rest_framework import serializers
 
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz)
+                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 
@@ -50,11 +50,43 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
-
+    upvotes_count = serializers.SerializerMethodField()
+    downvotes_count = serializers.SerializerMethodField()
+    is_my_answer = serializers.SerializerMethodField()
+    is_upvoted = serializers.SerializerMethodField()
+    is_downvoted = serializers.SerializerMethodField()
     class Meta:
         model = ForumAnswer
-        fields = ('id', 'answer', 'author', 'created_at')
-        read_only_fields = ('author', 'created_at')
+        fields = ('id', 'answer', 'author', 'created_at', 'is_my_answer', 'is_upvoted', 'is_downvoted', 'upvotes_count', 'downvotes_count')
+        read_only_fields = ('author', 'created_at', 'upvotes_count', 'downvotes_count', 'is_my_answer', 'is_upvoted', 'is_downvoted')
+
+    def get_is_my_answer(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        return obj.id if obj.author == user else None
+
+    def get_is_upvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        upvote = ForumAnswerUpvote.objects.filter(user=user, forum_answer=obj).first()
+        return upvote.id if upvote else None
+
+    def get_is_downvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        downvote = ForumAnswerDownvote.objects.filter(user=user, forum_answer=obj).first()
+        return downvote.id if downvote else None
+    
+    def get_upvotes_count(self, obj):
+        return obj.upvotes.count()
+    
+    def get_downvotes_count(self, obj):
+        return obj.downvotes.count()
+    
+    
 
     def create(self, validated_data):
         return ForumAnswer.objects.create(**validated_data)
@@ -88,14 +120,16 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_is_bookmarked(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumBookmark.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        bookmark = ForumBookmark.objects.filter(user=user, forum_question=obj).first()
+        return bookmark.id if bookmark else None
 
     def get_is_upvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumUpvote.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        upvote = ForumUpvote.objects.filter(user=user, forum_question=obj).first()
+        return upvote.id if upvote else None
 
     def get_upvotes_count(self, obj):
         return obj.upvotes.count()
@@ -103,8 +137,9 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_is_downvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumDownvote.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        downvote = ForumDownvote.objects.filter(user=user, forum_question=obj).first()
+        return downvote.id if downvote else None
 
     def get_downvotes_count(self, obj):
         return obj.downvotes.count()
