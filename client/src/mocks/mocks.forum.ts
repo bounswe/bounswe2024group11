@@ -1,4 +1,4 @@
-import { PostDetails, PostOverview } from "../types/post";
+import { PostDetails, PostOverview } from "../types/forum";
 
 export const forumOverview: PostOverview[] = [
     {

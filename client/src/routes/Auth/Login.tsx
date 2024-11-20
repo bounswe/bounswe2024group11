@@ -1,10 +1,9 @@
 import { Form, Link } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
-import { buttonClass, buttonInnerRing } from "../components/button";
-
-import { inputClass, labelClass } from "../components/input";
-import { Logo } from "../components/logo";
-import type { loginAction } from "./Login.data";
+import { buttonClass, buttonInnerRing } from "../../components/button";
+import { inputClass, labelClass } from "../../components/input";
+import { Logo } from "../../components/logo";
+import { loginAction } from "./Login.data";
 
 export const Login = () => {
     const actionData = useActionData<typeof loginAction>();

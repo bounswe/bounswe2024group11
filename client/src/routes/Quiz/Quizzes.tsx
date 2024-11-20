@@ -1,11 +1,11 @@
 import { RiCloseFill } from "@remixicon/react";
 import { useState } from "react";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
-import { buttonClass } from "../components/button";
-import { inputClass } from "../components/input";
-import { PageHead } from "../components/page-head";
-import { QuizCard } from "../components/quiz-card";
-import { homeLoader } from "./Home.data";
+import { buttonClass } from "../../components/button";
+import { inputClass } from "../../components/input";
+import { PageHead } from "../../components/page-head";
+import { QuizCard } from "../../components/quiz-card";
+import { homeLoader } from "../Home/Home.data";
 import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
