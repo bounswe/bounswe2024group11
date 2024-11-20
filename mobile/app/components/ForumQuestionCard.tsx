@@ -14,18 +14,25 @@ interface ForumQuestionCardProps {
 const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
   const [question, setQuestion] = useState(item);
 
-  const handleVoteChange = (isUpvote: boolean, isDownvote: boolean) => {
+  const handleVoteChange = (
+    isUpvoteId: number | null,
+    isDownvoteId: number | null
+  ) => {
     setQuestion((prevQuestion) => ({
       ...prevQuestion,
-      is_upvoted: isUpvote,
-      is_downvoted: isDownvote,
-      upvotes_count: isUpvote
-        ? prevQuestion.upvotes_count + 1
+      is_upvoted: isUpvoteId,
+      is_downvoted: isDownvoteId,
+      upvotes_count: isUpvoteId
+        ? prevQuestion.is_upvoted
+          ? prevQuestion.upvotes_count
+          : prevQuestion.upvotes_count + 1
         : prevQuestion.is_upvoted
           ? prevQuestion.upvotes_count - 1
           : prevQuestion.upvotes_count,
-      downvotes_count: isDownvote
-        ? prevQuestion.downvotes_count + 1
+      downvotes_count: isDownvoteId
+        ? prevQuestion.is_downvoted
+          ? prevQuestion.downvotes_count
+          : prevQuestion.downvotes_count + 1
         : prevQuestion.is_downvoted
           ? prevQuestion.downvotes_count - 1
           : prevQuestion.downvotes_count,
@@ -44,11 +51,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
         </Text>
         <Text style={{ color: "grey", marginBottom: 10 }}>{item.body}</Text>
         <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            marginBottom: 10,
-          }}
+          style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 10 }}
         >
           {item.tags.map((tag) => (
             <Text
@@ -77,9 +80,9 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
             <Text style={{ marginLeft: 10 }}>{item.answers_count} Answers</Text>
           </View>
           <VoteButtonsView
-            is_upvoted={question.is_upvoted}
+            is_upvoted={question.is_upvoted} // Pass upvote ID or null
             upvotes_count={question.upvotes_count}
-            is_downvoted={question.is_downvoted}
+            is_downvoted={question.is_downvoted} // Pass downvote ID or null
             downvotes_count={question.downvotes_count}
             questionId={Number(question.id)}
             onVoteChange={handleVoteChange}
