@@ -15,6 +15,7 @@ interface QuizQuestionProps {
   onSelectOption: (option: number) => void;
   goToPreviousQuestion: () => void;
   goToNextQuestion: () => void;
+  onSubmit: () => void;
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({
@@ -28,6 +29,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   questions_length,
   goToPreviousQuestion,
   goToNextQuestion,
+  onSubmit,
 }) => {
   return (
     <View style={styles.container}>
@@ -43,6 +45,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         questions_length={questions_length}
         goToPreviousQuestion={goToPreviousQuestion}
         goToNextQuestion={goToNextQuestion}
+        onSubmit={onSubmit}
       />
     </View>
   );

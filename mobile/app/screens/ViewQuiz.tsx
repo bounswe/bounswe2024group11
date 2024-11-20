@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
 import QuizQuestion from "../components/QuizQuestion";
-import { QuizQuestionType } from "../types/quiz";
+import { QuizAnswerType, QuizQuestionType } from "../types/quiz";
 
 type ViewQuizScreenRouteProp = RouteProp<RootStackParamList, "ViewQuiz">;
 
@@ -47,11 +47,25 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
+
   const selectOption = (option: number) => {
     if (!selectedOptions) return;
     const updatedOptions = [...selectedOptions];
     updatedOptions[currentQuestionIndex] = option;
     setSelectedOptions(updatedOptions);
+  };
+
+  const submitQuiz = async () => {
+    const answers: QuizAnswerType[] = questions.map((question, index) => ({
+      question: question.id,
+      answer: selectedOptions?.[index] ?? null,
+    }));
+
+    const result = await axios.post(`${API_URL}/take-quiz/`, {
+      quiz: id,
+      answers,
+    });
+    console.log(result);
   };
 
   return (
@@ -68,6 +82,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
           goToPreviousQuestion={goToPreviousQuestion}
           goToNextQuestion={goToNextQuestion}
           onSelectOption={selectOption}
+          onSubmit={submitQuiz}
         />
       )}
     </View>

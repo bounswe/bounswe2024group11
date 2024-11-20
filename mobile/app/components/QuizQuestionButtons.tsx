@@ -12,6 +12,7 @@ interface QuizQuestionButtonsProps {
   questions_length: number;
   goToPreviousQuestion: () => void;
   goToNextQuestion: () => void;
+  onSubmit: () => void;
 }
 
 const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
@@ -19,6 +20,7 @@ const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
   questions_length,
   goToNextQuestion,
   goToPreviousQuestion,
+  onSubmit,
 }) => {
   const screenWidth = Dimensions.get("window").width;
   const cardWidth = screenWidth / 2 - 40;
@@ -43,6 +45,7 @@ const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
       ) : (
         <TouchableOpacity
           style={[styles.button, styles.submitButton, { width: cardWidth }]}
+          onPress={onSubmit}
         >
           <Text style={styles.submitButtonText}>Submit</Text>
         </TouchableOpacity>

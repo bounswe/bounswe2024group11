@@ -38,6 +38,11 @@ export type QuizCardHeaderType = {
   rating: rating;
 };
 
+export type QuizAnswerType = {
+  question: number;
+  answer: number | null;
+};
+
 // export type QuizQuestionOptionsType = {
 //   A: string;
 //   B: string;
