@@ -6,8 +6,8 @@ import QuizQuestionOptions from "./QuizQuestionOptions";
 interface QuizQuestionBodyProps {
   question: QuizQuestionType;
   quiz_type: number;
-  selectedOption: string | null;
-  onSelectOption: (option: string) => void;
+  selectedOption: number | null;
+  onSelectOption: (option: number) => void;
 }
 
 const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
@@ -24,10 +24,10 @@ const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
           : quiz_type == 2
             ? "What is the Turkish translation of "
             : "What is the sense of "}
-        "{question.text}"?
+        "{question.question_text}"?
       </Text>
       <QuizQuestionOptions
-        options={question.options}
+        options={question.choices}
         selectedOption={selectedOption}
         onSelectOption={onSelectOption}
       />

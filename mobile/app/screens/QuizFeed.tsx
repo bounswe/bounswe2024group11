@@ -28,7 +28,6 @@ const QuizFeed: React.FC = () => {
       try {
         const result = await axios.get(`${API_URL}`);
         setQuizzes(result.data.results);
-        console.log(quizzes);
       } catch (error) {
         console.error("Error fetching questions", error);
       }

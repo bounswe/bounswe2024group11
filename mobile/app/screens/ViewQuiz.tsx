@@ -12,20 +12,20 @@ type Props = {
   route: ViewQuizScreenRouteProp;
 };
 
-const API_URL = "http://10.0.2.2:3000/quiz-questions";
+const API_URL = "http://54.247.125.93/api/v1";
 
 const ViewQuiz: React.FC<Props> = ({ route }) => {
   const { id, type, title, description } = route.params;
   const [questions, setQuestions] = useState<QuizQuestionType[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>();
+  const [selectedOptions, setSelectedOptions] = useState<number[]>();
 
   //   const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const result = await axios.get(`${API_URL}/${id}`);
+        const result = await axios.get(`${API_URL}/quizzes/${id}`);
         setQuestions(result.data.questions);
         setSelectedOptions(new Array(questions.length).fill(null));
       } catch (error) {
@@ -47,7 +47,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
-  const selectOption = (option: string) => {
+  const selectOption = (option: number) => {
     if (!selectedOptions) return;
     const updatedOptions = [...selectedOptions];
     updatedOptions[currentQuestionIndex] = option;

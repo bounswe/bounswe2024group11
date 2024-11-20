@@ -11,8 +11,8 @@ interface QuizQuestionProps {
   question: QuizQuestionType;
   currentQuestionIndex: number;
   questions_length: number;
-  selectedOption: string | null;
-  onSelectOption: (option: string) => void;
+  selectedOption: number | null;
+  onSelectOption: (option: number) => void;
   goToPreviousQuestion: () => void;
   goToNextQuestion: () => void;
 }

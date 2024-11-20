@@ -17,6 +17,7 @@ const QuizQuestionOption: React.FC<QuizQuestionOptionProps> = ({
 
   return (
     <View
+      key={option}
       style={[
         styles.option,
         isSelected && styles.selectedOption,

@@ -1,13 +1,13 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { QuizQuestionOptionsType } from "../types/quiz";
+import { QuizQuestionOptionType } from "../types/quiz";
 import QuizQuestionOption from "./QuizQuestionOption";
 
 interface QuizQuestionOptionsProps {
-  options: QuizQuestionOptionsType;
-  selectedOption: string | null;
-  onSelectOption: (option: string) => void;
+  options: QuizQuestionOptionType[];
+  selectedOption: number | null;
+  onSelectOption: (option: number) => void;
 }
 
 const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
@@ -16,13 +16,18 @@ const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
   onSelectOption,
 }) => {
   return (
+    // QuizQuestionOptionType = {
+    //     id: number;
+    //     choice_text: string;
+    //     is_correct: boolean;
+    //   };
     <View style={styles.container}>
-      {Object.entries(options).map(([key, value]) => (
-        <TouchableOpacity key={key} onPress={() => onSelectOption(key)}>
+      {options.map((option) => (
+        <TouchableOpacity onPress={() => onSelectOption(option.id)}>
           <QuizQuestionOption
-            key={key}
-            option={value}
-            isSelected={selectedOption === key}
+            key={option.id}
+            option={option.choice_text}
+            isSelected={selectedOption === option.id}
           />
         </TouchableOpacity>
       ))}
