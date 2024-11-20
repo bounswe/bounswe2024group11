@@ -31,6 +31,7 @@ export const ForumCard = ({ post, key }: ForumCardProps) => {
         e: React.MouseEvent,
         voteType: "upvote" | "downvote",
     ) => {
+        console.log(user);
         e.preventDefault(); // Prevent link navigation
         e.stopPropagation(); // Stop event bubbling
         if (!logged_in) return;

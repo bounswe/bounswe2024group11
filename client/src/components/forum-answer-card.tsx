@@ -27,6 +27,7 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
     ) => {
         e.preventDefault();
         logger.log("Vote clicked");
+        console.log(user);
         if (!logged_in) return;
 
         try {

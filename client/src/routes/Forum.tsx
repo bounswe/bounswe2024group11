@@ -3,9 +3,8 @@ import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
 import { Form } from "react-router-dom";
 import {
-    useActionData,
     useLoaderData,
-    useRouteLoaderData,
+    useRouteLoaderData
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { ForumCard } from "../components/forum-card";
@@ -13,7 +12,7 @@ import { inputClass } from "../components/input";
 import { PageHead } from "../components/page-head";
 import AutocompleteTag from "../components/tagselect";
 import { Tag } from "../types/post";
-import { createPostAction, forumLoader } from "./Forum.data";
+import { forumLoader } from "./Forum.data";
 import { homeLoader } from "./Home.data";
 
 import "./styles.css";
@@ -28,7 +27,7 @@ const availableTags: Tag[] = [
 ];
 
 export const Forum = () => {
-    const actionData = useActionData<typeof createPostAction>();
+    // const actionData = useActionData<typeof createPostAction>();
     const [creatingPost, setCreatingPost] = useState(false);
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const data = useLoaderData<typeof forumLoader>();

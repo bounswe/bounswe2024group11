@@ -50,6 +50,7 @@ export const postAction = async ({ params, request }: ActionFunctionArgs) => {
 
     const data = await res.json();
     const { output, issues, success } = safeParse(answerSchema, data);
+    console.log(output);
     if (!success) {
         throw new Error(`Failed to create post: ${issues}`);
     }

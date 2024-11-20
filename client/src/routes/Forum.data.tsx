@@ -37,6 +37,7 @@ export const createPostAction = async ({ request }: { request: Request }) => {
 
     const data = await res.json();
     const { output, issues, success } = safeParse(postDetailsSchema, data);
+    console.log(output);
     if (!success) {
         logger.log(data);
         throw new Error(`Failed to create post: ${issues}`);
