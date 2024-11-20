@@ -99,17 +99,20 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     upvotes_count = serializers.SerializerMethodField()
     is_downvoted = serializers.SerializerMethodField()
     downvotes_count = serializers.SerializerMethodField()
+    is_my_forum_question = serializers.SerializerMethodField()
 
     class Meta:
         model = ForumQuestion
         fields = (
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
-            'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers'
+            'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
+            'is_my_forum_question'
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
-            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers'
+            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
+            'is_my_forum_question'
         )
 
     def get_answers_count(self, obj):
@@ -141,6 +144,12 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
 
     def get_downvotes_count(self, obj):
         return obj.downvotes.count()
+
+    def get_is_my_forum_question(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return obj.author == user
 
     def create(self, validated_data):
         # Extract tags from validated_data

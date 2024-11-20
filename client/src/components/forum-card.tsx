@@ -38,7 +38,7 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                         </p>
                     </div>
                     <div className="flex flex-row items-center justify-end gap-3">
-                        {question.is_bookmarked && (
+                        {question.is_my_forum_question && (
                             <deleteFetcher.Form
                                 method="POST"
                                 action={`/forum/${question.id}/delete`}
