@@ -4,12 +4,15 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 
 interface VoteButtonViewsProps {
-  is_upvoted: boolean;
+  is_upvoted: number | null; // Now holds the upvote ID or null
   upvotes_count: number;
-  is_downvoted: boolean;
+  is_downvoted: number | null; // Now holds the downvote ID or null
   downvotes_count: number;
   questionId: number;
-  onVoteChange: (is_upvoted: boolean, is_downvoted: boolean) => void;
+  onVoteChange: (
+    is_upvoted: number | null,
+    is_downvoted: number | null
+  ) => void;
 }
 
 const VoteButtonsView: React.FC<VoteButtonViewsProps> = ({
@@ -23,50 +26,62 @@ const VoteButtonsView: React.FC<VoteButtonViewsProps> = ({
   const handleUpvote = async () => {
     try {
       if (is_upvoted) {
-        await axios.delete(
-          `http://54.247.125.93/api/v1/forum-upvote/${questionId}/`
+        const response = await axios.delete(
+          `http://54.247.125.93/api/v1/forum-upvote/${is_upvoted}/`
         );
-        onVoteChange(false, is_downvoted);
+        console.log("Upvote deleted:", response.data);
+        onVoteChange(null, null); // Clear upvote state
       } else {
-        await axios.post("http://54.247.125.93/api/v1/forum-upvote/", {
-          forum_question: questionId,
-        });
-        onVoteChange(true, false);
+        const response = await axios.post(
+          `http://54.247.125.93/api/v1/forum-upvote/`,
+          { forum_question: questionId }
+        );
+        console.log("Upvote added:", response.data);
+        onVoteChange(response.data.id, null); // Update upvote state
       }
     } catch (error) {
-      console.error("Error upvoting:", error);
+      console.error("Error handling upvote:", error);
     }
   };
 
   const handleDownvote = async () => {
     try {
       if (is_downvoted) {
-        await axios.delete(
-          `http://54.247.125.93/api/v1/forum-upvote/${questionId}/`
+        const response = await axios.delete(
+          `http://54.247.125.93/api/v1/forum-downvote/${is_downvoted}/`
         );
-        onVoteChange(is_upvoted, false);
+        console.log("Downvote deleted:", response.data);
+        onVoteChange(null, null); // Clear downvote state
       } else {
-        await axios.post("http://54.247.125.93/api/v1/forum-upvote/", {
-          forum_question: questionId,
-        });
-        onVoteChange(false, true);
+        const response = await axios.post(
+          `http://54.247.125.93/api/v1/forum-downvote/`,
+          { forum_question: questionId }
+        );
+        console.log("Downvote added:", response.data);
+        onVoteChange(null, response.data.id); // Update downvote state
       }
     } catch (error) {
-      console.error("Error downvoting:", error);
+      console.error("Error handling downvote:", error);
     }
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.iconButton, is_upvoted && styles.upvotedButton]}
+        style={[
+          styles.iconButton,
+          is_upvoted ? styles.upvotedButton : undefined,
+        ]}
         onPress={handleUpvote}
       >
         <Icon name="arrow-up" size={24} color={is_upvoted ? "#fff" : "#000"} />
       </TouchableOpacity>
       <Text style={styles.votesCount}>{upvotes_count - downvotes_count}</Text>
       <TouchableOpacity
-        style={[styles.iconButton, is_downvoted && styles.downvotedButton]}
+        style={[
+          styles.iconButton,
+          is_downvoted ? styles.downvotedButton : undefined,
+        ]}
         onPress={handleDownvote}
       >
         <Icon
