@@ -21,9 +21,26 @@ const ViewQuizButton: React.FC<ViewQuizButtonProps> = ({ item }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.button}>
-        {item.is_taken ? "Review Quiz" : "Take Quiz"}
-      </Text>
+      {item.is_taken ? (
+        <View style={styles.button}>
+          <Text style={styles.text}>Review Quiz</Text>
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("ViewQuiz", {
+              id: item.id,
+              type: item.type,
+              title: item.title,
+              description: item.description,
+            })
+          }
+        >
+          <View style={styles.button}>
+            <Text style={styles.text}>Take Quiz</Text>
+          </View>
+        </TouchableOpacity>
+      )}
       {item.is_taken && (
         <TouchableOpacity
           onPress={() =>
@@ -35,7 +52,7 @@ const ViewQuizButton: React.FC<ViewQuizButtonProps> = ({ item }) => {
             })
           }
         >
-          <Text style={styles.secondButton}>Retake Quiz</Text>
+          <Text style={[styles.button, styles.secondButton]}>Retake Quiz</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -48,10 +65,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#22D3EE",
-    color: "#ffffff",
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "center",
     padding: 12,
     borderRadius: 8,
     marginVertical: 12,
@@ -59,14 +72,12 @@ const styles = StyleSheet.create({
   },
   secondButton: {
     backgroundColor: "#000000",
+  },
+  text: {
     color: "#ffffff",
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
-    padding: 12,
-    borderRadius: 8,
-    marginVertical: 12,
-    elevation: 4,
   },
 });
 
