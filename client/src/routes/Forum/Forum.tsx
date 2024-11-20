@@ -8,9 +8,8 @@ import { ForumQuestionCard } from "../../components/forum-card";
 import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 
-import { forumLoader } from "./Forum.data";
-
 import { homeLoader } from "../Home/Home.data";
+import { forumLoader } from "./Forum.data";
 
 export const Forum = () => {
     const [creatingPost, setCreatingPost] = useState(false);
@@ -29,9 +28,14 @@ export const Forum = () => {
     const handlePageChange = (page: number) => {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("page", page.toString());
-        if (perPage !== 10) {
-            newParams.set("per_page", perPage.toString());
-        }
+        newParams.set("per_page", perPage.toString());
+        setSearchParams(newParams);
+    };
+
+    const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("per_page", e.target.value);
+        newParams.set("page", "1"); // Reset to the first page
         setSearchParams(newParams);
     };
 
@@ -39,46 +43,82 @@ export const Forum = () => {
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <PageHead title="Forum" description={description} />
             <main className="flex flex-col items-stretch justify-stretch gap-10">
-                <div className="mt-8 flex justify-center gap-4">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={!data.previous}
-                        aria-disabled={!data.previous}
-                        className={buttonClass({
-                            intent: "secondary",
-                        })}
-                    >
-                        <div
-                            className={buttonInnerRing({ intent: "secondary" })}
-                        />
-                        Previous
-                    </button>
-                    <span className="flex items-center">
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={!data.next}
-                        aria-disabled={!data.next}
-                        className={buttonClass({ intent: "secondary" })}
-                    >
-                        <div
-                            className={buttonInnerRing({ intent: "secondary" })}
-                        />
-                        Next
-                    </button>
+                <div className="flex flex-col gap-4">
+                    {/* Pagination Controls */}
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <label htmlFor="perPage" className="mr-2">
+                                Questions per page:
+                            </label>
+                            <select
+                                id="perPage"
+                                value={perPage}
+                                onChange={handlePerPageChange}
+                                className={`${inputClass()} w-24`}
+                            >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() =>
+                                    handlePageChange(currentPage - 1)
+                                }
+                                disabled={!data.previous}
+                                aria-disabled={!data.previous}
+                                className={buttonClass({
+                                    intent: "secondary",
+                                })}
+                            >
+                                <div
+                                    className={buttonInnerRing({
+                                        intent: "secondary",
+                                    })}
+                                />
+                                Previous
+                            </button>
+                            <span className="flex items-center">
+                                Page {currentPage} of {totalPages}
+                            </span>
+                            <button
+                                onClick={() =>
+                                    handlePageChange(currentPage + 1)
+                                }
+                                disabled={!data.next}
+                                aria-disabled={!data.next}
+                                className={buttonClass({
+                                    intent: "secondary",
+                                })}
+                            >
+                                <div
+                                    className={buttonInnerRing({
+                                        intent: "secondary",
+                                    })}
+                                />
+                                Next
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                {/* Forum Questions */}
                 <div className="flex w-full flex-col items-center gap-6">
                     {data.results.map((post) => (
                         <ForumQuestionCard key={post.id} question={post} />
                     ))}
                 </div>
             </main>
+            {/* Floating Add Question Button */}
             <div hidden={!logged_in}>
                 <Button
                     aria-labelledby="add-new-post"
                     onClick={() => setCreatingPost(true)}
-                    className={`${buttonClass({ intent: "primary", rounded: "full", position: "fixed" })} bottom-8 right-8 size-12`}
+                    className={`${buttonClass({
+                        intent: "primary",
+                        rounded: "full",
+                        position: "fixed",
+                    })} bottom-8 right-8 size-12`}
                 >
                     <div
                         className={buttonInnerRing({
@@ -89,6 +129,7 @@ export const Forum = () => {
                     <RiAddLine color="white" size="24px"></RiAddLine>
                 </Button>
             </div>
+            {/* Dialog for Creating Post */}
             <Dialog
                 open={creatingPost}
                 onClose={() => setCreatingPost(false)}
@@ -113,20 +154,13 @@ export const Forum = () => {
                             className={`${inputClass()} w-full`}
                             required
                         />
-
                         <textarea
                             name="body"
                             aria-label="Question Body"
                             placeholder="Question Body"
                             className={`${inputClass()} w-full`}
                         ></textarea>
-                        <div className="flex flex-col gap-2">
-                            <div>
-                                <span>Tags:</span>
-                            </div>
-                        </div>
                         <button
-                            aria-label="Post"
                             type="submit"
                             className={buttonClass({ intent: "primary" })}
                             onClick={() => setCreatingPost(false)}

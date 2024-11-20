@@ -1,11 +1,12 @@
 import { Button, Separator } from "@ariakit/react";
 import { RiArrowDownLine, RiArrowUpLine } from "@remixicon/react";
 import { useFetcher } from "react-router-dom";
+
+import { Answer } from "../routes/Forum/Forum.schema";
 import {
     downvoteForumAnswerAction,
     upvoteForumAnswerAction,
-} from "../routes/Forum/Forum.data";
-import { Answer } from "../routes/Forum/Forum.schema";
+} from "../routes/Forum/Question.data";
 import { getNumberDifference, getRelativeTime } from "../utils";
 import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";

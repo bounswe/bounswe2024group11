@@ -1,17 +1,15 @@
-import { useFetcher, useSearchParams } from "react-router-dom";
+import { useFetcher } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass } from "../../components/button";
 import { ForumAnswerCard } from "../../components/forum-answer-card";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { inputClass } from "../../components/input";
 import { homeLoader } from "../Home/Home.data";
-import { answerForumAction } from "./Forum.data";
-import { forumQuestionLoader } from "./Question.data";
+import { answerForumAction, forumQuestionLoader } from "./Question.data";
 
 export const ForumQuestion = () => {
     const data = useLoaderData<typeof forumQuestionLoader>();
     const { logged_in } = useRouteLoaderData<typeof homeLoader>("home-main");
-    const [searchParams, setSearchParams] = useSearchParams();
 
     const answerFetcher = useFetcher<typeof answerForumAction>();
 

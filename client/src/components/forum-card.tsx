@@ -5,12 +5,13 @@ import {
     RiBookmark2Line,
 } from "@remixicon/react";
 import { Link, useFetcher } from "react-router-dom";
+
+import { ForumQuestion } from "../routes/Forum/Forum.schema";
 import {
     bookmarkForumAction,
     downvoteForumAction,
     upvoteForumAction,
-} from "../routes/Forum/Forum.data";
-import { ForumQuestion } from "../routes/Forum/Forum.schema";
+} from "../routes/Forum/Question.data";
 import { getNumberDifference, pluralize } from "../utils";
 import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";

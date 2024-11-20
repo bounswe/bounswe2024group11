@@ -13,16 +13,17 @@ import { Login } from "./routes/Auth/Login";
 import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
+
+import { forumLoader } from "./routes/Forum/Forum.data";
 import {
     answerForumAction,
     bookmarkForumAction,
     downvoteForumAction,
     downvoteForumAnswerAction,
-    forumLoader,
+    forumQuestionLoader,
     upvoteForumAction,
     upvoteForumAnswerAction,
-} from "./routes/Forum/Forum.data";
-import { forumQuestionLoader } from "./routes/Forum/Question.data";
+} from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { QuizPage } from "./routes/Quiz/Quiz";
 import { quizLoader } from "./routes/Quiz/Quiz.data";
