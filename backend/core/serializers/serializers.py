@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from faker import Faker
 from rest_framework import serializers
 
@@ -223,15 +222,18 @@ class QuizSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
     is_taken = serializers.SerializerMethodField()
     num_taken = serializers.SerializerMethodField()
+    is_my_quiz = serializers.SerializerMethodField()
     
 
     class Meta:
         model = Quiz
         fields = (
             'id', 'title', 'description', 'difficulty', "author", 
-            'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating"
+            'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating",
+            'is_my_quiz'
         )
-        read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author")
+        read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
+                           'is_my_quiz')
 
     def get_is_taken(self, obj):
         user = self.context['request'].user
@@ -257,6 +259,12 @@ class QuizSerializer(serializers.ModelSerializer):
         # Round the average score to 1 decimal place
         return {"score": round(result['avg_score'], 1), "count": result['count']}
 
+    # TODO: Check whether this works on the client side.
+    def get_is_my_quiz(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return obj.author == user
     
     def calculate_difficulty(self, questions):
         # implement this method to calculate the difficulty of a quiz via external api
