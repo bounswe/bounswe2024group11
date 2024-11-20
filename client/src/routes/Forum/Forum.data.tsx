@@ -28,8 +28,8 @@ export const forumLoader = (async ({ request }) => {
             forumSchema,
             response.data,
         );
-        console.log(issues);
-        console.log(output);
+        logger.log(issues);
+        logger.log(output);
         if (!success) {
             throw new Error("Failed to parse forum response");
         }
