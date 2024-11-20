@@ -72,3 +72,11 @@ export const getRelativeTime = (
 export const pluralize = (count: number, singular: string, plural: string) => {
     return count === 1 ? "1 " + singular : count + " " + plural;
 };
+
+export const getNumberDifference = (
+    value1: number | null,
+    value2: number | null,
+) => {
+    if (value1 === null || value2 === null) return 0;
+    return value1 - value2;
+};

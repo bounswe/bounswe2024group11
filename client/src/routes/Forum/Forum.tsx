@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Form, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { ForumCard } from "../../components/forum-card";
+import { ForumQuestionCard } from "../../components/forum-card";
 import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 
@@ -70,7 +70,7 @@ export const Forum = () => {
                 </div>
                 <div className="flex w-full flex-col items-center gap-6">
                     {data.results.map((post) => (
-                        <ForumCard key={post.id} question={post} />
+                        <ForumQuestionCard key={post.id} question={post} />
                     ))}
                 </div>
             </main>

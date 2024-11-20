@@ -26,6 +26,7 @@ export const answerSchema = object({
     is_downvoted: nullable(number()),
     upvotes_count: nullable(number()),
     downvotes_count: nullable(number()),
+    forum_question: nullable(number()),
 });
 
 export const forumQuestionSchema = object({
@@ -74,6 +75,20 @@ export const forumDownvoteSchema = object({
 
 export const forumAnswerSchema = object({
     answer: string(),
+});
+
+export const forumAnswerUpvoteSchema = object({
+    id: number(),
+    user: number(),
+    forum_answer: number(),
+    created_at: string(), // ISO date string
+});
+
+export const forumAnswerDownvoteSchema = object({
+    id: number(),
+    user: number(),
+    forum_answer: number(),
+    created_at: string(), // ISO date string
 });
 
 export type Tag = InferInput<typeof tagSchema>;

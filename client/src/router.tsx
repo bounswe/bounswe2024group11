@@ -17,8 +17,10 @@ import {
     answerForumAction,
     bookmarkForumAction,
     downvoteForumAction,
+    downvoteForumAnswerAction,
     forumLoader,
     upvoteForumAction,
+    upvoteForumAnswerAction,
 } from "./routes/Forum/Forum.data";
 import { forumQuestionLoader } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
@@ -82,6 +84,14 @@ export const routes: RouteObject[] = [
                             {
                                 path: "answer",
                                 action: answerForumAction,
+                            },
+                            {
+                                path: "upvoteAnswer",
+                                action: upvoteForumAnswerAction,
+                            },
+                            {
+                                path: "downvoteAnswer",
+                                action: downvoteForumAnswerAction,
                             },
                         ],
                     },

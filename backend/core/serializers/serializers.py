@@ -57,8 +57,8 @@ class ForumAnswerSerializer(serializers.ModelSerializer):
     is_downvoted = serializers.SerializerMethodField()
     class Meta:
         model = ForumAnswer
-        fields = ('id', 'answer', 'author', 'created_at', 'is_my_answer', 'is_upvoted', 'is_downvoted', 'upvotes_count', 'downvotes_count')
-        read_only_fields = ('author', 'created_at', 'upvotes_count', 'downvotes_count', 'is_my_answer', 'is_upvoted', 'is_downvoted')
+        fields = ('id', 'answer', 'author', 'created_at', 'is_my_answer', 'is_upvoted', 'is_downvoted', 'upvotes_count', 'downvotes_count', 'forum_question')
+        read_only_fields = ('author', 'created_at', 'upvotes_count', 'downvotes_count', 'is_my_answer', 'is_upvoted', 'is_downvoted', 'forum_question')
 
     def get_is_my_answer(self, obj):
         user = self.context['request'].user
@@ -85,8 +85,6 @@ class ForumAnswerSerializer(serializers.ModelSerializer):
     
     def get_downvotes_count(self, obj):
         return obj.downvotes.count()
-    
-    
 
     def create(self, validated_data):
         return ForumAnswer.objects.create(**validated_data)

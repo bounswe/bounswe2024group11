@@ -5,7 +5,9 @@ import { USER } from "../../constants";
 import { useToastStore } from "../../store";
 import { logger } from "../../utils";
 import {
+    forumAnswerDownvoteSchema,
     forumAnswerSchema,
+    forumAnswerUpvoteSchema,
     forumBookmarkSchema,
     forumDownvoteSchema,
     forumSchema,
@@ -238,5 +240,170 @@ export const answerForumAction = (async ({ request, params }) => {
     } catch (error) {
         logger.error("Error in answerForumAction", error);
         throw new Error("Failed to process answer action");
+    }
+}) satisfies ActionFunction;
+
+export const upvoteForumAnswerAction = (async ({ request }) => {
+    console.log("Processing upvote/downvote action...");
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+
+    if (!user) {
+        useToastStore.getState().add({
+            id: "not-logged-in",
+            type: "info",
+            data: {
+                message: "Log in to vote",
+                description: "You need to log in to vote on answers.",
+            },
+        });
+        return redirect("/login");
+    }
+
+    const formData = await request.formData();
+    const answerId = formData.get("answer_id");
+    const isUpvoted = formData.get("is_upvoted");
+
+    if (!answerId) {
+        throw new Error("Answer ID is required to process vote action.");
+    }
+
+    try {
+        let response;
+
+        if (Number(isUpvoted)) {
+            // DELETE request to remove upvote
+            response = await apiClient.delete(
+                `/forum-answer-upvote/${isUpvoted}/`,
+            );
+
+            useToastStore.getState().add({
+                id: `upvote-delete-success-${answerId}`,
+                type: "info",
+                data: {
+                    message: "Upvote removed",
+                    description: "Your upvote has been removed.",
+                },
+            });
+        } else {
+            // POST request to create upvote
+            response = await apiClient.post(`/forum-answer-upvote/`, {
+                forum_answer: Number(answerId),
+            });
+
+            const { issues, success } = safeParse(
+                forumAnswerUpvoteSchema,
+                response.data,
+            );
+
+            if (!success) {
+                logger.error("Response validation failed", issues);
+                throw new Error("Invalid response from upvote creation.");
+            }
+
+            useToastStore.getState().add({
+                id: `upvote-success-${answerId}`,
+                type: "success",
+                data: {
+                    message: "Upvote created successfully",
+                    description: "Your upvote has been posted.",
+                },
+            });
+        }
+
+        return response;
+    } catch (error) {
+        logger.error("Error in upvoteForumAnswerAction", error);
+        useToastStore.getState().add({
+            id: `vote-error-${answerId}`,
+            type: "error",
+            data: {
+                message: "Failed to process vote",
+                description: "Something went wrong while processing your vote.",
+            },
+        });
+        throw new Error("Failed to process vote action.");
+    }
+}) satisfies ActionFunction;
+
+export const downvoteForumAnswerAction = (async ({ request }) => {
+    console.log("Processing downvote action...");
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+
+    if (!user) {
+        useToastStore.getState().add({
+            id: "not-logged-in",
+            type: "info",
+            data: {
+                message: "Log in to vote",
+                description: "You need to log in to vote on answers.",
+            },
+        });
+        return redirect("/login");
+    }
+
+    const formData = await request.formData();
+    const answerId = formData.get("answer_id");
+    const isDownvoted = formData.get("is_downvoted");
+
+    if (!answerId) {
+        throw new Error("Answer ID is required to process downvote action.");
+    }
+
+    try {
+        let response;
+
+        if (Number(isDownvoted)) {
+            // DELETE request to remove downvote
+            response = await apiClient.delete(
+                `/forum-answer-downvote/${isDownvoted}/`,
+            );
+
+            useToastStore.getState().add({
+                id: `downvote-delete-success-${answerId}`,
+                type: "info",
+                data: {
+                    message: "Downvote removed",
+                    description: "Your downvote has been removed.",
+                },
+            });
+        } else {
+            // POST request to create downvote
+            response = await apiClient.post(`/forum-answer-downvote/`, {
+                forum_answer: Number(answerId),
+            });
+
+            const { issues, success } = safeParse(
+                forumAnswerDownvoteSchema,
+                response.data,
+            );
+
+            if (!success) {
+                logger.error("Response validation failed", issues);
+                throw new Error("Invalid response from downvote creation.");
+            }
+
+            useToastStore.getState().add({
+                id: `downvote-success-${answerId}`,
+                type: "success",
+                data: {
+                    message: "Downvote created successfully",
+                    description: "Your downvote has been recorded.",
+                },
+            });
+        }
+
+        return response;
+    } catch (error) {
+        logger.error("Error in downvoteForumAnswerAction", error);
+        useToastStore.getState().add({
+            id: `vote-error-${answerId}`,
+            type: "error",
+            data: {
+                message: "Failed to process vote",
+                description:
+                    "Something went wrong while processing your downvote.",
+            },
+        });
+        throw new Error("Failed to process downvote action.");
     }
 }) satisfies ActionFunction;

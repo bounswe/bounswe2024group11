@@ -11,14 +11,14 @@ import {
     upvoteForumAction,
 } from "../routes/Forum/Forum.data";
 import { ForumQuestion } from "../routes/Forum/Forum.schema";
-import { pluralize } from "../utils";
+import { getNumberDifference, pluralize } from "../utils";
 import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";
 type ForumCardProps = {
     question: ForumQuestion;
 };
 
-export const ForumCard = ({ question }: ForumCardProps) => {
+export const ForumQuestionCard = ({ question }: ForumCardProps) => {
     const upvoteFetcher = useFetcher<typeof upvoteForumAction>();
     const downvoteFetcher = useFetcher<typeof downvoteForumAction>();
     const bookmarkFetcher = useFetcher<typeof bookmarkForumAction>();
@@ -117,7 +117,10 @@ export const ForumCard = ({ question }: ForumCardProps) => {
                         </Button>
                     </upvoteFetcher.Form>
                     <p className="text-slate- w-6 text-center text-sm">
-                        {question.upvotes_count - question.downvotes_count}
+                        {getNumberDifference(
+                            question.upvotes_count,
+                            question.downvotes_count,
+                        )}
                     </p>
                     <downvoteFetcher.Form
                         method="POST"
