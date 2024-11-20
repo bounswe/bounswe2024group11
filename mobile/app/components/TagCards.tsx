@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { DummyTagForQuiz } from "../types/tag";
+import { Tag } from "../types/tag";
 import TagCard from "./TagCard";
 
 interface TagCardsProps {
-  items: DummyTagForQuiz[];
+  items: Tag[];
 }
 
 const TagCards: React.FC<TagCardsProps> = ({ items }) => {
@@ -17,7 +17,7 @@ const TagCards: React.FC<TagCardsProps> = ({ items }) => {
         horizontal={true}
       /> */}
       {items.map((item) => (
-        <TagCard key={item.id} item={item} />
+        <TagCard key={item.linked_data_id} item={item} />
       ))}
     </View>
   );

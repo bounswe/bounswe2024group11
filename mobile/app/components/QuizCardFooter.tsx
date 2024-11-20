@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   created_at: {},
   num_taken: {},
   take_quiz_button: {
-    backgroundColor: "#22D3EE",
+    backgroundColor: "#06b6d4",
     color: "#ffffff",
     fontSize: 14,
     fontWeight: "bold",

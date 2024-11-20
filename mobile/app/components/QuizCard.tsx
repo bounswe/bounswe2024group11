@@ -19,7 +19,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ item }) => {
         <QuizCardHeader
           item={{
             difficulty: item.difficulty,
-            rating_score: item.rating.score,
+            rating: item.rating,
           }}
         />
         <QuizCardBody

@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { DummyTagForQuiz } from "../types/tag";
+import { Tag } from "../types/tag";
 
 interface TagCardProps {
-  item: DummyTagForQuiz;
+  item: Tag;
 }
 
 const TagCard: React.FC<TagCardProps> = ({ item }) => {

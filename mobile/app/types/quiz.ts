@@ -1,41 +1,53 @@
 import { Author } from "./forum";
-import { DummyTagForQuiz } from "./tag";
+import { Tag } from "./tag";
 
 export type rating = {
   score: number;
   count: number;
 };
 
-export type QuizOverview = {
-  id: string;
-  type: number;
-  title: string;
-  description: string;
-  author: Author;
-  created_at: string;
-  difficulty: string;
-  is_taken: boolean;
-  num_taken: number;
-  question_count: number;
-  rating: rating;
-  tags: DummyTagForQuiz[];
-};
-
-export type QuizCardHeaderType = {
-  difficulty: string;
-  rating_score: number;
-};
-
-export type QuizQuestionOptionsType = {
-  A: string;
-  B: string;
-  C: string;
-  D: string;
+export type QuizQuestionOptionType = {
+  id: number;
+  choice_text: string;
+  is_correct: boolean;
 };
 
 export type QuizQuestionType = {
-  id: string;
-  text: string;
-  options: QuizQuestionOptionsType;
-  correct_answer: string;
+  id: number;
+  question_text: string;
+  choices: QuizQuestionOptionType[];
 };
+
+export type QuizOverview = {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: number;
+  author: Author;
+  tags: Tag[];
+  type: number;
+  created_at: string;
+  num_taken: number;
+  is_taken: boolean;
+  rating: rating;
+  questions: QuizQuestionType[];
+};
+
+export type QuizCardHeaderType = {
+  difficulty: number;
+  rating: rating;
+};
+
+// export type QuizQuestionOptionsType = {
+//   A: string;
+//   B: string;
+//   C: string;
+//   D: string;
+// };
+
+// export type QuizQuestionType = {
+//   id: string;
+//   text: string;
+//   options: QuizQuestionOptionsType;
+//   correct_answer: string;
+// };

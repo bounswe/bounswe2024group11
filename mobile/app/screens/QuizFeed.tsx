@@ -13,7 +13,7 @@ import { RootStackParamList } from "../../App";
 import QuizCard from "../components/QuizCard";
 import { QuizOverview } from "../types/quiz";
 
-const API_URL = "http://10.0.2.2:3000/quiz-feed";
+const API_URL = "http://54.247.125.93/api/v1/quizzes/";
 
 type QuizScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -27,7 +27,8 @@ const QuizFeed: React.FC = () => {
     const fetchQuestions = async () => {
       try {
         const result = await axios.get(`${API_URL}`);
-        setQuizzes(result.data);
+        setQuizzes(result.data.results);
+        console.log(quizzes);
       } catch (error) {
         console.error("Error fetching questions", error);
       }
