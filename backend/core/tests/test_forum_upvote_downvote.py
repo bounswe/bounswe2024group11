@@ -247,24 +247,37 @@ class ForumAnswerUpvoteAPITest(ForumSetup):
             author=self.user,
             answer="This is a test answer for votes."
         )
-        self.client.post(reverse('forum-answer-upvote-list', args=[self.forum_question.id]), {"forum_answer": forum_answer.id}, format='json')
-        forum_vote = ForumAnswerUpvote.objects.get(user=self.user, forum_answer=forum_answer)
-
+        response = self.client.post(reverse('forum-answer-upvote-list'), {"forum_answer": forum_answer.id}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response_question = self.client.get(reverse("forum-question-answers-detail", args=[self.forum_question.id, forum_answer.id]))
+        upvote_count = response_question.data["upvotes_count"]
         # Send DELETE request to remove the upvote
-        response = self.client.delete(reverse('forum-answer-upvote-detail', args=[self.forum_question.id, forum_vote.id]))
+        response = self.client.delete(reverse('forum-answer-upvote-detail', args=[response.data["id"]]))
 
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(ForumAnswerUpvote.objects.filter(id=forum_vote.id).exists())
 
-    def test_cannot_upvote_same_forum_answer_twice(self):
-        """Test that the same forum answer cannot be upvoted twice"""
-        # Create the first upvote
+        response = self.client.get(reverse("forum-question-answers-detail", args=[self.forum_question.id, forum_answer.id]))
+
+        self.assertEqual(response.data["upvotes_count"], upvote_count - 1)
+
+    def test_downvote_after_upvote(self):
+        """Test deleting a forum answer upvote"""
+        # Create a forum answer and upvote to delete
         forum_answer = ForumAnswer.objects.create(
             forum_question=self.forum_question,
             author=self.user,
             answer="This is a test answer for votes."
         )
-        self.client.post(reverse('forum-answer-upvote-list', args=[self.forum_question.id]), {"forum_answer": forum_answer.id}, format='json')
-
-        # Attempt to create a duplicate upvote     
+        response = self.client.post(reverse('forum-answer-upvote-list'), {"forum_answer": forum_answer.id}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response_question = self.client.get(reverse("forum-question-answers-detail", args=[self.forum_question.id, forum_answer.id]))
+        upvote_count = response_question.data["upvotes_count"]
+        downvote_count = response_question.data["downvotes_count"]
+        # Send DELETE request to remove the upvote
+        response = self.client.post(reverse('forum-answer-downvote-list'), {"forum_answer": forum_answer.id})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response_question = self.client.get(reverse("forum-question-answers-detail", args=[self.forum_question.id, forum_answer.id]))
+        self.assertEqual(response_question.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_question.data["upvotes_count"], upvote_count - 1)
+        self.assertEqual(response_question.data["downvotes_count"], downvote_count + 1)
