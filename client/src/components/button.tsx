@@ -7,7 +7,6 @@ export const buttonInnerRing = cva(
         "inset-[1px]",
         "width-full",
         "height-full",
-        "rounded-[7px]",
         "border",
         "transition-all",
     ],
@@ -24,9 +23,14 @@ export const buttonInnerRing = cva(
                 tertiary: ["border-white/50"],
                 destructive: ["border-red-400"],
             },
+            rounded: {
+                default: ["rounded-[7px]"],
+                full: ["rounded-full"],
+            },
         },
         defaultVariants: {
             intent: "primary",
+            rounded: "default",
         },
     },
 );
@@ -38,9 +42,7 @@ export const buttonClass = cva(
         "flex",
         "items-center",
         "justify-center",
-        "rounded-2",
         "group",
-        "relative",
         "transition-all",
         "duration-100",
         "focus-visible:ring-slate-300",
@@ -111,11 +113,21 @@ export const buttonClass = cva(
                 small: ["text-xs", "py-1", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
             },
+            rounded: {
+                default: ["rounded-2"],
+                full: ["rounded-full"],
+            },
+            position: {
+                fixed: ["fixed"],
+                relative: ["relative"],
+            },
         },
         defaultVariants: {
             intent: "primary",
             size: "medium",
             icon: "none",
+            rounded: "default",
+            position: "relative",
         },
     },
 );

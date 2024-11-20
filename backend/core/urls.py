@@ -1,6 +1,13 @@
 from django.urls import path
-from .views.forum_views import ForumQuestionViewSet
+from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
+from .views.quiz_views import QuizViewSet
+from .views.rate_quiz_views import RateQuizViewSet
+from .views.take_quiz_views import TakeQuizViewSet
+from .views.forum_bookmark_views import ForumBookmarkViewSet
+from .views.forum_vote_views import ForumUpvoteViewSet
+from .views.forum_vote_views import ForumDownvoteViewSet
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 from .views import views
 from .views.tagging_views import TaggingView
 from .views.jwt_views import DecoratedTokenObtainPairView, DecoratedTokenRefreshView, DecoratedTokenVerifyView, RegisterView
@@ -22,9 +29,17 @@ schema_view = get_schema_view(
     public=True,
 )
 
-
 router = DefaultRouter()
 router.register(r'forum-questions', ForumQuestionViewSet, basename='forum-question')
+router.register(r'quizzes', QuizViewSet, basename='quiz')
+router.register(r'rate-quiz', RateQuizViewSet, basename='rate-quiz')
+router.register(r'take-quiz', TakeQuizViewSet, basename='take-quiz')
+router.register(r'forum-bookmarks', ForumBookmarkViewSet, basename='forumbookmark')
+router.register(r'forum-upvote', ForumUpvoteViewSet, basename='forum-upvote')
+router.register(r'forum-downvote', ForumDownvoteViewSet, basename='forum-downvote')
+
+forum_question_router = routers.NestedDefaultRouter(router, r'forum-questions', lookup='forum_question')
+forum_question_router.register(r'answers', ForumAnswerViewSet, basename='forum-question-answers')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,7 +53,7 @@ urlpatterns = [
     path('token/verify/', DecoratedTokenVerifyView.as_view(), name='token_verify'),
     path('auth/register/', RegisterView.as_view(), name='register'),
     path("tagging/", TaggingView.as_view(), name="tagging"),
-
 ]
 
 urlpatterns += router.urls
+urlpatterns += forum_question_router.urls

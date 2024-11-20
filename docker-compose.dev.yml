@@ -30,7 +30,6 @@ services:
             ./wait-for-it.sh db:3306 -- 
             python manage.py migrate &&
             python manage.py runserver 0.0.0.0:8000"
-        restart: "on-failure"
         env_file: ./.env.dev
         depends_on:
             db:
@@ -45,7 +44,6 @@ services:
         container_name: client
         command: >
             sh -c "serve -s dist -l 3310"
-        restart: "on-failure"
         env_file: ./.env.dev
         depends_on:
             - backend

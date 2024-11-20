@@ -1,0 +1,47 @@
+[
+    {
+        "model": "core.forumquestion",
+        "pk": 1,
+        "fields": {
+            "title": "How will AI impact the future of software development?",
+            "question": "With advancements in artificial intelligence, how do you think AI will change the way we approach software development in the next 5 to 10 years? What are the opportunities and challenges developers might face as AI tools become more integrated into the development process?",
+            "author": 2,
+            "tags": [1, 6],
+            "created_at": "2024-11-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "core.forumquestion",
+        "pk": 2,
+        "fields": {
+            "title": "How do you use the word 'clutch' in English?",
+            "question": "In English, the word 'clutch' has different meanings depending on the context. It can refer to a car part, but it's also used in sports or to describe someone who performs well under pressure. Can someone explain the different uses of 'clutch' in everyday English? How would you use it in a sentence in different contexts?",
+            "author": 3,
+            "tags": [2],
+            "created_at": "2024-11-11T19:43:30Z"
+        }
+    },
+    {
+        "model": "core.forumquestion",
+        "pk": 3,
+        "fields": {
+            "title": "'Stack' kelimesi İngilizcede ne anlama gelir ve nasıl kullanılır?",
+            "question": "'Stack' kelimesi İngilizcede farklı anlamlara sahip olabilir. Bir yığın ya da deste olarak kullanılabilir, aynı zamanda yazılımda 'tech stack' (teknoloji yığını) gibi terimlerde de yer alır. 'Stack' kelimesinin farklı anlamlarını öğrenmek için birkaç örnek verebilir misiniz? Hem günlük hayatta hem de teknik bağlamda nasıl kullanıldığını açıklayabilir misiniz?",
+            "author": 4,
+            "tags": [3],
+            "created_at": "2024-11-04T01:30:01Z"
+        }
+    },
+    {
+        "model": "core.forumquestion",
+        "pk": 4,
+        "fields": {
+            "title": "Sürrealizm nedir ve İngilizcede nasıl kullanılır?",
+            "question": "Sürrealizm, 20. yüzyılın başlarında ortaya çıkan bir sanat ve edebiyat akımıdır. Gerçek dışı ve mantık dışı imgelerle, bilinçaltı düşünceleri ifade etmeye çalışır. 'Surrealism' kelimesinin İngilizcede nasıl kullanıldığını merak ediyorum. Bu terimi hem sanat hem de edebiyat bağlamında nasıl açıklayabiliriz? Ayrıca, 'surreal' sıfatı günlük İngilizce kullanımda nasıl yer alır?",
+            "author": 4,
+            "tags": [4],
+            "created_at": "2024-11-01T02:01:03Z"
+        }
+    }
+    
+]
