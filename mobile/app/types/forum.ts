@@ -19,9 +19,9 @@ export type Question = {
   created_at: string;
   answers_count: number;
   is_bookmarked: boolean;
-  is_upvoted: boolean;
+  is_upvoted: number | null;
   upvotes_count: number;
-  is_downvoted: boolean;
+  is_downvoted: number | null;
   downvotes_count: number;
 };
 
