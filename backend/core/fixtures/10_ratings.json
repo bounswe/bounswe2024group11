@@ -1,0 +1,11 @@
+[
+    {
+        "model": "core.ratequiz",
+        "pk": 1,
+        "fields": {
+            "user": 4,
+            "quiz": 2,
+            "rating": 4
+        }
+    }
+]

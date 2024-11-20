@@ -1,0 +1,11 @@
+[
+    {
+        "model": "core.forumbookmark",
+        "pk": 1,
+        "fields": {
+            "user": 4,
+            "forum_question": 2,
+            "created_at": "2024-11-01T00:00:00Z"
+        }
+    }
+]

@@ -1,0 +1,48 @@
+[
+    {
+        "model": "core.customuser",
+        "pk": 2,
+        "fields": {
+            "username": "alibaba",
+            "email": "alibaba@email.com",
+            "full_name": "alibaba",
+            "password": "pbkdf2_sha256$870000$50IAFdDG7UOH5uduO4oaag$eoO2GgQvQGPRqGNHf6Fx09DIFHexlu07b1wCoMSBCTw=",
+            "avatar": "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=Cody%20Ross"
+        }
+    },
+    {
+        "model": "core.customuser",
+        "pk": 3,
+        "fields": {
+            "username": "jackma",
+            "email": "jackma@email.com",
+            "full_name": "jackma",
+            "password": "pbkdf2_sha256$870000$5FBpWJm1MH8zSQQLtyCLKG$ZFdXXizefxp3GG9puBQfwvUycrkbgg3osp17DVtWw4E=",
+            "avatar": "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=David%20Bush"
+        }
+    },
+    {
+        "model": "core.customuser",
+        "pk": 4,
+        "fields": {
+            "username": "elonmusk",
+            "email": "elonmusk@email.com",
+            "full_name": "elonmusk",
+            "password": "pbkdf2_sha256$870000$ON7hnXFDI8Ql6PuhUsxcX0$kWPKvfRvrjayRhdlTHbOSB3VuCjTX3JQfq7hp6HxkjQ=",
+            "avatar": "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=Jason%20Lee",
+            "is_active": true,
+            "date_joined": "2024-11-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "core.customuser",
+        "pk": 5,
+        "fields": {
+            "username": "jeffbezos",
+            "email": "jeffbezos@email.com",
+            "full_name": "jeffbezos",
+            "password": "pbkdf2_sha256$870000$M0wXgnc7B95xOFOfqLSl90$jLTmKk+cZUSFF0nU7ZmRB1GHuA0sFHD5qWZkA+LNGNY=",
+            "avatar": "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=Michael%20Blair"
+        }
+    }
+]

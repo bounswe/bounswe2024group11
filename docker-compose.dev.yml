@@ -1,0 +1,61 @@
+services:
+    db:
+        image: mysql:8.0
+        ports:
+            - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: mydatabase
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        container_name: db
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+    backend:
+        build:
+            context: ./backend
+        image: meminseeker/turquiz:backend
+        platform: linux/amd64
+        ports:
+            - "8000:8000"
+        container_name: backend
+        command: >
+            sh -c "
+            ./wait-for-it.sh db:3306 -- 
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+        env_file: ./.env.dev
+        depends_on:
+            db:
+                condition: service_healthy
+    client:
+        build:
+            context: ./client
+        image: meminseeker/turquiz:client
+        platform: linux/amd64
+        ports:
+            - "3310:3310"
+        container_name: client
+        command: >
+            sh -c "serve -s dist -l 3310"
+        env_file: ./.env.dev
+        depends_on:
+            - backend
+    nginx:
+        build:
+            context: ./nginx
+        image: meminseeker/turquiz:nginx
+        platform: linux/amd64
+        restart: always
+        ports:
+            - "80:80"
+        depends_on:
+            - client
+volumes:
+    db_data:

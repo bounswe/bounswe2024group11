@@ -1,0 +1,69 @@
+[ 
+    {
+        "model": "core.tag",
+        "pk": 1,
+        "fields": {
+            "name": "technology",
+            "linked_data_id": "bn:00030858n",
+            "description": "The practical application of science to commerce or industry"
+        }
+    },
+    {
+        "model": "core.tag",
+        "pk": 2,
+        "fields":     {
+            "name": "clutch",
+            "linked_data_id": "bn:00020080n",
+            "description": "A pedal or lever that engages or disengages a rotating shaft and a driving mechanism"
+        }
+    
+    },
+    {
+        "model": "core.tag",
+        "pk": 3,
+        "fields":     {
+            "name": "stack",
+            "linked_data_id": "bn:00065347n",
+            "description": "A list in which the next item to be removed is the item most recently stored (LIFO)"
+        }
+    
+    },
+    {
+        "model": "core.tag",
+        "pk": 4,
+        "fields":     {
+            "name": "surrealism",
+            "linked_data_id": "bn:00075416n",
+            "description": "A 20th century movement of artists and writers (developing out of dadaism) who used fantastic images and incongruous juxtapositions in order to represent unconscious thoughts and dreams"
+        }
+    
+    },
+    {
+        "model": "core.tag",
+        "pk": 5,
+        "fields":     {
+            "name": "altruism",
+            "linked_data_id": "bn:00003158n",
+            "description": "The quality of unselfish concern for the welfare of others"
+        }
+    
+    },
+    {
+        "model": "core.tag",
+        "pk": 6,
+        "fields": {
+            "name": "artificial intelligence",
+            "linked_data_id": "bn:00002150n",
+            "description": "The branch of computer science that deal with writing computer programs that can solve problems creatively"
+        }
+    },
+    {
+        "model": "core.tag",
+        "pk": 7,
+        "fields": {
+            "name": "car",
+            "linked_data_id": "bn:00007309n",
+            "description": "A motor vehicle with four wheels; usually propelled by an internal combustion engine"
+        }
+    }
+]
