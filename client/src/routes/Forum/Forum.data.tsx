@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction } from "react-router";
+import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
 import apiClient from "../../api";
 import { USER } from "../../constants";
@@ -190,8 +190,9 @@ export const bookmarkForumAction = (async ({
 }) satisfies ActionFunction;
 
 export const answerForumAction = (async ({ request, params }) => {
-    // if not logged in, redirect to login page and add a toast
+    // If not logged in, render a warning message and return redirect login.
 
+    const postId = params.postId;
     const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
     if (!user) {
         useToastStore.getState().add({
@@ -202,6 +203,7 @@ export const answerForumAction = (async ({ request, params }) => {
                 description: "You need to log in to answer forum questions.",
             },
         });
+        return redirect("/login");
     }
 
     const formData = await request.formData();

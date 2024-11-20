@@ -1,4 +1,4 @@
-import { Form, useFetcher, useSearchParams } from "react-router-dom";
+import { useFetcher, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass } from "../../components/button";
 import { ForumAnswerCard } from "../../components/forum-answer-card";
@@ -29,7 +29,7 @@ export const ForumQuestion = () => {
                         );
                     })}
                 </div>
-                <Form
+                <answerFetcher.Form
                     action="answer"
                     method="POST"
                     className="flex w-full max-w-xl flex-col items-center justify-center gap-4"
@@ -51,7 +51,7 @@ export const ForumQuestion = () => {
                     >
                         Post Comment
                     </button>
-                </Form>
+                </answerFetcher.Form>
             </main>
         </div>
     );
