@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -12,6 +12,26 @@ interface ForumQuestionCardProps {
 }
 
 const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
+  const [question, setQuestion] = useState(item);
+
+  const handleVoteChange = (isUpvote: boolean, isDownvote: boolean) => {
+    setQuestion((prevQuestion) => ({
+      ...prevQuestion,
+      is_upvoted: isUpvote,
+      is_downvoted: isDownvote,
+      upvotes_count: isUpvote
+        ? prevQuestion.upvotes_count + 1
+        : prevQuestion.is_upvoted
+          ? prevQuestion.upvotes_count - 1
+          : prevQuestion.upvotes_count,
+      downvotes_count: isDownvote
+        ? prevQuestion.downvotes_count + 1
+        : prevQuestion.is_downvoted
+          ? prevQuestion.downvotes_count - 1
+          : prevQuestion.downvotes_count,
+    }));
+  };
+
   return (
     <View>
       <Card style={{ borderRadius: 10, marginBottom: 10, padding: 10 }}>
@@ -57,10 +77,12 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
             <Text style={{ marginLeft: 10 }}>{item.answers_count} Answers</Text>
           </View>
           <VoteButtonsView
-            is_upvoted={item.is_upvoted}
-            upvotes_count={item.upvotes_count}
-            is_downvoted={item.is_downvoted}
-            downvotes_count={item.downvotes_count}
+            is_upvoted={question.is_upvoted}
+            upvotes_count={question.upvotes_count}
+            is_downvoted={question.is_downvoted}
+            downvotes_count={question.downvotes_count}
+            questionId={Number(question.id)}
+            onVoteChange={handleVoteChange}
           />
         </View>
       </Card>
@@ -71,7 +93,6 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    // alignItems: 'center',
     justifyContent: "space-between",
     marginBottom: 10,
   },
