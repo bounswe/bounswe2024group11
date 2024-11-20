@@ -12,9 +12,9 @@ const QuizDetailText: React.FC<QuizDetailTextProps> = ({ item }) => {
       <Text style={styles.title}>Ready to start to {item.title} quiz?</Text>
       <Text style={styles.description}>{item.description}</Text>
       <Text style={styles.info}>
-        The quiz consists of {item.question_count} questions. You can move the
+        The quiz consists of {item.questions.length} questions. You can move the
         next or previous question using the buttons below. will be provided{" "}
-        {item.question_count} minutes to complete the quiz.
+        {item.questions.length} minutes to complete the quiz.
       </Text>
     </View>
   );
