@@ -75,8 +75,9 @@ class ForumAnswerSerializer(serializers.ModelSerializer):
     def get_is_upvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumAnswerUpvote.objects.filter(user=user, forum_answer=obj).exists()
+            return None
+        upvote = ForumAnswerUpvote.objects.filter(user=user, forum_answer=obj).first()
+        return upvote.id if upvote else None
     
     def get_downvotes_count(self, obj):
         return obj.downvotes.count()
@@ -85,8 +86,8 @@ class ForumAnswerSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if not user.is_authenticated:
             return False
-        return ForumAnswerDownvote.objects.filter(user=user, forum_answer=obj).exists()
-    
+        downvote = ForumAnswerDownvote.objects.filter(user=user, forum_answer=obj).first()
+        return downvote.id if downvote else None
 
 
 class ForumQuestionSerializer(serializers.ModelSerializer):

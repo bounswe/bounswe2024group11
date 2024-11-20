@@ -174,8 +174,7 @@ class ForumAnswerUpvote(models.Model):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        if ForumAnswerDownvote.objects.filter(user=self.user, forum_answer=self.forum_answer).exists():
-            raise ValidationError("A user cannot upvote and downvote the same forum answer at the same time.")
+        ForumAnswerDownvote.objects.filter(user=self.user, forum_answer=self.forum_answer).delete()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -191,8 +190,7 @@ class ForumAnswerDownvote(models.Model):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        if ForumAnswerUpvote.objects.filter(user=self.user, forum_answer=self.forum_answer).exists():
-            raise ValidationError("A user cannot upvote and downvote the same forum answer at the same time.")
+        ForumAnswerUpvote.objects.filter(user=self.user, forum_answer=self.forum_answer).delete()
         super().save(*args, **kwargs)
 
     def __str__(self):
