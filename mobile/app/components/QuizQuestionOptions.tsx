@@ -25,9 +25,11 @@ const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
     //   };
     <View style={styles.container}>
       {options.map((option) => (
-        <TouchableOpacity onPress={() => onSelectOption(option.id)}>
+        <TouchableOpacity
+          key={option.id}
+          onPress={() => onSelectOption(option.id)}
+        >
           <QuizQuestionOption
-            key={option.id}
             option={option.choice_text}
             isSelected={selectedOption === option.id}
             is_review={is_review}
