@@ -52,9 +52,18 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
   const selectOption = (option: number) => {
     if (!selectedOptions) return;
     const updatedOptions = [...selectedOptions];
-    updatedOptions[currentQuestionIndex] = option;
+    const prevOption = updatedOptions[currentQuestionIndex];
+    if (prevOption === option) {
+      updatedOptions[currentQuestionIndex] = null;
+    } else {
+      updatedOptions[currentQuestionIndex] = option;
+    }
     setSelectedOptions(updatedOptions);
   };
+
+  //   const checkQuestion = ((option: number)) => {
+  //     const currentQuestion =
+  //   }
 
   const submitQuiz = async () => {
     const answers: QuizAnswerType[] = questions.map((question, index) => ({
