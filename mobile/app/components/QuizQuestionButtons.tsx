@@ -25,33 +25,57 @@ const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
   onSubmit,
 }) => {
   const screenWidth = Dimensions.get("window").width;
-  const cardWidth = screenWidth / 2 - 40;
+  const fullCardWidth = screenWidth - 80;
+  const halfCardWidth = fullCardWidth / 2;
 
   return (
     <View style={styles.container}>
-      {currentQuestionIndex > 0 && (
-        <TouchableOpacity
-          style={[styles.button, styles.previousButton, { width: cardWidth }]}
-          onPress={goToPreviousQuestion}
-        >
-          <Text style={styles.previousButtonText}>Previous</Text>
-        </TouchableOpacity>
-      )}
-      {currentQuestionIndex < questions_length - 1 ? (
-        <TouchableOpacity
-          style={[styles.button, styles.nextButton, { width: cardWidth }]}
-          onPress={goToNextQuestion}
-        >
-          <Text style={styles.nextButtonText}>Next</Text>
-        </TouchableOpacity>
+      {is_review ? (
+        <>
+          {currentQuestionIndex > 0 && (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.previousButton,
+                { width: halfCardWidth },
+              ]}
+              onPress={goToPreviousQuestion}
+            >
+              <Text style={styles.previousButtonText}>Previous</Text>
+            </TouchableOpacity>
+          )}
+          {currentQuestionIndex < questions_length - 1 ? (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.nextButton,
+                { width: halfCardWidth },
+              ]}
+              onPress={goToNextQuestion}
+            >
+              <Text style={styles.nextButtonText}>Next</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.submitButton,
+                { width: halfCardWidth },
+              ]}
+              onPress={onSubmit}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          )}
+        </>
       ) : (
         <TouchableOpacity
-          style={[styles.button, styles.submitButton, { width: cardWidth }]}
-          onPress={onSubmit}
+          style={[styles.button, styles.checkButton, { width: fullCardWidth }]}
         >
-          <Text style={styles.submitButtonText}>Submit</Text>
+          <Text style={styles.previousButtonText}>Check</Text>
         </TouchableOpacity>
       )}
+      {}
     </View>
   );
 };
@@ -81,6 +105,11 @@ const styles = StyleSheet.create({
     right: 8,
     marginLeft: 8,
     backgroundColor: "#020617",
+  },
+  checkButton: {
+    position: "absolute",
+    left: 16,
+    backgroundColor: "#FFFFFF",
   },
   submitButton: {
     position: "absolute",
