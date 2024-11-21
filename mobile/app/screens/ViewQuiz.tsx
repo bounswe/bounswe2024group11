@@ -1,4 +1,5 @@
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -12,6 +13,8 @@ type Props = {
   route: ViewQuizScreenRouteProp;
 };
 
+type QuizResultNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 // const API_URL = "http://54.247.125.93/api/v1";
 const API_URL = "http://10.0.2.2:8000/api/v1";
 
@@ -20,6 +23,9 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
   const [questions, setQuestions] = useState<QuizQuestionType[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<number[]>();
+  const [checkedOptions, setCheckedOptions] = useState<number[]>([null, null]);
+
+  const navigation = useNavigation<QuizResultNavigationProp>();
 
   //   const isFocused = useIsFocused();
 
@@ -50,6 +56,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
   };
 
   const selectOption = (option: number) => {
+    if (checkedOptions[1]) return;
     if (!selectedOptions) return;
     const updatedOptions = [...selectedOptions];
     const prevOption = updatedOptions[currentQuestionIndex];
@@ -61,9 +68,21 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
     setSelectedOptions(updatedOptions);
   };
 
-  //   const checkQuestion = ((option: number)) => {
-  //     const currentQuestion =
-  //   }
+  const checkQuestion = () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    const selectedOption = selectedOptions?.[currentQuestionIndex];
+    const correctOption = currentQuestion.choices.find(
+      (option) => option.is_correct
+    )?.id;
+    setCheckedOptions([selectedOption, correctOption]);
+  };
+
+  const continueQuiz = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCheckedOptions([null, null]);
+    }
+  };
 
   const submitQuiz = async () => {
     const answers: QuizAnswerType[] = questions.map((question, index) => ({
@@ -75,7 +94,8 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       quiz: id,
       answers,
     });
-    console.log(result);
+    console.log(result.data);
+    navigation.navigate("QuizResult");
   };
 
   return (
@@ -90,10 +110,13 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
           currentQuestionIndex={currentQuestionIndex}
           questions_length={questions.length}
           selectedOption={selectedOptions?.[currentQuestionIndex] || null}
+          checkedOptions={checkedOptions}
           goToPreviousQuestion={goToPreviousQuestion}
           goToNextQuestion={goToNextQuestion}
           onSelectOption={selectOption}
           onSubmit={submitQuiz}
+          onCheckQuestion={checkQuestion}
+          onContinue={continueQuiz}
         />
       )}
     </View>

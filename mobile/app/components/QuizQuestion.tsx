@@ -13,10 +13,13 @@ interface QuizQuestionProps {
   currentQuestionIndex: number;
   questions_length: number;
   selectedOption: number | null;
+  checkedOptions: number[];
   onSelectOption: (option: number) => void;
   goToPreviousQuestion: () => void;
   goToNextQuestion: () => void;
   onSubmit: () => void;
+  onCheckQuestion: () => void;
+  onContinue: () => void;
 }
 
 const QuizQuestion: React.FC<QuizQuestionProps> = ({
@@ -26,12 +29,15 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   is_review,
   quiz_type,
   selectedOption,
+  checkedOptions,
   onSelectOption,
   currentQuestionIndex,
   questions_length,
   goToPreviousQuestion,
   goToNextQuestion,
   onSubmit,
+  onCheckQuestion,
+  onContinue,
 }) => {
   return (
     <View style={styles.container}>
@@ -41,15 +47,19 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         quiz_type={quiz_type}
         is_review={is_review}
         selectedOption={selectedOption}
+        checkedOptions={checkedOptions}
         onSelectOption={onSelectOption}
       />
       <QuizQuestionButtons
         currentQuestionIndex={currentQuestionIndex}
         questions_length={questions_length}
         is_review={is_review}
+        checkedOptions={checkedOptions}
         goToPreviousQuestion={goToPreviousQuestion}
         goToNextQuestion={goToNextQuestion}
         onSubmit={onSubmit}
+        onCheckQuestion={onCheckQuestion}
+        onContinue={onContinue}
       />
     </View>
   );

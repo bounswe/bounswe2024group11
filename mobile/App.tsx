@@ -13,6 +13,7 @@ import Login from "./app/screens/Login";
 import Profile from "./app/screens/Profile";
 import QuizDetail from "./app/screens/QuizDetail";
 import QuizFeed from "./app/screens/QuizFeed";
+import QuizResult from "./app/screens/QuizResult";
 import Register from "./app/screens/Register"; // import the new Register screen
 import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
@@ -32,6 +33,7 @@ export type RootStackParamList = {
     description: string;
     is_review: boolean;
   };
+  QuizResult: undefined;
   CreateQuestion: undefined;
 };
 
@@ -136,6 +138,7 @@ export const Layout = () => {
                 title: route.params?.title ? route.params.title : "Quiz",
               })}
             />
+            <Stack.Screen name="QuizResult" component={QuizResult} />
             {/*
             {authState?.authenticated
               ? <Stack.Screen

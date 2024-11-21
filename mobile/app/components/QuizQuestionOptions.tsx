@@ -8,6 +8,7 @@ interface QuizQuestionOptionsProps {
   options: QuizQuestionOptionType[];
   selectedOption: number | null;
   is_review: boolean;
+  checkedOptions: number[];
   onSelectOption: (option: number) => void;
 }
 
@@ -15,14 +16,10 @@ const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
   options,
   selectedOption,
   is_review,
+  checkedOptions,
   onSelectOption,
 }) => {
   return (
-    // QuizQuestionOptionType = {
-    //     id: number;
-    //     choice_text: string;
-    //     is_correct: boolean;
-    //   };
     <View style={styles.container}>
       {options.map((option) => (
         <TouchableOpacity
@@ -33,6 +30,21 @@ const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
             option={option.choice_text}
             isSelected={selectedOption === option.id}
             is_review={is_review}
+            status={
+              checkedOptions[1]
+                ? checkedOptions[0]
+                  ? option.id === checkedOptions[0]
+                    ? option.id === checkedOptions[1]
+                      ? "correct"
+                      : "wrong"
+                    : option.id === checkedOptions[1]
+                      ? "correct"
+                      : "regular"
+                  : option.id === checkedOptions[1]
+                    ? "empty"
+                    : "regular"
+                : "regular"
+            }
           />
         </TouchableOpacity>
       ))}

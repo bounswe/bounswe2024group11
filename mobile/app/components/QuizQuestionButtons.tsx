@@ -11,18 +11,24 @@ interface QuizQuestionButtonsProps {
   currentQuestionIndex: number;
   questions_length: number;
   is_review: boolean;
+  checkedOptions: number[];
   goToPreviousQuestion: () => void;
   goToNextQuestion: () => void;
   onSubmit: () => void;
+  onCheckQuestion: () => void;
+  onContinue: () => void;
 }
 
 const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
   currentQuestionIndex,
   questions_length,
   is_review,
+  checkedOptions,
   goToNextQuestion,
   goToPreviousQuestion,
   onSubmit,
+  onCheckQuestion,
+  onContinue,
 }) => {
   const screenWidth = Dimensions.get("window").width;
   const fullCardWidth = screenWidth - 80;
@@ -70,9 +76,38 @@ const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
         </>
       ) : (
         <TouchableOpacity
-          style={[styles.button, styles.checkButton, { width: fullCardWidth }]}
+          style={[
+            styles.button,
+            styles.checkButton,
+            checkedOptions[1]
+              ? checkedOptions[0]
+                ? checkedOptions[0] === checkedOptions[1]
+                  ? styles.correctQuestion
+                  : styles.wrongQuestion
+                : styles.emptyQuestion
+              : {},
+            { width: fullCardWidth },
+          ]}
+          onPress={
+            checkedOptions[1]
+              ? currentQuestionIndex < questions_length - 1
+                ? onContinue
+                : onSubmit
+              : onCheckQuestion
+          }
         >
-          <Text style={styles.previousButtonText}>Check</Text>
+          <Text
+            style={[
+              styles.uncheckedButtonText,
+              checkedOptions[1] ? styles.checkedButtonText : {},
+            ]}
+          >
+            {checkedOptions[1]
+              ? currentQuestionIndex < questions_length - 1
+                ? "Continue"
+                : "Finish Quiz"
+              : "Check"}
+          </Text>
         </TouchableOpacity>
       )}
       {}
@@ -107,9 +142,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#020617",
   },
   checkButton: {
+    backgroundColor: "#FFFFFF",
     position: "absolute",
     left: 16,
-    backgroundColor: "#FFFFFF",
+  },
+  correctQuestion: {
+    backgroundColor: "#22c55e",
+  },
+  wrongQuestion: {
+    backgroundColor: "#ef4444",
+  },
+  emptyQuestion: {
+    backgroundColor: "#eab308",
   },
   submitButton: {
     position: "absolute",
@@ -127,6 +171,13 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: "#FFFFFF",
     alignSelf: "center",
+  },
+  uncheckedButtonText: {
+    alignSelf: "center",
+  },
+  checkedButtonText: {
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
 });
 

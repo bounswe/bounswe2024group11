@@ -8,6 +8,7 @@ interface QuizQuestionBodyProps {
   quiz_type: number;
   is_review: boolean;
   selectedOption: number | null;
+  checkedOptions: number[];
   onSelectOption: (option: number) => void;
 }
 
@@ -16,6 +17,7 @@ const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
   quiz_type,
   is_review,
   selectedOption,
+  checkedOptions,
   onSelectOption,
 }) => {
   return (
@@ -33,6 +35,7 @@ const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
         selectedOption={selectedOption}
         onSelectOption={onSelectOption}
         is_review={is_review}
+        checkedOptions={checkedOptions}
       />
     </View>
   );

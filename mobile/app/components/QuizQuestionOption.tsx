@@ -5,12 +5,14 @@ interface QuizQuestionOptionProps {
   option: string;
   isSelected: boolean;
   is_review: boolean;
+  status: "correct" | "wrong" | "empty" | "regular";
 }
 
 const QuizQuestionOption: React.FC<QuizQuestionOptionProps> = ({
   option,
   isSelected,
   is_review,
+  status,
 }) => {
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -23,6 +25,9 @@ const QuizQuestionOption: React.FC<QuizQuestionOptionProps> = ({
       style={[
         styles.option,
         isSelected && styles.selectedOption,
+        status === "correct" && styles.correctOption,
+        status === "wrong" && styles.wrongOption,
+        status === "empty" && styles.emptyOption,
         { width: cardWidth, height: cardHeight },
       ]}
     >
@@ -53,6 +58,15 @@ const styles = StyleSheet.create({
   },
   selectedText: {
     color: "#FFFFFF",
+  },
+  correctOption: {
+    backgroundColor: "#22c55e",
+  },
+  wrongOption: {
+    backgroundColor: "#ef4444",
+  },
+  emptyOption: {
+    backgroundColor: "#eab308",
   },
 });
 
