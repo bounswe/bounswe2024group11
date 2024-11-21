@@ -13,7 +13,8 @@ import { RootStackParamList } from "../../App";
 import QuizCard from "../components/QuizCard";
 import { QuizOverview } from "../types/quiz";
 
-const API_URL = "http://54.247.125.93/api/v1/quizzes/";
+// const API_URL = "http://54.247.125.93/api/v1/quizzes/";
+const API_URL = "http://10.0.2.2:8000/api/v1/quizzes/";
 
 type QuizScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
