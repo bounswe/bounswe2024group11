@@ -52,7 +52,9 @@ const ViewQuizButton: React.FC<ViewQuizButtonProps> = ({ item }) => {
             })
           }
         >
-          <Text style={[styles.button, styles.secondButton]}>Retake Quiz</Text>
+          <View style={[styles.button, styles.secondButton]}>
+            <Text style={styles.text}>Retake Quiz</Text>
+          </View>
         </TouchableOpacity>
       )}
     </View>
