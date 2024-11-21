@@ -17,11 +17,31 @@ class UserAnswerSerializer(serializers.ModelSerializer):
 class TakeQuizSerializer(serializers.ModelSerializer):
     # Define a nested serializer for UserAnswers (many=True)
     answers = UserAnswerSerializer(many=True)
+    score = serializers.SerializerMethodField()
+    correct_answer_count = serializers.SerializerMethodField()
+    wrong_answer_count = serializers.SerializerMethodField()
+    empty_answer_count = serializers.SerializerMethodField()
 
     class Meta:
         model = TakeQuiz
-        fields = ['id', 'quiz', 'user', 'date', 'answers']
-        read_only_fields = ['user', 'date']
+        fields = ['id', 'quiz', 'user', 'date', 'answers', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count']
+        read_only_fields = ['user', 'date', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count']
+    
+    def get_score(self, obj):
+        correct_answers = 0
+        for answer in obj.answers.all():
+            if answer.answer.is_correct:
+                correct_answers += 1
+        return correct_answers
+    
+    def get_correct_answer_count(self, obj):
+        return obj.answers.filter(answer__is_correct=True).count()
+    
+    def get_wrong_answer_count(self, obj):
+        return obj.answers.filter(answer__is_correct=False).count()
+    
+    def get_empty_answer_count(self, obj):
+        return obj.answers.filter(answer=None).count()
 
     def create(self, validated_data):
         # Extract the answers from the validated data
