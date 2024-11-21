@@ -30,6 +30,7 @@ export type RootStackParamList = {
     type: number;
     title: string;
     description: string;
+    is_review: boolean;
   };
   CreateQuestion: undefined;
 };

@@ -22,9 +22,21 @@ const ViewQuizButton: React.FC<ViewQuizButtonProps> = ({ item }) => {
   return (
     <View style={styles.container}>
       {item.is_taken ? (
-        <View style={styles.button}>
-          <Text style={styles.text}>Review Quiz</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("ViewQuiz", {
+              id: item.id,
+              type: item.type,
+              title: item.title,
+              description: item.description,
+              is_review: true,
+            })
+          }
+        >
+          <View style={styles.button}>
+            <Text style={styles.text}>Review Quiz</Text>
+          </View>
+        </TouchableOpacity>
       ) : (
         <TouchableOpacity
           onPress={() =>
@@ -33,6 +45,7 @@ const ViewQuizButton: React.FC<ViewQuizButtonProps> = ({ item }) => {
               type: item.type,
               title: item.title,
               description: item.description,
+              is_review: false,
             })
           }
         >
@@ -49,6 +62,7 @@ const ViewQuizButton: React.FC<ViewQuizButtonProps> = ({ item }) => {
               type: item.type,
               title: item.title,
               description: item.description,
+              is_review: false,
             })
           }
         >

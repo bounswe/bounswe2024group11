@@ -7,6 +7,7 @@ import QuizQuestionButtons from "./QuizQuestionButtons";
 interface QuizQuestionProps {
   title: string;
   description: string;
+  is_review: boolean;
   quiz_type: number;
   question: QuizQuestionType;
   currentQuestionIndex: number;
@@ -22,6 +23,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   question,
   title,
   description,
+  is_review,
   quiz_type,
   selectedOption,
   onSelectOption,
@@ -37,12 +39,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       <QuizQuestionBody
         question={question}
         quiz_type={quiz_type}
+        is_review={is_review}
         selectedOption={selectedOption}
         onSelectOption={onSelectOption}
       />
       <QuizQuestionButtons
         currentQuestionIndex={currentQuestionIndex}
         questions_length={questions_length}
+        is_review={is_review}
         goToPreviousQuestion={goToPreviousQuestion}
         goToNextQuestion={goToNextQuestion}
         onSubmit={onSubmit}

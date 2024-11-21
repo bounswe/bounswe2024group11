@@ -15,7 +15,7 @@ type Props = {
 const API_URL = "http://54.247.125.93/api/v1";
 
 const ViewQuiz: React.FC<Props> = ({ route }) => {
-  const { id, type, title, description } = route.params;
+  const { id, type, title, description, is_review } = route.params;
   const [questions, setQuestions] = useState<QuizQuestionType[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<number[]>();
@@ -74,6 +74,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
         <QuizQuestion
           title={title}
           description={description}
+          is_review={is_review}
           quiz_type={type}
           question={questions[currentQuestionIndex]}
           currentQuestionIndex={currentQuestionIndex}

@@ -4,11 +4,13 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 interface QuizQuestionOptionProps {
   option: string;
   isSelected: boolean;
+  is_review: boolean;
 }
 
 const QuizQuestionOption: React.FC<QuizQuestionOptionProps> = ({
   option,
   isSelected,
+  is_review,
 }) => {
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;

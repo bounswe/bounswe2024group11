@@ -7,12 +7,14 @@ import QuizQuestionOption from "./QuizQuestionOption";
 interface QuizQuestionOptionsProps {
   options: QuizQuestionOptionType[];
   selectedOption: number | null;
+  is_review: boolean;
   onSelectOption: (option: number) => void;
 }
 
 const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
   options,
   selectedOption,
+  is_review,
   onSelectOption,
 }) => {
   return (
@@ -28,6 +30,7 @@ const QuizQuestionOptions: React.FC<QuizQuestionOptionsProps> = ({
             key={option.id}
             option={option.choice_text}
             isSelected={selectedOption === option.id}
+            is_review={is_review}
           />
         </TouchableOpacity>
       ))}

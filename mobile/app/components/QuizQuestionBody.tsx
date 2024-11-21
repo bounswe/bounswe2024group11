@@ -6,6 +6,7 @@ import QuizQuestionOptions from "./QuizQuestionOptions";
 interface QuizQuestionBodyProps {
   question: QuizQuestionType;
   quiz_type: number;
+  is_review: boolean;
   selectedOption: number | null;
   onSelectOption: (option: number) => void;
 }
@@ -13,6 +14,7 @@ interface QuizQuestionBodyProps {
 const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
   question,
   quiz_type,
+  is_review,
   selectedOption,
   onSelectOption,
 }) => {
@@ -30,6 +32,7 @@ const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
         options={question.choices}
         selectedOption={selectedOption}
         onSelectOption={onSelectOption}
+        is_review={is_review}
       />
     </View>
   );

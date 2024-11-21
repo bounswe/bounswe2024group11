@@ -10,6 +10,7 @@ import {
 interface QuizQuestionButtonsProps {
   currentQuestionIndex: number;
   questions_length: number;
+  is_review: boolean;
   goToPreviousQuestion: () => void;
   goToNextQuestion: () => void;
   onSubmit: () => void;
@@ -18,6 +19,7 @@ interface QuizQuestionButtonsProps {
 const QuizQuestionButtons: React.FC<QuizQuestionButtonsProps> = ({
   currentQuestionIndex,
   questions_length,
+  is_review,
   goToNextQuestion,
   goToPreviousQuestion,
   onSubmit,
