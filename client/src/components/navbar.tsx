@@ -1,6 +1,6 @@
 import { RiLogoutBoxRLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
-import type { User } from "../types/user";
+import type { User } from "../schemas";
 import { buttonClass, buttonInnerRing } from "./button";
 
 const routes = [

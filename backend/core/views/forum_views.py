@@ -8,7 +8,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 
 class ForumQuestionPagination(PageNumberPagination):
-    page_size = 10  # Set your desired page size here
+    page_size = 10
+    page_size_query_param = 'per_page'
+    max_page_size = 100
 
 
 class ForumQuestionViewSet(viewsets.ModelViewSet):

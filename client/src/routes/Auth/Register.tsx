@@ -1,21 +1,29 @@
 import { Form, Link } from "react-router-dom";
-import { buttonClass, buttonInnerRing } from "../components/button";
+import { buttonClass, buttonInnerRing } from "../../components/button";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActionData } from "react-router-typesafe";
-import { inputClass, labelClass } from "../components/input";
-import { Logo } from "../components/logo";
+import { inputClass, labelClass } from "../../components/input";
+import { Logo } from "../../components/logo";
 import { registerAction } from "./Register.data";
 
 export const Register = () => {
     const actionData = useActionData<typeof registerAction>();
     const mismatchedPasswords = actionData?.error === "Passwords do not match";
     const passwordRef = useRef<HTMLInputElement>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
     useEffect(() => {
         if (mismatchedPasswords) {
             passwordRef.current?.focus();
         }
     }, [mismatchedPasswords]);
+
+    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const url = event.target.value;
+        setAvatarPreview(url || null); // Update the preview only if a value is provided
+    };
+
     const usedUsername = actionData?.error === "Username is already taken";
     const usedEmail = actionData?.error === "Email is already taken";
 
@@ -48,14 +56,12 @@ export const Register = () => {
                                 Full Name{" "}
                                 <span className="text-cyan-600">*</span>
                             </span>
-
                             <input
                                 autoFocus={true}
                                 type="text"
                                 name="full_name"
                                 autoComplete="name"
                                 aria-label="Full name"
-                                aria-invalid={mismatchedPasswords}
                                 className={inputClass()}
                                 required
                             />
@@ -69,8 +75,6 @@ export const Register = () => {
                                 type="email"
                                 name="email"
                                 autoComplete="email"
-                                aria-label="Email"
-                                aria-invalid={mismatchedPasswords}
                                 className={inputClass({ invalid: usedEmail })}
                                 required
                             />
@@ -85,7 +89,6 @@ export const Register = () => {
                                 type="text"
                                 name="username"
                                 autoComplete="username"
-                                aria-label="Username"
                                 className={inputClass({
                                     invalid: usedUsername,
                                 })}
@@ -101,10 +104,8 @@ export const Register = () => {
                             <input
                                 type="password"
                                 name="password"
-                                autoComplete="new_password"
-                                aria-label="Password"
+                                autoComplete="new-password"
                                 ref={passwordRef}
-                                aria-description="Password"
                                 className={inputClass({
                                     invalid: mismatchedPasswords,
                                 })}
@@ -120,15 +121,35 @@ export const Register = () => {
                             <input
                                 type="password"
                                 name="confirm_password"
-                                autoComplete="new_password"
-                                aria-label="Confirm Password"
-                                aria-description="Type your password again"
+                                autoComplete="new-password"
                                 className={inputClass({
                                     invalid: mismatchedPasswords,
                                 })}
                                 required
                             />
                         </label>
+
+                        <label className={labelClass()}>
+                            <span>Avatar URI</span>
+                            <input
+                                type="url"
+                                name="avatar"
+                                autoComplete="avatar"
+                                className={inputClass()}
+                                placeholder="https://example.com/avatar.jpg"
+                                onChange={handleAvatarChange}
+                            />
+                        </label>
+
+                        {avatarPreview && (
+                            <div className="flex items-center justify-center">
+                                <img
+                                    src={avatarPreview}
+                                    alt="Avatar Preview"
+                                    className="h-20 w-20 rounded-full border-2 border-cyan-600"
+                                />
+                            </div>
+                        )}
                     </fieldset>
 
                     <div className="flex flex-col gap-2">
@@ -153,7 +174,7 @@ export const Register = () => {
                     </div>
                 </Form>
             </div>
-            <div className="rounded-2xl flex w-full max-w-md flex-col items-center gap-0 rounded-4 px-6">
+            <div className="rounded-2xl flex w-full max-w-md flex-col items-center gap-0 px-6">
                 <span className="text-slate-500">Just looking around?</span>
                 <Link
                     to="/"

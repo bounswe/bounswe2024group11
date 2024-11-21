@@ -1,14 +1,15 @@
-import { LoaderFunction, redirect } from "react-router";
-import { USER, USER_TOKEN_ACCESS, USER_TOKEN_REFRESH } from "../constants";
-import { useToastStore } from "../store";
+import Cookies from "js-cookie";
+import { LoaderFunction, redirect } from "react-router-typesafe";
+import { USER } from "../../constants";
+import { useToastStore } from "../../store";
 
 export const logoutLoader = (() => {
-    localStorage.removeItem(USER_TOKEN_ACCESS);
-    localStorage.removeItem(USER_TOKEN_REFRESH);
-    localStorage.removeItem(USER);
-    sessionStorage.removeItem(USER_TOKEN_ACCESS);
-    sessionStorage.removeItem(USER_TOKEN_REFRESH);
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+
     sessionStorage.removeItem(USER);
+    localStorage.removeItem(USER);
+
     useToastStore.getState().add({
         id: "logout-success",
         type: "info",
@@ -18,5 +19,6 @@ export const logoutLoader = (() => {
                 "No this is not the end, lift up your head. Somewhere we'll meet again.",
         },
     });
+
     return redirect("/login");
 }) satisfies LoaderFunction;

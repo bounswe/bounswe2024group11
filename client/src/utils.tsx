@@ -1,15 +1,5 @@
 export const BASE_URL = "http://localhost:8000/api/v1";
 
-export async function enableMocking() {
-    if (import.meta.env.VITE_ENABLE_MOCKS === "false") {
-        return;
-    }
-
-    const { worker } = await import("./mocks/browser");
-
-    return worker.start();
-}
-
 type Logger = {
     log: typeof console.log;
     error: typeof console.error;
@@ -67,4 +57,16 @@ export const getRelativeTime = (
     if (days < 7) return rtf.format(-days, "day");
     if (days < 30) return rtf.format(-days, "day");
     return "more than a month ago";
+};
+
+export const pluralize = (count: number, singular: string, plural: string) => {
+    return count === 1 ? "1 " + singular : count + " " + plural;
+};
+
+export const getNumberDifference = (
+    value1: number | null,
+    value2: number | null,
+) => {
+    if (value1 === null || value2 === null) return 0;
+    return value1 - value2;
 };

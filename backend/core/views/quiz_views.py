@@ -3,11 +3,18 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from ..serializers.serializers import QuizSerializer
 from ..permissions import IsAuthorOrReadOnly
+from rest_framework.pagination import PageNumberPagination
+
+class QuizPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'per_page'
+    max_page_size = 100
 
 class QuizViewSet(viewsets.ModelViewSet):
     queryset = Quiz.objects.all().order_by('-created_at')
     serializer_class = QuizSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+    pagination_class = QuizPagination
 
     def calculate_difficulty(self, questions):
         # implement this method to calculate the difficulty of a quiz via external api

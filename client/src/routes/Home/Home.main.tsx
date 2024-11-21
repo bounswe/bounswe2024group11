@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
-import { Navbar } from "../components/navbar";
+import { Navbar } from "../../components/navbar";
 import { homeLoader } from "./Home.data";
 
 export const HomeMain = () => {

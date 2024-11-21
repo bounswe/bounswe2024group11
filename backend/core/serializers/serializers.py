@@ -1,9 +1,9 @@
-from django.contrib.auth import get_user_model
 from faker import Faker
 from rest_framework import serializers
 
+from django.contrib.auth import get_user_model
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz)
+                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 
@@ -50,11 +50,41 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
-
+    upvotes_count = serializers.SerializerMethodField()
+    downvotes_count = serializers.SerializerMethodField()
+    is_my_answer = serializers.SerializerMethodField()
+    is_upvoted = serializers.SerializerMethodField()
+    is_downvoted = serializers.SerializerMethodField()
     class Meta:
         model = ForumAnswer
-        fields = ('id', 'answer', 'author', 'created_at')
-        read_only_fields = ('author', 'created_at')
+        fields = ('id', 'answer', 'author', 'created_at', 'is_my_answer', 'is_upvoted', 'is_downvoted', 'upvotes_count', 'downvotes_count', 'forum_question')
+        read_only_fields = ('author', 'created_at', 'upvotes_count', 'downvotes_count', 'is_my_answer', 'is_upvoted', 'is_downvoted', 'forum_question')
+
+    def get_is_my_answer(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        return obj.id if obj.author == user else None
+
+    def get_is_upvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        upvote = ForumAnswerUpvote.objects.filter(user=user, forum_answer=obj).first()
+        return upvote.id if upvote else None
+
+    def get_is_downvoted(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        downvote = ForumAnswerDownvote.objects.filter(user=user, forum_answer=obj).first()
+        return downvote.id if downvote else None
+    
+    def get_upvotes_count(self, obj):
+        return obj.upvotes.count()
+    
+    def get_downvotes_count(self, obj):
+        return obj.downvotes.count()
 
     def create(self, validated_data):
         return ForumAnswer.objects.create(**validated_data)
@@ -69,17 +99,20 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     upvotes_count = serializers.SerializerMethodField()
     is_downvoted = serializers.SerializerMethodField()
     downvotes_count = serializers.SerializerMethodField()
+    is_my_forum_question = serializers.SerializerMethodField()
 
     class Meta:
         model = ForumQuestion
         fields = (
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
-            'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers'
+            'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
+            'is_my_forum_question'
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
-            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers'
+            'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
+            'is_my_forum_question'
         )
 
     def get_answers_count(self, obj):
@@ -88,14 +121,16 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_is_bookmarked(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumBookmark.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        bookmark = ForumBookmark.objects.filter(user=user, forum_question=obj).first()
+        return bookmark.id if bookmark else None
 
     def get_is_upvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumUpvote.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        upvote = ForumUpvote.objects.filter(user=user, forum_question=obj).first()
+        return upvote.id if upvote else None
 
     def get_upvotes_count(self, obj):
         return obj.upvotes.count()
@@ -103,11 +138,18 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_is_downvoted(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return False
-        return ForumDownvote.objects.filter(user=user, forum_question=obj).exists()
+            return None
+        downvote = ForumDownvote.objects.filter(user=user, forum_question=obj).first()
+        return downvote.id if downvote else None
 
     def get_downvotes_count(self, obj):
         return obj.downvotes.count()
+
+    def get_is_my_forum_question(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return obj.author == user
 
     def create(self, validated_data):
         # Extract tags from validated_data
@@ -181,15 +223,18 @@ class QuizSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
     is_taken = serializers.SerializerMethodField()
     num_taken = serializers.SerializerMethodField()
+    is_my_quiz = serializers.SerializerMethodField()
     
 
     class Meta:
         model = Quiz
         fields = (
             'id', 'title', 'description', 'difficulty', "author", 
-            'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating"
+            'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating",
+            'is_my_quiz'
         )
-        read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author")
+        read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
+                           'is_my_quiz')
 
     def get_is_taken(self, obj):
         user = self.context['request'].user
@@ -215,6 +260,12 @@ class QuizSerializer(serializers.ModelSerializer):
         # Round the average score to 1 decimal place
         return {"score": round(result['avg_score'], 1), "count": result['count']}
 
+    # TODO: Check whether this works on the client side.
+    def get_is_my_quiz(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return False
+        return obj.author == user
     
     def calculate_difficulty(self, questions):
         # implement this method to calculate the difficulty of a quiz via external api
