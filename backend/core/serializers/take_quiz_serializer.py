@@ -49,10 +49,6 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         user = validated_data['user']
         quiz = validated_data['quiz']
 
-        # Check if the user has already taken the quiz
-        if TakeQuiz.objects.filter(quiz=quiz, user=user).exists():
-            raise serializers.ValidationError("You have already taken this quiz.")
-
         # Create the TakeQuiz instance
         take_quiz = TakeQuiz.objects.create(**validated_data)
 
