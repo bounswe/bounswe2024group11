@@ -267,17 +267,23 @@ class QuizSerializer(serializers.ModelSerializer):
             return False
         return obj.author == user
     
-    def calculate_difficulty(self, questions):
+    def calculate_difficulty(self, questions, quiz_type):
         # implement this method to calculate the difficulty of a quiz via external api
+        print(questions)
+        print(quiz_type)
+        # if quiz_type == 1 or 3 use question_type, if quiz_type == 2 use choice_text with is_correct true
+            # for question in questions:
+            #     helper(question_text)
         return Faker().random_int(min=1, max=4)
 
     def create(self, validated_data):
         # Extract nested questions and tags from validated_data
         questions_data = validated_data.pop('questions', [])
         tags_data = validated_data.pop('tags', [])
+        quiz_type = validated_data.get('type')
 
         # Calculate the difficulty of the quiz  
-        validated_data["difficulty"] = self.calculate_difficulty(questions_data)
+        validated_data["difficulty"] = self.calculate_difficulty(questions_data, quiz_type)
         # Create the Quiz instance
         quiz = Quiz.objects.create(**validated_data)
 
