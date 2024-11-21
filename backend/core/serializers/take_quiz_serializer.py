@@ -11,7 +11,7 @@ queryset = User.objects.all()
 class UserAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAnswer
-        fields = ['id', 'take_quiz', 'question', 'answer']
+        fields = ['id', 'take_quiz', 'question', 'answer', 'is_hint_used']
         read_only_fields = ['take_quiz']
 
 class TakeQuizSerializer(serializers.ModelSerializer):
