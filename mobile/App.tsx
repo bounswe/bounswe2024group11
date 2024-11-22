@@ -6,6 +6,7 @@ import { Button, Image, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import CreateQuestion from "./app/screens/CreateQuestion";
+import CreateQuiz from "./app/screens/CreateQuiz";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   };
   QuizResult: undefined;
   CreateQuestion: undefined;
+  CreateQuiz: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -139,6 +141,7 @@ export const Layout = () => {
               })}
             />
             <Stack.Screen name="QuizResult" component={QuizResult} />
+            <Stack.Screen name="CreateQuiz" component={CreateQuiz} />
             {/*
             {authState?.authenticated
               ? <Stack.Screen
