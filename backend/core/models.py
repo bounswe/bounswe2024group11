@@ -89,17 +89,18 @@ class UserAnswer(models.Model):
     class Meta:
         unique_together = ['question', 'take_quiz']
 
-    def clean(self):
-        # Ensure that the question belongs to the same quiz
-        if self.question.quiz.id != self.take_quiz.quiz.id:
-            raise ValidationError("The question must belong to the same quiz.")
-        if self.answer.question.id != self.question.id:
-            raise ValidationError("The answer must belong to the same question.")
+    # def clean(self):
+
+    #     # Ensure that the question belongs to the same quiz
+    #     if self.question.quiz.id != self.take_quiz.quiz.id:
+    #         raise ValidationError("The question must belong to the same quiz.")
+    #     if self.answer.question.id != self.question.id:
+    #         raise ValidationError("The answer must belong to the same question.")
     
-    def save(self, *args, **kwargs):
-        # Perform custom validation before saving
-        self.clean()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Perform custom validation before saving
+    #     self.clean()
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.answer.choice_text

@@ -30,7 +30,7 @@ class TakeQuizSerializer(serializers.ModelSerializer):
     def get_score(self, obj):
         correct_answers = 0
         for answer in obj.answers.all():
-            if answer.answer.is_correct:
+            if answer.answer is not None and answer.answer.is_correct:
                 correct_answers += 1
         return correct_answers
     
@@ -53,13 +53,29 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         take_quiz = TakeQuiz.objects.create(**validated_data)
 
         # Create UserAnswer instances for each answer
-        try:
-            for answer_data in answers:
-                UserAnswer.objects.create(take_quiz=take_quiz, **answer_data)
-        except Exception as e:
-            take_quiz.delete()
-            # raise 400 with exception message
-            raise serializers.ValidationError(e)
+        if quiz:
+
+            try:
+                for answer_data in answers:
+                    print(answer_data)
+                    # Ensure `answer` field can be null
+                    # Ensure we have a question
+                    question = answer_data.get('question')
+                    if question is None:
+                        raise serializers.ValidationError("Each answer must have a question")
+
+                    # Create UserAnswer, allowing answer to be None
+                    UserAnswer.objects.create(
+                        take_quiz=take_quiz,
+                        question=question,
+                        answer=answer_data.get('answer', None),
+                        is_hint_used=answer_data.get('is_hint_used', False)
+                    )
+            except Exception as e:
+                take_quiz.delete()
+                # raise 400 with exception message
+                raise serializers.ValidationError(e)
+            
 
         return take_quiz
 
