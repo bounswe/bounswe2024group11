@@ -3,6 +3,8 @@ import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # BabelNet API configuration
 BASE_URL = "https://babelnet.io/v6"
@@ -63,6 +65,91 @@ class HintView(APIView):
     """
     APIView to fetch hints (synonyms, definitions, examples, and images) from BabelNet.
     """
+    @swagger_auto_schema(
+        operation_summary="Fetch hints for a word using BabelNet",
+        operation_description=(
+            "This endpoint fetches synonyms, definitions, examples, and images "
+            "for a given word's synset ID from the BabelNet API. It allows restricting "
+            "synonyms to high-quality ones and excludes the queried word itself from synonyms."
+        ),
+        manual_parameters=[
+            openapi.Parameter(
+                "synset_id",
+                openapi.IN_QUERY,
+                description="The synset ID for which to fetch hints (e.g., `bn:00007309n`).",
+                type=openapi.TYPE_STRING,
+                required=True,
+            ),
+            openapi.Parameter(
+                "target_lang",
+                openapi.IN_QUERY,
+                description="The target language for the results (default is `EN`).",
+                type=openapi.TYPE_STRING,
+                required=False,
+            ),
+            openapi.Parameter(
+                "word",
+                openapi.IN_QUERY,
+                description="The original word to avoid including in the synonyms.",
+                type=openapi.TYPE_STRING,
+                required=False,
+            ),
+        ],
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "synonyms": openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(type=openapi.TYPE_STRING),
+                        description="List of high-quality synonyms for the synset."
+                    ),
+                    "definitions": openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(type=openapi.TYPE_STRING),
+                        description="List of definitions for the synset."
+                    ),
+                    "examples": openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(type=openapi.TYPE_STRING),
+                        description="List of example sentences for the synset."
+                    ),
+                    "images": openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(type=openapi.TYPE_STRING),
+                        description="List of up to 5 image URLs associated with the synset."
+                    ),
+                },
+                example={
+                    "synonyms": ["explanation", "clarification", "interpretation"],
+                    "definitions": [
+                        "A statement that makes something comprehensible by describing the relevant structure.",
+                        "The act of explaining; making something plain or intelligible."
+                    ],
+                    "examples": [
+                        "The explanation was clear.",
+                        "She provided a detailed explanation."
+                    ],
+                    "images": [
+                        "https://imageurl1.com",
+                        "https://imageurl2.com"
+                    ]
+                }
+            ),
+            400: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "error": openapi.Schema(type=openapi.TYPE_STRING, example="Parameter 'synset_id' is required.")
+                },
+            ),
+            500: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "error": openapi.Schema(type=openapi.TYPE_STRING, example="Error fetching hints.")
+                },
+            ),
+        },
+    )
 
     def get(self, request):
         # Get synset_id and targetLang from query parameters
