@@ -24,6 +24,8 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<number[]>();
   const [checkedOptions, setCheckedOptions] = useState<number[]>([null, null]);
+  const [isHintUsed, setIsHintUsed] = useState(false);
+  const [hintUsages, setHintUsages] = useState<boolean[]>([]);
 
   const navigation = useNavigation<QuizResultNavigationProp>();
 
@@ -35,6 +37,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
         const result = await axios.get(`${API_URL}/quizzes/${id}`);
         setQuestions(result.data.questions);
         setSelectedOptions(new Array(questions.length).fill(null));
+        setHintUsages(new Array(questions.length).fill(false));
       } catch (error) {
         console.error("Error fetching questions", error);
       }
@@ -75,12 +78,16 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       (option) => option.is_correct
     )?.id;
     setCheckedOptions([selectedOption, correctOption]);
+    const updatedHintUsages = [...hintUsages];
+    updatedHintUsages[currentQuestionIndex] = isHintUsed;
+    setHintUsages(updatedHintUsages);
   };
 
   const continueQuiz = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setCheckedOptions([null, null]);
+      setIsHintUsed(false);
     }
   };
 
@@ -88,6 +95,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
     const answers: QuizAnswerType[] = questions.map((question, index) => ({
       question: question.id,
       answer: selectedOptions?.[index] ?? null,
+      is_hint_used: hintUsages[index],
     }));
 
     const result = await axios.post(`${API_URL}/take-quiz/`, {
@@ -111,6 +119,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
           questions_length={questions.length}
           selectedOption={selectedOptions?.[currentQuestionIndex] || null}
           checkedOptions={checkedOptions}
+          setIsHintUsed={setIsHintUsed}
           goToPreviousQuestion={goToPreviousQuestion}
           goToNextQuestion={goToNextQuestion}
           onSelectOption={selectOption}
