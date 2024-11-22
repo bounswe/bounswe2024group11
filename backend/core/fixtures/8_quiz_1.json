@@ -26,8 +26,8 @@
         "model": "core.quizquestionhint",
         "pk": 1,
         "fields": {
-            "type": "text",
-            "text": "Algorithm is a set of instructions for solving a problem.",
+            "type": "sense",
+            "text": "A precise rule (or set of rules) specifying how to solve some problem.",
             "question": 1
         }
     },
