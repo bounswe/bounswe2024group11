@@ -1,4 +1,6 @@
 from django.urls import path
+
+from .views.get_translation_views import TranslationView
 from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
 from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
@@ -54,6 +56,7 @@ urlpatterns = [
     path('token/verify/', DecoratedTokenVerifyView.as_view(), name='token_verify'),
     path('auth/register/', RegisterView.as_view(), name='register'),
     path("tagging/", TaggingView.as_view(), name="tagging"),
+    path("get-translation/", TranslationView.as_view(), name="get-translation"),
 ]
 
 urlpatterns += router.urls
