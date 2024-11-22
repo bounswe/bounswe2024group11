@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
 import QuizCard from "../components/QuizCard";
 import { QuizOverview } from "../types/quiz";
@@ -39,6 +40,10 @@ const QuizFeed: React.FC = () => {
     }
   }, [isFocused]);
 
+  const handleCreateQuiz = () => {
+    navigation.navigate("CreateQuiz");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Quizzes</Text>
@@ -58,6 +63,12 @@ const QuizFeed: React.FC = () => {
           </TouchableOpacity>
         )}
       />
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleCreateQuiz}
+      >
+        <Icon name="plus" size={30} color="#FFFFFF" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -78,6 +89,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "normal",
     marginBottom: 24,
+  },
+  floatingButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 64,
+    height: 64,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 32,
+    backgroundColor: "#0ea5e9",
+    // borderColor: "#0ea5e9",
+    // borderWidth: 1,
+    elevation: 16,
   },
 });
 
