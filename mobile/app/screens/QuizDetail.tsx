@@ -15,7 +15,7 @@ const QuizDetail: React.FC<Props> = ({ route }) => {
   const { quiz } = route.params;
 
   return (
-    <View>
+    <View style={styles.container}>
       <QuizDetailText item={quiz} />
       <ViewQuizButton
         item={{
@@ -30,6 +30,11 @@ const QuizDetail: React.FC<Props> = ({ route }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+});
 
 export default QuizDetail;

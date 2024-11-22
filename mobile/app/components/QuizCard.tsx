@@ -14,7 +14,7 @@ interface QuizCardProps {
 
 const QuizCard: React.FC<QuizCardProps> = ({ item }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <Card style={styles.card}>
         <QuizCardHeader
           item={{
@@ -43,7 +43,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ item }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    backgroundColor: "#FFFFFF",
   },
   card: {
     borderRadius: 10,
