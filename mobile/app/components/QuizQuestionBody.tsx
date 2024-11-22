@@ -24,9 +24,9 @@ const QuizQuestionBody: React.FC<QuizQuestionBodyProps> = ({
     <View style={styles.container}>
       <Text style={styles.text}>
         {quiz_type == 1
-          ? "What is the English translation of "
+          ? "What is the Turkish translation of "
           : quiz_type == 2
-            ? "What is the Turkish translation of "
+            ? "What is the English translation of "
             : "What is the sense of "}
         "{question.question_text}"?
       </Text>
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
     height: "80%",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    marginVertical: 32,
+    marginTop: 64,
+    marginBottom: 32,
   },
   text: {
     fontSize: 24,
