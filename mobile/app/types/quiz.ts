@@ -12,10 +12,17 @@ export type QuizQuestionOptionType = {
   is_correct: boolean;
 };
 
+export type QuizQuestionHintType = {
+  id: number;
+  type: string;
+  text: string;
+};
+
 export type QuizQuestionType = {
   id: number;
   question_text: string;
   choices: QuizQuestionOptionType[];
+  hints: QuizQuestionHintType[];
 };
 
 export type QuizOverview = {
@@ -41,6 +48,7 @@ export type QuizCardHeaderType = {
 export type QuizAnswerType = {
   question: number;
   answer: number | null;
+  is_hint_used: boolean;
 };
 
 // export type QuizQuestionOptionsType = {
