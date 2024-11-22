@@ -57,7 +57,6 @@ class TakeQuizSerializer(serializers.ModelSerializer):
 
             try:
                 for answer_data in answers:
-                    print(answer_data)
                     # Ensure `answer` field can be null
                     # Ensure we have a question
                     question = answer_data.get('question')
