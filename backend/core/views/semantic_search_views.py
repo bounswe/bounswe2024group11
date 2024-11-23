@@ -52,13 +52,12 @@ class ForumQuestionPagination(PageNumberPagination):
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
-        responses={200: openapi.TYPE_ARRAY},
         manual_parameters=[
             openapi.Parameter(
-                'id', 
-                openapi.IN_QUERY, 
-                description="ID of the word", 
-                type=openapi.TYPE_STRING
+                'id',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description="example: `bn:00005106n`"
             ),
         ]
     )
@@ -90,13 +89,12 @@ class QuizPagination(PageNumberPagination):
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
-        responses={200: openapi.TYPE_ARRAY},
         manual_parameters=[
             openapi.Parameter(
-                'id', 
-                openapi.IN_QUERY, 
-                description="ID of the word", 
-                type=openapi.TYPE_STRING
+                'id',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description="example: `bn:00028795n`"
             ),
         ]
     )
