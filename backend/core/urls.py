@@ -6,6 +6,7 @@ from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
 from .views.take_quiz_views import TakeQuizViewSet
 from .views.forum_bookmark_views import ForumBookmarkViewSet
+from .views.semantic_search_views import ForumSemanticSearchView
 from .views.forum_vote_views import ForumUpvoteViewSet, ForumDownvoteViewSet, ForumAnswerUpvoteViewSet, ForumAnswerDownvoteViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
@@ -57,6 +58,7 @@ urlpatterns = [
     path('auth/register/', RegisterView.as_view(), name='register'),
     path("tagging/", TaggingView.as_view(), name="tagging"),
     path("get-translation/", TranslationView.as_view(), name="get-translation"),
+    path("forum-semantic-search/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
 ]
 
 urlpatterns += router.urls
