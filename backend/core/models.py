@@ -38,8 +38,7 @@ class Quiz(models.Model):
     DIFFICULTY_CHOICES = [
         (1, "Beginner"),
         (2, "Intermediate"),
-        (3, "Advanced"),
-        (4, "Expert"),
+        (3, "Advanced")
     ]
 
     title = models.CharField(max_length=255)
@@ -47,6 +46,7 @@ class Quiz(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES)
+    quiz_point = models.IntegerField(default=0)
     tags = models.ManyToManyField('Tag')
     type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)    
     
@@ -55,6 +55,7 @@ class Quiz(models.Model):
     
 class QuizQuestion(models.Model):
     question_text = models.CharField(max_length=1000)
+    question_point = models.IntegerField(default=0)
     quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
     
     def __str__(self):
@@ -78,6 +79,7 @@ class TakeQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='takes')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(default=0)
     
 
 class UserAnswer(models.Model):

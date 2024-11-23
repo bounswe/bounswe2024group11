@@ -20,10 +20,10 @@ export type Question = {
   author: Author;
   created_at: string;
   answers_count: number;
-  is_bookmarked: boolean;
-  is_upvoted: boolean;
+  is_bookmarked: number | null;
+  is_upvoted: number | null;
   upvotes_count: number;
-  is_downvoted: boolean;
+  is_downvoted: number | null;
   downvotes_count: number;
   answers?: Answer[];
 };

@@ -1,8 +1,9 @@
-import { InferInput } from "valibot";
-import { authorSchema } from "../types/forum";
-
 type AvatarProps = {
-    author: InferInput<typeof authorSchema>;
+    author: {
+        full_name: string;
+        username: string;
+        avatar: string | null;
+    };
     size: number;
 };
 

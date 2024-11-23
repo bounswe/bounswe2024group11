@@ -1,6 +1,6 @@
 from faker import Faker
 from rest_framework import serializers
-
+from ..views.difficulty_views import get_difficulty
 from django.contrib.auth import get_user_model
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
                      Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint)
@@ -194,7 +194,7 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
     hints = QuizQuestionHintSerializer(required=False, many=True)
     class Meta:
         model = QuizQuestion
-        fields = ('id', 'question_text', 'choices', 'hints')
+        fields = ('id', 'question_text', 'question_point', 'choices', "hints")
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
     def create(self, validated_data):
@@ -248,10 +248,10 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'title', 'description', 'difficulty', "author", 
             'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating",
-            'is_my_quiz'
+            'is_my_quiz', 'quiz_point'
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
-                           'is_my_quiz')
+                           'is_my_quiz', 'quiz_point')
 
     def get_is_taken(self, obj):
         user = self.context['request'].user
@@ -284,17 +284,12 @@ class QuizSerializer(serializers.ModelSerializer):
             return False
         return obj.author == user
     
-    def calculate_difficulty(self, questions):
-        # implement this method to calculate the difficulty of a quiz via external api
-        return Faker().random_int(min=1, max=4)
-
     def create(self, validated_data):
         # Extract nested questions and tags from validated_data
         questions_data = validated_data.pop('questions', [])
         tags_data = validated_data.pop('tags', [])
-
-        # Calculate the difficulty of the quiz  
-        validated_data["difficulty"] = self.calculate_difficulty(questions_data)
+        quiz_type = validated_data.get('type')
+         
         # Create the Quiz instance
         quiz = Quiz.objects.create(**validated_data)
 
@@ -306,21 +301,33 @@ class QuizSerializer(serializers.ModelSerializer):
         # Create and associate each QuizQuestion with the Quiz
         for question_data in questions_data:
             choices_data = question_data.pop('choices', [])
+            hints_data = question_data.pop('hints', [])
             question = QuizQuestion.objects.create(quiz=quiz, **question_data)
+            for hint_data in hints_data:
+                QuizQuestionHint.objects.create(question=question, **hint_data)
+
             for choice_data in choices_data:
                 QuizQuestionChoice.objects.create(question=question, **choice_data)
-            
+        # Calculate the total point of the quiz        
+        quiz.quiz_point = sum([question.question_point for question in quiz.questions.all()])
+        # Calculate the difficulty level of the quiz
+        effective_question_point = quiz.quiz_point / len(quiz.questions.all())
+        if (effective_question_point <= 16.66):
+            quiz.difficulty = 1
+        elif(effective_question_point > 23.33):
+            quiz.difficulty = 3
+        else:
+            quiz.difficulty = 2
         return quiz
 
     def update(self, instance, validated_data):
         # Handle updating nested tags and questions
         tags_data = validated_data.pop('tags', [])
         questions_data = validated_data.pop('questions', [])
-
+        
         # Update quiz fields
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
-        instance.difficulty = self.calculate_difficulty(questions_data)  # Update difficulty
         instance.save()
 
         # Update tags
