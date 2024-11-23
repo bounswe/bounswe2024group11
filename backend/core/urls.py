@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views.get_translation_views import TranslationView
+from .views.difficulty_views import QuestionPointView
 from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
 from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
@@ -57,6 +58,7 @@ urlpatterns = [
     path('auth/register/', RegisterView.as_view(), name='register'),
     path("tagging/", TaggingView.as_view(), name="tagging"),
     path("get-translation/", TranslationView.as_view(), name="get-translation"),
+    path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
 ]
 
 urlpatterns += router.urls
