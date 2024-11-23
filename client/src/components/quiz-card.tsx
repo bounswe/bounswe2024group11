@@ -17,13 +17,13 @@ import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { Avatar } from "../components/avatar";
 import { buttonClass, buttonInnerRing } from "../components/button";
-import { Quiz } from "../routes/Quizzes.data";
+import { Quiz } from "../routes/Quiz/Quizzes.data";
 import { getRelativeTime } from "../utils";
 
 type QuizCardProps = {
     quiz: Quiz;
     onTagClick: (tag: string) => void;
-    key: string;
+    quiz_key: string;
 };
 
 const difficultyText = cva([
@@ -60,10 +60,10 @@ const scoreClass = cva(
 const scoreToInteger = (score: number) =>
     Math.floor(score) as 0 | 1 | 2 | 3 | 4;
 
-export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
+export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
     return (
         <div
-            key={key}
+            key={quiz_key}
             aria-label={quiz.title}
             className="relative flex max-w-xl flex-col gap-4 rounded-2 bg-white px-6 py-6 shadow-none ring ring-slate-200 transition-all duration-200"
         >
@@ -72,7 +72,7 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                     <div className="flex items-center gap-1 pb-2">
                         <span className={difficultyText()}>
                             <RiDashboard3Line size={16} />
-                            {quiz.difficulty.toLocaleUpperCase()}
+                            {quiz.difficulty}
                         </span>
                     </div>
 
@@ -90,10 +90,12 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                                 tabIndex={0}
                                 aria-label={`Rated by ${quiz.rating.count}`}
                                 className={scoreClass({
-                                    score: scoreToInteger(quiz.rating.score),
+                                    score: scoreToInteger(
+                                        quiz.rating.score || 0,
+                                    ),
                                 })}
                             >
-                                {quiz.rating.score.toFixed(1)}
+                                {quiz.rating.score}
                             </span>
                         }
                     ></TooltipAnchor>
@@ -109,12 +111,13 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                 </TooltipProvider>
             </div>
             <div className="flex flex-wrap gap-2 tracking-wider">
-                {quiz.tags.map(({ name, id }) => {
+                {quiz.tags.map(({ name, linked_data_id }) => {
                     return (
                         <Link
+                            key={linked_data_id}
                             onClick={(e) => {
                                 e.preventDefault();
-                                onTagClick(id);
+                                onTagClick(linked_data_id);
                             }}
                             to="#"
                             className="touch-hitbox relative flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-[500] text-slate-950 transition-all hover:bg-slate-200"
@@ -154,6 +157,7 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                                     className={buttonInnerRing({
                                         intent: "secondary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 Follow
                             </Link>
@@ -173,7 +177,7 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                     <div className="flex flex-1 items-center justify-end gap-2">
                         {quiz.is_taken && (
                             <Link
-                                to={quiz.id}
+                                to={String(quiz.id)}
                                 className={buttonClass({
                                     intent: "tertiary",
                                     size: "medium",
@@ -184,12 +188,13 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                                     className={buttonInnerRing({
                                         intent: "tertiary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 <span>Review</span>
                             </Link>
                         )}
                         <Link
-                            to={quiz.id}
+                            to={String(quiz.id)}
                             className={buttonClass({
                                 intent: quiz.is_taken ? "secondary" : "primary",
                                 size: "medium",
@@ -202,6 +207,7 @@ export const QuizCard = ({ quiz, onTagClick, key }: QuizCardProps) => {
                                         ? "secondary"
                                         : "primary",
                                 })}
+                                aria-hidden="true"
                             />
                             <span>
                                 {quiz.is_taken ? "Re-attempt" : "Take Quiz"}

@@ -17,9 +17,9 @@ interface VoteButtonViewsProps {
 
 const VoteButtonsView: React.FC<VoteButtonViewsProps> = ({
   is_upvoted,
-  upvotes_count,
+  upvotes_count = 0,
   is_downvoted,
-  downvotes_count,
+  downvotes_count = 0,
   questionId,
   onVoteChange,
 }) => {

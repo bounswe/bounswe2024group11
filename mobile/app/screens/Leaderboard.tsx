@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
+  Dimensions,
   FlatList,
   Image,
-  TouchableOpacity,
-  Dimensions,
+  StyleSheet,
+  Text,
+  View
 } from "react-native";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
 const Leaderboard = () => {
   const [index, setIndex] = useState(0);

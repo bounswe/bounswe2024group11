@@ -1,8 +1,15 @@
 import { Button, Separator } from "@ariakit/react";
 import { RiArrowDownLine, RiArrowUpLine } from "@remixicon/react";
-import { Answer } from "../types/forum";
-import { getRelativeTime } from "../utils";
+import { useFetcher } from "react-router-dom";
+
+import { Answer } from "../routes/Forum/Forum.schema";
+import {
+    downvoteForumAnswerAction,
+    upvoteForumAnswerAction,
+} from "../routes/Forum/Question.data";
+import { getNumberDifference, getRelativeTime } from "../utils";
 import { Avatar } from "./avatar";
+import { toggleButtonClass } from "./button";
 
 type ForumAnswerCardProps = {
     answer: Answer;
@@ -10,6 +17,8 @@ type ForumAnswerCardProps = {
 };
 
 export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
+    const upvoteFetcher = useFetcher<typeof upvoteForumAnswerAction>();
+    const downvoteFetcher = useFetcher<typeof downvoteForumAnswerAction>();
     return (
         <div
             key={key}
@@ -40,23 +49,62 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-end">
                 <div className="flex flex-row items-center gap-2">
-                    <Button
-                        aria-label="Upvote"
-                        className="flex size-8 items-center justify-center rounded-2 bg-slate-100"
+                    <upvoteFetcher.Form
+                        method="POST"
+                        action={`/forum/${answer.forum_question}/upvoteAnswer`}
                     >
-                        <RiArrowUpLine />
-                    </Button>
+                        <input
+                            type="hidden"
+                            name="answer_id"
+                            value={answer.id}
+                        />
+                        <input
+                            type="hidden"
+                            name="is_upvoted"
+                            value={answer.is_upvoted || 0}
+                        />
+                        <Button
+                            type="submit"
+                            aria-label="Upvote"
+                            className={toggleButtonClass({
+                                intent: "upvote",
+                                state: answer.is_upvoted ? "on" : "off",
+                            })}
+                        >
+                            <RiArrowUpLine size={16} />
+                        </Button>
+                    </upvoteFetcher.Form>
                     <p className="w-6 text-center text-sm text-slate-900">
-                        {answer.upvotes_count && answer.downvotes_count
-                            ? answer.upvotes_count - answer.downvotes_count
-                            : 0}
+                        {getNumberDifference(
+                            answer.upvotes_count,
+                            answer.downvotes_count,
+                        )}
                     </p>
-                    <Button
-                        aria-label="Downvote"
-                        className="flex size-8 items-center justify-center rounded-2 border border-slate-200"
+                    <upvoteFetcher.Form
+                        method="POST"
+                        action={`/forum/${answer.forum_question}/downvoteAnswer`}
                     >
-                        <RiArrowDownLine />
-                    </Button>
+                        <input
+                            type="hidden"
+                            name="answer_id"
+                            value={answer.id}
+                        />
+                        <input
+                            type="hidden"
+                            name="is_downvoted"
+                            value={answer.is_downvoted || 0}
+                        />
+                        <Button
+                            type="submit"
+                            aria-label="Upvote"
+                            className={toggleButtonClass({
+                                intent: "downvote",
+                                state: answer.is_downvoted ? "on" : "off",
+                            })}
+                        >
+                            <RiArrowDownLine size={16} />
+                        </Button>
+                    </upvoteFetcher.Form>
                 </div>
             </div>
         </div>

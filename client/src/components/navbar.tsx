@@ -1,6 +1,6 @@
 import { RiLogoutBoxRLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
-import type { User } from "../types/user";
+import type { User } from "../schemas";
 import { buttonClass, buttonInnerRing } from "./button";
 
 const routes = [
@@ -76,6 +76,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                     className={buttonInnerRing({
                                         intent: "destructive",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 <span>Logout</span>
                                 <RiLogoutBoxRLine className="h-4" />
@@ -94,6 +95,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                             className={buttonInnerRing({
                                                 intent: "secondary",
                                             })}
+                                            aria-hidden="true"
                                         />
                                         Register
                                     </Link>
@@ -111,6 +113,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                             className={buttonInnerRing({
                                                 intent: "secondary",
                                             })}
+                                            aria-hidden="true"
                                         />
                                         Login
                                     </Link>

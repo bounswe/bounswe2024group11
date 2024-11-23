@@ -1,4 +1,4 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   title: API documentation
   description: API documentation
@@ -10,12 +10,12 @@ info:
   version: v1
 host: 127.0.0.1:8000
 schemes:
-  - http
+- http
 basePath: /api/v1
 consumes:
-  - application/json
+- application/json
 produces:
-  - application/json
+- application/json
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -23,61 +23,61 @@ securityDefinitions:
     name: Authorization
     description: Use with "Bearer <YOUR_TOKEN_HERE>"
 security:
-  - Bearer: []
+- Bearer: []
 paths:
   /auth/login/:
     post:
       operationId: auth_login_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/CustomTokenObtainPair"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CustomTokenObtainPair'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TokenObtainPairResponse"
+            $ref: '#/definitions/TokenObtainPairResponse'
       tags:
-        - auth
+      - auth
     parameters: []
   /auth/register/:
     post:
       operationId: auth_register_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Register"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Register'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/RegisterResponse"
+            $ref: '#/definitions/RegisterResponse'
       tags:
-        - auth
+      - auth
     parameters: []
-  /forum-bookmarks/:
+  /forum-answer-downvote/:
     get:
-      operationId: forum-bookmarks_list
-      description: ""
+      operationId: forum-answer-downvote_list
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -93,102 +93,324 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/ForumBookmark"
+                  $ref: '#/definitions/ForumAnswerDownvote'
       tags:
-        - forum-bookmarks
+      - forum-answer-downvote
+    post:
+      operationId: forum-answer-downvote_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswerDownvote'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerDownvote'
+      tags:
+      - forum-answer-downvote
+    parameters: []
+  /forum-answer-downvote/{id}/:
+    get:
+      operationId: forum-answer-downvote_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerDownvote'
+      tags:
+      - forum-answer-downvote
+    put:
+      operationId: forum-answer-downvote_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswerDownvote'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerDownvote'
+      tags:
+      - forum-answer-downvote
+    patch:
+      operationId: forum-answer-downvote_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswerDownvote'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerDownvote'
+      tags:
+      - forum-answer-downvote
+    delete:
+      operationId: forum-answer-downvote_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - forum-answer-downvote
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum answer downvote.
+      required: true
+      type: integer
+  /forum-answer-upvote/:
+    get:
+      operationId: forum-answer-upvote_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ForumAnswerUpvote'
+      tags:
+      - forum-answer-upvote
+    post:
+      operationId: forum-answer-upvote_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswerUpvote'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerUpvote'
+      tags:
+      - forum-answer-upvote
+    parameters: []
+  /forum-answer-upvote/{id}/:
+    get:
+      operationId: forum-answer-upvote_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerUpvote'
+      tags:
+      - forum-answer-upvote
+    put:
+      operationId: forum-answer-upvote_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswerUpvote'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerUpvote'
+      tags:
+      - forum-answer-upvote
+    patch:
+      operationId: forum-answer-upvote_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswerUpvote'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswerUpvote'
+      tags:
+      - forum-answer-upvote
+    delete:
+      operationId: forum-answer-upvote_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - forum-answer-upvote
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum answer upvote.
+      required: true
+      type: integer
+  /forum-bookmarks/:
+    get:
+      operationId: forum-bookmarks_list
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ForumBookmark'
+      tags:
+      - forum-bookmarks
     post:
       operationId: forum-bookmarks_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumBookmark"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumBookmark'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumBookmark"
+            $ref: '#/definitions/ForumBookmark'
       tags:
-        - forum-bookmarks
+      - forum-bookmarks
     parameters: []
   /forum-bookmarks/{id}/:
     get:
       operationId: forum-bookmarks_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumBookmark"
+            $ref: '#/definitions/ForumBookmark'
       tags:
-        - forum-bookmarks
+      - forum-bookmarks
     put:
       operationId: forum-bookmarks_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumBookmark"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumBookmark'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumBookmark"
+            $ref: '#/definitions/ForumBookmark'
       tags:
-        - forum-bookmarks
+      - forum-bookmarks
     patch:
       operationId: forum-bookmarks_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumBookmark"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumBookmark'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumBookmark"
+            $ref: '#/definitions/ForumBookmark'
       tags:
-        - forum-bookmarks
+      - forum-bookmarks
     delete:
       operationId: forum-bookmarks_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - forum-bookmarks
+      - forum-bookmarks
     parameters:
-      - name: id
-        in: path
-        description: A unique integer value identifying this forum bookmark.
-        required: true
-        type: integer
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum bookmark.
+      required: true
+      type: integer
   /forum-downvote/:
     get:
       operationId: forum-downvote_list
-      description: ""
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -204,102 +426,107 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/ForumDownvote"
+                  $ref: '#/definitions/ForumDownvote'
       tags:
-        - forum-downvote
+      - forum-downvote
     post:
       operationId: forum-downvote_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumDownvote"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumDownvote'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumDownvote"
+            $ref: '#/definitions/ForumDownvote'
       tags:
-        - forum-downvote
+      - forum-downvote
     parameters: []
   /forum-downvote/{id}/:
     get:
       operationId: forum-downvote_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumDownvote"
+            $ref: '#/definitions/ForumDownvote'
       tags:
-        - forum-downvote
+      - forum-downvote
     put:
       operationId: forum-downvote_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumDownvote"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumDownvote'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumDownvote"
+            $ref: '#/definitions/ForumDownvote'
       tags:
-        - forum-downvote
+      - forum-downvote
     patch:
       operationId: forum-downvote_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumDownvote"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumDownvote'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumDownvote"
+            $ref: '#/definitions/ForumDownvote'
       tags:
-        - forum-downvote
+      - forum-downvote
     delete:
       operationId: forum-downvote_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - forum-downvote
+      - forum-downvote
     parameters:
-      - name: id
-        in: path
-        description: A unique integer value identifying this forum downvote.
-        required: true
-        type: integer
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum downvote.
+      required: true
+      type: integer
   /forum-questions/:
     get:
       operationId: forum-questions_list
       description: Handle pagination explicitly.
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: per_page
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -315,43 +542,43 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/ForumQuestion"
+                  $ref: '#/definitions/ForumQuestion'
       tags:
-        - forum-questions
+      - forum-questions
     post:
       operationId: forum-questions_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumQuestion"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumQuestion"
+            $ref: '#/definitions/ForumQuestion'
       tags:
-        - forum-questions
+      - forum-questions
     parameters: []
   /forum-questions/{forum_question_pk}/answers/:
     get:
       operationId: forum-questions_answers_list
-      description: ""
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -367,169 +594,169 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/ForumAnswer"
+                  $ref: '#/definitions/ForumAnswer'
       tags:
-        - forum-questions
+      - forum-questions
     post:
       operationId: forum-questions_answers_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumAnswer"
-      responses:
-        "201":
-          description: ""
-          schema:
-            $ref: "#/definitions/ForumAnswer"
-      tags:
-        - forum-questions
-    parameters:
-      - name: forum_question_pk
-        in: path
+      - name: data
+        in: body
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/ForumAnswer'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ForumAnswer'
+      tags:
+      - forum-questions
+    parameters:
+    - name: forum_question_pk
+      in: path
+      required: true
+      type: string
   /forum-questions/{forum_question_pk}/answers/{id}/:
     get:
       operationId: forum-questions_answers_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumAnswer"
+            $ref: '#/definitions/ForumAnswer'
       tags:
-        - forum-questions
+      - forum-questions
     put:
       operationId: forum-questions_answers_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumAnswer"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswer'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumAnswer"
+            $ref: '#/definitions/ForumAnswer'
       tags:
-        - forum-questions
+      - forum-questions
     patch:
       operationId: forum-questions_answers_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumAnswer"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumAnswer'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumAnswer"
+            $ref: '#/definitions/ForumAnswer'
       tags:
-        - forum-questions
+      - forum-questions
     delete:
       operationId: forum-questions_answers_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - forum-questions
+      - forum-questions
     parameters:
-      - name: forum_question_pk
-        in: path
-        required: true
-        type: string
-      - name: id
-        in: path
-        description: A unique integer value identifying this forum answer.
-        required: true
-        type: integer
+    - name: forum_question_pk
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum answer.
+      required: true
+      type: integer
   /forum-questions/{id}/:
     get:
       operationId: forum-questions_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumQuestion"
+            $ref: '#/definitions/ForumQuestion'
       tags:
-        - forum-questions
+      - forum-questions
     put:
       operationId: forum-questions_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumQuestion"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumQuestion"
+            $ref: '#/definitions/ForumQuestion'
       tags:
-        - forum-questions
+      - forum-questions
     patch:
       operationId: forum-questions_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumQuestion"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumQuestion'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumQuestion"
+            $ref: '#/definitions/ForumQuestion'
       tags:
-        - forum-questions
+      - forum-questions
     delete:
       operationId: forum-questions_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - forum-questions
+      - forum-questions
     parameters:
-      - name: id
-        in: path
-        description: A unique integer value identifying this forum question.
-        required: true
-        type: integer
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum question.
+      required: true
+      type: integer
   /forum-upvote/:
     get:
       operationId: forum-upvote_list
-      description: ""
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -545,102 +772,211 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/ForumUpvote"
+                  $ref: '#/definitions/ForumUpvote'
       tags:
-        - forum-upvote
+      - forum-upvote
     post:
       operationId: forum-upvote_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumUpvote"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumUpvote'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumUpvote"
+            $ref: '#/definitions/ForumUpvote'
       tags:
-        - forum-upvote
+      - forum-upvote
     parameters: []
   /forum-upvote/{id}/:
     get:
       operationId: forum-upvote_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumUpvote"
+            $ref: '#/definitions/ForumUpvote'
       tags:
-        - forum-upvote
+      - forum-upvote
     put:
       operationId: forum-upvote_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumUpvote"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumUpvote'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumUpvote"
+            $ref: '#/definitions/ForumUpvote'
       tags:
-        - forum-upvote
+      - forum-upvote
     patch:
       operationId: forum-upvote_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/ForumUpvote"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ForumUpvote'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/ForumUpvote"
+            $ref: '#/definitions/ForumUpvote'
       tags:
-        - forum-upvote
+      - forum-upvote
     delete:
       operationId: forum-upvote_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - forum-upvote
+      - forum-upvote
     parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this forum upvote.
+      required: true
+      type: integer
+  /get-translation/:
+    get:
+      operationId: get-translation_list
+      description: ''
+      parameters:
+      - name: type
+        in: query
+        description: Type of question (type1 or type2)
+        type: string
       - name: id
-        in: path
-        description: A unique integer value identifying this forum upvote.
+        in: query
+        description: ID of the word
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Translation'
+      tags:
+      - get-translation
+    parameters: []
+  /hint/:
+    get:
+      operationId: hint_list
+      summary: Fetch hints for a word using BabelNet
+      description: This endpoint fetches synonyms, definitions, examples, and images
+        for a given word's synset ID from the BabelNet API. It allows restricting
+        synonyms to high-quality ones and excludes the queried word itself from synonyms.
+      parameters:
+      - name: synset_id
+        in: query
+        description: The synset ID for which to fetch hints (e.g., `bn:00007309n`).
         required: true
-        type: integer
+        type: string
+      - name: target_lang
+        in: query
+        description: The target language for the results (default is `EN`).
+        required: false
+        type: string
+      - name: word
+        in: query
+        description: The original word to avoid including in the synonyms.
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            properties:
+              synonyms:
+                description: List of high-quality synonyms for the synset.
+                type: array
+                items:
+                  type: string
+              definitions:
+                description: List of definitions for the synset.
+                type: array
+                items:
+                  type: string
+              examples:
+                description: List of example sentences for the synset.
+                type: array
+                items:
+                  type: string
+              images:
+                description: List of up to 5 image URLs associated with the synset.
+                type: array
+                items:
+                  type: string
+            example:
+              synonyms:
+              - explanation
+              - clarification
+              - interpretation
+              definitions:
+              - A statement that makes something comprehensible by describing the
+                relevant structure.
+              - The act of explaining; making something plain or intelligible.
+              examples:
+              - The explanation was clear.
+              - She provided a detailed explanation.
+              images:
+              - https://imageurl1.com
+              - https://imageurl2.com
+        '400':
+          description: ''
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Parameter 'synset_id' is required.
+        '500':
+          description: ''
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Error fetching hints.
+      tags:
+      - hint
+    parameters: []
   /quizzes/:
     get:
       operationId: quizzes_list
-      description: ""
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: per_page
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -656,102 +992,102 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/Quiz"
+                  $ref: '#/definitions/Quiz'
       tags:
-        - quizzes
+      - quizzes
     post:
       operationId: quizzes_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Quiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Quiz'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/Quiz"
+            $ref: '#/definitions/Quiz'
       tags:
-        - quizzes
+      - quizzes
     parameters: []
   /quizzes/{id}/:
     get:
       operationId: quizzes_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/Quiz"
+            $ref: '#/definitions/Quiz'
       tags:
-        - quizzes
+      - quizzes
     put:
       operationId: quizzes_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Quiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Quiz'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/Quiz"
+            $ref: '#/definitions/Quiz'
       tags:
-        - quizzes
+      - quizzes
     patch:
       operationId: quizzes_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Quiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Quiz'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/Quiz"
+            $ref: '#/definitions/Quiz'
       tags:
-        - quizzes
+      - quizzes
     delete:
       operationId: quizzes_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - quizzes
+      - quizzes
     parameters:
-      - name: id
-        in: path
-        description: A unique integer value identifying this quiz.
-        required: true
-        type: integer
+    - name: id
+      in: path
+      description: A unique integer value identifying this quiz.
+      required: true
+      type: integer
   /rate-quiz/:
     get:
       operationId: rate-quiz_list
-      description: ""
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -767,123 +1103,123 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/RateQuiz"
+                  $ref: '#/definitions/RateQuiz'
       tags:
-        - rate-quiz
+      - rate-quiz
     post:
       operationId: rate-quiz_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/RateQuiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RateQuiz'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/RateQuiz"
+            $ref: '#/definitions/RateQuiz'
       tags:
-        - rate-quiz
+      - rate-quiz
     parameters: []
   /rate-quiz/{id}/:
     get:
       operationId: rate-quiz_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/RateQuiz"
+            $ref: '#/definitions/RateQuiz'
       tags:
-        - rate-quiz
+      - rate-quiz
     put:
       operationId: rate-quiz_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/RateQuiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RateQuiz'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/RateQuiz"
+            $ref: '#/definitions/RateQuiz'
       tags:
-        - rate-quiz
+      - rate-quiz
     patch:
       operationId: rate-quiz_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/RateQuiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RateQuiz'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/RateQuiz"
+            $ref: '#/definitions/RateQuiz'
       tags:
-        - rate-quiz
+      - rate-quiz
     delete:
       operationId: rate-quiz_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - rate-quiz
+      - rate-quiz
     parameters:
-      - name: id
-        in: path
-        description: A unique integer value identifying this rate quiz.
-        required: true
-        type: integer
+    - name: id
+      in: path
+      description: A unique integer value identifying this rate quiz.
+      required: true
+      type: integer
   /tagging/:
     get:
       operationId: tagging_list
-      description: ""
+      description: ''
       parameters:
-        - name: word
-          in: query
-          description: Word to search
-          type: string
-        - name: lang
-          in: query
-          description: Language of the word
-          type: string
+      - name: word
+        in: query
+        description: Word to search
+        type: string
+      - name: lang
+        in: query
+        description: Language of the word
+        type: string
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TaggedWord"
+            $ref: '#/definitions/TaggedWord'
       tags:
-        - tagging
+      - tagging
     parameters: []
   /take-quiz/:
     get:
       operationId: take-quiz_list
-      description: ""
+      description: ''
       parameters:
-        - name: page
-          in: query
-          description: A page number within the paginated result set.
-          required: false
-          type: integer
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
             required:
-              - count
-              - results
+            - count
+            - results
             type: object
             properties:
               count:
@@ -899,126 +1235,126 @@ paths:
               results:
                 type: array
                 items:
-                  $ref: "#/definitions/TakeQuiz"
+                  $ref: '#/definitions/TakeQuiz'
       tags:
-        - take-quiz
+      - take-quiz
     post:
       operationId: take-quiz_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/TakeQuiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TakeQuiz'
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           schema:
-            $ref: "#/definitions/TakeQuiz"
+            $ref: '#/definitions/TakeQuiz'
       tags:
-        - take-quiz
+      - take-quiz
     parameters: []
   /take-quiz/{id}/:
     get:
       operationId: take-quiz_read
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TakeQuiz"
+            $ref: '#/definitions/TakeQuiz'
       tags:
-        - take-quiz
+      - take-quiz
     put:
       operationId: take-quiz_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/TakeQuiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TakeQuiz'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TakeQuiz"
+            $ref: '#/definitions/TakeQuiz'
       tags:
-        - take-quiz
+      - take-quiz
     patch:
       operationId: take-quiz_partial_update
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/TakeQuiz"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TakeQuiz'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TakeQuiz"
+            $ref: '#/definitions/TakeQuiz'
       tags:
-        - take-quiz
+      - take-quiz
     delete:
       operationId: take-quiz_delete
-      description: ""
+      description: ''
       parameters: []
       responses:
-        "204":
-          description: ""
+        '204':
+          description: ''
       tags:
-        - take-quiz
+      - take-quiz
     parameters:
-      - name: id
-        in: path
-        description: A unique integer value identifying this take quiz.
-        required: true
-        type: integer
+    - name: id
+      in: path
+      description: A unique integer value identifying this take quiz.
+      required: true
+      type: integer
   /token/refresh/:
     post:
       operationId: token_refresh_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/TokenRefresh"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TokenRefreshResponse"
+            $ref: '#/definitions/TokenRefreshResponse'
       tags:
-        - token
+      - token
     parameters: []
   /token/verify/:
     post:
       operationId: token_verify_create
-      description: ""
+      description: ''
       parameters:
-        - name: data
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/TokenVerify"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenVerify'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           schema:
-            $ref: "#/definitions/TokenVerifyResponse"
+            $ref: '#/definitions/TokenVerifyResponse'
       tags:
-        - token
+      - token
     parameters: []
 definitions:
   CustomTokenObtainPair:
     required:
-      - username
-      - password
+    - username
+    - password
     type: object
     properties:
       username:
@@ -1031,9 +1367,9 @@ definitions:
         minLength: 1
   UserResponse:
     required:
-      - username
-      - email
-      - full_name
+    - username
+    - email
+    - full_name
     type: object
     properties:
       username:
@@ -1051,9 +1387,9 @@ definitions:
         minLength: 1
   TokenObtainPairResponse:
     required:
-      - access
-      - refresh
-      - user
+    - access
+    - refresh
+    - user
     type: object
     properties:
       access:
@@ -1065,19 +1401,18 @@ definitions:
         type: string
         minLength: 1
       user:
-        $ref: "#/definitions/UserResponse"
+        $ref: '#/definitions/UserResponse'
   Register:
     required:
-      - username
-      - password
-      - email
-      - full_name
+    - username
+    - password
+    - email
+    - full_name
     type: object
     properties:
       username:
         title: Username
-        description:
-          Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
           only.
         type: string
         pattern: ^[\w.@+-]+$
@@ -1105,8 +1440,8 @@ definitions:
         x-nullable: true
   RegisterResponse:
     required:
-      - access
-      - refresh
+    - access
+    - refresh
     type: object
     properties:
       access:
@@ -1117,9 +1452,51 @@ definitions:
         title: Refresh
         type: string
         minLength: 1
+  ForumAnswerDownvote:
+    required:
+    - forum_answer
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      user:
+        title: User
+        type: integer
+        readOnly: true
+      forum_answer:
+        title: Forum answer
+        type: integer
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+  ForumAnswerUpvote:
+    required:
+    - forum_answer
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      user:
+        title: User
+        type: integer
+        readOnly: true
+      forum_answer:
+        title: Forum answer
+        type: integer
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
   ForumBookmark:
     required:
-      - forum_question
+    - forum_question
     type: object
     properties:
       id:
@@ -1140,7 +1517,7 @@ definitions:
         readOnly: true
   ForumDownvote:
     required:
-      - forum_question
+    - forum_question
     type: object
     properties:
       id:
@@ -1161,9 +1538,9 @@ definitions:
         readOnly: true
   Tag:
     required:
-      - name
-      - linked_data_id
-      - description
+    - name
+    - linked_data_id
+    - description
     type: object
     properties:
       name:
@@ -1190,8 +1567,7 @@ definitions:
         readOnly: true
       username:
         title: Username
-        description:
-          Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
           only.
         type: string
         readOnly: true
@@ -1215,7 +1591,7 @@ definitions:
         x-nullable: true
   ForumAnswer:
     required:
-      - answer
+    - answer
     type: object
     properties:
       id:
@@ -1228,17 +1604,41 @@ definitions:
         maxLength: 1000
         minLength: 1
       author:
-        $ref: "#/definitions/UserInfo"
+        $ref: '#/definitions/UserInfo'
       created_at:
         title: Created at
         type: string
         format: date-time
         readOnly: true
+      is_my_answer:
+        title: Is my answer
+        type: string
+        readOnly: true
+      is_upvoted:
+        title: Is upvoted
+        type: string
+        readOnly: true
+      is_downvoted:
+        title: Is downvoted
+        type: string
+        readOnly: true
+      upvotes_count:
+        title: Upvotes count
+        type: string
+        readOnly: true
+      downvotes_count:
+        title: Downvotes count
+        type: string
+        readOnly: true
+      forum_question:
+        title: Forum question
+        type: integer
+        readOnly: true
   ForumQuestion:
     required:
-      - title
-      - question
-      - tags
+    - title
+    - question
+    - tags
     type: object
     properties:
       id:
@@ -1258,9 +1658,9 @@ definitions:
       tags:
         type: array
         items:
-          $ref: "#/definitions/Tag"
+          $ref: '#/definitions/Tag'
       author:
-        $ref: "#/definitions/UserInfo"
+        $ref: '#/definitions/UserInfo'
       created_at:
         title: Created at
         type: string
@@ -1293,11 +1693,15 @@ definitions:
       answers:
         type: array
         items:
-          $ref: "#/definitions/ForumAnswer"
+          $ref: '#/definitions/ForumAnswer'
+        readOnly: true
+      is_my_forum_question:
+        title: Is my forum question
+        type: string
         readOnly: true
   ForumUpvote:
     required:
-      - forum_question
+    - forum_question
     type: object
     properties:
       id:
@@ -1316,9 +1720,20 @@ definitions:
         type: string
         format: date-time
         readOnly: true
+  Translation:
+    required:
+    - translations
+    type: object
+    properties:
+      translations:
+        description: List of translations
+        type: array
+        items:
+          type: string
+          minLength: 1
   QuizQuestionChoice:
     required:
-      - choice_text
+    - choice_text
     type: object
     properties:
       id:
@@ -1335,8 +1750,8 @@ definitions:
         type: boolean
   QuizQuestion:
     required:
-      - question_text
-      - choices
+    - question_text
+    - choices
     type: object
     properties:
       id:
@@ -1351,14 +1766,14 @@ definitions:
       choices:
         type: array
         items:
-          $ref: "#/definitions/QuizQuestionChoice"
+          $ref: '#/definitions/QuizQuestionChoice'
   Quiz:
     required:
-      - title
-      - description
-      - tags
-      - type
-      - questions
+    - title
+    - description
+    - tags
+    - type
+    - questions
     type: object
     properties:
       id:
@@ -1378,24 +1793,24 @@ definitions:
         title: Difficulty
         type: integer
         enum:
-          - 1
-          - 2
-          - 3
-          - 4
+        - 1
+        - 2
+        - 3
+        - 4
         readOnly: true
       author:
-        $ref: "#/definitions/UserInfo"
+        $ref: '#/definitions/UserInfo'
       tags:
         type: array
         items:
-          $ref: "#/definitions/Tag"
+          $ref: '#/definitions/Tag'
       type:
         title: Type
         type: integer
         enum:
-          - 1
-          - 2
-          - 3
+        - 1
+        - 2
+        - 3
       created_at:
         title: Created at
         type: string
@@ -1404,7 +1819,7 @@ definitions:
       questions:
         type: array
         items:
-          $ref: "#/definitions/QuizQuestion"
+          $ref: '#/definitions/QuizQuestion'
       num_taken:
         title: Num taken
         type: string
@@ -1417,10 +1832,14 @@ definitions:
         title: Rating
         type: string
         readOnly: true
+      is_my_quiz:
+        title: Is my quiz
+        type: string
+        readOnly: true
   RateQuiz:
     required:
-      - quiz
-      - rating
+    - quiz
+    - rating
     type: object
     properties:
       id:
@@ -1441,8 +1860,8 @@ definitions:
         readOnly: true
   WordDefinition:
     required:
-      - id
-      - definition
+    - id
+    - definition
     type: object
     properties:
       id:
@@ -1461,26 +1880,26 @@ definitions:
         description: List of adverbs with their definitions
         type: array
         items:
-          $ref: "#/definitions/WordDefinition"
+          $ref: '#/definitions/WordDefinition'
       VERB:
         description: List of verbs with their definitions
         type: array
         items:
-          $ref: "#/definitions/WordDefinition"
+          $ref: '#/definitions/WordDefinition'
       ADJ:
         description: List of adjectives with their definitions
         type: array
         items:
-          $ref: "#/definitions/WordDefinition"
+          $ref: '#/definitions/WordDefinition'
       NOUN:
         description: List of nouns with their definitions
         type: array
         items:
-          $ref: "#/definitions/WordDefinition"
+          $ref: '#/definitions/WordDefinition'
   UserAnswer:
     required:
-      - question
-      - answer
+    - question
+    - answer
     type: object
     properties:
       id:
@@ -1500,8 +1919,8 @@ definitions:
         type: integer
   TakeQuiz:
     required:
-      - quiz
-      - answers
+    - quiz
+    - answers
     type: object
     properties:
       id:
@@ -1523,10 +1942,10 @@ definitions:
       answers:
         type: array
         items:
-          $ref: "#/definitions/UserAnswer"
+          $ref: '#/definitions/UserAnswer'
   TokenRefresh:
     required:
-      - refresh
+    - refresh
     type: object
     properties:
       refresh:
@@ -1540,7 +1959,7 @@ definitions:
         minLength: 1
   TokenRefreshResponse:
     required:
-      - access
+    - access
     type: object
     properties:
       access:
@@ -1549,7 +1968,7 @@ definitions:
         minLength: 1
   TokenVerify:
     required:
-      - token
+    - token
     type: object
     properties:
       token:

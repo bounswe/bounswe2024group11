@@ -1,4 +1,13 @@
-import { array, InferInput, nullable, number, object, string } from "valibot";
+import {
+    array,
+    boolean,
+    InferInput,
+    nullable,
+    number,
+    object,
+    string,
+} from "valibot";
+import { authorSchema } from "../../schemas";
 
 export type Answer = InferInput<typeof answerSchema>;
 
@@ -9,14 +18,6 @@ const tagSchema = object({
 });
 export type ForumResponse = InferInput<typeof forumSchema>;
 
-export const authorSchema = object({
-    id: number(),
-    full_name: string(),
-    username: string(),
-    avatar: nullable(string()),
-    email: string(),
-});
-
 export const answerSchema = object({
     id: number(),
     answer: string(),
@@ -26,6 +27,7 @@ export const answerSchema = object({
     is_downvoted: nullable(number()),
     upvotes_count: nullable(number()),
     downvotes_count: nullable(number()),
+    forum_question: nullable(number()),
 });
 
 export const forumQuestionSchema = object({
@@ -42,6 +44,7 @@ export const forumQuestionSchema = object({
     upvotes_count: number(),
     downvotes_count: number(),
     answers: array(answerSchema),
+    is_my_forum_question: boolean(),
 });
 
 export const forumSchema = object({
@@ -74,6 +77,20 @@ export const forumDownvoteSchema = object({
 
 export const forumAnswerSchema = object({
     answer: string(),
+});
+
+export const forumAnswerUpvoteSchema = object({
+    id: number(),
+    user: number(),
+    forum_answer: number(),
+    created_at: string(), // ISO date string
+});
+
+export const forumAnswerDownvoteSchema = object({
+    id: number(),
+    user: number(),
+    forum_answer: number(),
+    created_at: string(), // ISO date string
 });
 
 export type Tag = InferInput<typeof tagSchema>;

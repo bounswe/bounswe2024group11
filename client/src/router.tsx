@@ -13,14 +13,18 @@ import { Login } from "./routes/Auth/Login";
 import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
+
+import { forumCreateAction, forumLoader } from "./routes/Forum/Forum.data";
 import {
     answerForumAction,
     bookmarkForumAction,
+    deleteForumAction,
     downvoteForumAction,
-    forumLoader,
+    downvoteForumAnswerAction,
+    forumQuestionLoader,
     upvoteForumAction,
-} from "./routes/Forum/Forum.data";
-import { forumQuestionLoader } from "./routes/Forum/Question.data";
+    upvoteForumAnswerAction,
+} from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { QuizPage } from "./routes/Quiz/Quiz";
 import { quizLoader } from "./routes/Quiz/Quiz.data";
@@ -31,6 +35,7 @@ export const routes: RouteObject[] = [
     {
         path: "/",
         element: <Root />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "/",
@@ -53,14 +58,7 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
-                        children: [
-                            {
-                                path: "create",
-                                action: () => {
-                                    return true;
-                                },
-                            },
-                        ],
+                        action: forumCreateAction,
                     },
                     {
                         path: "forum/:questionId",
@@ -83,6 +81,18 @@ export const routes: RouteObject[] = [
                                 path: "answer",
                                 action: answerForumAction,
                             },
+                            {
+                                path: "delete",
+                                action: deleteForumAction,
+                            },
+                            {
+                                path: "upvoteAnswer",
+                                action: upvoteForumAnswerAction,
+                            },
+                            {
+                                path: "downvoteAnswer",
+                                action: downvoteForumAnswerAction,
+                            },
                         ],
                     },
                     {
@@ -103,14 +113,12 @@ export const routes: RouteObject[] = [
             },
             {
                 path: "login",
-                errorElement: <ErrorPage />,
                 element: <Login />,
                 action: loginAction,
                 loader: loginLoader,
             },
             {
                 path: "register",
-                errorElement: <ErrorPage />,
                 element: <Register />,
                 action: registerAction,
             },

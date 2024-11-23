@@ -1,7 +1,8 @@
 import { LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
-import { quizDetailsSchema } from "../../types/quiz";
-import { BASE_URL, logger } from "../../utils";
+import apiClient from "../../api";
+import { logger } from "../../utils";
+import { quizDetailsSchema } from "./Quiz.schema";
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
@@ -10,23 +11,22 @@ export const quizLoader = (async ({ params }) => {
         throw new Error("Quiz ID is required.");
     }
 
-    const res = await fetch(`${BASE_URL}/quizzes/${quizId}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+    try {
+        const response = await apiClient.get(`/quizzes/${quizId}`);
 
-    if (!res.ok) {
+        const data = response.data; // Extract data from axios response
+        logger.log(data);
+
+        const { output, issues, success } = safeParse(quizDetailsSchema, data);
+
+        if (!success) {
+            logger.error("Failed to parse quiz response:", issues);
+            throw new Error(`Failed to parse quiz response: ${issues}`);
+        }
+
+        return output;
+    } catch (error) {
+        logger.error(`Error fetching quiz with ID: ${quizId}`, error);
         throw new Error(`Failed to fetch quiz with ID: ${quizId}`);
     }
-
-    const data = await res.json();
-    logger.log(data);
-    const { output, issues, success } = safeParse(quizDetailsSchema, data);
-    if (!success) {
-        throw new Error(`Failed to parse quiz response: ${issues}`);
-    }
-
-    return output;
 }) satisfies LoaderFunction;

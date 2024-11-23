@@ -165,6 +165,7 @@ export const toggleButtonClass = cva(
                 bookmark: [],
                 upvote: [],
                 downvote: [],
+                delete: [],
             },
             state: {
                 on: [],
@@ -204,6 +205,16 @@ export const toggleButtonClass = cva(
             },
             {
                 intent: "downvote",
+                state: "off",
+                class: ["bg-slate-100", "text-slate-800"],
+            },
+            {
+                intent: "delete",
+                state: "on",
+                class: ["bg-red-600", "text-white"],
+            },
+            {
+                intent: "delete",
                 state: "off",
                 class: ["bg-slate-100", "text-slate-800"],
             },
