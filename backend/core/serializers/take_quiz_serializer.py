@@ -17,7 +17,7 @@ class UserAnswerSerializer(serializers.ModelSerializer):
 class TakeQuizSerializer(serializers.ModelSerializer):
     # Define a nested serializer for UserAnswers (many=True)
     answers = UserAnswerSerializer(many=True)
-    score = serializers.SerializerMethodField()
+    # score = serializers.SerializerMethodField()
     correct_answer_count = serializers.SerializerMethodField()
     wrong_answer_count = serializers.SerializerMethodField()
     empty_answer_count = serializers.SerializerMethodField()
@@ -27,12 +27,26 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         fields = ['id', 'quiz', 'user', 'date', 'answers', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count']
         read_only_fields = ['user', 'date', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count']
     
-    def get_score(self, obj):
+    def calculate_score(self, obj):
         correct_answers = 0
         for answer in obj.answers.all():
             if answer.answer is not None and answer.answer.is_correct:
-                correct_answers += 1
+                if answer.is_hint_used:
+                    correct_answers += answer.question.question_point // 2
+                else:
+                    correct_answers += answer.question.question_point
         return correct_answers
+    
+    # def get_score(self, obj):
+    #     correct_answers = 0
+    #     for answer in obj.answers.all():
+    #         if answer.answer is not None and answer.answer.is_correct:
+    #             if answer.is_hint_used:
+    #                 correct_answers += answer.question.question_point // 2
+    #             else:
+    #                 correct_answers += answer.question.question_point
+    #     return correct_answers
+
     
     def get_correct_answer_count(self, obj):
         return obj.answers.filter(answer__is_correct=True).count()
@@ -74,8 +88,8 @@ class TakeQuizSerializer(serializers.ModelSerializer):
                 take_quiz.delete()
                 # raise 400 with exception message
                 raise serializers.ValidationError(e)
-            
-
+        take_quiz.score = self.calculate_score(take_quiz)
+        take_quiz.save()
         return take_quiz
 
     def update(self, instance, validated_data):
