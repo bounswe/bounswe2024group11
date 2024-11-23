@@ -14,6 +14,7 @@ import {
     downvoteForumAction,
     upvoteForumAction,
 } from "../routes/Forum/Question.data";
+import { RelevantQuiz } from "../routes/Forum/RelevantQuizQuestion";
 import { getNumberDifference, pluralize } from "../utils";
 import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";
@@ -109,7 +110,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                             {question.question}
                         </p>
                     </Link>
-                    <div className="flex flex-row gap-4">
+                    <div className="flex flex-row gap-2">
                         {question.tags.map(
                             ({ name, linked_data_id, description }) => (
                                 <Button
@@ -129,6 +130,9 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                     </div>
                 </div>
             </div>
+            {question.quiz_question && (
+                <RelevantQuiz quizQuestion={question.quiz_question} />
+            )}
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-between">
                 <div className="flex flex-row items-center gap-1">

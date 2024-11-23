@@ -1,10 +1,12 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 
+import { Portal } from "@ariakit/react";
+import { RiAddFill } from "@remixicon/react";
 import { homeLoader } from "../Home/Home.data";
 import { forumLoader } from "./Forum.data";
 
@@ -226,6 +228,16 @@ export const Forum = () => {
                         ))}
                 </div>
             </main>
+            <Portal className="fixed bottom-10 right-10 z-10">
+                <Link
+                    to="/forum/new"
+                    className={buttonClass({ intent: "primary", icon: "left" })}
+                >
+                    <span className={buttonInnerRing({ intent: "primary" })} />
+                    <RiAddFill size={20} />
+                    <span>New Forum Question</span>
+                </Link>
+            </Portal>
         </div>
     );
 };
