@@ -118,7 +118,8 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                         e.preventDefault();
                                         onTagClick?.(linked_data_id);
                                     }}
-                                    key={name}
+                                    aria-label={name}
+                                    key={linked_data_id}
                                     className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500"
                                     data-linked-id={linked_data_id}
                                     data-description={description}

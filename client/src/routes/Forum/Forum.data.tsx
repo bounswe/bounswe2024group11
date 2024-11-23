@@ -1,4 +1,9 @@
-import { ActionFunction, LoaderFunction, redirect } from "react-router";
+import {
+    ActionFunction,
+    LoaderFunction,
+    redirect,
+    ShouldRevalidateFunction,
+} from "react-router";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
@@ -7,6 +12,19 @@ import {
     forumQuestionSchema,
     forumSchema,
 } from "./Forum.schema";
+
+export const forumShouldRevalidate: ShouldRevalidateFunction = ({
+    currentUrl,
+    nextUrl,
+}) => {
+    const currentUrlParams = new URLSearchParams(currentUrl.search);
+    const nextUrlParams = new URLSearchParams(nextUrl.search);
+
+    return (
+        currentUrlParams.get("page") !== nextUrlParams.get("page") ||
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+    );
+};
 
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
@@ -85,10 +103,7 @@ export const forumCreateAction = (async ({ request }) => {
         quiz_question_id: quiz_question_id || null,
     });
 
-    const { issues, output, success } = safeParse(
-        forumQuestionSchema,
-        response.data,
-    );
+    const { issues, success } = safeParse(forumQuestionSchema, response.data);
 
     if (!success) {
         console.error(issues);

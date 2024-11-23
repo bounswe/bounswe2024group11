@@ -1,8 +1,21 @@
-import { LoaderFunction } from "react-router";
+import { LoaderFunction, ShouldRevalidateFunction } from "react-router";
 import { safeParse } from "valibot";
 import apiClient from "../../api";
 import { logger } from "../../utils";
 import { quizDetailsSchema } from "./Quiz.schema";
+
+export const quizShouldRevalidate: ShouldRevalidateFunction = ({
+    currentUrl,
+    nextUrl,
+}) => {
+    const currentUrlParams = new URLSearchParams(currentUrl.search);
+    const nextUrlParams = new URLSearchParams(nextUrl.search);
+
+    return (
+        currentUrlParams.get("page") !== nextUrlParams.get("page") ||
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+    );
+};
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;

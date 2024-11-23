@@ -63,7 +63,7 @@ const ToastModal = ({ toast }: ToastProps) => {
             aria-modal="false"
             aria-description={toast.data.message}
             aria-live="polite"
-            className="flex w-[24rem] max-w-full items-center gap-2 overflow-hidden rounded-2 bg-white px-3 py-2 ring-1 ring-slate-200"
+            className="z-50 flex w-[24rem] max-w-full items-center gap-2 overflow-hidden rounded-2 bg-white px-3 py-2 ring-1 ring-slate-200"
             style={{
                 transformOrigin: "top",
                 transform: `translateY(-${order * 8}px) scale(${index === length - 1 ? 1 : Math.pow(0.96, order)})`,
@@ -128,7 +128,7 @@ const ToastModal = ({ toast }: ToastProps) => {
 export const ToastWrapper = () => {
     const { toasts } = useToastStore();
     return (
-        <div className="perspective-md fixed bottom-0 right-6 z-10 flex flex-col items-end gap-2 pb-10">
+        <div className="perspective-md fixed bottom-0 right-6 z-50 flex flex-col items-end gap-2 pb-10">
             {toasts.map((toast) => {
                 return (
                     <div
