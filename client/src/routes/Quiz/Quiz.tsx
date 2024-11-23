@@ -1,3 +1,5 @@
+import * as Ariakit from "@ariakit/react";
+import { RiLightbulbFlashLine } from "@remixicon/react";
 import { useEffect, useRef, useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import {
@@ -62,8 +64,6 @@ const EndQuizComponent = ({
 }) => {
     const { logged_in, user } =
         useRouteLoaderData<typeof homeLoader>("home-main");
-    logger.log("User is logged in: ", logged_in);
-    logger.log("User data: ", user);
     return (
         <div className="flex flex-col items-center gap-8">
             <h2 className="max-w-lg text-balance text-center font-display text-3xl font-medium text-slate-900">
@@ -247,17 +247,74 @@ export const QuizPage = () => {
                     <div>{formatTime(timeRemaining)} mins left</div>
                 </div>
             </div>
-            <div>
+            <div className="flex gap-4">
                 <div
                     ref={ref}
                     tabIndex={0}
                     id="question"
                     autoFocus={true}
                     aria-description="Question"
-                    className="font-display text-lg font-medium tracking-tight"
+                    className="flex-1 font-display text-lg font-medium tracking-tight"
                 >
                     {quiz.questions[currentQuestion].question_text}
                 </div>
+                {quiz.questions[currentQuestion].hints.length > 0 && (
+                    <div>
+                        <Ariakit.PopoverProvider placement="bottom-end">
+                            <Ariakit.PopoverDisclosure
+                                className={buttonClass({
+                                    intent: "primary",
+                                    size: "medium",
+                                    icon: "only",
+                                })}
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "primary",
+                                    })}
+                                    aria-hidden="true"
+                                />
+                                <RiLightbulbFlashLine size={18} />
+                            </Ariakit.PopoverDisclosure>
+                            <Ariakit.Popover className="my-2 flex w-80 flex-col gap-4 rounded-2 bg-white p-4 text-slate-700 shadow-md ring-1 ring-slate-100">
+                                <div className="flex flex-col gap-1">
+                                    <Ariakit.PopoverHeading className="text-md font-medium">
+                                        Using hint for the question{" "}
+                                        {currentQuestion + 1}
+                                    </Ariakit.PopoverHeading>
+                                    <Ariakit.PopoverDescription className="text-sm text-slate-600">
+                                        Using a hint in a question will decrease
+                                        the points earned by 50%.
+                                    </Ariakit.PopoverDescription>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Ariakit.Button
+                                        onClick={() => {}}
+                                        className={buttonClass({
+                                            intent: "tertiary",
+                                            size: "medium",
+                                            className: "flex-1",
+                                        })}
+                                    >
+                                        Cancel
+                                    </Ariakit.Button>
+                                    <Ariakit.Button
+                                        onClick={() =>
+                                            showHint(currentQuestion)
+                                        }
+                                        className={buttonClass({
+                                            intent: "secondary",
+                                            size: "medium",
+                                            className: "flex-1",
+                                        })}
+                                    >
+                                        Accept Hint
+                                    </Ariakit.Button>
+                                </div>
+                            </Ariakit.Popover>
+                        </Ariakit.PopoverProvider>
+                    </div>
+                )}
             </div>
             {quiz.questions[currentQuestion] && (
                 <div>
@@ -335,6 +392,7 @@ export const QuizPage = () => {
                             className={buttonClass({
                                 intent: "primary",
                                 size: "medium",
+                                className: "w-full",
                             })}
                         >
                             <span
@@ -368,37 +426,18 @@ export const QuizPage = () => {
                     </button>
                 )}
             </div>
-            <div
-                className={`${!hintOpen ? "hidden" : "flex w-full flex-col"} `}
-            >
-                <h2 className="font-display text-lg font-medium tracking-tight">
-                    Hint
-                </h2>
-                <p className="w-full">{hintText}</p>
-            </div>
-            <button
-                className={
-                    buttonClass({
-                        intent: "primary",
-                        size: "medium",
-                        rounded: "full",
-                        position: "fixed",
-                        icon: "none",
-                    }) + " bottom-8 right-8"
-                }
-                onClick={() => {
-                    showHint(currentQuestion);
-                }}
-            >
-                <span
-                    className={buttonInnerRing({
-                        intent: "primary",
-                        rounded: "full",
-                    })}
-                    aria-hidden="true"
-                />
-                ?
-            </button>
+            {hintOpen && <Hint message={hintText} />}
         </main>
+    );
+};
+
+const Hint = ({ message }: { message: string }) => {
+    return (
+        <div className="flex flex-col gap-2 rounded-2 bg-orange-200 p-4 text-orange-900 ring-1 ring-orange-500/50">
+            <div className="flex items-center gap-2">
+                <RiLightbulbFlashLine size={24} />
+            </div>
+            <p className="w-full">{message}</p>
+        </div>
     );
 };
