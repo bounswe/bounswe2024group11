@@ -11,7 +11,8 @@ from rest_framework.generics import ListAPIView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from ..models import ForumQuestion, Quiz
-from ..serializers.serializers import ForumQuestionSerializer, QuizSerializer
+from ..serializers.serializers import 
+from ..serializers.forum_question_serializer import ForumQuestionSerializer
 # import pagination
 from rest_framework.pagination import PageNumberPagination
 from django.utils.decorators import method_decorator
