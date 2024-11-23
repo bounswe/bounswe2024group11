@@ -1,5 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { redirect } from "react-router";
+import { USER } from "./constants";
+import { useToastStore } from "./store";
 import { BASE_URL } from "./utils";
 
 const apiClient = axios.create({
@@ -36,5 +39,22 @@ apiClient.interceptors.response.use(
         return Promise.resolve(error.response);
     },
 );
+
+export const getUserOrRedirect = () => {
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+    const authToken = Cookies.get("access_token");
+    if (!user || !authToken) {
+        useToastStore.getState().add({
+            id: `not-logged-in-${Date.now()}`,
+            type: "info",
+            data: {
+                message: "Authentication required",
+                description: "You need to log in to complete this action",
+            },
+        });
+        redirect("/login");
+    }
+    return user;
+};
 
 export default apiClient;

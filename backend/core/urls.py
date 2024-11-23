@@ -1,11 +1,13 @@
 from django.urls import path
 
+
 from .views.get_translation_views import TranslationView
 from .views.difficulty_views import QuestionPointView
 from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
 from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
 from .views.take_quiz_views import TakeQuizViewSet
+from .views.hint_views import HintView
 from .views.forum_bookmark_views import ForumBookmarkViewSet
 from .views.forum_vote_views import ForumUpvoteViewSet, ForumDownvoteViewSet, ForumAnswerUpvoteViewSet, ForumAnswerDownvoteViewSet
 from rest_framework.routers import DefaultRouter
@@ -57,6 +59,7 @@ urlpatterns = [
     path('token/verify/', DecoratedTokenVerifyView.as_view(), name='token_verify'),
     path('auth/register/', RegisterView.as_view(), name='register'),
     path("tagging/", TaggingView.as_view(), name="tagging"),
+     path('hint/', HintView.as_view(), name='babelnet-hint'),
     path("get-translation/", TranslationView.as_view(), name="get-translation"),
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
 ]

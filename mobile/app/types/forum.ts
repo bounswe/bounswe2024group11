@@ -5,8 +5,10 @@ export type Tag = {
 };
 
 export type Author = {
-  full_name: string;
+  id: number;
   username: string;
+  email: string;
+  full_name: string;
   avatar: string;
 };
 
@@ -23,6 +25,7 @@ export type Question = {
   upvotes_count: number;
   is_downvoted: boolean;
   downvotes_count: number;
+  answers?: Answer[];
 };
 
 export type Answer = {
@@ -34,4 +37,5 @@ export type Answer = {
   upvotes_count: number;
   is_downvoted: boolean;
   downvotes_count: number;
+  answers?: Answer[];
 };
