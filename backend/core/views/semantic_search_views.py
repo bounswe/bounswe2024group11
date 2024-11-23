@@ -6,10 +6,14 @@ from dotenv import load_dotenv
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from ..models import ForumQuestion
 from ..serializers.serializers import ForumQuestionSerializer
+# import pagination
+from rest_framework.pagination import PageNumberPagination
 
 
 load_dotenv()
@@ -17,7 +21,7 @@ api_key = os.getenv('BABELNET_API_KEY')
 
 
 def get_ids(word_id):
-    return_array = []
+    return_array = [word_id]
 
     url = 'https://babelnet.io/v9/getOutgoingEdges'
     params = {
@@ -25,44 +29,37 @@ def get_ids(word_id):
         'key': api_key,
     }
     response = requests.get(url, params=params)
-
     if response.status_code != 200:
         raise Exception(f"Error fetching from BabelNet API. Status code: {response.status_code}")
     
     data = response.json()
     for value in data:
         if value.get("language") == "EN" or value.get("language") == "TR":
-            if value.get("pointer").get("shortName") != "related":
-                return_array.append(value)    
+            # if value.get("pointer").get("shortName") != "related":
+            #     return_array.append(value.get("target"))
+            return_array.append(value.get("target"))    
     
     return return_array
 
 
-def ForumSemanticSearchView(ListAPIView):
-    queryset = ForumQuestion.objects.all()
+class ForumQuestionPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'per_page'
+    max_page_size = 100
+
+class ForumSemanticSearchView(ListAPIView):
+    queryset = ForumQuestion.objects.all().order_by('-created_at')
     serializer_class = ForumQuestionSerializer
-    # permission_classes = [permissions.IsAuthenticated, IsAuthorOwnerOrReadOnly]
+    pagination_class = ForumQuestionPagination
 
-    @swagger_auto_schema(
-        responses={200: openapi.TYPE_ARRAY},
-        manual_parameters=[
-            openapi.Parameter('id', openapi.IN_QUERY, description="ID of the word", type=openapi.TYPE_STRING),
-        ]
-    )
-    
-    def get(self, request):     # Complete?
-        try:
-            word_id = request.query_params.get('id')
+    def get_queryset(self):
+        word_id = self.request.query_params.get('id')
+        if not word_id:
+            raise ValueError('Parameter "id" is required.')
+        linked_data_ids = get_ids(word_id)  # Make sure this function exists
+        return self.queryset.filter(tags__linked_data_id__in=linked_data_ids)
 
-            if not word_id:
-                return Response({'error': 'Parameter "id" is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-            linked_data_ids = get_ids(word_id)
-            self.queryset = self.queryset.filter(tags__linked_data_id__in=linked_data_ids)
-
-            serializers = self.serializer_class(self.queryset, many=True)
-
-            return Response(serializers.data, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def handle_exception(self, exc):
+        if isinstance(exc, ValueError):
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        return super().handle_exception(exc)
