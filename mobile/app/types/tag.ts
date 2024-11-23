@@ -15,3 +15,8 @@ export type TagSearchResult = {
   id: string;
   description: string;
 };
+
+export type DummyTagForQuiz = {
+  id: string;
+  name: string;
+};

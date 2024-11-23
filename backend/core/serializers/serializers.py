@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote)
+                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 
@@ -183,37 +183,54 @@ class QuizQuestionChoiceSerializer(serializers.ModelSerializer):
         fields = ('id', 'choice_text', 'is_correct')
         # No need for 'question' field here, as it will be assigned in the QuizQuestion serializer
 
+class QuizQuestionHintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizQuestionHint
+        fields = ('id', 'type', 'text')
+
 
 class QuizQuestionSerializer(serializers.ModelSerializer):
     choices = QuizQuestionChoiceSerializer(many=True)  # Allow nested choices creation
+    hints = QuizQuestionHintSerializer(required=False, many=True)
     class Meta:
         model = QuizQuestion
-        fields = ('id', 'question_text', 'choices')
+        fields = ('id', 'question_text', 'choices', 'hints')
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
     def create(self, validated_data):
         # Extract nested choices from validated_data
         choices_data = validated_data.pop('choices', [])
+        hint_data = validated_data.pop('hints', [])
         question = QuizQuestion.objects.create(**validated_data)
 
         # Create and associate each QuizQuestionChoice with the QuizQuestion
         for choice_data in choices_data:
             QuizQuestionChoice.objects.create(question=question, **choice_data)
+        
+        for hint_data in hint_data:
+            QuizQuestionHint.objects.create(question=question, **hint_data)
 
         return question
 
     def update(self, instance, validated_data):
         # Handle updating nested choices
         choices_data = validated_data.pop('choices', [])
-
+        hint_data = validated_data.pop('hints', [])
         # Update question fields
         instance.question_text = validated_data.get('question_text', instance.question_text)
+
+        instance.hints.all().delete()
+        for hint_data in hint_data:
+            QuizQuestionHint.objects.create(question=instance, **hint_data)
+
         instance.save()
 
         # Update or create associated choices
         instance.choices.all().delete()
         for choice_data in choices_data:
             QuizQuestionChoice.objects.create(question=instance, **choice_data)
+        
+        return instance
 
 
 class QuizSerializer(serializers.ModelSerializer):
