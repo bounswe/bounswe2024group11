@@ -42,7 +42,9 @@ export const Quizzes = () => {
             (quiz) =>
                 quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
                 (!selectedTagId ||
-                    quiz.tags.some((tag) => tag.id === selectedTagId)),
+                    quiz.tags.some(
+                        (tag) => tag.linked_data_id === selectedTagId,
+                    )),
         )
         .sort((a, b) => {
             if (sortBy === "newest") {
@@ -58,7 +60,7 @@ export const Quizzes = () => {
             } else if (sortBy === "popular") {
                 return b.num_taken - a.num_taken;
             } else if (sortBy === "most liked") {
-                return b.rating.score - a.rating.score;
+                return (b.rating.score || 0) - (a.rating.score || 0);
             }
             return 0;
         });
@@ -146,7 +148,10 @@ export const Quizzes = () => {
                         >
                             <option value="">All Tags</option>
                             {allTags.map((tag) => (
-                                <option key={tag.id} value={tag.id}>
+                                <option
+                                    key={tag.linked_data_id}
+                                    value={tag.name}
+                                >
                                     {tag.name}
                                 </option>
                             ))}
@@ -223,6 +228,7 @@ export const Quizzes = () => {
                     .map((quiz) => (
                         <QuizCard
                             key={quiz.id}
+                            quiz_key={String(quiz.id)}
                             onTagClick={(tag) => setSelectedTagId(tag)}
                             quiz={quiz}
                         />

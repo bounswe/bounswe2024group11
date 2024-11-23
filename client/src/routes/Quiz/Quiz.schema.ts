@@ -46,7 +46,7 @@ export const quizOverviewSchema = object({
     tags: array(quizTagSchema),
     num_taken: number(),
     is_taken: boolean(),
-    question_count: number(),
+    // question_count: number(),
     difficulty: difficultySchema,
     rating: ratingSchema,
 });
