@@ -27,7 +27,7 @@ import {
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { QuizPage } from "./routes/Quiz/Quiz";
-import { quizLoader } from "./routes/Quiz/Quiz.data";
+import { quizLoader, takeQuizAction } from "./routes/Quiz/Quiz.data";
 import { Quizzes } from "./routes/Quiz/Quizzes";
 import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
 
@@ -104,6 +104,7 @@ export const routes: RouteObject[] = [
                         path: "quizzes/:quizId",
                         element: <QuizPage />,
                         loader: quizLoader,
+                        action: takeQuizAction,
                     },
                     {
                         path: "profile",
