@@ -7,6 +7,7 @@ import {
     object,
     string,
 } from "valibot";
+import { authorSchema } from "../../schemas";
 
 export type Answer = InferInput<typeof answerSchema>;
 
@@ -16,14 +17,6 @@ const tagSchema = object({
     description: string(),
 });
 export type ForumResponse = InferInput<typeof forumSchema>;
-
-export const authorSchema = object({
-    id: number(),
-    full_name: string(),
-    username: string(),
-    avatar: nullable(string()),
-    email: string(),
-});
 
 export const answerSchema = object({
     id: number(),

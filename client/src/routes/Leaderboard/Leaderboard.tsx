@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { PageHead } from "../../components/page-head";
-import { homeLoader } from "./Home.data";
+import { homeLoader } from "../Home/Home.data";
 
 export const Leaderboard = () => {
     const [leaderboardType, setLeaderboardType] = useState("quiz");
