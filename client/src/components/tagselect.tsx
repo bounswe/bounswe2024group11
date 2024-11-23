@@ -15,7 +15,7 @@ import React, {
     useRef,
     useState,
 } from "react";
-import { Tag } from "../types/forum";
+import { Tag } from "../routes/Forum/Forum.schema";
 import { inputClass } from "./input";
 
 const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
@@ -36,7 +36,9 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
     const filteredOptions: Tag[] = availableTags.filter(
         (option: Tag) =>
             option.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-            !selectedTags.some((tag: Tag) => tag.id === option.id),
+            !selectedTags.some(
+                (tag: Tag) => tag.linked_data_id === option.linked_data_id,
+            ),
     );
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -61,7 +63,7 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
     const removeTag = useCallback(
         (tagId: string): void => {
             const newTags: Tag[] = selectedTags.filter(
-                (tag) => tag.id !== tagId,
+                (tag) => tag.linked_data_id !== tagId,
             );
             setSelectedTags(newTags);
             onTagsChange?.(newTags);
@@ -121,19 +123,19 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
             <input
                 type="hidden"
                 name="tags"
-                value={selectedTags.map((tag) => tag.id).join(",")}
+                value={selectedTags.map((tag) => tag.linked_data_id).join(",")}
             />
             <div className="mb-2 flex flex-wrap gap-2">
                 {selectedTags.map((tag) => (
                     <Button
                         aria-label={tag.name}
-                        key={tag.id}
+                        key={tag.linked_data_id}
                         className="rounded-md flex items-center gap-1 rounded-2 bg-slate-200 px-2 py-1"
                     >
                         <span>{tag.name}</span>
                         <button
                             type="button"
-                            onClick={() => removeTag(tag.id)}
+                            onClick={() => removeTag(tag.linked_data_id)}
                             className="bg-slate-200"
                             aria-label={`Remove ${tag.name}`}
                         >
@@ -161,7 +163,7 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
                     aria-controls="tag-listbox"
                     aria-activedescendant={
                         highlightedIndex >= 0
-                            ? `option-${filteredOptions[highlightedIndex].id}`
+                            ? `option-${filteredOptions[highlightedIndex].linked_data_id}`
                             : undefined
                     }
                 />
@@ -174,8 +176,8 @@ const AutocompleteTag: React.FC<AutocompleteTagProps> = ({
                     >
                         {filteredOptions.map((option, index) => (
                             <div
-                                id={`option-${option.id}`}
-                                key={option.id}
+                                id={`option-${option.linked_data_id}`}
+                                key={option.linked_data_id}
                                 role="option"
                                 aria-selected={index === highlightedIndex}
                                 className={`cursor-pointer px-4 py-2 ${
