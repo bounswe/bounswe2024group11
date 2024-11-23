@@ -99,6 +99,6 @@ export const quizzesLoader = (async ({ request }) => {
         return output;
     } catch (error) {
         logger.error("Error fetching quizzes", error);
-        throw new Error("Failed to fetch quizzes");
+        throw new Error("Failed to load quizzes");
     }
 }) satisfies LoaderFunction;

@@ -1,8 +1,26 @@
-import { ActionFunction, LoaderFunction, redirect } from "react-router";
+import {
+    ActionFunction,
+    LoaderFunction,
+    redirect,
+    ShouldRevalidateFunction,
+} from "react-router";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
 import { completedQuizSchema, quizDetailsSchema } from "./Quiz.schema";
+
+export const quizShouldRevalidate: ShouldRevalidateFunction = ({
+    currentUrl,
+    nextUrl,
+}) => {
+    const currentUrlParams = new URLSearchParams(currentUrl.search);
+    const nextUrlParams = new URLSearchParams(nextUrl.search);
+
+    return (
+        currentUrlParams.get("page") !== nextUrlParams.get("page") ||
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+    );
+};
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
@@ -31,7 +49,7 @@ export const quizLoader = (async ({ params }) => {
         return output;
     } catch (error) {
         logger.error(`Error fetching quiz with ID: ${quizId}`, error);
-        throw new Error(`Failed to fetch quiz with ID: ${quizId}`);
+        throw new Error(`Failed to load quiz with ID: ${quizId}`);
     }
 }) satisfies LoaderFunction;
 

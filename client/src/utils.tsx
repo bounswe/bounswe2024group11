@@ -70,3 +70,43 @@ export const getNumberDifference = (
     if (value1 === null || value2 === null) return 0;
     return value1 - value2;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DebouncedFunction<T extends (...args: any[]) => any> = {
+    (...args: Parameters<T>): void;
+    cancel: () => void;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function debounce<T extends (...args: any[]) => any>(
+    func: T,
+    wait: number = 300,
+): DebouncedFunction<T> {
+    let timeoutId: NodeJS.Timeout | undefined;
+
+    // Create the debounced function
+    const debounced = function (
+        this: ThisParameterType<T>,
+        ...args: Parameters<T>
+    ) {
+        // Clear any existing timeout
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        // Set up new timeout
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    } as DebouncedFunction<T>;
+
+    // Add cancel method
+    debounced.cancel = function () {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = undefined;
+        }
+    };
+
+    return debounced;
+}
