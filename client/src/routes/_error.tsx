@@ -1,9 +1,11 @@
 import { useRouteError } from "react-router";
 import { Link } from "react-router-dom";
 import { buttonClass, buttonInnerRing } from "../components/button";
+import { logger } from "../utils";
 
 export const ErrorPage = () => {
     const error = useRouteError();
+    logger.error(error);
     const errorMessage =
         typeof error == "object" &&
         error !== null &&
@@ -19,14 +21,12 @@ export const ErrorPage = () => {
                 aria-live="polite"
             >
                 <div className="flex flex-col items-center gap-2">
-                    <h1
-                        id="error-heading"
-                        className="text-2xl font-semibold"
-                        tabIndex={-1}
-                    >
-                        {errorMessage}
+                    <h1 className="text-2xl font-semibold" tabIndex={-1}>
+                        An error occurred on our side.
                     </h1>
-                    <p>Sorry, it's not you, it's us:</p>
+                    <p tabIndex={-1} id="error-heading">
+                        {errorMessage}
+                    </p>
                 </div>
                 <Link
                     className={buttonClass({ intent: "primary" })}
