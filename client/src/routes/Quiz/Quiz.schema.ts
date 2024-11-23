@@ -14,6 +14,8 @@ const quizTagSchema = object({
     description: string(),
 });
 
+export type QuizTag = InferInput<typeof quizTagSchema>;
+
 // const difficultySchema = union([
 //     literal("easy"),
 //     literal("medium"),
@@ -25,19 +27,28 @@ const ratingSchema = object({
     count: number(),
 });
 
-export const questionsSchema = array(
-    object({
-        id: number(),
-        question_text: string(),
-        choices: array(
-            object({
-                id: number(),
-                is_correct: boolean(),
-                choice_text: string(),
-            }),
-        ),
-    }),
-);
+export const quizQuestionSchema = object({
+    id: number(),
+    question_text: string(),
+    choices: array(
+        object({
+            id: number(),
+            is_correct: boolean(),
+            choice_text: string(),
+        }),
+    ),
+    hints: array(
+        object({
+            id: number(),
+            text: string(),
+            type: string(),
+        }),
+    ),
+});
+
+export type QuizQuestion = InferInput<typeof quizQuestionSchema>;
+
+export const questionsSchema = array(quizQuestionSchema);
 export const quizOverviewSchema = object({
     id: number(),
     title: string(),
