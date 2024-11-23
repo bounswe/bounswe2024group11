@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status, serializers
 from rest_framework.response import Response
 from ..permissions import IsAuthorOrReadOnly
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from datamuse import Datamuse
 
 def get_difficulty(keyword):
@@ -41,7 +43,16 @@ def get_difficulty(keyword):
     del api
     return total_point
 
+class DifficultySerializer(serializers.Serializer):
+    question_point = serializers.IntegerField(help_text='Difficulty point of the question')
+
 class QuestionPointView(APIView):
+    @swagger_auto_schema(
+        responses={200: DifficultySerializer},
+        manual_parameters=[
+            openapi.Parameter('keyword', openapi.IN_QUERY, description="Keyword of the question", type=openapi.TYPE_STRING),
+        ] 
+    )
     def get(self, request):
         try:
             keyword = request.GET.get('keyword')
