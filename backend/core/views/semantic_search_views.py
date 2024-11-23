@@ -52,7 +52,6 @@ class ForumQuestionPagination(PageNumberPagination):
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
-        responses={200: openapi.TYPE_ARRAY},
         manual_parameters=[
             openapi.Parameter(
                 'id',
@@ -90,7 +89,6 @@ class QuizPagination(PageNumberPagination):
 @method_decorator(
     name='get',
     decorator=swagger_auto_schema(
-        responses={200: openapi.TYPE_ARRAY},
         manual_parameters=[
             openapi.Parameter(
                 'id',
