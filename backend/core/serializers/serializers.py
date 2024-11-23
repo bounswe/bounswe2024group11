@@ -194,8 +194,7 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
     hints = QuizQuestionHintSerializer(required=False, many=True)
     class Meta:
         model = QuizQuestion
-        fields = ('id', 'question_text', 'question_point', 'choices', "hint")
-        read_only_fields = ('question_point',)
+        fields = ('id', 'question_text', 'question_point', 'choices', "hints")
         # No need for 'quiz' field here, as it will be assigned in the Quiz serializer
 
     def create(self, validated_data):
@@ -302,16 +301,11 @@ class QuizSerializer(serializers.ModelSerializer):
         # Create and associate each QuizQuestion with the Quiz
         for question_data in questions_data:
             choices_data = question_data.pop('choices', [])
-            quiz_type = validated_data.get('type')
-            if(quiz_type == 2):
-                for choice in choices_data:
-                    if choice['is_correct']:
-                        keyword = choice['choice_text']
-                        break
-            else:
-                keyword = question_data['question_text']
-            question_data['question_point'] = get_difficulty(keyword)
+            hints_data = question_data.pop('hints', [])
             question = QuizQuestion.objects.create(quiz=quiz, **question_data)
+            for hint_data in hints_data:
+                QuizQuestionHint.objects.create(question=question, **hint_data)
+
             for choice_data in choices_data:
                 QuizQuestionChoice.objects.create(question=question, **choice_data)
         # Calculate the total point of the quiz        
