@@ -70,7 +70,7 @@ export const Quizzes = () => {
     ).sort((a, b) => a.name.localeCompare(b.name));
 
     const description = logged_in
-        ? `This is your time to shine ${user.full_name}`
+        ? `This is your time to shine, ${user.full_name}`
         : "Test your knowledge of various topics. Log in to track your progress.";
 
     return (
@@ -78,114 +78,119 @@ export const Quizzes = () => {
             <PageHead title="Quizzes" description={description} />
             <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <fieldset className="flex flex-col gap-2">
+                                <label
+                                    htmlFor="perPage"
+                                    className="text-sm text-slate-500"
+                                >
+                                    Show quizzes per page:
+                                </label>
+                                <select
+                                    id="perPage"
+                                    value={perPage}
+                                    onChange={handlePerPageChange}
+                                    className={`${inputClass()} w-24`}
+                                >
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </fieldset>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={!data.previous}
+                                    aria-disabled={!data.previous}
+                                    className={buttonClass({
+                                        intent: "secondary",
+                                    })}
+                                >
+                                    <div
+                                        className={buttonInnerRing({
+                                            intent: "secondary",
+                                        })}
+                                        aria-hidden="true"
+                                    />
+                                    Previous
+                                </button>
+                                <span className="flex items-center">
+                                    Page {currentPage} of {totalPages}
+                                </span>
+                                <button
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    disabled={!data.next}
+                                    aria-disabled={!data.next}
+                                    className={buttonClass({
+                                        intent: "secondary",
+                                    })}
+                                >
+                                    <div
+                                        className={buttonInnerRing({
+                                            intent: "secondary",
+                                        })}
+                                        aria-hidden="true"
+                                    />
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-4 sm:flex-row">
                         <div>
-                            <label htmlFor="perPage" className="mr-2">
-                                Questions per page:
-                            </label>
                             <select
-                                id="perPage"
-                                value={perPage}
-                                onChange={handlePerPageChange}
-                                className={`${inputClass()} w-24`}
+                                className={inputClass({
+                                    className: "w-40 cursor-pointer",
+                                })}
+                                value={selectedTagId || ""}
+                                onChange={(e) =>
+                                    setSelectedTagId(e.target.value || null)
+                                }
                             >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
+                                <option value="">All Tags</option>
+                                {allTags.map((tag) => (
+                                    <option
+                                        key={tag.linked_data_id}
+                                        value={tag.linked_data_id}
+                                    >
+                                        {tag.name}
+                                    </option>
+                                ))}
                             </select>
                         </div>
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() =>
-                                    handlePageChange(currentPage - 1)
-                                }
-                                disabled={!data.previous}
-                                aria-disabled={!data.previous}
-                                className={buttonClass({
-                                    intent: "secondary",
+                        <div className="flex-grow">
+                            <input
+                                type="text"
+                                placeholder="Search quizzes..."
+                                className={inputClass({
+                                    className: "w-full max-w-sm",
                                 })}
-                            >
-                                <div
-                                    className={buttonInnerRing({
-                                        intent: "secondary",
-                                    })}
-                                    aria-hidden="true"
-                                />
-                                Previous
-                            </button>
-                            <span className="flex items-center">
-                                Page {currentPage} of {totalPages}
-                            </span>
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <div>
                             <button
-                                onClick={() =>
-                                    handlePageChange(currentPage + 1)
-                                }
-                                disabled={!data.next}
-                                aria-disabled={!data.next}
                                 className={buttonClass({
-                                    intent: "secondary",
+                                    intent: "tertiary",
+                                    size: "medium",
+                                    icon: "left",
                                 })}
+                                onClick={() => {
+                                    setSearchTerm("");
+                                    setSelectedTagId(null);
+                                    setSortBy("newest");
+                                }}
                             >
-                                <div
-                                    className={buttonInnerRing({
-                                        intent: "secondary",
-                                    })}
-                                    aria-hidden="true"
-                                />
-                                Next
+                                <RiCloseFill size={20} />
+                                Clear All Filters
                             </button>
                         </div>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-4 sm:flex-row">
-                    <div>
-                        <select
-                            className={inputClass({
-                                className: "w-40 cursor-pointer",
-                            })}
-                            value={selectedTagId || ""}
-                            onChange={(e) =>
-                                setSelectedTagId(e.target.value || null)
-                            }
-                        >
-                            <option value="">All Tags</option>
-                            {allTags.map((tag) => (
-                                <option
-                                    key={tag.linked_data_id}
-                                    value={tag.linked_data_id}
-                                >
-                                    {tag.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex-grow">
-                        <input
-                            type="text"
-                            placeholder="Search quizzes..."
-                            className={inputClass({
-                                className: "w-full max-w-sm",
-                            })}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <button
-                            className={buttonClass({
-                                intent: "tertiary",
-                                size: "medium",
-                                icon: "left",
-                            })}
-                            onClick={() => {
-                                setSearchTerm("");
-                                setSelectedTagId(null);
-                                setSortBy("newest");
-                            }}
-                        >
-                            <RiCloseFill size={20} />
-                            Clear All Filters
-                        </button>
                     </div>
                 </div>
                 <div className="flex gap-2">

@@ -30,4 +30,4 @@ mysqlclient==2.2.4
 python-dotenv==1.0.1
 drf-nested-routers==0.91.0
 rdflib==7.0.0
-
+python-datamuse==2.0.1

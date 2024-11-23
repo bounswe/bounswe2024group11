@@ -30,7 +30,7 @@ def get_translation(word_id, target_lang):
                 if lemma.replace("_", " ").lower().strip() not in translations:
                     lemma = lemma.replace("_", " ").lower().strip()
                     translations.append(lemma)
-                    print(lemma)
+                    # print(lemma)
 
     return translations
 
