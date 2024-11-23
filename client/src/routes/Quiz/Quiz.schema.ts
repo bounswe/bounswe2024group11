@@ -72,10 +72,22 @@ export const quizOverviewSchema = object({
     difficulty: number(),
 });
 
+export const completedQuizSchema = object({
+    quiz: number(),
+    answers: array(
+        object({
+            question: number(),
+            answer: number(),
+            is_hint_used: boolean(),
+        }),
+    ),
+});
+
 export const quizDetailsSchema = object({
     ...quizOverviewSchema.entries,
     questions: questionsSchema,
 });
 
+export type CompletedQuiz = InferInput<typeof completedQuizSchema>;
 export type QuizOverview = InferInput<typeof quizOverviewSchema>;
 export type QuizDetails = InferInput<typeof quizDetailsSchema>;

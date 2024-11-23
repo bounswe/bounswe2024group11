@@ -42,6 +42,7 @@ export const ErrorPage = () => {
                             strokeLinecap="round"
                             stroke="currentColor"
                         >
+                            <title>Error Illustration</title>
                             <g className="text-cyan-600">
                                 <path d="M21.4251 23.49V66.36L12.0851 60.97V28.82L2.74512 23.43V12.71L21.4251 23.49Z" />
                                 <path d="M41.4251 13.49L31.4751 18.47L21.4251 23.49L2.74512 12.71L22.7451 2.70996L41.4251 13.49Z" />

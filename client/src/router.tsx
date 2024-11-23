@@ -33,7 +33,11 @@ import {
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { QuizPage } from "./routes/Quiz/Quiz";
-import { quizLoader, quizShouldRevalidate } from "./routes/Quiz/Quiz.data";
+import {
+    quizLoader,
+    quizShouldRevalidate,
+    takeQuizAction,
+} from "./routes/Quiz/Quiz.data";
 import { Quizzes } from "./routes/Quiz/Quizzes";
 import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
 
@@ -117,6 +121,7 @@ export const routes: RouteObject[] = [
                         path: "quizzes/:quizId",
                         element: <QuizPage />,
                         loader: quizLoader,
+                        action: takeQuizAction,
                     },
                     {
                         path: "profile",

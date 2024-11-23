@@ -9,6 +9,7 @@ from .views.rate_quiz_views import RateQuizViewSet
 from .views.take_quiz_views import TakeQuizViewSet
 from .views.hint_views import HintView
 from .views.forum_bookmark_views import ForumBookmarkViewSet
+from .views.semantic_search_views import ForumSemanticSearchView, QuizSemanticSearchView
 from .views.forum_vote_views import ForumUpvoteViewSet, ForumDownvoteViewSet, ForumAnswerUpvoteViewSet, ForumAnswerDownvoteViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
@@ -61,6 +62,8 @@ urlpatterns = [
     path("tagging/", TaggingView.as_view(), name="tagging"),
      path('hint/', HintView.as_view(), name='babelnet-hint'),
     path("get-translation/", TranslationView.as_view(), name="get-translation"),
+    path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
+    path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"),
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
 ]
 

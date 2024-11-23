@@ -21,7 +21,7 @@ export const forumQuestionLoader = (async ({ params }) => {
     }
 
     try {
-        const response = await apiClient.get(`/forum-questions/${postId}`);
+        const response = await apiClient.get(`/forum-questions/${postId}/`);
 
         const { output, issues, success } = safeParse(
             forumQuestionSchema,
