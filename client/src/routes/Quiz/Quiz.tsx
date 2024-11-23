@@ -90,6 +90,7 @@ export const QuizPage = () => {
     const [_, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
     const [answers, setAnswers] = useState<Record<number, string>>({});
+    const [hints, setHints] = useState<Record<number, boolean>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [isQuizEnded, setIsQuizEnded] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
@@ -147,6 +148,17 @@ export const QuizPage = () => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    };
+    const showHint = (questionIndex: number) => {
+        const hint = quiz.questions[questionIndex].hints;
+        const hinttext = hint?.[0]?.text || "";
+        if (hinttext === "") {
+            logger.log(`No hint for question ${questionIndex}`);
+        } else {
+            const updatedHints = { ...hints, [questionIndex]: true };
+            logger.log(`Hint for question ${questionIndex}`, hinttext || "");
+            setHints(updatedHints);
+        }
     };
 
     const startQuiz = () => {
@@ -318,6 +330,27 @@ export const QuizPage = () => {
                     </button>
                 )}
             </div>
+            <button
+                className={buttonClass({
+                    intent: "primary",
+                    size: "medium",
+                    rounded: "full",
+                    position: "fixed",
+                    icon: "none",
+                })}
+                onClick={() => {
+                    showHint(currentQuestion);
+                }}
+            >
+                <span
+                    className={buttonInnerRing({
+                        intent: "primary",
+                        rounded: "full",
+                    })}
+                    aria-hidden="true"
+                />
+                ?
+            </button>
         </main>
     );
 };

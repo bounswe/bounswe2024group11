@@ -5,6 +5,7 @@ import {
     nullable,
     number,
     object,
+    optional,
     string,
 } from "valibot";
 
@@ -27,6 +28,11 @@ const quizTagSchema = object({
 //     literal("medium"),
 //     literal("hard"),
 // ]);
+const hintSchema = object({
+    id: number(),
+    type: string(),
+    text: string(),
+});
 
 const ratingSchema = object({
     score: nullable(number()),
@@ -44,6 +50,7 @@ export const questionsSchema = array(
                 choice_text: string(),
             }),
         ),
+        hints: optional(array(hintSchema)),
     }),
 );
 export const quizOverviewSchema = object({

@@ -6,6 +6,7 @@ import {
     nullable,
     number,
     object,
+    optional,
     safeParse,
     string,
 } from "valibot";
@@ -47,6 +48,15 @@ const quizSchema = object({
                     is_correct: boolean(),
                     choice_text: string(),
                 }),
+            ),
+            hints: optional(
+                array(
+                    object({
+                        id: number(),
+                        type: string(),
+                        text: string(),
+                    }),
+                ),
             ),
         }),
     ),
