@@ -25,12 +25,12 @@ export const quizShouldRevalidate: ShouldRevalidateFunction = ({
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
 
-    if (!getUserOrRedirect()) {
-        return redirect("/login");
+    if (!quizId || !Number(quizId)) {
+        throw new Error("Quiz ID is required.");
     }
 
-    if (!quizId) {
-        throw new Error("Quiz ID is required.");
+    if (!getUserOrRedirect()) {
+        return redirect("/login");
     }
 
     try {
@@ -91,3 +91,37 @@ export const takeQuizAction = (async ({ request, params }) => {
         throw new Error(`Failed to take quiz with ID: `);
     }
 }) satisfies ActionFunction;
+
+export const quizReviewLoader = (async ({ params }) => {
+    const { quizId } = params;
+
+    if (!quizId || !Number(quizId)) {
+        throw new Error("Quiz ID is required.");
+    }
+
+    if (!getUserOrRedirect()) {
+        return redirect("/login");
+    }
+
+    try {
+        const response = await apiClient.get(`/quizzes/${quizId}/`);
+
+        const data = response.data; // Extract data from axios response
+        logger.log(data);
+
+        const { output, issues, success } = safeParse(quizDetailsSchema, data);
+
+        if (!success) {
+            logger.error("Failed to parse quiz response:", issues);
+            throw new Error(`Failed to parse quiz response: ${issues}`);
+        }
+
+        if (!output.is_taken) {
+            return redirect(`/quizzes/${quizId}/`);
+        }
+        return output;
+    } catch (error) {
+        logger.error(`Error fetching quiz with ID: ${quizId}`, error);
+        throw new Error(`Failed to load quiz with ID: ${quizId}`);
+    }
+}) satisfies LoaderFunction;

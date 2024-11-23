@@ -89,7 +89,7 @@ const EndQuizComponent = ({
     );
 };
 
-export const QuizPage = () => {
+export const TakeQuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [_, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();

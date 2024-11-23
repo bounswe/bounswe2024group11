@@ -177,7 +177,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     <div className="flex flex-1 items-center justify-end gap-2">
                         {quiz.is_taken && (
                             <Link
-                                to={String(quiz.id)}
+                                to={`${quiz.id}/review`}
                                 className={buttonClass({
                                     intent: "tertiary",
                                     size: "medium",
