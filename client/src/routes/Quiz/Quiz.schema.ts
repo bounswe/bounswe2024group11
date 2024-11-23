@@ -8,14 +8,6 @@ import {
     string,
 } from "valibot";
 
-export const authorSchema = object({
-    id: number(),
-    full_name: string(),
-    username: string(),
-    avatar: nullable(string()),
-    email: string(),
-});
-
 const quizTagSchema = object({
     name: string(),
     linked_data_id: string(),

@@ -19,9 +19,10 @@ import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";
 type ForumCardProps = {
     question: ForumQuestion;
+    onTagClick?: (tag: string) => void;
 };
 
-export const ForumQuestionCard = ({ question }: ForumCardProps) => {
+export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
     const upvoteFetcher = useFetcher<typeof upvoteForumAction>();
     const downvoteFetcher = useFetcher<typeof downvoteForumAction>();
     const bookmarkFetcher = useFetcher<typeof bookmarkForumAction>();
@@ -109,11 +110,22 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                         </p>
                     </Link>
                     <div className="flex flex-row gap-4">
-                        {question.tags.map(({ name }) => (
-                            <span className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500">
-                                {name.toLocaleUpperCase()}
-                            </span>
-                        ))}
+                        {question.tags.map(
+                            ({ name, linked_data_id, description }) => (
+                                <Button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        onTagClick?.(linked_data_id);
+                                    }}
+                                    key={name}
+                                    className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500"
+                                    data-linked-id={linked_data_id}
+                                    data-description={description}
+                                >
+                                    {name.toLocaleUpperCase()}
+                                </Button>
+                            ),
+                        )}
                     </div>
                 </div>
             </div>
