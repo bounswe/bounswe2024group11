@@ -14,6 +14,7 @@ from ..models import ForumQuestion, Quiz
 from ..serializers.serializers import ForumQuestionSerializer, QuizSerializer
 # import pagination
 from rest_framework.pagination import PageNumberPagination
+from django.utils.decorators import method_decorator
 
 
 load_dotenv()
@@ -47,24 +48,27 @@ class ForumQuestionPagination(PageNumberPagination):
     page_size_query_param = 'per_page'
     max_page_size = 100
 
+
+@method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(
+        responses={200: openapi.TYPE_ARRAY},
+        manual_parameters=[
+            openapi.Parameter(
+                'id', 
+                openapi.IN_QUERY, 
+                description="ID of the word", 
+                type=openapi.TYPE_STRING
+            ),
+        ]
+    )
+)
+
 class ForumSemanticSearchView(ListAPIView):
     queryset = ForumQuestion.objects.all().order_by('-created_at')
     serializer_class = ForumQuestionSerializer
     pagination_class = ForumQuestionPagination
     
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'id',
-                openapi.IN_QUERY,
-                description="ID of the word for semantic search",
-                type=openapi.TYPE_STRING,
-                required=True,
-            )
-        ],
-        responses={200: ForumQuestionSerializer(many=True)},
-    )
-
     def get_queryset(self):
         word_id = self.request.query_params.get('id')
         if not word_id:
@@ -83,6 +87,20 @@ class QuizPagination(PageNumberPagination):
     page_size_query_param = 'per_page'
     max_page_size = 100
 
+@method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(
+        responses={200: openapi.TYPE_ARRAY},
+        manual_parameters=[
+            openapi.Parameter(
+                'id', 
+                openapi.IN_QUERY, 
+                description="ID of the word", 
+                type=openapi.TYPE_STRING
+            ),
+        ]
+    )
+)
 
 class QuizSemanticSearchView(ListAPIView):
     queryset = Quiz.objects.all().order_by('-created_at')
