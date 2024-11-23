@@ -1,18 +1,22 @@
-import { ActionFunction, LoaderFunction } from "react-router";
+import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
-import apiClient from "../../api";
+import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
 import { completedQuizSchema, quizDetailsSchema } from "./Quiz.schema";
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
 
+    if (!getUserOrRedirect()) {
+        return redirect("/login");
+    }
+
     if (!quizId) {
         throw new Error("Quiz ID is required.");
     }
 
     try {
-        const response = await apiClient.get(`/quizzes/${quizId}`);
+        const response = await apiClient.get(`/quizzes/${quizId}/`);
 
         const data = response.data; // Extract data from axios response
         logger.log(data);
@@ -33,6 +37,10 @@ export const quizLoader = (async ({ params }) => {
 
 export const takeQuizAction = (async ({ request, params }) => {
     try {
+        if (!getUserOrRedirect()) {
+            return redirect("/login");
+        }
+
         const formData = await request.formData();
 
         const answers = formData.get("answers") as string;
