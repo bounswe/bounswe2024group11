@@ -45,6 +45,7 @@ const Forum: React.FC = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
+            key={item.id}
             onPress={() =>
               navigation.navigate("ForumQuestionDetail", { question: item })
             }

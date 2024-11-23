@@ -23,7 +23,6 @@ env:
   DB_PORT: ${{ secrets.DB_PORT }}
   CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
   VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
-  VITE_ENABLE_MOCKS: ${{ secrets.VITE_ENABLE_MOCKS }}
   VITE_LOGGING: ${{ secrets.VITE_LOGGING }}
 
 permissions:
@@ -73,7 +72,6 @@ jobs:
           DB_PORT=$DB_PORT
           CORS_ALLOWED_ORIGINS=$CORS_ALLOWED_ORIGINS
           VITE_BACKEND_URL=$VITE_BACKEND_URL
-          VITE_ENABLE_MOCKS=$VITE_ENABLE_MOCKS
           VITE_LOGGING=$VITE_LOGGING
           END
 

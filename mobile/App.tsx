@@ -6,14 +6,19 @@ import { Button, Image, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import CreateQuestion from "./app/screens/CreateQuestion";
+import CreateQuiz from "./app/screens/CreateQuiz";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
 import Login from "./app/screens/Login";
 import Profile from "./app/screens/Profile";
-import Quiz from "./app/screens/Quiz";
+import QuizDetail from "./app/screens/QuizDetail";
+import QuizFeed from "./app/screens/QuizFeed";
+import QuizResult from "./app/screens/QuizResult";
 import Register from "./app/screens/Register"; // import the new Register screen
+import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
+import { QuizOverview } from "./app/types/quiz";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -21,7 +26,17 @@ export type RootStackParamList = {
   Register: undefined;
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
+  QuizDetail: { quiz: QuizOverview };
+  ViewQuiz: {
+    id: string;
+    type: number;
+    title: string;
+    description: string;
+    is_review: boolean;
+  };
+  QuizResult: undefined;
   CreateQuestion: undefined;
+  CreateQuiz: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -59,8 +74,8 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Quiz"
-        component={Quiz}
+        name="QuizFeed"
+        component={QuizFeed}
         options={{
           tabBarIcon: () => (
             <Image
@@ -117,6 +132,16 @@ export const Layout = () => {
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}
             />
+            <Stack.Screen name="QuizDetail" component={QuizDetail} />
+            <Stack.Screen
+              name="ViewQuiz"
+              component={ViewQuiz}
+              options={({ route }) => ({
+                title: route.params?.title ? route.params.title : "Quiz",
+              })}
+            />
+            <Stack.Screen name="QuizResult" component={QuizResult} />
+            <Stack.Screen name="CreateQuiz" component={CreateQuiz} />
             {/*
             {authState?.authenticated
               ? <Stack.Screen

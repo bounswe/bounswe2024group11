@@ -15,28 +15,45 @@ import { logger } from "../../utils";
 export type Quiz = InferInput<typeof quizSchema>;
 
 const quizSchema = object({
-    id: string(),
+    id: number(),
     title: string(),
     description: string(),
     author: object({
         full_name: string(),
         username: string(),
         avatar: string(),
+        id: number(),
+        email: string(),
     }),
     created_at: string(),
     tags: array(
         object({
-            id: string(),
             name: string(),
+            linked_data_id: string(),
+            description: string(),
         }),
     ),
     type: number(),
     num_taken: number(),
+    is_my_quiz: boolean(),
     is_taken: boolean(),
-    question_count: number(),
-    difficulty: string(),
+    questions: array(
+        object({
+            id: number(),
+            question_text: string(),
+            choices: array(
+                object({
+                    id: number(),
+                    is_correct: boolean(),
+                    choice_text: string(),
+                }),
+            ),
+        }),
+    ),
+    //question_count: nullable(number()),
+    difficulty: number(),
     rating: object({
-        score: number(),
+        score: nullable(number()),
         count: number(),
     }),
 });
@@ -57,7 +74,7 @@ export const quizzesLoader = (async ({ request }) => {
         const response = await apiClient.get("/quizzes/", {
             params: { page, per_page },
         });
-
+        //logger.log(response.data);
         const data = response.data; // Extract data from the axios response
         const { output, issues, success } = safeParse(
             quizzesResponseSchema,

@@ -38,8 +38,7 @@ class Quiz(models.Model):
     DIFFICULTY_CHOICES = [
         (1, "Beginner"),
         (2, "Intermediate"),
-        (3, "Advanced"),
-        (4, "Expert"),
+        (3, "Advanced")
     ]
 
     title = models.CharField(max_length=255)
@@ -47,6 +46,7 @@ class Quiz(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES)
+    quiz_point = models.IntegerField(default=0)
     tags = models.ManyToManyField('Tag')
     type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)    
     
@@ -55,10 +55,17 @@ class Quiz(models.Model):
     
 class QuizQuestion(models.Model):
     question_text = models.CharField(max_length=1000)
+    question_point = models.IntegerField(default=0)
     quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
     
     def __str__(self):
         return self.question_text
+
+
+class QuizQuestionHint(models.Model):
+    type = models.CharField(max_length=100)
+    text = models.CharField(max_length=1000)
+    question = models.ForeignKey(QuizQuestion, related_name="hints", on_delete=models.CASCADE)
 
 class QuizQuestionChoice(models.Model):
     question = models.ForeignKey(QuizQuestion, related_name="choices", on_delete=models.CASCADE)
@@ -72,29 +79,30 @@ class TakeQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='takes')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(default=0)
     
-    class Meta:
-        unique_together = ['quiz', 'user']
 
 class UserAnswer(models.Model):
     question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
     take_quiz = models.ForeignKey(TakeQuiz, related_name='answers', on_delete=models.CASCADE, null=True)
-    answer = models.ForeignKey(QuizQuestionChoice, on_delete=models.CASCADE)
+    answer = models.ForeignKey(QuizQuestionChoice, null=True, blank=True, on_delete=models.CASCADE)
+    is_hint_used = models.BooleanField(default=False)
     
     class Meta:
         unique_together = ['question', 'take_quiz']
 
-    def clean(self):
-        # Ensure that the question belongs to the same quiz
-        if self.question.quiz.id != self.take_quiz.quiz.id:
-            raise ValidationError("The question must belong to the same quiz.")
-        if self.answer.question.id != self.question.id:
-            raise ValidationError("The answer must belong to the same question.")
+    # def clean(self):
+
+    #     # Ensure that the question belongs to the same quiz
+    #     if self.question.quiz.id != self.take_quiz.quiz.id:
+    #         raise ValidationError("The question must belong to the same quiz.")
+    #     if self.answer.question.id != self.question.id:
+    #         raise ValidationError("The answer must belong to the same question.")
     
-    def save(self, *args, **kwargs):
-        # Perform custom validation before saving
-        self.clean()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Perform custom validation before saving
+    #     self.clean()
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.answer.choice_text

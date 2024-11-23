@@ -851,6 +851,110 @@ paths:
       description: A unique integer value identifying this forum upvote.
       required: true
       type: integer
+  /get-translation/:
+    get:
+      operationId: get-translation_list
+      description: ''
+      parameters:
+      - name: type
+        in: query
+        description: Type of question (type1 or type2)
+        type: string
+      - name: id
+        in: query
+        description: ID of the word
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Translation'
+      tags:
+      - get-translation
+    parameters: []
+  /hint/:
+    get:
+      operationId: hint_list
+      summary: Fetch hints for a word using BabelNet
+      description: This endpoint fetches synonyms, definitions, examples, and images
+        for a given word's synset ID from the BabelNet API. It allows restricting
+        synonyms to high-quality ones and excludes the queried word itself from synonyms.
+      parameters:
+      - name: synset_id
+        in: query
+        description: The synset ID for which to fetch hints (e.g., `bn:00007309n`).
+        required: true
+        type: string
+      - name: target_lang
+        in: query
+        description: The target language for the results (default is `EN`).
+        required: false
+        type: string
+      - name: word
+        in: query
+        description: The original word to avoid including in the synonyms.
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            properties:
+              synonyms:
+                description: List of high-quality synonyms for the synset.
+                type: array
+                items:
+                  type: string
+              definitions:
+                description: List of definitions for the synset.
+                type: array
+                items:
+                  type: string
+              examples:
+                description: List of example sentences for the synset.
+                type: array
+                items:
+                  type: string
+              images:
+                description: List of up to 5 image URLs associated with the synset.
+                type: array
+                items:
+                  type: string
+            example:
+              synonyms:
+              - explanation
+              - clarification
+              - interpretation
+              definitions:
+              - A statement that makes something comprehensible by describing the
+                relevant structure.
+              - The act of explaining; making something plain or intelligible.
+              examples:
+              - The explanation was clear.
+              - She provided a detailed explanation.
+              images:
+              - https://imageurl1.com
+              - https://imageurl2.com
+        '400':
+          description: ''
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Parameter 'synset_id' is required.
+        '500':
+          description: ''
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Error fetching hints.
+      tags:
+      - hint
+    parameters: []
   /quizzes/:
     get:
       operationId: quizzes_list
@@ -859,6 +963,11 @@ paths:
       - name: page
         in: query
         description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: per_page
+        in: query
+        description: Number of results to return per page.
         required: false
         type: integer
       responses:
@@ -1521,6 +1630,10 @@ definitions:
         title: Downvotes count
         type: string
         readOnly: true
+      forum_question:
+        title: Forum question
+        type: integer
+        readOnly: true
   ForumQuestion:
     required:
     - title
@@ -1582,6 +1695,10 @@ definitions:
         items:
           $ref: '#/definitions/ForumAnswer'
         readOnly: true
+      is_my_forum_question:
+        title: Is my forum question
+        type: string
+        readOnly: true
   ForumUpvote:
     required:
     - forum_question
@@ -1603,6 +1720,17 @@ definitions:
         type: string
         format: date-time
         readOnly: true
+  Translation:
+    required:
+    - translations
+    type: object
+    properties:
+      translations:
+        description: List of translations
+        type: array
+        items:
+          type: string
+          minLength: 1
   QuizQuestionChoice:
     required:
     - choice_text
@@ -1702,6 +1830,10 @@ definitions:
         readOnly: true
       rating:
         title: Rating
+        type: string
+        readOnly: true
+      is_my_quiz:
+        title: Is my quiz
         type: string
         readOnly: true
   RateQuiz:

@@ -35,6 +35,7 @@ export const routes: RouteObject[] = [
     {
         path: "/",
         element: <Root />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "/",
@@ -112,14 +113,12 @@ export const routes: RouteObject[] = [
             },
             {
                 path: "login",
-                errorElement: <ErrorPage />,
                 element: <Login />,
                 action: loginAction,
                 loader: loginLoader,
             },
             {
                 path: "register",
-                errorElement: <ErrorPage />,
                 element: <Register />,
                 action: registerAction,
             },
