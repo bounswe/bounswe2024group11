@@ -38,7 +38,10 @@ const StartQuizComponent = ({
             onClick={onStart}
             aria-describedby="start-quiz-heading"
         >
-            <span className={buttonInnerRing({ intent: "secondary" })} />
+            <span
+                className={buttonInnerRing({ intent: "secondary" })}
+                aria-hidden="true"
+            />
             Start Quiz
         </button>
     </div>
@@ -72,7 +75,10 @@ const EndQuizComponent = ({
                 className={buttonClass({ intent: "primary", size: "medium" })}
                 onClick={onGoBack}
             >
-                <span className={buttonInnerRing({ intent: "primary" })} />
+                <span
+                    className={buttonInnerRing({ intent: "primary" })}
+                    aria-hidden="true"
+                />
                 See All Quizzes
             </button>
         </div>
@@ -268,7 +274,10 @@ export const QuizPage = () => {
                         setCurrentQuestion((prev) => prev - 1);
                     }}
                 >
-                    <span className={buttonInnerRing({ intent: "tertiary" })} />
+                    <span
+                        className={buttonInnerRing({ intent: "tertiary" })}
+                        aria-hidden="true"
+                    />
                     Previous
                 </button>
                 {currentQuestion === quiz.questions.length - 1 ? (
@@ -281,6 +290,7 @@ export const QuizPage = () => {
                     >
                         <span
                             className={buttonInnerRing({ intent: "primary" })}
+                            aria-hidden="true"
                         />
                         Finish Quiz
                     </button>
@@ -300,6 +310,7 @@ export const QuizPage = () => {
                     >
                         <span
                             className={buttonInnerRing({ intent: "secondary" })}
+                            aria-hidden="true"
                         />
                         Next
                     </button>

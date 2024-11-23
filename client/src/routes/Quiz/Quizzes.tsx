@@ -109,6 +109,7 @@ export const Quizzes = () => {
                                     className={buttonInnerRing({
                                         intent: "secondary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 Previous
                             </button>
@@ -129,6 +130,7 @@ export const Quizzes = () => {
                                     className={buttonInnerRing({
                                         intent: "secondary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 Next
                             </button>

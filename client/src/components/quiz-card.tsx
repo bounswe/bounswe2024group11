@@ -157,6 +157,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                                     className={buttonInnerRing({
                                         intent: "secondary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 Follow
                             </Link>
@@ -187,6 +188,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                                     className={buttonInnerRing({
                                         intent: "tertiary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 <span>Review</span>
                             </Link>
@@ -205,6 +207,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                                         ? "secondary"
                                         : "primary",
                                 })}
+                                aria-hidden="true"
                             />
                             <span>
                                 {quiz.is_taken ? "Re-attempt" : "Take Quiz"}

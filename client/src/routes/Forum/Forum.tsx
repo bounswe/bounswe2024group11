@@ -110,6 +110,7 @@ export const Forum = () => {
                                 className={buttonInnerRing({
                                     intent: "primary",
                                 })}
+                                aria-hidden="true"
                             />
                             <span>Post</span>
                         </button>
@@ -149,6 +150,7 @@ export const Forum = () => {
                                     className={buttonInnerRing({
                                         intent: "secondary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 Previous
                             </button>
@@ -169,6 +171,7 @@ export const Forum = () => {
                                     className={buttonInnerRing({
                                         intent: "secondary",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 Next
                             </button>
@@ -198,6 +201,7 @@ export const Forum = () => {
                             intent: "primary",
                             rounded: "full",
                         })}
+                        aria-hidden="true"
                     />
                     <RiAddLine color="white" size="24px"></RiAddLine>
                 </Button>
