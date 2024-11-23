@@ -30,6 +30,7 @@ services:
       ./wait-for-it.sh db:3306 -- 
       python manage.py makemigrations &&
       python manage.py migrate &&
+      python manage.py loaddata ./core/fixtures/*.json &&
       python manage.py runserver 0.0.0.0:8000"
     restart: "on-failure"
     env_file: ./backend/.env

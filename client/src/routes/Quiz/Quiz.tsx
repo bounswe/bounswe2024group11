@@ -38,7 +38,10 @@ const StartQuizComponent = ({
             onClick={onStart}
             aria-describedby="start-quiz-heading"
         >
-            <span className={buttonInnerRing({ intent: "secondary" })} />
+            <span
+                className={buttonInnerRing({ intent: "secondary" })}
+                aria-hidden="true"
+            />
             Start Quiz
         </button>
     </div>
@@ -72,7 +75,10 @@ const EndQuizComponent = ({
                 className={buttonClass({ intent: "primary", size: "medium" })}
                 onClick={onGoBack}
             >
-                <span className={buttonInnerRing({ intent: "primary" })} />
+                <span
+                    className={buttonInnerRing({ intent: "primary" })}
+                    aria-hidden="true"
+                />
                 See All Quizzes
             </button>
         </div>
@@ -151,10 +157,10 @@ export const QuizPage = () => {
         setIsQuizEnded(true);
         let correct = 0;
         Object.entries(answers).forEach(([index, answer]) => {
-            const correctOption = quiz.results[Number(index)].options.find(
-                (o) => o.is_correct === "true",
+            const correctOption = quiz.questions[Number(index)].choices.find(
+                (o) => o.is_correct === true,
             );
-            if (correctOption && correctOption.id === answer) {
+            if (correctOption && String(correctOption.id) === answer) {
                 correct++;
             }
         });
@@ -211,7 +217,7 @@ export const QuizPage = () => {
                     aria-description="Question"
                     className="font-display text-lg font-medium tracking-tight"
                 >
-                    {quiz.questions[currentQuestion].text}
+                    {quiz.questions[currentQuestion].question_text}
                 </div>
             </div>
             {quiz.questions[currentQuestion] && (
@@ -221,13 +227,13 @@ export const QuizPage = () => {
                         role="radiogroup"
                         aria-labelledby={`question-${currentQuestion}`}
                     >
-                        {quiz.questions[currentQuestion].options.map(
-                            (option, _) => (
-                                <li key={option.id}>
+                        {quiz.questions[currentQuestion].choices.map(
+                            (choice, _) => (
+                                <li key={choice.id}>
                                     <label
                                         className={`flex cursor-pointer items-center justify-center gap-2 rounded-2 px-4 py-3 text-center text-lg transition-colors duration-200 ${
                                             answers[currentQuestion] ===
-                                            option.id
+                                            String(choice.id)
                                                 ? "bg-cyan-700 text-white"
                                                 : "bg-slate-100 text-slate-950 hover:bg-slate-200"
                                         }`}
@@ -238,16 +244,18 @@ export const QuizPage = () => {
                                             className="sr-only"
                                             type="radio"
                                             name="option"
-                                            value={option.id}
+                                            value={choice.id}
                                             checked={
                                                 answers[currentQuestion] ===
-                                                option.id
+                                                String(choice.id)
                                             }
                                             onChange={() =>
-                                                handleOptionChange(option.id)
+                                                handleOptionChange(
+                                                    String(choice.id),
+                                                )
                                             }
                                         />
-                                        {option.text}
+                                        {choice.choice_text}
                                     </label>
                                 </li>
                             ),
@@ -268,7 +276,10 @@ export const QuizPage = () => {
                         setCurrentQuestion((prev) => prev - 1);
                     }}
                 >
-                    <span className={buttonInnerRing({ intent: "tertiary" })} />
+                    <span
+                        className={buttonInnerRing({ intent: "tertiary" })}
+                        aria-hidden="true"
+                    />
                     Previous
                 </button>
                 {currentQuestion === quiz.questions.length - 1 ? (
@@ -281,6 +292,7 @@ export const QuizPage = () => {
                     >
                         <span
                             className={buttonInnerRing({ intent: "primary" })}
+                            aria-hidden="true"
                         />
                         Finish Quiz
                     </button>
@@ -300,6 +312,7 @@ export const QuizPage = () => {
                     >
                         <span
                             className={buttonInnerRing({ intent: "secondary" })}
+                            aria-hidden="true"
                         />
                         Next
                     </button>
