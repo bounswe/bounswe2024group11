@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
+import { Form, useNavigate } from "react-router-dom";
+import {
+    useActionData,
+    useLoaderData,
+    useRouteLoaderData,
+} from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
-import { quizLoader } from "./Quiz.data";
+import { quizLoader, takeQuizAction } from "./Quiz.data";
 import { QuizDetails } from "./Quiz.schema";
 
 const StartQuizComponent = ({
@@ -89,19 +93,27 @@ export const QuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [_, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
+    const solvedQuiz = useActionData<typeof takeQuizAction>();
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [hints, setHints] = useState<Record<number, boolean>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [isQuizEnded, setIsQuizEnded] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
     const [correctAnswers, setCorrectAnswers] = useState(0);
+    const [hintText, setHintText] = useState("");
 
     const ref = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-
     useEffect(() => {
+        if (hints[currentQuestion]) {
+            setHintOpen(true);
+            setHintText(quiz.questions[currentQuestion].hints[0]?.text || "");
+        } else {
+            setHintOpen(false);
+            setHintText("");
+        }
         ref.current?.focus();
-    }, [currentQuestion]);
+    }, [currentQuestion, hints, quiz.questions]);
 
     useEffect(() => {
         const savedAnswers = localStorage.getItem(`quiz_${quiz.id}_answers`);
@@ -149,21 +161,36 @@ export const QuizPage = () => {
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
     };
+    const [hintOpen, setHintOpen] = useState(false);
     const showHint = (questionIndex: number) => {
         const hint = quiz.questions[questionIndex].hints;
-        const hinttext = hint?.[0]?.text || "";
+        const hinttext = hint[0]?.text || "";
         if (hinttext === "") {
             logger.log(`No hint for question ${questionIndex}`);
         } else {
             const updatedHints = { ...hints, [questionIndex]: true };
             logger.log(`Hint for question ${questionIndex}`, hinttext || "");
+            setHintText(hinttext);
             setHints(updatedHints);
+            setHintOpen(true);
         }
     };
-
+    const prepareAnswers = () => {
+        return Object.entries(answers).map(([index, answer]) => ({
+            question: quiz.questions[Number(index)].id,
+            answer: Number(answer),
+            is_hint_used: hints[Number(index)] || false,
+        }));
+    };
     const startQuiz = () => {
         setIsQuizStarted(true);
     };
+
+    useEffect(() => {
+        if (solvedQuiz) {
+            endQuiz();
+        }
+    }, [solvedQuiz]);
 
     const endQuiz = () => {
         setIsQuizEnded(true);
@@ -295,19 +322,30 @@ export const QuizPage = () => {
                     Previous
                 </button>
                 {currentQuestion === quiz.questions.length - 1 ? (
-                    <button
-                        className={buttonClass({
-                            intent: "primary",
-                            size: "medium",
-                        })}
-                        onClick={endQuiz}
-                    >
-                        <span
-                            className={buttonInnerRing({ intent: "primary" })}
-                            aria-hidden="true"
+                    <Form method="POST" action={`/quizzes/${quiz.id}`}>
+                        <input
+                            type="hidden"
+                            name="answers"
+                            value={JSON.stringify(prepareAnswers())}
                         />
-                        Finish Quiz
-                    </button>
+
+                        <input type="hidden" name="quizId" value={quiz.id} />
+                        <button
+                            type="submit"
+                            className={buttonClass({
+                                intent: "primary",
+                                size: "medium",
+                            })}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "primary",
+                                })}
+                                aria-hidden="true"
+                            />
+                            Finish Quiz
+                        </button>
+                    </Form>
                 ) : (
                     <button
                         className={buttonClass({
@@ -330,14 +368,24 @@ export const QuizPage = () => {
                     </button>
                 )}
             </div>
+            <div
+                className={`${!hintOpen ? "hidden" : "flex w-full flex-col"} `}
+            >
+                <h2 className="font-display text-lg font-medium tracking-tight">
+                    Hint
+                </h2>
+                <p className="w-full">{hintText}</p>
+            </div>
             <button
-                className={buttonClass({
-                    intent: "primary",
-                    size: "medium",
-                    rounded: "full",
-                    position: "fixed",
-                    icon: "none",
-                })}
+                className={
+                    buttonClass({
+                        intent: "primary",
+                        size: "medium",
+                        rounded: "full",
+                        position: "fixed",
+                        icon: "none",
+                    }) + " bottom-8 right-8"
+                }
                 onClick={() => {
                     showHint(currentQuestion);
                 }}

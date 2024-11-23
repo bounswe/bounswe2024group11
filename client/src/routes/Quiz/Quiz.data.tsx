@@ -1,8 +1,8 @@
-import { LoaderFunction } from "react-router";
+import { ActionFunction, LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
 import apiClient from "../../api";
 import { logger } from "../../utils";
-import { quizDetailsSchema } from "./Quiz.schema";
+import { completedQuizSchema, quizDetailsSchema } from "./Quiz.schema";
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
@@ -31,40 +31,37 @@ export const quizLoader = (async ({ params }) => {
     }
 }) satisfies LoaderFunction;
 
-// export const hintAction = (async ({ params }) => {
-//     const synset_id = params.synset_id;
-//     const targetLang = params.target_lang;
-//     const word = params.word;
-//     getUserOrRedirect();
-//     try {
-//         const response = await apiClient.get(
-//             `/hint/?synset_id=${synset_id}&word=${word}&target_lang=${targetLang}/`,
-//         );
+export const takeQuizAction = (async ({ request, params }) => {
+    try {
+        const formData = await request.formData();
 
-//         if (response.status === 204) {
-//             useToastStore.getState().add({
-//                 id: `hint-success-${synset_id}`,
-//                 type: "success",
-//                 data: {
-//                     message: "Question deleted",
-//                     description:
-//                         "The question hint has been retrieved successfully",
-//                 },
-//             });
-//         }
+        const answers = formData.get("answers") as string;
+        const quizId = formData.get("quizId");
 
-//         return response.data;
-//     } catch (error) {
-//         logger.error("Error in hintAction", error);
-//         useToastStore.getState().add({
-//             id: `hint-error-${synset_id}`,
-//             type: "error",
-//             data: {
-//                 message: "Failed to get question hint",
-//                 description:
-//                     "Unable to get the question hint. Please try again.",
-//             },
-//         });
-//         throw new Error("Failed to delete question");
-//     }
-// }) satisfies ActionFunction;
+        logger.log("submit quiz", {
+            quiz: Number(quizId),
+            answers: JSON.parse(answers),
+        });
+
+        const response = await apiClient.post(`/take-quiz/`, {
+            quiz: Number(quizId),
+            answers: JSON.parse(answers),
+        });
+
+        const data = response.data; // Extract data from axios response
+        logger.log(data);
+        const { output, issues, success } = safeParse(
+            completedQuizSchema,
+            data,
+        );
+        if (!success) {
+            logger.error("Failed to parse quiz response:", issues);
+            throw new Error(`Failed to parse quiz response: ${issues}`);
+        }
+
+        return output;
+    } catch (error) {
+        logger.error(`Error submitting quiz:`, error);
+        throw new Error(`Failed to take quiz with ID: `);
+    }
+}) satisfies ActionFunction;

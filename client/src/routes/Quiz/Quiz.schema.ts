@@ -5,17 +5,8 @@ import {
     nullable,
     number,
     object,
-    optional,
     string,
 } from "valibot";
-
-export const authorSchema = object({
-    id: number(),
-    full_name: string(),
-    username: string(),
-    avatar: nullable(string()),
-    email: string(),
-});
 
 const quizTagSchema = object({
     name: string(),
@@ -23,36 +14,41 @@ const quizTagSchema = object({
     description: string(),
 });
 
+export type QuizTag = InferInput<typeof quizTagSchema>;
+
 // const difficultySchema = union([
 //     literal("easy"),
 //     literal("medium"),
 //     literal("hard"),
 // ]);
-const hintSchema = object({
-    id: number(),
-    type: string(),
-    text: string(),
-});
 
 const ratingSchema = object({
     score: nullable(number()),
     count: number(),
 });
 
-export const questionsSchema = array(
-    object({
-        id: number(),
-        question_text: string(),
-        choices: array(
-            object({
-                id: number(),
-                is_correct: boolean(),
-                choice_text: string(),
-            }),
-        ),
-        hints: optional(array(hintSchema)),
-    }),
-);
+export const quizQuestionSchema = object({
+    id: number(),
+    question_text: string(),
+    choices: array(
+        object({
+            id: number(),
+            is_correct: boolean(),
+            choice_text: string(),
+        }),
+    ),
+    hints: array(
+        object({
+            id: number(),
+            text: string(),
+            type: string(),
+        }),
+    ),
+});
+
+export type QuizQuestion = InferInput<typeof quizQuestionSchema>;
+
+export const questionsSchema = array(quizQuestionSchema);
 export const quizOverviewSchema = object({
     id: number(),
     title: string(),
@@ -76,10 +72,22 @@ export const quizOverviewSchema = object({
     difficulty: number(),
 });
 
+export const completedQuizSchema = object({
+    quiz: number(),
+    answers: array(
+        object({
+            question: number(),
+            answer: number(),
+            is_hint_used: boolean(),
+        }),
+    ),
+});
+
 export const quizDetailsSchema = object({
     ...quizOverviewSchema.entries,
     questions: questionsSchema,
 });
 
+export type CompletedQuiz = InferInput<typeof completedQuizSchema>;
 export type QuizOverview = InferInput<typeof quizOverviewSchema>;
 export type QuizDetails = InferInput<typeof quizDetailsSchema>;
