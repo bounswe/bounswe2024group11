@@ -152,7 +152,7 @@ export const Quizzes = () => {
                             {allTags.map((tag) => (
                                 <option
                                     key={tag.linked_data_id}
-                                    value={tag.name}
+                                    value={tag.linked_data_id}
                                 >
                                     {tag.name}
                                 </option>
