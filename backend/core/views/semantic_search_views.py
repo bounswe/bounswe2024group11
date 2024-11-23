@@ -55,10 +55,10 @@ class ForumQuestionPagination(PageNumberPagination):
         responses={200: openapi.TYPE_ARRAY},
         manual_parameters=[
             openapi.Parameter(
-                'id', 
-                openapi.IN_QUERY, 
-                description="ID of the word", 
-                type=openapi.TYPE_STRING
+                'id',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description="example: `bn:00005106n`"
             ),
         ]
     )
@@ -93,10 +93,10 @@ class QuizPagination(PageNumberPagination):
         responses={200: openapi.TYPE_ARRAY},
         manual_parameters=[
             openapi.Parameter(
-                'id', 
-                openapi.IN_QUERY, 
-                description="ID of the word", 
-                type=openapi.TYPE_STRING
+                'id',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description="example: `bn:00028795n`"
             ),
         ]
     )
