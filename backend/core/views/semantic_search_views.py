@@ -10,8 +10,8 @@ from rest_framework.generics import ListAPIView
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from ..models import ForumQuestion
-from ..serializers.serializers import ForumQuestionSerializer
+from ..models import ForumQuestion, Quiz
+from ..serializers.serializers import ForumQuestionSerializer, QuizSerializer
 # import pagination
 from rest_framework.pagination import PageNumberPagination
 
@@ -51,6 +51,19 @@ class ForumSemanticSearchView(ListAPIView):
     queryset = ForumQuestion.objects.all().order_by('-created_at')
     serializer_class = ForumQuestionSerializer
     pagination_class = ForumQuestionPagination
+    
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'id',
+                openapi.IN_QUERY,
+                description="ID of the word for semantic search",
+                type=openapi.TYPE_STRING,
+                required=True,
+            )
+        ],
+        responses={200: ForumQuestionSerializer(many=True)},
+    )
 
     def get_queryset(self):
         word_id = self.request.query_params.get('id')
@@ -63,3 +76,28 @@ class ForumSemanticSearchView(ListAPIView):
         if isinstance(exc, ValueError):
             return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         return super().handle_exception(exc)
+
+
+class QuizPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'per_page'
+    max_page_size = 100
+
+
+class QuizSemanticSearchView(ListAPIView):
+    queryset = Quiz.objects.all().order_by('-created_at')
+    serializer_class = QuizSerializer
+    pagination_class = QuizPagination
+
+    def get_queryset(self):
+        word_id = self.request.query_params.get('id')
+        if not word_id:
+            raise ValueError('Parameter "id" is required.')
+        linked_data_ids = get_ids(word_id)  # Make sure this function exists
+        return self.queryset.filter(tags__linked_data_id__in=linked_data_ids)
+
+    def handle_exception(self, exc):
+        if isinstance(exc, ValueError):
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        return super().handle_exception(exc)
+    
