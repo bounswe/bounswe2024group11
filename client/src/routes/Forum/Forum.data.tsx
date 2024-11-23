@@ -1,4 +1,5 @@
 import { ActionFunction, LoaderFunction } from "react-router";
+import { makeLoader } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
@@ -29,6 +30,10 @@ export const forumLoader = (async ({ request }) => {
         logger.error("Error fetching forum data", error);
         throw new Error("Failed to load forum questions");
     }
+}) satisfies LoaderFunction;
+
+export const forumCreateLoader = makeLoader(async ({ request }) => {
+    return null;
 }) satisfies LoaderFunction;
 
 export const forumCreateAction = (async ({ request }) => {

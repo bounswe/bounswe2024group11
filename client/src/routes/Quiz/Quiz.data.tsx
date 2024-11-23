@@ -27,6 +27,6 @@ export const quizLoader = (async ({ params }) => {
         return output;
     } catch (error) {
         logger.error(`Error fetching quiz with ID: ${quizId}`, error);
-        throw new Error(`Failed to fetch quiz with ID: ${quizId}`);
+        throw new Error(`Failed to load quiz with ID: ${quizId}`);
     }
 }) satisfies LoaderFunction;

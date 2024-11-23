@@ -14,7 +14,12 @@ import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
 
-import { forumCreateAction, forumLoader } from "./routes/Forum/Forum.data";
+import {
+    forumCreateAction,
+    forumCreateLoader,
+    forumLoader,
+} from "./routes/Forum/Forum.data";
+import { NewForum } from "./routes/Forum/NewForum";
 import {
     answerForumAction,
     bookmarkForumAction,
@@ -58,6 +63,11 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
+                    },
+                    {
+                        path: "forum/new",
+                        element: <NewForum />,
+                        loader: forumCreateLoader,
                         action: forumCreateAction,
                     },
                     {
