@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction } from "react-router";
 import { safeParse } from "valibot";
-import apiClient from "../../api";
+import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
 import { forumSchema } from "./Forum.schema";
 
@@ -32,6 +32,8 @@ export const forumLoader = (async ({ request }) => {
 }) satisfies LoaderFunction;
 
 export const forumCreateAction = (async ({ request }) => {
+    if (!getUserOrRedirect()) return null;
+
     try {
         const formData = await request.formData();
         const formEntries = Object.fromEntries(formData);

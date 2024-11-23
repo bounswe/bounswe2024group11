@@ -161,6 +161,7 @@ export const Register = () => {
                                 className={buttonInnerRing({
                                     intent: "secondary",
                                 })}
+                                aria-hidden="true"
                             />
                             <span>Register</span>
                         </button>

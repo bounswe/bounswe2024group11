@@ -1,7 +1,6 @@
 import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
-import apiClient from "../../api";
-import { USER } from "../../constants";
+import apiClient, { getUserOrRedirect } from "../../api";
 import { useToastStore } from "../../store";
 import { logger } from "../../utils";
 import {
@@ -41,10 +40,8 @@ export const forumQuestionLoader = (async ({ params }) => {
 }) satisfies LoaderFunction;
 
 export const upvoteForumAction = (async ({ request }: { request: Request }) => {
+    if (!getUserOrRedirect()) return null;
     try {
-        console.log("Processing upvote action...");
-
-        // Parse form data
         const formData = await request.formData();
         const forumQuestionId = formData.get("post_id");
         const currentUpvote = formData.get("is_upvoted");
@@ -112,10 +109,8 @@ export const downvoteForumAction = (async ({
 }: {
     request: Request;
 }) => {
+    if (!getUserOrRedirect()) return null;
     try {
-        console.log("Processing downvote action...");
-
-        // Parse form data
         const formData = await request.formData();
         const forumQuestionId = formData.get("post_id");
         const currentDownvote = formData.get("is_downvoted");
@@ -184,7 +179,7 @@ export const bookmarkForumAction = (async ({
     request: Request;
 }) => {
     try {
-        console.log("Processing bookmark action...");
+        if (!getUserOrRedirect()) return null;
 
         // Parse form data
         const formData = await request.formData();
@@ -247,21 +242,8 @@ export const bookmarkForumAction = (async ({
 }) satisfies ActionFunction;
 
 export const answerForumAction = (async ({ request, params }) => {
-    // If not logged in, render a warning message and return redirect login.
-
+    if (!getUserOrRedirect()) return null;
     const postId = params.postId;
-    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
-    if (!user) {
-        useToastStore.getState().add({
-            id: "not-logged-in",
-            type: "info",
-            data: {
-                message: "Authentication required",
-                description: "Please log in to answer questions",
-            },
-        });
-        return redirect("/login");
-    }
 
     const formData = await request.formData();
     const answer = formData.get("answer");
@@ -300,19 +282,7 @@ export const answerForumAction = (async ({ request, params }) => {
 
 export const upvoteForumAnswerAction = (async ({ request }) => {
     console.log("Processing upvote/downvote action...");
-    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
-
-    if (!user) {
-        useToastStore.getState().add({
-            id: "not-logged-in",
-            type: "info",
-            data: {
-                message: "Authentication required",
-                description: "Please log in to vote on answers",
-            },
-        });
-        return redirect("/login");
-    }
+    if (!getUserOrRedirect()) return null;
 
     const formData = await request.formData();
     const answerId = formData.get("answer_id");
@@ -381,20 +351,7 @@ export const upvoteForumAnswerAction = (async ({ request }) => {
 }) satisfies ActionFunction;
 
 export const downvoteForumAnswerAction = (async ({ request }) => {
-    console.log("Processing downvote action...");
-    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
-
-    if (!user) {
-        useToastStore.getState().add({
-            id: "not-logged-in",
-            type: "info",
-            data: {
-                message: "Authentication required",
-                description: "Please log in to vote on answers",
-            },
-        });
-        return redirect("/login");
-    }
+    if (!getUserOrRedirect()) return null;
 
     const formData = await request.formData();
     const answerId = formData.get("answer_id");
@@ -466,7 +423,7 @@ export const downvoteForumAnswerAction = (async ({ request }) => {
 
 export const deleteForumAction = (async ({ params }) => {
     const postId = params.questionId;
-
+    getUserOrRedirect();
     try {
         const response = await apiClient.delete(`/forum-questions/${postId}/`);
 

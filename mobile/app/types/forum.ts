@@ -25,6 +25,7 @@ export type Question = {
   upvotes_count: number;
   is_downvoted: boolean;
   downvotes_count: number;
+  answers?: Answer[];
 };
 
 export type Answer = {
@@ -36,4 +37,5 @@ export type Answer = {
   upvotes_count: number;
   is_downvoted: boolean;
   downvotes_count: number;
+  answers?: Answer[];
 };

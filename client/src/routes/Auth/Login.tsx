@@ -98,6 +98,7 @@ export const Login = () => {
                                 className={buttonInnerRing({
                                     intent: "secondary",
                                 })}
+                                aria-hidden="true"
                             />
                             <span>Log In</span>
                         </button>
