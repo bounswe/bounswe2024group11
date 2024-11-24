@@ -54,6 +54,7 @@ export const buttonClass = cva(
         "disabled:active:ring-0",
         "disabled:cursor-default",
         "disabled:opacity-50",
+        "disabled:pointer-events-none",
     ],
     {
         variants: {
