@@ -220,7 +220,7 @@ export const QuizReview = () => {
                     Back to Quizzes
                 </Link>
                 <Link
-                    to={`/quizzes`}
+                    to={`/quizzes/${quiz.id}/`}
                     className={buttonClass({
                         intent: "primary",
                         size: "medium",

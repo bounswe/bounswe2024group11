@@ -37,27 +37,27 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  # client:
-  #     build:
-  #         context: ./client
-  #     ports:
-  #         - "3310:3310"
-  #     volumes:
-  #         - ./client:/home/app/client
-  #     container_name: client
-  #     command: >
-  #         sh -c "serve -s build -l 3310"
-  #     restart: "on-failure"
-  #     env_file: ./client/.env
-  #     depends_on:
-  #         - backend
-  # nginx:
-  #     image: nginx:1.27-alpine
-  #     volumes:
-  #         - ./nginx:/etc/nginx/conf.d
-  #     ports:
-  #         - "80:80"
-  #     depends_on:
-  #         - client
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3310:3310"
+    volumes:
+      - ./client:/home/app/client
+    container_name: client
+    command: >
+      sh -c "serve -s dist -l 3310"
+    restart: "on-failure"
+    env_file: ./client/.env
+    depends_on:
+      - backend
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    depends_on:
+      - client
 volumes:
   db_data:
