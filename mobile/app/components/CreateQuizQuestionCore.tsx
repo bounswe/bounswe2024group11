@@ -1,8 +1,9 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CreateQuizQuestionType } from "../types/quiz";
 import { TagSearchResult } from "../types/tag";
+import CreateQuizQuestionSuggestionModal from "./CreateQuizQuestionSuggestionModal";
 
 interface Props {
   question: CreateQuizQuestionType;
@@ -35,26 +36,11 @@ const CreateQuizQuestionCore: React.FC<Props> = ({
         </TouchableOpacity>
       </View>
       {suggestedQuestionTexts.length > 0 && (
-        <View>
-          <FlatList
-            style={styles.suggestionList}
-            data={suggestedQuestionTexts}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.suggestionItem}
-                onPress={() => selectQuestionText(item)}
-              >
-                <Text style={styles.suggestionItemTitle}>
-                  {questionTextInput.replace(/\b\w/g, (char) =>
-                    char.toUpperCase()
-                  )}
-                </Text>
-                <Text>{item.description}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+        <CreateQuizQuestionSuggestionModal
+          title={questionTextInput}
+          data={suggestedQuestionTexts}
+          onSelect={selectQuestionText}
+        />
       )}
     </View>
   );
@@ -83,24 +69,6 @@ const styles = StyleSheet.create({
     color: "#0f172a",
     backgroundColor: "#e2e8f0",
     borderColor: "#0f172a",
-  },
-  suggestionList: {
-    maxHeight: 300,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#0f172a",
-    backgroundColor: "#f1f5f9",
-    marginVertical: 10,
-  },
-  suggestionItemTitle: {
-    // fontSize: 16,
-    fontWeight: "bold",
-  },
-  suggestionItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderRadius: 8,
-    borderBottomColor: "#0f172a",
   },
 });
 
