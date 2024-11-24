@@ -289,13 +289,15 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         selectQuestionText={selectQuestionText}
         selectTranslation={selectTranslation}
       />
-      <View style={styles.separator} />
       {questions[currentQuestionIndex].point > 0 && (
-        <CreateQuizQuestionOptions
-          choices={questions[currentQuestionIndex].choices}
-          onChangeOptionText={changeOptionText}
-          onMoveOption={moveOption}
-        />
+        <>
+          <View style={styles.separator} />
+          <CreateQuizQuestionOptions
+            choices={questions[currentQuestionIndex].choices}
+            onChangeOptionText={changeOptionText}
+            onMoveOption={moveOption}
+          />
+        </>
       )}
       <CreateQuizQuestionHints />
       <CreateQuizQuestionFooter
