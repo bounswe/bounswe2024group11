@@ -5,6 +5,7 @@ import {
     nullable,
     number,
     object,
+    optional,
     string,
 } from "valibot";
 
@@ -15,12 +16,6 @@ const quizTagSchema = object({
 });
 
 export type QuizTag = InferInput<typeof quizTagSchema>;
-
-// const difficultySchema = union([
-//     literal("easy"),
-//     literal("medium"),
-//     literal("hard"),
-// ]);
 
 const ratingSchema = object({
     score: nullable(number()),
@@ -37,12 +32,14 @@ export const quizQuestionSchema = object({
             choice_text: string(),
         }),
     ),
-    hints: array(
-        object({
-            id: number(),
-            text: string(),
-            type: string(),
-        }),
+    hints: nullable(
+        array(
+            object({
+                id: number(),
+                text: string(),
+                type: string(),
+            }),
+        ),
     ),
 });
 
@@ -72,20 +69,79 @@ export const quizOverviewSchema = object({
     difficulty: number(),
 });
 
+export const quizAnswerSchema = object({
+    question: number(),
+    answer: number(),
+    is_hint_used: boolean(),
+});
+
+export const quizAnswersSchema = array(quizAnswerSchema);
+
+export type QuizAnswer = InferInput<typeof quizAnswerSchema>;
+
 export const completedQuizSchema = object({
     quiz: number(),
-    answers: array(
-        object({
-            question: number(),
-            answer: number(),
-            is_hint_used: boolean(),
-        }),
-    ),
+    answers: quizAnswersSchema,
 });
 
 export const quizDetailsSchema = object({
     ...quizOverviewSchema.entries,
     questions: questionsSchema,
+});
+
+export type Quiz = InferInput<typeof quizSchema>;
+
+export const quizSchema = object({
+    id: number(),
+    title: string(),
+    description: string(),
+    author: object({
+        full_name: string(),
+        username: string(),
+        avatar: string(),
+        id: number(),
+        email: string(),
+    }),
+    created_at: string(),
+    tags: array(
+        object({
+            name: string(),
+            linked_data_id: string(),
+            description: string(),
+        }),
+    ),
+    type: number(),
+    num_taken: number(),
+    is_my_quiz: boolean(),
+    is_taken: boolean(),
+    questions: array(
+        object({
+            id: number(),
+            question_text: string(),
+            choices: array(
+                object({
+                    id: number(),
+                    is_correct: boolean(),
+                    choice_text: string(),
+                }),
+            ),
+            hints: optional(
+                array(
+                    object({
+                        id: number(),
+                        type: string(),
+                        text: string(),
+                    }),
+                ),
+            ),
+        }),
+    ),
+    //question_count: nullable(number()),
+    difficulty: number(),
+    rating: object({
+        score: nullable(number()),
+        count: number(),
+    }),
 });
 
 export type CompletedQuiz = InferInput<typeof completedQuizSchema>;

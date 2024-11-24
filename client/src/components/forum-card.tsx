@@ -30,8 +30,8 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
     const deleteFetcher = useFetcher<typeof deleteForumAction>();
 
     return (
-        <div className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
-            <div className="flex flex-col gap-3 pb-3">
+        <div className="relative flex h-full w-full flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
+            <div className="flex flex-1 flex-col gap-3 pb-3">
                 <div className="flex w-full items-center justify-between gap-3">
                     <div className="flex flex-row items-center justify-start gap-3">
                         <Avatar author={question.author} size={24} />

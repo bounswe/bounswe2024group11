@@ -1,7 +1,7 @@
 import * as Ariakit from "@ariakit/react";
 import { RiLightbulbFlashLine } from "@remixicon/react";
 import { useEffect, useRef, useState } from "react";
-import { Form, useNavigate } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
 import {
     useActionData,
     useLoaderData,
@@ -56,11 +56,11 @@ const StartQuizComponent = ({
 const EndQuizComponent = ({
     correctAnswers,
     totalQuestions,
-    onGoBack,
+    quizId,
 }: {
     correctAnswers: number;
     totalQuestions: number;
-    onGoBack: () => void;
+    quizId: number;
 }) => {
     const { logged_in, user } =
         useRouteLoaderData<typeof homeLoader>("home-main");
@@ -75,21 +75,31 @@ const EndQuizComponent = ({
                 <p>Correct Answers: {correctAnswers}</p>
                 <p>Wrong Answers: {totalQuestions - correctAnswers}</p>
             </div>
-            <button
+            <Link
                 className={buttonClass({ intent: "primary", size: "medium" })}
-                onClick={onGoBack}
+                to={`/quizzes/${quizId}/review`}
+            >
+                <span
+                    className={buttonInnerRing({ intent: "primary" })}
+                    aria-hidden="true"
+                />
+                Review Quiz
+            </Link>
+            <Link
+                to={`/quizzes`}
+                className={buttonClass({ intent: "primary", size: "medium" })}
             >
                 <span
                     className={buttonInnerRing({ intent: "primary" })}
                     aria-hidden="true"
                 />
                 See All Quizzes
-            </button>
+            </Link>
         </div>
     );
 };
 
-export const QuizPage = () => {
+export const TakeQuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [_, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
@@ -103,7 +113,6 @@ export const QuizPage = () => {
     const [hintText, setHintText] = useState("");
 
     const ref = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
     useEffect(() => {
         if (hints[currentQuestion]) {
             setHintOpen(true);
@@ -114,13 +123,6 @@ export const QuizPage = () => {
         }
         ref.current?.focus();
     }, [currentQuestion, hints, quiz.questions]);
-
-    useEffect(() => {
-        const savedAnswers = localStorage.getItem(`quiz_${quiz.id}_answers`);
-        if (savedAnswers) {
-            setAnswers(JSON.parse(savedAnswers));
-        }
-    }, [quiz.id]);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -142,10 +144,6 @@ export const QuizPage = () => {
         setSelectedOption(optionId);
         const updatedAnswers = { ...answers, [currentQuestion]: optionId };
         setAnswers(updatedAnswers);
-        localStorage.setItem(
-            `quiz_${quiz.id}_answers`,
-            JSON.stringify(updatedAnswers),
-        );
     };
 
     const isPrevDisabled = currentQuestion === 0;
@@ -206,10 +204,6 @@ export const QuizPage = () => {
         setCorrectAnswers(correct);
     };
 
-    const goBackToAllQuizzes = () => {
-        navigate("/quizzes");
-    };
-
     if (!isQuizStarted) {
         return (
             <main className="container flex max-w-screen-sm flex-col items-stretch gap-8 py-12">
@@ -224,7 +218,7 @@ export const QuizPage = () => {
                 <EndQuizComponent
                     correctAnswers={correctAnswers}
                     totalQuestions={quiz.questions.length}
-                    onGoBack={goBackToAllQuizzes}
+                    quizId={quiz.id}
                 />
             </main>
         );
