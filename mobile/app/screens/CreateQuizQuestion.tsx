@@ -1,35 +1,15 @@
 import { RouteProp } from "@react-navigation/native";
+import axios from "axios";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
-import NewQuizQuestion from "../components/NewQuizQuestion";
-import {
-  CreateQuizQuestionChoiceType,
-  CreateQuizQuestionHintType,
-  CreateQuizQuestionType,
-  SuggestedHintsType,
-} from "../types/quiz";
+import CreateQuizQuestionCore from "../components/CreateQuizQuestionCore";
+import CreateQuizQuestionFooter from "../components/CreateQuizQuestionFooter";
+import CreateQuizQuestionHeader from "../components/CreateQuizQuestionHeader";
+import CreateQuizQuestionHints from "../components/CreateQuizQuestionHints";
+import CreateQuizQuestionOptions from "../components/CreateQuizQuestionOptions";
+import { CreateQuizQuestionType } from "../types/quiz";
 import { Tag, TagSearchResult } from "../types/tag";
-
-const NewQuizQuestionInitialState: CreateQuizQuestionType = {
-  question_text: "",
-  choices: [],
-  hints: [],
-  point: 0,
-};
-
-const NewQuizQuestionChoicesInitialState: CreateQuizQuestionChoiceType[] = [
-  { choice_text: "", is_correct: true },
-  { choice_text: "", is_correct: false },
-  { choice_text: "", is_correct: false },
-  { choice_text: "", is_correct: false },
-];
-
-const NewQuizQuestionHintInitialState: CreateQuizQuestionHintType = {
-  type: "custom",
-  text: "",
-};
 
 type CreateQuizQuestionScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -42,221 +22,199 @@ interface Props {
 
 const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const { title, description, tags, type } = route.params;
-  const [questionsCount, setQuestionsCount] = useState(1);
+
   const [questions, setQuestions] = useState<CreateQuizQuestionType[]>([
-    NewQuizQuestionInitialState,
+    {
+      question_text: "",
+      choices: [],
+      hints: [],
+      point: 0,
+    },
   ]);
+  const [questionsCount, setQuestionsCount] = useState(1);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [questionInput, setQuestionInput] = useState("");
-  const [currentQuestionText, setCurrentQuestionText] = useState("");
-  const [suggestedLinkedKeywords, setSuggestedLinkedKeywords] = useState<
+  const [questionTextInput, setQuestionTextInput] = useState("");
+  const [suggestedQuestionTexts, setSuggestedQuestionTexts] = useState<
     TagSearchResult[]
   >([]);
-  const [currentQuestionLinkedKeyword, setCurrentQuestionLinkedKeyword] =
-    useState<Tag | null>(null);
-  const [currentQuestionPoint, setCurrentQuestionPoint] = useState(0);
-  const [currentQuestionChoices, setCurrentQuestionChoices] = useState<
-    CreateQuizQuestionChoiceType[]
-  >(NewQuizQuestionChoicesInitialState);
-  const [currentQuestionCorrectAnswer, setCurrentQuestionCorrectAnswer] =
-    useState<string>("");
-  const [
-    currentQuestionSuggestedTranslations,
-    setCurrentQuestionSuggestedTranslations,
-  ] = useState<string[] | null>(null);
-  const [currentQuestionHints, setCurrentQuestionHints] = useState<
-    CreateQuizQuestionHintType[]
-  >([NewQuizQuestionHintInitialState]);
-  const [currentQuestionHintType, setCurrentQuestionHintType] =
-    useState<string>("custom");
-  const [currentQuestionHintText, setCurrentQuestionHintText] = useState("");
-  const [suggestedHints, setSuggestedHints] =
-    useState<SuggestedHintsType | null>(null);
+  const [questionTags, setQuestionTags] = useState<Tag[]>([
+    {
+      name: "",
+      linked_data_id: "",
+      description: "",
+    },
+  ]);
+
+  // const API_URL = "http://54.247.125.93/api/v1";
+  const API_URL = "http://10.0.2.2:8000/api/v1";
+  const source_lang = type === 2 ? "TR" : "EN";
+
+  const fetchTagging = async (
+    input: string,
+    callback: (tags: TagSearchResult[]) => void
+  ) => {
+    const ENDPOINT = `${API_URL}/tagging/?word=${input}&lang=${source_lang}`;
+    try {
+      const result = await axios.get(`${ENDPOINT}`);
+      const combinedTags: TagSearchResult[] = [];
+      if (result.data.NOUN) {
+        combinedTags.push(...result.data.NOUN);
+      }
+      if (result.data.VERB) {
+        combinedTags.push(...result.data.VERB);
+      }
+      if (result.data.ADJ) {
+        combinedTags.push(...result.data.ADJ);
+      }
+      if (result.data.ADV) {
+        combinedTags.push(...result.data.ADV);
+      }
+      callback(combinedTags);
+    } catch (error) {
+      console.error("Error fetching tag suggestions", error);
+    }
+  };
+
+  const changeQuestionText = (text: string) => {
+    setQuestionTextInput(text);
+  };
+
+  const searchQuestionText = () => {
+    if (questionTextInput.length <= 2) return;
+    fetchTagging(questionTextInput, setSuggestedQuestionTexts);
+  };
+
+  const selectQuestionText = (text: TagSearchResult) => {
+    if (questionTextInput.length <= 2) return;
+
+    const updatedQuestionTags = [...questionTags];
+    updatedQuestionTags[currentQuestionIndex] = {
+      name: questionTextInput.replace(/\b\w/g, (char) => char.toUpperCase()),
+      linked_data_id: text.id,
+      description: text.description,
+    };
+    setQuestionTags(updatedQuestionTags);
+
+    const updatedQuestions = [...questions];
+    updatedQuestions[currentQuestionIndex].question_text =
+      questionTextInput.replace(/\b\w/g, (char) => char.toUpperCase());
+    setQuestions(updatedQuestions);
+
+    setQuestionTextInput("");
+    setSuggestedQuestionTexts([]);
+  };
 
   const goToNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      const updatedQuestions = [...questions];
-      updatedQuestions[currentQuestionIndex].question_text =
-        currentQuestionText;
-      updatedQuestions[currentQuestionIndex].choices = currentQuestionChoices;
-      updatedQuestions[currentQuestionIndex].point = currentQuestionPoint;
-      updatedQuestions[currentQuestionIndex].hints = currentQuestionHints;
-
-      setQuestions(updatedQuestions);
-
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setQuestionInput("");
-      setCurrentQuestionText("");
-      setSuggestedLinkedKeywords([]);
+    if (currentQuestionIndex < questionsCount - 1) {
       console.log(questions);
-      console.log(currentQuestionIndex);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setQuestionTextInput("");
     }
   };
 
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      const updatedQuestions = [...questions];
-      updatedQuestions[currentQuestionIndex].question_text =
-        currentQuestionText;
-      updatedQuestions[currentQuestionIndex].choices = currentQuestionChoices;
-      updatedQuestions[currentQuestionIndex].point = currentQuestionPoint;
-      updatedQuestions[currentQuestionIndex].hints = currentQuestionHints;
-
-      setQuestions(updatedQuestions);
-
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setQuestionInput("");
-      setCurrentQuestionText("");
-      setSuggestedLinkedKeywords([]);
       console.log(questions);
-      console.log(currentQuestionIndex);
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setQuestionTextInput("");
     }
   };
 
   const addQuestionToRight = () => {
+    const updatedQuestions = [...questions];
+    updatedQuestions.splice(currentQuestionIndex + 1, 0, {
+      question_text: "",
+      choices: [],
+      hints: [],
+      point: 0,
+    });
+    setQuestions(updatedQuestions);
+
+    const updatedQuestionTags = [...questionTags];
+    updatedQuestionTags.splice(currentQuestionIndex + 1, 0, {
+      name: "",
+      linked_data_id: "",
+      description: "",
+    });
+    setQuestionTags(updatedQuestionTags);
+
     setQuestionsCount(questionsCount + 1);
-
-    const newQuestions = [...questions];
-    newQuestions.splice(
-      currentQuestionIndex + 1,
-      0,
-      NewQuizQuestionInitialState
-    );
-    setQuestions(newQuestions);
-
-    goToNextQuestion();
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setQuestionTextInput("");
   };
 
   const addQuestionToLeft = () => {
+    const updatedQuestions = [...questions];
+    updatedQuestions.splice(currentQuestionIndex, 0, {
+      question_text: "",
+      choices: [],
+      hints: [],
+      point: 0,
+    });
+    setQuestions(updatedQuestions);
+
+    const updatedQuestionTags = [...questionTags];
+    updatedQuestionTags.splice(currentQuestionIndex, 0, {
+      name: "",
+      linked_data_id: "",
+      description: "",
+    });
+    setQuestionTags(updatedQuestionTags);
+
     setQuestionsCount(questionsCount + 1);
-
-    const newQuestions = [...questions];
-    newQuestions.splice(currentQuestionIndex, 0, NewQuizQuestionInitialState);
-    setQuestions(newQuestions);
-
-    goToPreviousQuestion();
+    setQuestionTextInput("");
   };
 
   const deleteQuestion = () => {
-    const newQuestions = [...questions];
-    newQuestions.splice(currentQuestionIndex, 1);
-    setQuestions(newQuestions);
+    if (questionsCount <= 1) return;
 
-    if (currentQuestionIndex === questions.length - 1) {
-      goToPreviousQuestion();
+    const updatedQuestions = [...questions];
+    updatedQuestions.splice(currentQuestionIndex, 1);
+    setQuestions(updatedQuestions);
+
+    const updatedQuestionTags = [...questionTags];
+    updatedQuestionTags.splice(currentQuestionIndex, 1);
+    setQuestionTags(updatedQuestionTags);
+
+    if (currentQuestionIndex == questionsCount - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
+    setQuestionsCount(questionsCount - 1);
+    setQuestionTextInput("");
   };
 
   return (
     <View style={styles.container}>
-      <NewQuizQuestion
-        quiz_type={type}
-        questionInput={questionInput}
-        setQuestionInput={setQuestionInput}
-        questionText={currentQuestionText}
-        setQuestionText={setCurrentQuestionText}
-        suggestedLinkedKeywords={suggestedLinkedKeywords}
-        setSuggestedLinkedKeywords={setSuggestedLinkedKeywords}
-        questionLinkedKeyword={currentQuestionLinkedKeyword}
-        setQuestionLinkedKeyword={setCurrentQuestionLinkedKeyword}
-        questionPoint={currentQuestionPoint}
-        setQuestionPoint={setCurrentQuestionPoint}
-        questionChoices={currentQuestionChoices}
-        setQuestionChoices={setCurrentQuestionChoices}
-        questionCorrectAnswer={currentQuestionCorrectAnswer}
-        setQuestionCorrectAnswer={setCurrentQuestionCorrectAnswer}
-        questionSuggestedTranslations={currentQuestionSuggestedTranslations}
-        setQuestionSuggestedTranslations={
-          setCurrentQuestionSuggestedTranslations
-        }
-        questionHints={currentQuestionHints}
-        setQuestionHints={setCurrentQuestionHints}
-        questionHintType={currentQuestionHintType}
-        setQuestionHintType={setCurrentQuestionHintType}
-        questionHintText={currentQuestionHintText}
-        setQuestionHintText={setCurrentQuestionHintText}
-        suggestedHints={suggestedHints}
-        setSuggestedHints={setSuggestedHints}
+      <CreateQuizQuestionHeader
+        questions_count={questionsCount}
+        current_question_index={currentQuestionIndex}
       />
-
-      <View style={styles.navigationButtons}>
-        <TouchableOpacity
-          style={[styles.navigationButton, styles.goToPreviousButton]}
-          onPress={goToPreviousQuestion}
-        >
-          <Icon name="arrow-left" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.navigationButton, styles.addButton]}
-          onPress={addQuestionToLeft}
-        >
-          <Icon name="plus" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.navigationButton, styles.deleteButton]}
-          onPress={deleteQuestion}
-        >
-          <Icon name="trash-can-outline" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.navigationButton, styles.addButton]}
-          onPress={addQuestionToRight}
-        >
-          <Icon name="plus" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.navigationButton, styles.goToNextButton]}
-          onPress={goToNextQuestion}
-        >
-          <Icon name="arrow-right" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+      <CreateQuizQuestionCore
+        question={questions[currentQuestionIndex]}
+        questionTextInput={questionTextInput}
+        suggestedQuestionTexts={suggestedQuestionTexts}
+        onChangeQuestionText={changeQuestionText}
+        searchQuestionText={searchQuestionText}
+        selectQuestionText={selectQuestionText}
+      />
+      <CreateQuizQuestionOptions />
+      <CreateQuizQuestionHints />
+      <CreateQuizQuestionFooter
+        goToNextQuestion={goToNextQuestion}
+        goToPreviousQuestion={goToPreviousQuestion}
+        addQuestionToRight={addQuestionToRight}
+        addQuestionToLeft={addQuestionToLeft}
+        deleteQuestion={deleteQuestion}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
     padding: 24,
-    width: "100%",
-    height: "100%",
+    backgroundColor: "#FFFFFF",
     flex: 1,
-    justifyContent: "flex-start",
-  },
-  navigationButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 32,
-    width: "100%",
-    marginHorizontal: 24,
-  },
-  navigationButton: {
-    // padding: 8,
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 12,
-    backgroundColor: "#F5F5F5",
-    // width: 48,
-    // height: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-  },
-  deleteButton: {
-    backgroundColor: "#FFE5E5",
-  },
-  addButton: {
-    backgroundColor: "#E5FFE5",
-  },
-  goToNextButton: {
-    backgroundColor: "#E5E5FF",
-  },
-  goToPreviousButton: {
-    backgroundColor: "#E5E5FF",
   },
 });
 
