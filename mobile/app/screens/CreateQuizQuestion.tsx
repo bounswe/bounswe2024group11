@@ -150,6 +150,27 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     fetchDifficulty(keyword);
   };
 
+  const changeOptionText = (index: number, text: string) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[currentQuestionIndex].choices[index].choice_text = text;
+    setQuestions(updatedQuestions);
+  };
+
+  const moveOption = (index: number, direction: number) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= 4) return;
+
+    const updatedQuestions = [...questions];
+    [
+      updatedQuestions[currentQuestionIndex].choices[index],
+      updatedQuestions[currentQuestionIndex].choices[targetIndex],
+    ] = [
+      updatedQuestions[currentQuestionIndex].choices[targetIndex],
+      updatedQuestions[currentQuestionIndex].choices[index],
+    ];
+    setQuestions(updatedQuestions);
+  };
+
   const goToNextQuestion = () => {
     if (currentQuestionIndex < questionsCount - 1) {
       console.log(questions);
@@ -268,7 +289,14 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         selectQuestionText={selectQuestionText}
         selectTranslation={selectTranslation}
       />
-      <CreateQuizQuestionOptions />
+      <View style={styles.separator} />
+      {questions[currentQuestionIndex].point > 0 && (
+        <CreateQuizQuestionOptions
+          choices={questions[currentQuestionIndex].choices}
+          onChangeOptionText={changeOptionText}
+          onMoveOption={moveOption}
+        />
+      )}
       <CreateQuizQuestionHints />
       <CreateQuizQuestionFooter
         goToNextQuestion={goToNextQuestion}
@@ -286,6 +314,11 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: "#FFFFFF",
     flex: 1,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#ddd",
+    marginVertical: 12,
   },
 });
 
