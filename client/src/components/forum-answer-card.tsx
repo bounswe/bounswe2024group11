@@ -1,6 +1,6 @@
 import { Button, Separator } from "@ariakit/react";
 import { RiArrowDownLine, RiArrowUpLine } from "@remixicon/react";
-import { useFetcher } from "react-router-dom";
+import { Link, useFetcher } from "react-router-dom";
 
 import { Answer } from "../routes/Forum/Forum.schema";
 import {
@@ -27,22 +27,28 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
         >
             <div className="flex flex-col gap-3 pb-3">
                 <div className="flex w-full items-center justify-between gap-3">
-                    <div className="flex flex-row items-center justify-start gap-3">
-                        <Avatar author={answer.author} size={24} />
-                        <p className="text-sm text-slate-500">
-                            {answer.author.username}
-                        </p>
-                    </div>
-                    <p className="text-sm text-slate-500">
+                    <Link
+                        className="flex flex-row items-center justify-start gap-3"
+                        to={`/profile/${answer.author.username}`}
+                    >
+                        <Avatar author={answer.author} size={32} />
+                        <div className="flex flex-col items-start">
+                            <p className="text-sm font-medium text-slate-900">
+                                {answer.author.full_name}
+                            </p>
+                            <p className="text-sm text-slate-700">
+                                @{answer.author.username}
+                            </p>
+                        </div>
+                    </Link>
+                    <p className="text-sm text-slate-600">
                         {getRelativeTime(new Date(answer.created_at))}
                     </p>
                 </div>
 
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm text-slate-500">
-                            {answer.answer}
-                        </p>
+                        <p className="text-slate-900">{answer.answer}</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +86,7 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
                             answer.downvotes_count,
                         )}
                     </p>
-                    <upvoteFetcher.Form
+                    <downvoteFetcher.Form
                         method="POST"
                         action={`/forum/${answer.forum_question}/downvoteAnswer`}
                     >
@@ -104,7 +110,7 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
                         >
                             <RiArrowDownLine size={16} />
                         </Button>
-                    </upvoteFetcher.Form>
+                    </downvoteFetcher.Form>
                 </div>
             </div>
         </div>
