@@ -7,7 +7,6 @@ import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass, labelClass } from "../../components/input";
 import { debounce } from "../../utils";
-import { QuizQuestion } from "../Quiz/Quiz.schema";
 import { forumCreateLoader } from "./Forum.data";
 import { Tag } from "./Forum.schema";
 import { RelevantQuiz } from "./RelevantQuizQuestion";
@@ -45,10 +44,11 @@ const tagOptionClass = cva(
 
 export const NewForum = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const relevant_quiz_id = searchParams.get("quiz_id");
+    const relevant_quiz_id = searchParams.get("qid");
     const [tagQuery, setTagQuery] = useState(searchParams.get("word") || "");
     const data = useLoaderData<typeof forumCreateLoader>() ?? {
         dictionary: undefined,
+        relevantQuiz: null,
     };
 
     const nounOptions: Tag[] =
@@ -110,32 +110,11 @@ export const NewForum = () => {
         );
     };
 
-    const relevant_quiz: QuizQuestion = {
-        id: Number(relevant_quiz_id),
-        question_text: "What is the Turkish translation of 'turquiz'?",
-        choices: [
-            {
-                id: 1,
-                is_correct: true,
-                choice_text: "turkuaz",
-            },
-            {
-                id: 2,
-                is_correct: false,
-                choice_text: "türkü",
-            },
-            {
-                id: 3,
-                is_correct: false,
-                choice_text: "kalem",
-            },
-            {
-                id: 4,
-                is_correct: false,
-                choice_text: "araba",
-            },
-        ],
-        hints: [],
+    const handleQuizRemoval = () => {
+        setSearchParams((prev) => {
+            prev.delete("qid");
+            return prev;
+        });
     };
 
     useEffect(() => {
@@ -259,17 +238,21 @@ export const NewForum = () => {
                                 }
                             />
                         </label>
-                        {relevant_quiz_id && (
+                        {data.relevantQuiz && (
                             <div className="flex flex-col gap-2">
                                 <input
                                     hidden
                                     name="quiz_question_id"
-                                    value={relevant_quiz_id}
+                                    value={data.relevantQuiz.id}
+                                    readOnly
                                 />
                                 <span className={labelClass()}>
                                     Relevant Quiz Question
                                 </span>
-                                <RelevantQuiz quizQuestion={relevant_quiz} />
+                                <RelevantQuiz
+                                    onQuizRemoval={handleQuizRemoval}
+                                    quizQuestion={data.relevantQuiz}
+                                />
                             </div>
                         )}
                         <label className={labelClass()}>

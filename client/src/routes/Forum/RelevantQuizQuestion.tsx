@@ -1,4 +1,7 @@
+import { Button } from "@ariakit/react";
+import { RiDeleteBinLine } from "@remixicon/react";
 import { cva } from "cva";
+import { buttonClass, buttonInnerRing } from "../../components/button";
 import { labelClass } from "../../components/input";
 import { QuizQuestion } from "../Quiz/Quiz.schema";
 
@@ -32,12 +35,33 @@ const relevantOptionClass = cva(
 
 export const RelevantQuiz = ({
     quizQuestion,
+    onQuizRemoval,
 }: {
     quizQuestion: QuizQuestion;
+    onQuizRemoval?: () => void;
 }) => {
     return (
         <div className="flex flex-col gap-4 rounded-4 bg-slate-100 p-4 text-sm ring-1 ring-slate-100">
-            <span className={labelClass()}>{quizQuestion.question_text}</span>
+            <div className="flex items-center justify-between gap-2">
+                <span className={labelClass()}>
+                    {quizQuestion.question_text}
+                </span>
+                {onQuizRemoval && (
+                    <Button
+                        className={buttonClass({ intent: "destructive" })}
+                        onClick={onQuizRemoval}
+                        aria-label="Remove Relevant Quiz"
+                    >
+                        <span
+                            className={buttonInnerRing({
+                                intent: "destructive",
+                            })}
+                            aria-hidden="true"
+                        />
+                        <RiDeleteBinLine size={16} />
+                    </Button>
+                )}
+            </div>
             <div className="grid grid-cols-2 gap-2">
                 {quizQuestion.choices.map((choice) => (
                     <div

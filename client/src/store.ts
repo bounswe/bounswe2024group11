@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Toast } from "./components/toast";
+import { QuizQuestion } from "./routes/Quiz/Quiz.schema";
 
 type ToastStore = {
     toasts: Toast[];
@@ -9,6 +10,34 @@ type ToastStore = {
     timer: NodeJS.Timeout | null;
     maxToasts: number;
 };
+
+type QuestionsStore = {
+    questions: Record<number, QuizQuestion>;
+    add: (question: QuizQuestion) => void;
+    remove: (id: number) => void;
+};
+
+export const useQuestionsStore = create<QuestionsStore>((set) => ({
+    questions: {},
+    add: (question) => {
+        set((state) => {
+            return {
+                questions: {
+                    ...state.questions,
+                    [question.id]: question,
+                },
+            };
+        });
+    },
+    remove: (id) => {
+        set((state) => {
+            const { [id]: _, ...newQuestions } = state.questions;
+            return {
+                questions: newQuestions,
+            };
+        });
+    },
+}));
 
 export const useToastStore = create<ToastStore>((set) => ({
     toasts: [],
