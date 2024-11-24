@@ -1,4 +1,4 @@
-import { RiQuestionAnswerLine, RiQuestionLine } from "@remixicon/react";
+import { RiQuestionAnswerLine, RiQuestionnaireFill } from "@remixicon/react";
 import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
@@ -61,7 +61,15 @@ import { QuizAnswer, QuizQuestion } from "./Quiz.schema";
 // });
 
 const optionClass = cva(
-    ["flex", "items-center", "gap-2", "rounded-2", "p-2", "text-center"],
+    [
+        "flex",
+        "items-center",
+        "gap-2",
+        "rounded-2",
+        "p-2",
+        "text-center",
+        "font-medium",
+    ],
     {
         variants: {
             correct: {
@@ -108,7 +116,9 @@ const QuizCard = ({
                     <span className="text-xs tracking-widest text-slate-500">
                         QUESTION ID {question.id}
                     </span>
-                    <h2 className="text-lg">{question.question_text}</h2>
+                    <h2 className="text-lg font-medium">
+                        {question.question_text}
+                    </h2>
                 </div>
                 <Link
                     className={buttonClass({
@@ -137,10 +147,11 @@ const QuizCard = ({
                             {choice.choice_text}
                         </span>
                         <Link
-                            className="rounded-full bg-transparent p-3 text-current transition-all hover:bg-white hover:text-orange-900"
+                            aria-label="Ask Community"
+                            className="rounded-full bg-transparent p-2.5 text-current transition-all hover:bg-white hover:text-orange-900"
                             to={`/forum/new?title=${choice.choice_text}&question=Quiz+option:+${choice.choice_text}?&quiz_question=${question.id}`}
                         >
-                            <RiQuestionLine size={16} />
+                            <RiQuestionnaireFill size={20} />
                         </Link>
                     </div>
                 ))}
