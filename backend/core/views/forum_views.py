@@ -2,7 +2,8 @@ from ..models import ForumQuestion, ForumAnswer
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.response import Response
-from ..serializers.serializers import ForumQuestionSerializer, ForumAnswerSerializer
+from ..serializers.serializers import ForumAnswerSerializer
+from ..serializers.forum_question_serializer import ForumQuestionSerializer
 from ..permissions import IsAuthorOrReadOnly
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination

@@ -12,7 +12,7 @@ export const ErrorPage = () => {
         "message" in error &&
         typeof error.message == "string"
             ? error.message
-            : "An unexpected error has occurred.";
+            : "";
     const errorMessage2 =
         typeof error == "object" &&
         error !== null &&
@@ -22,7 +22,7 @@ export const ErrorPage = () => {
         "message" in error.error &&
         typeof error.error.message == "string"
             ? error.error.message
-            : "An unexpected error has occurred.";
+            : "";
     return (
         <main id="error-page" role="main" aria-labelledby="error-heading">
             <div
@@ -42,6 +42,7 @@ export const ErrorPage = () => {
                             strokeLinecap="round"
                             stroke="currentColor"
                         >
+                            <title>Error Illustration</title>
                             <g className="text-cyan-600">
                                 <path d="M21.4251 23.49V66.36L12.0851 60.97V28.82L2.74512 23.43V12.71L21.4251 23.49Z" />
                                 <path d="M41.4251 13.49L31.4751 18.47L21.4251 23.49L2.74512 12.71L22.7451 2.70996L41.4251 13.49Z" />
@@ -64,9 +65,16 @@ export const ErrorPage = () => {
                     <h1 className="text-2xl font-semibold" tabIndex={-1}>
                         An error occurred on our side.
                     </h1>
-                    <p tabIndex={-1} id="error-heading">
-                        {errorMessage} {errorMessage2}
-                    </p>
+                    {errorMessage && (
+                        <p tabIndex={-1} id="error-heading">
+                            {errorMessage}
+                        </p>
+                    )}
+                    {errorMessage2 && (
+                        <p tabIndex={-1} id="error-heading">
+                            {errorMessage2}
+                        </p>
+                    )}
                 </div>
                 <Link
                     className={buttonClass({ intent: "primary" })}

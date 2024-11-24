@@ -6,6 +6,7 @@ import {
     nullable,
     number,
     object,
+    optional,
     safeParse,
     string,
 } from "valibot";
@@ -48,6 +49,15 @@ const quizSchema = object({
                     choice_text: string(),
                 }),
             ),
+            hints: optional(
+                array(
+                    object({
+                        id: number(),
+                        type: string(),
+                        text: string(),
+                    }),
+                ),
+            ),
         }),
     ),
     //question_count: nullable(number()),
@@ -89,6 +99,6 @@ export const quizzesLoader = (async ({ request }) => {
         return output;
     } catch (error) {
         logger.error("Error fetching quizzes", error);
-        throw new Error("Failed to fetch quizzes");
+        throw new Error("Failed to load quizzes");
     }
 }) satisfies LoaderFunction;

@@ -1,5 +1,8 @@
-import { RiCloseFill } from "@remixicon/react";
-import { useState } from "react";
+import {
+    RiArrowLeftLine,
+    RiArrowRightLine,
+    RiCloseFill,
+} from "@remixicon/react";
 import { useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
@@ -15,13 +18,13 @@ export const Quizzes = () => {
 
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-    const [sortBy, setSortBy] = useState("newest");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
     const totalPages = Math.ceil(data.count / perPage);
+    const searchTerm = searchParams.get("search") || "";
+    const sortBy = searchParams.get("sort") || "newest";
+    const selectedTagId = searchParams.get("tag");
 
     const handlePageChange = (page: number) => {
         const newParams = new URLSearchParams(searchParams);
@@ -37,14 +40,42 @@ export const Quizzes = () => {
         setSearchParams(newParams);
     };
 
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("search", e.target.value);
+        setSearchParams(newParams);
+    };
+
+    const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("sort", e.target.value);
+        setSearchParams(newParams);
+    };
+
+    const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        if (e.target.value) {
+            newParams.set("tag", e.target.value);
+        } else {
+            newParams.delete("tag");
+        }
+        setSearchParams(newParams);
+    };
+
     const filteredQuizzes = data.results
         .filter(
             (quiz) =>
-                quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                (!selectedTagId ||
-                    quiz.tags.some(
-                        (tag) => tag.linked_data_id === selectedTagId,
-                    )),
+                (quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                    (!selectedTagId ||
+                        quiz.tags.some(
+                            (tag) => tag.linked_data_id === selectedTagId,
+                        ))) ||
+                quiz.description
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                quiz.tags.some((tag) =>
+                    tag.name.toLowerCase().includes(searchTerm.toLowerCase()),
+                ),
         )
         .sort((a, b) => {
             if (sortBy === "newest") {
@@ -79,7 +110,7 @@ export const Quizzes = () => {
             <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-4">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-start justify-between">
                             <fieldset className="flex flex-col gap-2">
                                 <label
                                     htmlFor="perPage"
@@ -104,9 +135,11 @@ export const Quizzes = () => {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={!data.previous}
+                                    aria-label="Previous Page"
                                     aria-disabled={!data.previous}
                                     className={buttonClass({
                                         intent: "secondary",
+                                        className: "w-16",
                                     })}
                                 >
                                     <div
@@ -115,10 +148,16 @@ export const Quizzes = () => {
                                         })}
                                         aria-hidden="true"
                                     />
-                                    Previous
+                                    <RiArrowLeftLine size={16} />
                                 </button>
-                                <span className="flex items-center">
-                                    Page {currentPage} of {totalPages}
+                                <span className="flex w-12 items-center justify-center gap-1 text-center text-sm text-slate-400">
+                                    <span className="px-1 py-0.5 text-base text-slate-700">
+                                        {currentPage}
+                                    </span>
+                                    <span className="text-xs">/</span>
+                                    <span className="px-1 py-0.5 text-base font-regular">
+                                        {totalPages}
+                                    </span>
                                 </span>
                                 <button
                                     onClick={() =>
@@ -126,8 +165,10 @@ export const Quizzes = () => {
                                     }
                                     disabled={!data.next}
                                     aria-disabled={!data.next}
+                                    aria-label="Next Page"
                                     className={buttonClass({
                                         intent: "secondary",
+                                        className: "w-16",
                                     })}
                                 >
                                     <div
@@ -136,7 +177,7 @@ export const Quizzes = () => {
                                         })}
                                         aria-hidden="true"
                                     />
-                                    Next
+                                    <RiArrowRightLine size={16} />
                                 </button>
                             </div>
                         </div>
@@ -145,12 +186,10 @@ export const Quizzes = () => {
                         <div>
                             <select
                                 className={inputClass({
-                                    className: "w-40 cursor-pointer",
+                                    className: "w-48 cursor-pointer",
                                 })}
                                 value={selectedTagId || ""}
-                                onChange={(e) =>
-                                    setSelectedTagId(e.target.value || null)
-                                }
+                                onChange={handleTagChange}
                             >
                                 <option value="">All Tags</option>
                                 {allTags.map((tag) => (
@@ -166,12 +205,12 @@ export const Quizzes = () => {
                         <div className="flex-grow">
                             <input
                                 type="text"
-                                placeholder="Search quizzes..."
+                                placeholder="Search by title, description, or tag"
                                 className={inputClass({
                                     className: "w-full max-w-sm",
                                 })}
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={handleSearchChange}
                             />
                         </div>
                         <div>
@@ -181,11 +220,9 @@ export const Quizzes = () => {
                                     size: "medium",
                                     icon: "left",
                                 })}
-                                onClick={() => {
-                                    setSearchTerm("");
-                                    setSelectedTagId(null);
-                                    setSortBy("newest");
-                                }}
+                                onClick={() =>
+                                    setSearchParams(new URLSearchParams())
+                                }
                             >
                                 <RiCloseFill size={20} />
                                 Clear All Filters
@@ -204,8 +241,8 @@ export const Quizzes = () => {
                                     type="radio"
                                     value={option}
                                     checked={sortBy === option}
-                                    onChange={(e) => setSortBy(e.target.value)}
                                     className="sr-only"
+                                    onChange={handleSortChange}
                                 />
                                 <span
                                     className={`rounded-full px-4 py-1.5 font-medium transition-all ${
@@ -236,8 +273,14 @@ export const Quizzes = () => {
                         <QuizCard
                             key={quiz.id}
                             quiz_key={String(quiz.id)}
-                            onTagClick={(tag) => setSelectedTagId(tag)}
                             quiz={quiz}
+                            onTagClick={(tag) => {
+                                const newParams = new URLSearchParams(
+                                    searchParams,
+                                );
+                                newParams.set("tag", tag);
+                                setSearchParams(newParams);
+                            }}
                         />
                     ))}
             </main>

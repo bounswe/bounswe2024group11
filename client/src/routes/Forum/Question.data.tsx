@@ -21,7 +21,7 @@ export const forumQuestionLoader = (async ({ params }) => {
     }
 
     try {
-        const response = await apiClient.get(`/forum-questions/${postId}`);
+        const response = await apiClient.get(`/forum-questions/${postId}/`);
 
         const { output, issues, success } = safeParse(
             forumQuestionSchema,
@@ -35,7 +35,7 @@ export const forumQuestionLoader = (async ({ params }) => {
         return output;
     } catch (error) {
         logger.error(`Error fetching post with ID: ${postId}`, error);
-        throw new Error(`Failed to fetch post with ID: ${postId}`);
+        throw new Error(`Failed to load post with ID: ${postId}`);
     }
 }) satisfies LoaderFunction;
 

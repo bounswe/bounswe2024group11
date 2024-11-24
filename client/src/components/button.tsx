@@ -116,6 +116,7 @@ export const buttonClass = cva(
             size: {
                 small: ["text-xs", "py-1", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
+                large: ["text-base", "py-3", "px-6"],
             },
             rounded: {
                 default: ["rounded-2"],
