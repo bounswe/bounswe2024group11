@@ -33,12 +33,20 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
         <div className="relative flex h-full w-full flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
             <div className="flex flex-1 flex-col gap-3 pb-3">
                 <div className="flex w-full items-center justify-between gap-3">
-                    <div className="flex flex-row items-center justify-start gap-3">
-                        <Avatar author={question.author} size={24} />
-                        <p className="text-sm text-slate-500">
-                            {question.author.username}
-                        </p>
-                    </div>
+                    <Link
+                        className="flex flex-row items-center justify-start gap-3"
+                        to={`/profile/${question.author.username}`}
+                    >
+                        <Avatar author={question.author} size={32} />
+                        <div className="flex flex-col items-start">
+                            <p className="font-medium text-slate-900">
+                                {question.author.full_name}
+                            </p>
+                            <p className="text-sm text-slate-700">
+                                @{question.author.username}
+                            </p>
+                        </div>
+                    </Link>
                     <div className="flex flex-row items-center justify-end gap-3">
                         {question.is_my_forum_question && (
                             <deleteFetcher.Form
@@ -106,9 +114,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                         <h2 className="text-xl font-semibold text-slate-900 underline-offset-2 group-hover:underline">
                             {question.title}
                         </h2>
-                        <p className="text-sm text-slate-500">
-                            {question.question}
-                        </p>
+                        <p className="text-slate-700">{question.question}</p>
                     </Link>
                     <div className="flex flex-row gap-2">
                         {question.tags.map(

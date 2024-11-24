@@ -33,7 +33,7 @@ import {
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { Profile } from "./routes/Profile/Profile";
-import { profileLoader } from "./routes/Profile/Profile.data";
+import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
@@ -133,7 +133,12 @@ export const routes: RouteObject[] = [
                         loader: quizReviewLoader,
                     },
                     {
-                        path: "profile",
+                        path: "profile/",
+                        element: <Profile />,
+                        loader: myProfileLoader,
+                    },
+                    {
+                        path: "profile/:username",
                         element: <Profile />,
                         loader: profileLoader,
                     },
