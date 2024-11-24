@@ -136,12 +136,15 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
             )}
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-between">
-                <div className="flex flex-row items-center gap-1">
+                <Link
+                    className="flex flex-row items-center gap-1 underline-offset-2 hover:underline"
+                    to={`/forum/${question.id}`}
+                >
                     <RiBookmark2Line className="size-5 text-slate-500" />
-                    <p className="text-xs text-slate-500">
+                    <p className="text-sm text-slate-500">
                         {pluralize(question.answers_count, "answer", "answers")}
                     </p>
-                </div>
+                </Link>
                 <div className="flex flex-row items-center gap-2">
                     <upvoteFetcher.Form
                         method="POST"

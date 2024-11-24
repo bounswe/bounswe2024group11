@@ -35,7 +35,7 @@ export const Navbar = ({ user }: NavbarProps) => {
     return (
         <nav
             aria-label="Main navigation"
-            className="fixed top-0 z-10 w-full border-b border-slate-200 bg-[rgba(255,255,255,.92)] px-6 py-3 backdrop-blur-sm"
+            className="fixed top-0 z-50 w-full border-b border-slate-200 bg-[rgba(255,255,255,.92)] px-6 py-3 backdrop-blur-sm"
         >
             <div className="container max-w-screen-xl">
                 <div className="flex items-center gap-2">
