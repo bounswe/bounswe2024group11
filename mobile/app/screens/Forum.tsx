@@ -8,7 +8,8 @@ import { RootStackParamList } from "../../App";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Question } from "../types/forum";
 
-const API_URL = "http://54.247.125.93/api/v1/forum-questions/";
+// const API_URL = "http://54.247.125.93/api/v1/forum-questions/";
+const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
 
 type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
