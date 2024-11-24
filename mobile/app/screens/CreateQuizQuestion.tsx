@@ -26,7 +26,12 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const [questions, setQuestions] = useState<CreateQuizQuestionType[]>([
     {
       question_text: "",
-      choices: [],
+      choices: [
+        { choice_text: "", is_correct: true },
+        { choice_text: "", is_correct: false },
+        { choice_text: "", is_correct: false },
+        { choice_text: "", is_correct: false },
+      ],
       hints: [],
       point: 0,
     },
@@ -44,6 +49,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
       description: "",
     },
   ]);
+  const [allTranslations, setAllTranslations] = useState<string[][]>([[]]);
 
   // const API_URL = "http://54.247.125.93/api/v1";
   const API_URL = "http://10.0.2.2:8000/api/v1";
@@ -84,6 +90,18 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     fetchTagging(questionTextInput, setSuggestedQuestionTexts);
   };
 
+  const fetchTranslations = async (linked_data_id: string) => {
+    const ENDPOINT = `${API_URL}/get-translation/?type=type${type}&id=${linked_data_id.substring(3)}`;
+    try {
+      const result = await axios.get(`${ENDPOINT}`);
+      const updatedAllTranslations = [...allTranslations];
+      updatedAllTranslations[currentQuestionIndex] = result.data.translations;
+      setAllTranslations(updatedAllTranslations);
+    } catch (error) {
+      console.error("Error fetching translations", error);
+    }
+  };
+
   const selectQuestionText = (text: TagSearchResult) => {
     if (questionTextInput.length <= 2) return;
 
@@ -100,8 +118,18 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
       questionTextInput.replace(/\b\w/g, (char) => char.toUpperCase());
     setQuestions(updatedQuestions);
 
+    fetchTranslations(text.id);
+
     setQuestionTextInput("");
     setSuggestedQuestionTexts([]);
+  };
+
+  const selectTranslation = (translation: string) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[currentQuestionIndex].choices.find(
+      (choice) => choice.is_correct
+    )!.choice_text = translation;
+    setQuestions(updatedQuestions);
   };
 
   const goToNextQuestion = () => {
@@ -124,7 +152,12 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     const updatedQuestions = [...questions];
     updatedQuestions.splice(currentQuestionIndex + 1, 0, {
       question_text: "",
-      choices: [],
+      choices: [
+        { choice_text: "", is_correct: true },
+        { choice_text: "", is_correct: false },
+        { choice_text: "", is_correct: false },
+        { choice_text: "", is_correct: false },
+      ],
       hints: [],
       point: 0,
     });
@@ -138,6 +171,10 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     });
     setQuestionTags(updatedQuestionTags);
 
+    const updatedAllTranslations = [...allTranslations];
+    updatedAllTranslations.splice(currentQuestionIndex + 1, 0, []);
+    setAllTranslations(updatedAllTranslations);
+
     setQuestionsCount(questionsCount + 1);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setQuestionTextInput("");
@@ -147,7 +184,12 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     const updatedQuestions = [...questions];
     updatedQuestions.splice(currentQuestionIndex, 0, {
       question_text: "",
-      choices: [],
+      choices: [
+        { choice_text: "", is_correct: true },
+        { choice_text: "", is_correct: false },
+        { choice_text: "", is_correct: false },
+        { choice_text: "", is_correct: false },
+      ],
       hints: [],
       point: 0,
     });
@@ -160,6 +202,10 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
       description: "",
     });
     setQuestionTags(updatedQuestionTags);
+
+    const updatedAllTranslations = [...allTranslations];
+    updatedAllTranslations.splice(currentQuestionIndex, 0, []);
+    setAllTranslations(updatedAllTranslations);
 
     setQuestionsCount(questionsCount + 1);
     setQuestionTextInput("");
@@ -176,6 +222,10 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     updatedQuestionTags.splice(currentQuestionIndex, 1);
     setQuestionTags(updatedQuestionTags);
 
+    const updatedAllTranslations = [...allTranslations];
+    updatedAllTranslations.splice(currentQuestionIndex, 1);
+    setAllTranslations(updatedAllTranslations);
+
     if (currentQuestionIndex == questionsCount - 1) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
@@ -190,12 +240,15 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         current_question_index={currentQuestionIndex}
       />
       <CreateQuizQuestionCore
+        quiz_type={type}
         question={questions[currentQuestionIndex]}
         questionTextInput={questionTextInput}
         suggestedQuestionTexts={suggestedQuestionTexts}
+        translations={allTranslations[currentQuestionIndex]}
         onChangeQuestionText={changeQuestionText}
         searchQuestionText={searchQuestionText}
         selectQuestionText={selectQuestionText}
+        selectTranslation={selectTranslation}
       />
       <CreateQuizQuestionOptions />
       <CreateQuizQuestionHints />

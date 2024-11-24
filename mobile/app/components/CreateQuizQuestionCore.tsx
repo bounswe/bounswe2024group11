@@ -4,23 +4,30 @@ import { CreateQuizQuestionType } from "../types/quiz";
 import { TagSearchResult } from "../types/tag";
 import CreateQuizQuestionSuggestionModal from "./CreateQuizQuestionSuggestionModal";
 import CreateQuizQuestionText from "./CreateQuizQuestionText";
+import TranslationPicker from "./TranslationPicker";
 
 interface Props {
+  quiz_type: number;
   question: CreateQuizQuestionType;
   questionTextInput: string;
   suggestedQuestionTexts: TagSearchResult[];
+  translations: string[];
   onChangeQuestionText: (text: string) => void;
   searchQuestionText: () => void;
   selectQuestionText: (text: TagSearchResult) => void;
+  selectTranslation: (translation: string) => void;
 }
 
 const CreateQuizQuestionCore: React.FC<Props> = ({
+  quiz_type,
   question,
   questionTextInput,
   suggestedQuestionTexts,
+  translations,
   onChangeQuestionText,
   searchQuestionText,
   selectQuestionText,
+  selectTranslation,
 }) => {
   return (
     <View style={styles.container}>
@@ -34,6 +41,14 @@ const CreateQuizQuestionCore: React.FC<Props> = ({
           title={questionTextInput}
           data={suggestedQuestionTexts}
           onSelect={selectQuestionText}
+        />
+      )}
+      {translations.length > 0 && (
+        <TranslationPicker
+          quiz_type={quiz_type}
+          question={question}
+          translations={translations}
+          onSelect={selectTranslation}
         />
       )}
     </View>
