@@ -32,6 +32,8 @@ import {
     upvoteForumAnswerAction,
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
+import { Profile } from "./routes/Profile/Profile";
+import { profileLoader } from "./routes/Profile/Profile.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
@@ -132,7 +134,8 @@ export const routes: RouteObject[] = [
                     },
                     {
                         path: "profile",
-                        element: <div>Profile</div>,
+                        element: <Profile />,
+                        loader: profileLoader,
                     },
                 ],
             },
