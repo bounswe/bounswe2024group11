@@ -21,6 +21,10 @@ const routes = [
         name: "Leaderboard",
         href: "/leaderboard",
     },
+    {
+        name: "Profile",
+        href: "/profile",
+    },
 ];
 
 type NavbarProps = {
