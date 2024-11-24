@@ -18,16 +18,24 @@ export const Profile = () => {
         username: user?.username || "",
     };
     return (
-        <div className="container flex max-w-screen-md flex-col items-stretch gap-8 py-12">
-            <div className="flex flex-col items-start">
-                <Avatar author={author} size={80} />
-                <h2 className="pt-2 text-lg font-semibold">
-                    {user?.full_name}
-                </h2>
-                <p className="text-sm text-slate-500">{user?.username}</p>
+        <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+            <div className="flex flex-row items-center gap-4">
+                <Avatar author={author} size={96} />
+                <div>
+                    <h2 className="pt-2 text-2xl font-semibold">
+                        {user?.full_name}
+                    </h2>
+                    <p className="text-lg text-slate-500">{user?.username}</p>
+                </div>
             </div>
-            <div className="flex w-full flex-row justify-between">
-                <div>Badges</div>
+            <div className="flex w-full flex-row items-center justify-between">
+                <div>
+                    <div className="flex flex-row gap-4">
+                        <div className="text-3xl">🏆</div>
+                        <div className="text-3xl">🏅</div>
+                        <div className="text-3xl">🎖️</div>
+                    </div>
+                </div>
                 <div>700 Points</div>
             </div>
             <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
