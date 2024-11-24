@@ -1,73 +1,9 @@
 import { LoaderFunction } from "react-router";
-import {
-    array,
-    boolean,
-    InferInput,
-    nullable,
-    number,
-    object,
-    optional,
-    safeParse,
-    string,
-} from "valibot";
+import { array, nullable, number, object, safeParse, string } from "valibot";
 import apiClient from "../../api"; // Axios instance
 import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
-
-export type Quiz = InferInput<typeof quizSchema>;
-
-const quizSchema = object({
-    id: number(),
-    title: string(),
-    description: string(),
-    author: object({
-        full_name: string(),
-        username: string(),
-        avatar: string(),
-        id: number(),
-        email: string(),
-    }),
-    created_at: string(),
-    tags: array(
-        object({
-            name: string(),
-            linked_data_id: string(),
-            description: string(),
-        }),
-    ),
-    type: number(),
-    num_taken: number(),
-    is_my_quiz: boolean(),
-    is_taken: boolean(),
-    questions: array(
-        object({
-            id: number(),
-            question_text: string(),
-            choices: array(
-                object({
-                    id: number(),
-                    is_correct: boolean(),
-                    choice_text: string(),
-                }),
-            ),
-            hints: optional(
-                array(
-                    object({
-                        id: number(),
-                        type: string(),
-                        text: string(),
-                    }),
-                ),
-            ),
-        }),
-    ),
-    //question_count: nullable(number()),
-    difficulty: number(),
-    rating: object({
-        score: nullable(number()),
-        count: number(),
-    }),
-});
+import { quizSchema } from "./Quiz.schema";
 
 const quizzesResponseSchema = object({
     count: number(),

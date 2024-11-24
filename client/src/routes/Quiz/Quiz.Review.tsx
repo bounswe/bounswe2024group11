@@ -69,7 +69,7 @@ const QuizCard = ({
             <h2>
                 {question.question_text} {answer?.answer}
                 <Link
-                    to={`/forum/new?qid=${question.id}&title=Quiz+Question:+"${question.question_text}"&question=Can+you+help+me+with+${question.question_text}?`}
+                    to={`/forum/new?qidvalue=${question.id}&title=Quiz+Question:+"${question.question_text}"&question=Can+you+help+me+with+${question.question_text}?`}
                 >
                     <span>Ask Community</span>
                 </Link>

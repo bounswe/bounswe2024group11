@@ -17,15 +17,15 @@ import {
 export const forumShouldRevalidate: ShouldRevalidateFunction = ({
     currentUrl,
     nextUrl,
-    defaultShouldRevalidate,
+    formData,
 }) => {
     const currentUrlParams = new URLSearchParams(currentUrl.search);
     const nextUrlParams = new URLSearchParams(nextUrl.search);
-
+    console.log(formData);
     return (
+        !!formData ||
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
-        defaultShouldRevalidate
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
     );
 };
 
