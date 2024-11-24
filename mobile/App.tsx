@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import CreateQuestion from "./app/screens/CreateQuestion";
 import CreateQuiz from "./app/screens/CreateQuiz";
+import CreateQuizQuestion from "./app/screens/CreateQuizQuestion";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
@@ -19,6 +20,7 @@ import Register from "./app/screens/Register"; // import the new Register screen
 import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
 import { QuizOverview } from "./app/types/quiz";
+import { Tag } from "./app/types/tag";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -37,6 +39,12 @@ export type RootStackParamList = {
   QuizResult: undefined;
   CreateQuestion: undefined;
   CreateQuiz: undefined;
+  CreateQuizQuestion: {
+    title: string;
+    description: string;
+    tags: Tag[];
+    type: number;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -142,6 +150,13 @@ export const Layout = () => {
             />
             <Stack.Screen name="QuizResult" component={QuizResult} />
             <Stack.Screen name="CreateQuiz" component={CreateQuiz} />
+            <Stack.Screen
+              name="CreateQuizQuestion"
+              component={CreateQuizQuestion}
+              options={({ route }) => ({
+                title: route.params?.title ? route.params.title : "Quiz",
+              })}
+            />
             {/*
             {authState?.authenticated
               ? <Stack.Screen
