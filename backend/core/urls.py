@@ -62,8 +62,8 @@ urlpatterns = [
     path("tagging/", TaggingView.as_view(), name="tagging"),
      path('hint/', HintView.as_view(), name='babelnet-hint'),
     path("get-translation/", TranslationView.as_view(), name="get-translation"),
-    path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
-    path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"),
+    # path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"), # semantic search is moved to forum-questions
+    # path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"), # semantic search is moved to quizzes
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
 ]
 

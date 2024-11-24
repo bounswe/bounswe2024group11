@@ -7,6 +7,16 @@ from ..serializers.forum_question_serializer import ForumQuestionSerializer
 from ..permissions import IsAuthorOrReadOnly
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+import requests
+import os
+from dotenv import load_dotenv
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from .semantic_search_views import get_ids
+
+load_dotenv()
+api_key = os.getenv('BABELNET_API_KEY')
+
 
 class ForumQuestionPagination(PageNumberPagination):
     page_size = 10
@@ -25,15 +35,51 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         # Set the author to the current authenticated user
         serializer.save(author=self.request.user)
 
+    @swagger_auto_schema(
+        operation_description="Retrieve a list of forum questions with optional filters and sorting.",
+        manual_parameters=[
+            openapi.Parameter(
+                name="tag",
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description="example: `bn:00005106n`"
+            ),
+            openapi.Parameter(
+                name="sort",
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                enum=["oldest", "newest", "popular"],
+                description="Sort forum questions by creation date or popularity. Defaults to 'newest'."
+            )
+        ],
+        responses={200: ForumQuestionSerializer(many=True)},
+    )
+
     def list(self, request, *args, **kwargs):
         # queryset = ForumQuestion.objects.all().order_by('-created_at')
         # serializer = ForumQuestionSerializer(queryset, many=True, context={'request': request})
         # return Response(serializer.data)
 
+        word_id = self.request.query_params.get('tag')
+        if word_id:
+            linked_data_ids = get_ids(word_id)
+            queryset = ForumQuestion.objects.filter(tags__linked_data_id__in=linked_data_ids)
+        else:
+            queryset = ForumQuestion.objects.all()
+
+        sort = self.request.query_params.get('sort')
+        if sort == 'oldest':
+            queryset = queryset.order_by('created_at')
+        elif sort == 'newest':
+            queryset = queryset.order_by('-created_at')
+        elif sort == 'popular':
+            queryset = queryset.order_by('-upvotes')
+        else:
+            queryset = queryset.order_by('-created_at')
         """
         Handle pagination explicitly.
         """
-        queryset = self.filter_queryset(self.get_queryset()).order_by('-created_at')
+        # queryset = self.filter_queryset(self.get_queryset()).order_by('-created_at')
 
         # Apply pagination
         page = self.paginate_queryset(queryset)
