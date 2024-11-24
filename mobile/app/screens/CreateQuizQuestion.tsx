@@ -124,12 +124,30 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     setSuggestedQuestionTexts([]);
   };
 
+  const fetchDifficulty = async (keyword: string) => {
+    const ENDPOINT = `${API_URL}/get-difficulty/?keyword=${keyword}`;
+    try {
+      const result = await axios.get(`${ENDPOINT}`);
+      const point = result.data.question_point;
+
+      const updatedQuestions = [...questions];
+      updatedQuestions[currentQuestionIndex].point = point;
+      setQuestions(updatedQuestions);
+    } catch (error) {
+      console.error("Error fetching difficulty", error);
+    }
+  };
+
   const selectTranslation = (translation: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[currentQuestionIndex].choices.find(
       (choice) => choice.is_correct
     )!.choice_text = translation;
     setQuestions(updatedQuestions);
+
+    const keyword =
+      type === 2 ? translation : questions[currentQuestionIndex].question_text;
+    fetchDifficulty(keyword);
   };
 
   const goToNextQuestion = () => {

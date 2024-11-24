@@ -4,6 +4,7 @@ import { CreateQuizQuestionType } from "../types/quiz";
 import { TagSearchResult } from "../types/tag";
 import CreateQuizQuestionSuggestionModal from "./CreateQuizQuestionSuggestionModal";
 import CreateQuizQuestionText from "./CreateQuizQuestionText";
+import DifficultyView from "./DifficultyView";
 import TranslationPicker from "./TranslationPicker";
 
 interface Props {
@@ -51,6 +52,7 @@ const CreateQuizQuestionCore: React.FC<Props> = ({
           onSelect={selectTranslation}
         />
       )}
+      {question.point > 0 && <DifficultyView point={question.point} />}
     </View>
   );
 };
