@@ -11,6 +11,7 @@ import {
     string,
 } from "valibot";
 import apiClient from "../../api"; // Axios instance
+import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
 
 export type Quiz = InferInput<typeof quizSchema>;
@@ -95,6 +96,19 @@ export const quizzesLoader = (async ({ request }) => {
             logger.error("Failed to parse quizzes response", issues);
             throw new Error(`Failed to parse quizzes response: ${issues}`);
         }
+
+        const questionStore = useQuestionsStore;
+        output.results.forEach((quiz) => {
+            quiz.questions.forEach((question) => {
+                questionStore.getState().add({
+                    id: question.id,
+                    question_text: question.question_text,
+                    choices: question.choices,
+                    hints: question.hints ?? null,
+                });
+            });
+        });
+        console.log("question Store:", questionStore.getState().questions);
 
         return output;
     } catch (error) {

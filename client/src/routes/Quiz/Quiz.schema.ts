@@ -37,12 +37,14 @@ export const quizQuestionSchema = object({
             choice_text: string(),
         }),
     ),
-    hints: array(
-        object({
-            id: number(),
-            text: string(),
-            type: string(),
-        }),
+    hints: nullable(
+        array(
+            object({
+                id: number(),
+                text: string(),
+                type: string(),
+            }),
+        ),
     ),
 });
 
@@ -72,15 +74,19 @@ export const quizOverviewSchema = object({
     difficulty: number(),
 });
 
+export const quizAnswerSchema = object({
+    question: number(),
+    answer: number(),
+    is_hint_used: boolean(),
+});
+
+export const quizAnswersSchema = array(quizAnswerSchema);
+
+export type QuizAnswer = InferInput<typeof quizAnswerSchema>;
+
 export const completedQuizSchema = object({
     quiz: number(),
-    answers: array(
-        object({
-            question: number(),
-            answer: number(),
-            is_hint_used: boolean(),
-        }),
-    ),
+    answers: quizAnswersSchema,
 });
 
 export const quizDetailsSchema = object({

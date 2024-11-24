@@ -120,7 +120,7 @@ export const routes: RouteObject[] = [
                         shouldRevalidate: quizShouldRevalidate,
                     },
                     {
-                        path: "quizzes/:quizId/take",
+                        path: "quizzes/:quizId/",
                         element: <TakeQuizPage />,
                         loader: quizLoader,
                         action: takeQuizAction,

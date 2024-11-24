@@ -6,6 +6,7 @@ import {
 } from "react-router";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
+import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
 import {
     dictionarySchema,
@@ -16,13 +17,15 @@ import {
 export const forumShouldRevalidate: ShouldRevalidateFunction = ({
     currentUrl,
     nextUrl,
+    defaultShouldRevalidate,
 }) => {
     const currentUrlParams = new URLSearchParams(currentUrl.search);
     const nextUrlParams = new URLSearchParams(nextUrl.search);
 
     return (
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
+        defaultShouldRevalidate
     );
 };
 
@@ -61,9 +64,17 @@ export const forumCreateLoader = (async ({ request }) => {
     const url = new URL(request.url);
     const word = url.searchParams.get("word") || "";
     const lang = url.searchParams.get("lang") || "en";
+    const qid = url.searchParams.get("qid");
+    const relevantQuiz = qid
+        ? useQuestionsStore.getState().questions[Number(qid)]
+        : null;
+
+    console.log(useQuestionsStore.getState().questions);
+    console.log("relevant quiz", relevantQuiz);
     if (!word) {
         return {
             dictionary: undefined,
+            relevantQuiz,
         };
     }
 
@@ -84,7 +95,10 @@ export const forumCreateLoader = (async ({ request }) => {
         throw new Error("Failed to parse dictionary response.");
     }
 
+    console.log("qid", qid);
+
     return {
+        relevantQuiz,
         dictionary: output,
     };
 }) satisfies LoaderFunction;

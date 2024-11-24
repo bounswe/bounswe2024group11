@@ -7,18 +7,24 @@ import {
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
-import { completedQuizSchema, quizDetailsSchema } from "./Quiz.schema";
+import {
+    completedQuizSchema,
+    quizAnswersSchema,
+    quizDetailsSchema,
+} from "./Quiz.schema";
 
 export const quizShouldRevalidate: ShouldRevalidateFunction = ({
     currentUrl,
     nextUrl,
+    defaultShouldRevalidate,
 }) => {
     const currentUrlParams = new URLSearchParams(currentUrl.search);
     const nextUrlParams = new URLSearchParams(nextUrl.search);
 
     return (
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
+        defaultShouldRevalidate
     );
 };
 
@@ -45,7 +51,6 @@ export const quizLoader = (async ({ params }) => {
             logger.error("Failed to parse quiz response:", issues);
             throw new Error(`Failed to parse quiz response: ${issues}`);
         }
-
         return output;
     } catch (error) {
         logger.error(`Error fetching quiz with ID: ${quizId}`, error);
@@ -53,7 +58,7 @@ export const quizLoader = (async ({ params }) => {
     }
 }) satisfies LoaderFunction;
 
-export const takeQuizAction = (async ({ request, params }) => {
+export const takeQuizAction = (async ({ request }) => {
     try {
         if (!getUserOrRedirect()) {
             return redirect("/login");
@@ -64,16 +69,12 @@ export const takeQuizAction = (async ({ request, params }) => {
         const answers = formData.get("answers") as string;
         const quizId = formData.get("quizId");
 
-        logger.log("submit quiz", {
-            quiz: Number(quizId),
-            answers: JSON.parse(answers),
-        });
+        localStorage.setItem("quiz_answer" + String(quizId), answers);
 
         const response = await apiClient.post(`/take-quiz/`, {
             quiz: Number(quizId),
             answers: JSON.parse(answers),
         });
-
         const data = response.data; // Extract data from axios response
         logger.log(data);
         const { output, issues, success } = safeParse(
@@ -102,13 +103,24 @@ export const quizReviewLoader = (async ({ params }) => {
     if (!getUserOrRedirect()) {
         return redirect("/login");
     }
+    const savedAnswers = localStorage.getObject("quiz_answer" + String(quizId));
+    const {
+        output: outputS,
+        issues: issuesS,
+        success: successS,
+    } = safeParse(quizAnswersSchema, savedAnswers);
 
+    if (!successS) {
+        logger.error(
+            "Failed to parse quiz answers from local storage",
+            issuesS,
+        );
+        throw new Error(`Failed to load quiz answers: ${issuesS}`);
+    }
     try {
         const response = await apiClient.get(`/quizzes/${quizId}/`);
 
         const data = response.data; // Extract data from axios response
-        logger.log(data);
-
         const { output, issues, success } = safeParse(quizDetailsSchema, data);
 
         if (!success) {
@@ -119,7 +131,8 @@ export const quizReviewLoader = (async ({ params }) => {
         if (!output.is_taken) {
             return redirect(`/quizzes/${quizId}/`);
         }
-        return output;
+        console.log(output);
+        return { quiz: output, savedAnswers: outputS };
     } catch (error) {
         logger.error(`Error fetching quiz with ID: ${quizId}`, error);
         throw new Error(`Failed to load quiz with ID: ${quizId}`);
