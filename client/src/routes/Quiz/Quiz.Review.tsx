@@ -77,12 +77,17 @@ const optionClass = cva(
                 false: "",
             },
             selected: {
-                true: "bg-cyan-700 text-white",
-                false: "bg-slate-100 text-slate-900",
+                true: "",
+                false: "",
             },
         },
 
         compoundVariants: [
+            {
+                correct: false,
+                selected: false,
+                class: ["bg-slate-100 text-slate-900"],
+            },
             {
                 correct: true,
                 selected: true,
