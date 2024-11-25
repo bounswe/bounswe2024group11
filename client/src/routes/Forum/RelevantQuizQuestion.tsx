@@ -1,5 +1,7 @@
+import { Button } from "@ariakit/react";
+import { RiDeleteBinLine, RiQuestionLine } from "@remixicon/react";
 import { cva } from "cva";
-import { labelClass } from "../../components/input";
+import { buttonClass, buttonInnerRing } from "../../components/button";
 import { QuizQuestion } from "../Quiz/Quiz.schema";
 
 const relevantOptionClass = cva(
@@ -9,9 +11,10 @@ const relevantOptionClass = cva(
         "justify-center",
         "gap-2",
         "rounded-2",
-        "p-2",
+        "px-2",
+        "py-3",
         "text-center",
-        "text-xs",
+        "text-sm",
         "ring-1",
         "ring-slate-200",
         "font-medium",
@@ -20,11 +23,7 @@ const relevantOptionClass = cva(
         variants: {
             selected: {
                 true: "bg-green-700 text-white",
-                false: "bg-slate-100 text-slate-900",
-            },
-            disabled: {
-                true: "cursor-not-allowed opacity-50",
-                false: "",
+                false: "bg-white text-slate-900",
             },
         },
     },
@@ -32,12 +31,39 @@ const relevantOptionClass = cva(
 
 export const RelevantQuiz = ({
     quizQuestion,
+    onQuizRemoval,
 }: {
     quizQuestion: QuizQuestion;
+    onQuizRemoval?: () => void;
 }) => {
     return (
-        <div className="flex flex-col gap-4 rounded-4 bg-slate-100 p-4 text-sm ring-1 ring-slate-100">
-            <span className={labelClass()}>{quizQuestion.question_text}</span>
+        <div className="flex flex-col gap-4 rounded-4 bg-slate-50 p-3 text-sm ring-1 ring-slate-100">
+            <div className="flex items-center justify-between gap-2">
+                <div className="flex items-start gap-2">
+                    <RiQuestionLine
+                        size={32}
+                        className="flex-none rounded-full bg-slate-100 p-2 leading-6"
+                    />
+                    <span className="text-base font-medium leading-8">
+                        {quizQuestion.question_text}
+                    </span>
+                </div>
+                {onQuizRemoval && (
+                    <Button
+                        className={buttonClass({ intent: "destructive" })}
+                        onClick={onQuizRemoval}
+                        aria-label="Remove Relevant Quiz"
+                    >
+                        <span
+                            className={buttonInnerRing({
+                                intent: "destructive",
+                            })}
+                            aria-hidden="true"
+                        />
+                        <RiDeleteBinLine size={16} />
+                    </Button>
+                )}
+            </div>
             <div className="grid grid-cols-2 gap-2">
                 {quizQuestion.choices.map((choice) => (
                     <div

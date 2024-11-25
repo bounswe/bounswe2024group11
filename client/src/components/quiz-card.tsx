@@ -17,7 +17,7 @@ import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { Avatar } from "../components/avatar";
 import { buttonClass, buttonInnerRing } from "../components/button";
-import { Quiz } from "../routes/Quiz/Quizzes.data";
+import { Quiz } from "../routes/Quiz/Quiz.schema";
 import { getRelativeTime } from "../utils";
 
 type QuizCardProps = {
@@ -177,7 +177,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     <div className="flex flex-1 items-center justify-end gap-2">
                         {quiz.is_taken && (
                             <Link
-                                to={String(quiz.id)}
+                                to={`${quiz.id}/review`}
                                 className={buttonClass({
                                     intent: "tertiary",
                                     size: "medium",

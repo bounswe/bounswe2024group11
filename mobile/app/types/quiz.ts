@@ -51,16 +51,26 @@ export type QuizAnswerType = {
   is_hint_used: boolean;
 };
 
-// export type QuizQuestionOptionsType = {
-//   A: string;
-//   B: string;
-//   C: string;
-//   D: string;
-// };
+export type CreateQuizQuestionChoiceType = {
+  choice_text: string;
+  is_correct: boolean;
+};
 
-// export type QuizQuestionType = {
-//   id: string;
-//   text: string;
-//   options: QuizQuestionOptionsType;
-//   correct_answer: string;
-// };
+export type CreateQuizQuestionHintType = {
+  type: string;
+  text: string;
+};
+
+export type SuggestedHintsType = {
+  synonyms: string[];
+  definitions: string[];
+  examples: string[];
+  images: string[];
+};
+
+export type CreateQuizQuestionType = {
+  question_text: string;
+  choices: CreateQuizQuestionChoiceType[];
+  hints: CreateQuizQuestionHintType[];
+  point: number;
+};

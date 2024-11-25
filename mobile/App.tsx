@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import CreateQuestion from "./app/screens/CreateQuestion";
 import CreateQuiz from "./app/screens/CreateQuiz";
+import CreateQuizQuestion from "./app/screens/CreateQuizQuestion";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
@@ -16,9 +17,11 @@ import QuizDetail from "./app/screens/QuizDetail";
 import QuizFeed from "./app/screens/QuizFeed";
 import QuizResult from "./app/screens/QuizResult";
 import Register from "./app/screens/Register"; // import the new Register screen
+import ReviewCreateQuiz from "./app/screens/ReviewCreateQuiz";
 import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
-import { QuizOverview } from "./app/types/quiz";
+import { CreateQuizQuestionType, QuizOverview } from "./app/types/quiz";
+import { Tag } from "./app/types/tag";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -26,6 +29,7 @@ export type RootStackParamList = {
   Register: undefined;
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
+  QuizFeed: undefined;
   QuizDetail: { quiz: QuizOverview };
   ViewQuiz: {
     id: string;
@@ -37,6 +41,20 @@ export type RootStackParamList = {
   QuizResult: undefined;
   CreateQuestion: undefined;
   CreateQuiz: undefined;
+  CreateQuizQuestion: {
+    title: string;
+    description: string;
+    tags: Tag[];
+    quiz_type: number;
+  };
+  ReviewCreateQuiz: {
+    title: string;
+    description: string;
+    tags: Tag[];
+    quiz_type: number;
+    questions: CreateQuizQuestionType[];
+    questionsCount: number;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -132,6 +150,7 @@ export const Layout = () => {
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}
             />
+            <Stack.Screen name="QuizFeed" component={QuizFeed} />
             <Stack.Screen name="QuizDetail" component={QuizDetail} />
             <Stack.Screen
               name="ViewQuiz"
@@ -142,6 +161,17 @@ export const Layout = () => {
             />
             <Stack.Screen name="QuizResult" component={QuizResult} />
             <Stack.Screen name="CreateQuiz" component={CreateQuiz} />
+            <Stack.Screen
+              name="CreateQuizQuestion"
+              component={CreateQuizQuestion}
+              options={({ route }) => ({
+                title: route.params?.title ? route.params.title : "Quiz",
+              })}
+            />
+            <Stack.Screen
+              name="ReviewCreateQuiz"
+              component={ReviewCreateQuiz}
+            />
             {/*
             {authState?.authenticated
               ? <Stack.Screen

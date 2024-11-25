@@ -32,12 +32,16 @@ import {
     upvoteForumAnswerAction,
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
-import { QuizPage } from "./routes/Quiz/Quiz";
+import { Profile } from "./routes/Profile/Profile";
+import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
+import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
+    quizReviewLoader,
     quizShouldRevalidate,
     takeQuizAction,
 } from "./routes/Quiz/Quiz.data";
+import { QuizReview } from "./routes/Quiz/Quiz.Review";
 import { Quizzes } from "./routes/Quiz/Quizzes";
 import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
 
@@ -118,14 +122,25 @@ export const routes: RouteObject[] = [
                         shouldRevalidate: quizShouldRevalidate,
                     },
                     {
-                        path: "quizzes/:quizId",
-                        element: <QuizPage />,
+                        path: "quizzes/:quizId/",
+                        element: <TakeQuizPage />,
                         loader: quizLoader,
                         action: takeQuizAction,
                     },
                     {
-                        path: "profile",
-                        element: <div>Profile</div>,
+                        path: "quizzes/:quizId/review",
+                        element: <QuizReview />,
+                        loader: quizReviewLoader,
+                    },
+                    {
+                        path: "profile/",
+                        element: <Profile />,
+                        loader: myProfileLoader,
+                    },
+                    {
+                        path: "profile/:username",
+                        element: <Profile />,
+                        loader: profileLoader,
                     },
                 ],
             },

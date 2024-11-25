@@ -54,6 +54,7 @@ export const buttonClass = cva(
         "disabled:active:ring-0",
         "disabled:cursor-default",
         "disabled:opacity-50",
+        "disabled:pointer-events-none",
     ],
     {
         variants: {
@@ -192,7 +193,7 @@ export const toggleButtonClass = cva(
             {
                 intent: "upvote",
                 state: "on",
-                class: ["bg-cyan-500", "text-white"],
+                class: ["bg-cyan-600", "text-white"],
             },
             {
                 intent: "upvote",

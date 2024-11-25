@@ -65,17 +65,22 @@ export const Quizzes = () => {
     const filteredQuizzes = data.results
         .filter(
             (quiz) =>
-                (quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                    (!selectedTagId ||
-                        quiz.tags.some(
-                            (tag) => tag.linked_data_id === selectedTagId,
-                        ))) ||
-                quiz.description
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                quiz.tags.some((tag) =>
-                    tag.name.toLowerCase().includes(searchTerm.toLowerCase()),
-                ),
+                quiz.tags.some((tag) => {
+                    if (!selectedTagId) return true;
+                    return tag.linked_data_id === selectedTagId;
+                }) &&
+                (quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    quiz.description
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                    quiz.tags.some((tag) =>
+                        tag.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase()),
+                    ) ||
+                    quiz.author.username
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())),
         )
         .sort((a, b) => {
             if (sortBy === "newest") {
