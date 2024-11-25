@@ -7,7 +7,8 @@
         "dev": "vite --port 3310",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "test": "vitest"
     },
     "dependencies": {
         "@ariakit/react": "^0.4.13",
@@ -56,7 +57,8 @@
         "tailwindcss": "^3.4.13",
         "typescript": "^5.5.3",
         "typescript-eslint": "^8.7.0",
-        "vite": "^5.4.8"
+        "vite": "^5.4.8",
+        "vitest": "^2.1.5"
     },
     "packageManager": "pnpm@9.3.0"
 }
