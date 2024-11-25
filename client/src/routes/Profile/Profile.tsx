@@ -45,11 +45,8 @@ const Badge = ({
 };
 
 export const Profile = () => {
-    const data = useLoaderData<typeof profileLoader>();
-    const posts = data.results.map((post) => ({
-        ...post,
-        is_bookmarked: 1,
-    }));
+    const { my, bookMarked, upvoted } = useLoaderData<typeof profileLoader>();
+
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
     const author = {
@@ -111,18 +108,59 @@ export const Profile = () => {
                     </span>
                 </div>
             </section>
-            <hr aria-hidden="true" />
-            <section
-                aria-label="User posts"
-                className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2"
-            >
-                {posts.map((post) => (
-                    <ForumQuestionCard
-                        onTagClick={() => {}}
-                        key={post.id}
-                        question={post}
-                    />
-                ))}
+            <hr className="my-4" aria-hidden="true" />
+            <section aria-label="User posts" className="flex flex-col gap-4">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
+                    <span>My Forum Questions</span>
+                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
+                        {my.length}
+                    </span>
+                </h2>
+                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+                    {my.map((post) => (
+                        <ForumQuestionCard
+                            onTagClick={() => {}}
+                            key={post.id}
+                            question={post}
+                        />
+                    ))}
+                </div>
+            </section>{" "}
+            <hr className="my-4" aria-hidden="true" />
+            <section aria-label="User posts" className="flex flex-col gap-4">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
+                    <span>Bookmarked Forum Questions</span>
+                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
+                        {bookMarked.length}
+                    </span>
+                </h2>
+                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+                    {bookMarked.map((post) => (
+                        <ForumQuestionCard
+                            onTagClick={() => {}}
+                            key={post.id}
+                            question={post}
+                        />
+                    ))}
+                </div>
+            </section>{" "}
+            <hr className="my-4" aria-hidden="true" />
+            <section aria-label="User posts" className="flex flex-col gap-4">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
+                    <span>Upvoted Forum Questions</span>
+                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
+                        {upvoted.length}
+                    </span>
+                </h2>
+                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+                    {upvoted.map((post) => (
+                        <ForumQuestionCard
+                            onTagClick={() => {}}
+                            key={post.id}
+                            question={post}
+                        />
+                    ))}
+                </div>
             </section>
         </main>
     );

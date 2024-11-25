@@ -205,6 +205,34 @@ export const QuizReview = () => {
                     />
                 ))}
             </main>
+            <div className="flex gap-4">
+                <Link
+                    className={buttonClass({
+                        intent: "secondary",
+                        size: "medium",
+                    })}
+                    to={`/quizzes/${quiz.id}/`}
+                >
+                    <span
+                        className={buttonInnerRing({ intent: "secondary" })}
+                        aria-hidden="true"
+                    />
+                    Back to Quizzes
+                </Link>
+                <Link
+                    to={`/quizzes/${quiz.id}/`}
+                    className={buttonClass({
+                        intent: "primary",
+                        size: "medium",
+                    })}
+                >
+                    <span
+                        className={buttonInnerRing({ intent: "primary" })}
+                        aria-hidden="true"
+                    />
+                    Re-attempt
+                </Link>
+            </div>
         </div>
     );
 };

@@ -24,7 +24,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password', 'email', 'full_name', "avatar")
 
-    def set_avatar(self, user):
+    def set_avatar(self, user, validated_data):
+        if validated_data.get('avatar', None):
+            user.avatar = validated_data['avatar']
+            user.save()
+            return
         unique_seed = Faker().name()  # Generate a unique seed for the avatar
         avatar_url = f"https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed={unique_seed}"
         user.avatar = avatar_url
@@ -38,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             full_name=validated_data['full_name'],
         )
-        self.set_avatar(user)
+        self.set_avatar(user, validated_data)
 
         return user
 
