@@ -3,54 +3,54 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-interface VoteButtonViewsProps {
+interface VoteAnswerButtonViewsProps {
   is_upvoted: number | null; // Now holds the upvote ID or null
   upvotes_count: number;
   is_downvoted: number | null; // Now holds the downvote ID or null
   downvotes_count: number;
-  questionId: number;
+  answerId: number; // Use answerId for answers instead of questionId
   onVoteChange: (
     is_upvoted: number | null,
     is_downvoted: number | null
   ) => void;
 }
 
-const VoteButtonsView: React.FC<VoteButtonViewsProps> = ({
+const VoteAnswerButtonsView: React.FC<VoteAnswerButtonViewsProps> = ({
   is_upvoted,
   upvotes_count = 0,
   is_downvoted,
   downvotes_count = 0,
-  questionId,
+  answerId, // Receiving answerId for answers
   onVoteChange,
 }) => {
   const handleUpvote = async () => {
     try {
       if (is_upvoted) {
         const response = await axios.delete(
-          `http://138.68.97.90/api/v1/forum-upvote/${is_upvoted}/`
-          // `http://10.0.2.2:8000/api/v1/forum-upvote/${is_upvoted}/`
+          `http://138.68.97.90/api/v1/forum-answer-upvote/${is_upvoted}/`
+          // `http://10.0.2.2:8000/api/v1/forum-answer-upvote/${is_upvoted}/`
         );
         console.log("Upvote deleted:", response.data);
         onVoteChange(null, null); // Clear upvote state
       } else if (is_downvoted) {
         const response = await axios.delete(
-          `http://138.68.97.90/api/v1/forum-downvote/${is_downvoted}/`
-          // `http://10.0.2.2:8000/api/v1/forum-downvote/${is_downvoted}/`
+          `http://138.68.97.90/api/v1/forum-answer-downvote/${is_downvoted}/`
+          // `http://10.0.2.2:8000/api/v1/forum-answer-downvote/${is_downvoted}/`
         );
         console.log("Downvote deleted:", response.data);
         onVoteChange(null, null); // Clear downvote state
         const response2 = await axios.post(
-          `http://138.68.97.90/api/v1/forum-upvote/`,
-          // `http://10.0.2.2:8000/api/v1/forum-upvote/`,
-          { forum_question: questionId }
+          `http://138.68.97.90/api/v1/forum-answer-upvote/`,
+          // `http://10.0.2.2:8000/api/v1/forum-answer-upvote/`,
+          { forum_answer: answerId }
         );
         console.log("Upvote added:", response2.data);
         onVoteChange(response2.data.id, null); // Update upvote state
       } else {
         const response = await axios.post(
-          `http://138.68.97.90/api/v1/forum-upvote/`,
-          // `http://10.0.2.2:8000/api/v1/forum-upvote/`,
-          { forum_question: questionId }
+          `http://138.68.97.90/api/v1/forum-answer-upvote/`,
+          // `http://10.0.2.2:8000/api/v1/forum-answer-upvote/`,
+          { forum_answer: answerId }
         );
         console.log("Upvote added:", response.data);
         onVoteChange(response.data.id, null); // Update upvote state
@@ -64,30 +64,30 @@ const VoteButtonsView: React.FC<VoteButtonViewsProps> = ({
     try {
       if (is_downvoted) {
         const response = await axios.delete(
-          `http://138.68.97.90/api/v1/forum-downvote/${is_downvoted}/`
-          // `http://10.0.2.2:8000/api/v1/forum-downvote/${is_downvoted}/`
+          `http://138.68.97.90/api/v1/forum-answer-downvote/${is_downvoted}/`
+          // `http://10.0.2.2:8000/api/v1/forum-answer-downvote/${is_downvoted}/`
         );
         console.log("Downvote deleted:", response.data);
         onVoteChange(null, null); // Clear downvote state
       } else if (is_upvoted) {
         const response = await axios.delete(
-          `http://138.68.97.90/api/v1/forum-upvote/${is_upvoted}/`
-          // `http://10.0.2.2:8000/api/v1/forum-upvote/${is_upvoted}/`
+          `http://138.68.97.90/api/v1/forum-answer-upvote/${is_upvoted}/`
+          // `http://10.0.2.2:8000/api/v1/forum-answer-upvote/${is_upvoted}/`
         );
         console.log("Upvote deleted:", response.data);
         onVoteChange(null, null); // Clear upvote state
         const response2 = await axios.post(
-          `http://138.68.97.90/api/v1/forum-downvote/`,
-          // `http://10.0.2.2:8000/api/v1/forum-downvote/`,
-          { forum_question: questionId }
+          `http://138.68.97.90/api/v1/forum-answer-downvote/`,
+          // `http://10.0.2.2:8000/api/v1/forum-answer-downvote/`,
+          { forum_answer: answerId }
         );
         console.log("Downvote added:", response2.data);
         onVoteChange(null, response2.data.id); // Update downvote state
       } else {
         const response = await axios.post(
-          `http://138.68.97.90/api/v1/forum-downvote/`,
-          // `http://10.0.2.2:8000/api/v1/forum-downvote/`,
-          { forum_question: questionId }
+          `http://138.68.97.90/api/v1/forum-answer-downvote/`,
+          // `http://10.0.2.2:8000/api/v1/forum-answer-downvote/`,
+          { forum_answer: answerId }
         );
         console.log("Downvote added:", response.data);
         onVoteChange(null, response.data.id); // Update downvote state
@@ -157,4 +157,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VoteButtonsView;
+export default VoteAnswerButtonsView;

@@ -11,3 +11,7 @@ web/
 .env.stage
 .env.prod
 .env.makefile
+
+package.json
+package-lock.json
+./node_modules/

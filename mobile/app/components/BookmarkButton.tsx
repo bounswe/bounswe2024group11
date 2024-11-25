@@ -21,6 +21,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       if (isBookmarked) {
         await axios.delete(
           `http://138.68.97.90/api/v1/forum-bookmarks/${isBookmarked}/`
+          // `http://10.0.2.2:8000/api/v1/forum-bookmarks/${isBookmarked}/`
         );
         console.log("Bookmark removed");
         setIsBookmarked(null);
@@ -28,6 +29,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       } else {
         const response = await axios.post(
           `http://138.68.97.90/api/v1/forum-bookmarks/`,
+          // `http://10.0.2.2:8000/api/v1/forum-bookmarks/`,
           {
             forum_question: questionId,
           }
