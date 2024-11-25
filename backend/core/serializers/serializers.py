@@ -235,6 +235,7 @@ class QuizSerializer(serializers.ModelSerializer):
             quiz.difficulty = 3
         else:
             quiz.difficulty = 2
+        quiz.save()
         return quiz
 
     def update(self, instance, validated_data):
