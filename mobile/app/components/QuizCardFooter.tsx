@@ -62,7 +62,7 @@ const QuizCardFooter: React.FC<QuizCardFooterProps> = ({ item }) => {
             item.is_taken ? styles.retake_quiz_button : styles.take_quiz_button
           }
         >
-          {item.is_taken ? "Retake Quiz" : "Take Quiz"}
+          {item.is_taken ? "Re-attempt" : "Take Quiz"}
         </Text>
       </View>
     </View>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   created_at: {},
   num_taken: {},
   take_quiz_button: {
-    backgroundColor: "#06b6d4",
+    backgroundColor: "#0ea5e9",
     color: "#ffffff",
     fontSize: 14,
     fontWeight: "bold",
