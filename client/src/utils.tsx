@@ -1,4 +1,6 @@
-export const BASE_URL = "http://138.68.97.90:8000/api/v1";
+const VITE_API_URL = import.meta.env.VITE_BASE_URL;
+
+export const BASE_URL = `${VITE_API_URL}/api/v1`;
 
 type Logger = {
     log: typeof console.log;
