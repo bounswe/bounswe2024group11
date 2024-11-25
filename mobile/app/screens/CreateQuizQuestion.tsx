@@ -9,12 +9,9 @@ import CreateQuizQuestionFooter from "../components/CreateQuizQuestionFooter";
 import CreateQuizQuestionHeader from "../components/CreateQuizQuestionHeader";
 import CreateQuizQuestionHints from "../components/CreateQuizQuestionHints";
 import CreateQuizQuestionOptions from "../components/CreateQuizQuestionOptions";
-import {
-  CreateQuizQuestionHintType,
-  CreateQuizQuestionType,
-  SuggestedHintsType,
-} from "../types/quiz";
+import { CreateQuizQuestionType, SuggestedHintsType } from "../types/quiz";
 import { Tag, TagSearchResult } from "../types/tag";
+import { combineHints } from "../utils/quiz";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -218,31 +215,6 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     const updatedQuestions = [...questions];
     updatedQuestions[currentQuestionIndex].hints[0].text = text;
     setQuestions(updatedQuestions);
-  };
-
-  const combineHints = (suggested_hints: SuggestedHintsType) => {
-    const hints: CreateQuizQuestionHintType[] = [];
-    if (suggested_hints?.synonyms.length > 0) {
-      suggested_hints.synonyms.forEach((synonym) => {
-        hints.push({ type: "synonym", text: synonym });
-      });
-    }
-    if (suggested_hints?.definitions.length > 0) {
-      suggested_hints.definitions.forEach((definition) => {
-        hints.push({ type: "definition", text: definition });
-      });
-    }
-    if (suggested_hints?.examples.length > 0) {
-      suggested_hints.examples.forEach((example) => {
-        hints.push({ type: "example", text: example });
-      });
-    }
-    if (suggested_hints?.images.length > 0) {
-      suggested_hints.images.forEach((image) => {
-        hints.push({ type: "image", text: image });
-      });
-    }
-    return hints;
   };
 
   const goToNextQuestion = () => {
