@@ -22,8 +22,8 @@ services:
       context: ./backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/home/app/backend
+    # volumes:
+    #   - ./backend:/home/app/backend
     container_name: backend
     command: >
       sh -c "
@@ -42,8 +42,8 @@ services:
       context: ./client
     ports:
       - "3310:3310"
-    volumes:
-      - ./client:/home/app/client
+    # volumes:
+    #   - ./client:/home/app/client
     container_name: client
     command: >
       sh -c "serve -s dist -l 3310"
