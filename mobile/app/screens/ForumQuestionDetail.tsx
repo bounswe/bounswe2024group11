@@ -1,19 +1,20 @@
+import { RouteProp, useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  FlatList,
-  TextInput,
-  Button,
-  StyleSheet,
-  Text,
+  ActivityIndicator,
   Alert,
+  Button,
+  FlatList,
+  StyleSheet,
+  TextInput,
+  View,
 } from "react-native";
-import axios from "axios";
-import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
 import ForumAnswerCard from "../components/ForumAnswerCard";
 import ForumQuestionCard from "../components/ForumQuestionCard";
-import { Answer, Question } from "../types/forum";
-import { RootStackParamList } from "../../App";
+import { Answer } from "../types/forum";
+
 // const API_URL = "http://54.247.125.93/api/v1/forum-questions/";
 const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
 
@@ -30,24 +31,32 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
   const { question } = route.params;
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [newAnswer, setNewAnswer] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true); // Loading state for answers
+  const isFocused = useIsFocused(); // Hook to track focus status
+
+  // Fetch answers when the screen is focused or question ID changes
+  const fetchAnswers = async () => {
+    setLoading(true); // Set loading to true when fetching
+    try {
+      const response = await axios.get(`${API_URL}${question.id}/answers/`);
+      // Map the 'answer' field to 'body' field
+      const mappedAnswers = response.data.results.map((item: any) => ({
+        ...item,
+        body: item.answer, // Map 'answer' to 'body'
+      }));
+      setAnswers(mappedAnswers || []);
+    } catch (error) {
+      console.error("Error fetching answers:", error);
+    } finally {
+      setLoading(false); // Set loading to false when done
+    }
+  };
 
   useEffect(() => {
-    const fetchAnswers = async () => {
-      try {
-        const response = await axios.get(`${API_URL}${question.id}/answers/`);
-        // Map the 'answer' field to 'body' field
-        const mappedAnswers = response.data.results.map((item: any) => ({
-          ...item,
-          body: item.answer, // Map 'answer' to 'body'
-        }));
-        setAnswers(mappedAnswers || []);
-      } catch (error) {
-        console.error("Error fetching answers:", error);
-      }
-    };
-
-    fetchAnswers();
-  }, [question.id]);
+    if (isFocused) {
+      fetchAnswers(); // Fetch answers when the screen is focused
+    }
+  }, [question.id, isFocused]);
 
   const handleCreateAnswer = async () => {
     if (!newAnswer.trim()) {
@@ -62,9 +71,10 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
       });
       setAnswers((prevAnswers) => [
         ...prevAnswers,
-        { ...response.data, body: response.data.answer }, // Add new answer with the correct structure
+        { ...response.data, body: response.data.answer }, // Add new answer with correct structure
       ]);
       setNewAnswer(""); // Clear the input field
+      fetchAnswers(); // Re-fetch answers after adding a new one
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
@@ -86,11 +96,16 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
     <View style={{ flex: 1, padding: 10 }}>
       <ForumQuestionCard item={question} />
 
-      <FlatList
-        data={answers}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <ForumAnswerCard item={item} />}
-      />
+      {loading ? (
+        // Displaying loading indicator while answers are being fetched
+        <ActivityIndicator size="large" color="#2196F3" />
+      ) : (
+        <FlatList
+          data={answers}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <ForumAnswerCard item={item} />}
+        />
+      )}
 
       <View style={styles.answerInputContainer}>
         <TextInput
