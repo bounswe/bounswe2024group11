@@ -1,4 +1,4 @@
-const VITE_API_URL = import.meta.env.VITE_BASE_URL;
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const BASE_URL = `${VITE_API_URL}/api/v1`;
 
