@@ -59,8 +59,8 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const [allTranslations, setAllTranslations] = useState<string[][]>([[]]);
   const [allHints, setAllHints] = useState<SuggestedHintsType[]>([]);
 
-  // const API_URL = "http://54.247.125.93/api/v1";
-  const API_URL = "http://10.0.2.2:8000/api/v1";
+  const API_URL = "http://138.68.97.90/api/v1";
+  // const API_URL = "http://10.0.2.2:8000/api/v1";
   const source_lang = quiz_type === 2 ? "TR" : "EN";
   const navigation = useNavigation<NavigationProp>();
 
@@ -100,7 +100,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchTranslations = async (linked_data_id: string) => {
-    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
+    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const updatedAllTranslations = [...allTranslations];

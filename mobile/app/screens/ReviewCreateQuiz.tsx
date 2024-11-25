@@ -31,8 +31,8 @@ const ReviewCreateQuiz: React.FC<Props> = ({ route }) => {
   const [editedQuestions, setEditedQuestions] =
     useState<CreateQuizQuestionType[]>(questions);
 
-  // const API_URL = "http://138.68.97.90/api/v1";
-  const API_URL = "http://10.0.2.2:8000/api/v1";
+  const API_URL = "http://138.68.97.90/api/v1";
+  // const API_URL = "http://10.0.2.2:8000/api/v1";
   const navigation = useNavigation<NavigationProp>();
 
   const moveQuestion = (index: number, direction: number) => {

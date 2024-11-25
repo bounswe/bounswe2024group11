@@ -1,21 +1,20 @@
+import { RouteProp } from "@react-navigation/native";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  FlatList,
-  TextInput,
-  Button,
-  StyleSheet,
-  Text,
   Alert,
+  Button,
+  FlatList,
+  StyleSheet,
+  TextInput,
+  View,
 } from "react-native";
-import axios from "axios";
-import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
 import ForumAnswerCard from "../components/ForumAnswerCard";
 import ForumQuestionCard from "../components/ForumQuestionCard";
-import { Answer, Question } from "../types/forum";
-import { RootStackParamList } from "../../App";
+import { Answer } from "../types/forum";
 
-const API_URL = "http://54.247.125.93/api/v1/forum-questions/";
+const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
 
 type ForumQuestionDetailScreenRouteProp = RouteProp<
   RootStackParamList,
