@@ -115,8 +115,6 @@ const CreateQuizQuestionHints: React.FC<Props> = ({
           ) : (
             <></>
           )}
-          <Text>Selected hint type: {selected_hint.type}</Text>
-          <Text>Selected hint text: {selected_hint.text}</Text>
         </View>
       </View>
     </View>

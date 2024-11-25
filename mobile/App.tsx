@@ -17,9 +17,10 @@ import QuizDetail from "./app/screens/QuizDetail";
 import QuizFeed from "./app/screens/QuizFeed";
 import QuizResult from "./app/screens/QuizResult";
 import Register from "./app/screens/Register"; // import the new Register screen
+import ReviewCreateQuiz from "./app/screens/ReviewCreateQuiz";
 import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
-import { QuizOverview } from "./app/types/quiz";
+import { CreateQuizQuestionType, QuizOverview } from "./app/types/quiz";
 import { Tag } from "./app/types/tag";
 
 export type RootStackParamList = {
@@ -43,7 +44,15 @@ export type RootStackParamList = {
     title: string;
     description: string;
     tags: Tag[];
-    type: number;
+    quiz_type: number;
+  };
+  ReviewCreateQuiz: {
+    title: string;
+    description: string;
+    tags: Tag[];
+    quiz_type: number;
+    questions: CreateQuizQuestionType[];
+    questionsCount: number;
   };
 };
 
@@ -156,6 +165,10 @@ export const Layout = () => {
               options={({ route }) => ({
                 title: route.params?.title ? route.params.title : "Quiz",
               })}
+            />
+            <Stack.Screen
+              name="ReviewCreateQuiz"
+              component={ReviewCreateQuiz}
             />
             {/*
             {authState?.authenticated

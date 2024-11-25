@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     color: "#0f172a",
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#bae6fd",
     borderColor: "#0f172a",
   },
 });

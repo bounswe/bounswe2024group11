@@ -192,7 +192,7 @@ const CreateQuiz: React.FC = () => {
               title: title,
               description: description,
               tags: tags,
-              type: quizType,
+              quiz_type: quizType,
             })
           }
         >

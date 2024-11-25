@@ -1,4 +1,5 @@
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -15,6 +16,8 @@ import {
 } from "../types/quiz";
 import { Tag, TagSearchResult } from "../types/tag";
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 type CreateQuizQuestionScreenRouteProp = RouteProp<
   RootStackParamList,
   "CreateQuizQuestion"
@@ -25,7 +28,7 @@ interface Props {
 }
 
 const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
-  const { title, description, tags, type } = route.params;
+  const { title, description, tags, quiz_type } = route.params;
 
   const [questions, setQuestions] = useState<CreateQuizQuestionType[]>([
     {
@@ -58,7 +61,8 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
 
   // const API_URL = "http://54.247.125.93/api/v1";
   const API_URL = "http://10.0.2.2:8000/api/v1";
-  const source_lang = type === 2 ? "TR" : "EN";
+  const source_lang = quiz_type === 2 ? "TR" : "EN";
+  const navigation = useNavigation<NavigationProp>();
 
   const fetchTagging = async (
     input: string,
@@ -96,7 +100,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchTranslations = async (linked_data_id: string) => {
-    const ENDPOINT = `${API_URL}/get-translation/?type=type${type}&id=${linked_data_id.substring(3)}`;
+    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const updatedAllTranslations = [...allTranslations];
@@ -172,7 +176,9 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     setQuestions(updatedQuestions);
 
     const keyword =
-      type === 2 ? translation : questions[currentQuestionIndex].question_text;
+      quiz_type === 2
+        ? translation
+        : questions[currentQuestionIndex].question_text;
     fetchDifficulty(keyword);
     fetchHints();
   };
@@ -341,6 +347,26 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     setQuestionTextInput("");
   };
 
+  const reviewQuiz = () => {
+    if (questions.find((question) => question.question_text === "")) return;
+    if (
+      questions.find((question) =>
+        question.choices.find((choice) => choice.choice_text === "")
+      )
+    )
+      return;
+    if (questions.find((question) => question.point === 0)) return;
+
+    navigation.navigate("ReviewCreateQuiz", {
+      title,
+      description,
+      tags,
+      quiz_type,
+      questions,
+      questionsCount,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <CreateQuizQuestionHeader
@@ -348,7 +374,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         current_question_index={currentQuestionIndex}
       />
       <CreateQuizQuestionCore
-        quiz_type={type}
+        quiz_type={quiz_type}
         question={questions[currentQuestionIndex]}
         questionTextInput={questionTextInput}
         suggestedQuestionTexts={suggestedQuestionTexts}
@@ -383,6 +409,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         addQuestionToRight={addQuestionToRight}
         addQuestionToLeft={addQuestionToLeft}
         deleteQuestion={deleteQuestion}
+        reviewQuiz={reviewQuiz}
       />
     </View>
   );
