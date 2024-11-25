@@ -19,7 +19,7 @@ def get_hint(id, targetLang="EN", word = ""):
         image_array = []
 
         # BabelNet API URL
-        url = f"{BASE_URL}/getSynset?id={id}&targetLang={targetLang}&key={API_KEY}"
+        url = f"{BASE_URL}/getSynset?id=bn:{id}&targetLang={targetLang}&key={API_KEY}"
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for HTTP errors
 
@@ -76,7 +76,7 @@ class HintView(APIView):
             openapi.Parameter(
                 "synset_id",
                 openapi.IN_QUERY,
-                description="The synset ID for which to fetch hints (e.g., `bn:00007309n`).",
+                description="The synset ID for which to fetch hints without `bn:` prefix (e.g., instead of `bn:00007309n` use `00007309n`).",
                 type=openapi.TYPE_STRING,
                 required=True,
             ),
