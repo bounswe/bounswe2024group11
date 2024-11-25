@@ -1,5 +1,10 @@
 import { Button, Separator } from "@ariakit/react";
-import { RiArrowDownLine, RiArrowUpLine } from "@remixicon/react";
+import {
+    RiThumbDownFill,
+    RiThumbDownLine,
+    RiThumbUpFill,
+    RiThumbUpLine,
+} from "@remixicon/react";
 import { Link, useFetcher } from "react-router-dom";
 
 import { Answer } from "../routes/Forum/Forum.schema";
@@ -77,7 +82,11 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
                                 state: answer.is_upvoted ? "on" : "off",
                             })}
                         >
-                            <RiArrowUpLine size={16} />
+                            {answer.is_upvoted ? (
+                                <RiThumbUpFill size={16} />
+                            ) : (
+                                <RiThumbUpLine size={16} />
+                            )}
                         </Button>
                     </upvoteFetcher.Form>
                     <p className="w-6 text-center text-sm text-slate-900">
@@ -108,7 +117,11 @@ export const ForumAnswerCard = ({ answer, key }: ForumAnswerCardProps) => {
                                 state: answer.is_downvoted ? "on" : "off",
                             })}
                         >
-                            <RiArrowDownLine size={16} />
+                            {answer.is_downvoted ? (
+                                <RiThumbDownFill size={16} />
+                            ) : (
+                                <RiThumbDownLine size={16} />
+                            )}
                         </Button>
                     </downvoteFetcher.Form>
                 </div>

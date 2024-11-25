@@ -193,7 +193,7 @@ export const toggleButtonClass = cva(
             {
                 intent: "upvote",
                 state: "on",
-                class: ["bg-cyan-500", "text-white"],
+                class: ["bg-cyan-600", "text-white"],
             },
             {
                 intent: "upvote",

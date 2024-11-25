@@ -1,9 +1,11 @@
 import { Button, Separator } from "@ariakit/react";
 import {
-    RiArrowDownLine,
-    RiArrowUpLine,
     RiBookmark2Line,
-    RiDeleteBin4Line,
+    RiDeleteBinLine,
+    RiThumbDownFill,
+    RiThumbDownLine,
+    RiThumbUpFill,
+    RiThumbUpLine,
 } from "@remixicon/react";
 import { Link, useFetcher } from "react-router-dom";
 
@@ -71,7 +73,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                         state: "on",
                                     })}
                                 >
-                                    <RiDeleteBin4Line size={16} />
+                                    <RiDeleteBinLine size={16} />
                                 </Button>
                             </deleteFetcher.Form>
                         )}
@@ -174,7 +176,11 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                 state: question.is_upvoted ? "on" : "off",
                             })}
                         >
-                            <RiArrowUpLine size={16} />
+                            {question.is_upvoted ? (
+                                <RiThumbUpFill size={16} />
+                            ) : (
+                                <RiThumbUpLine size={16} />
+                            )}
                         </Button>
                     </upvoteFetcher.Form>
                     <p className="text-slate- w-6 text-center text-sm">
@@ -205,7 +211,11 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                 state: question.is_downvoted ? "on" : "off",
                             })}
                         >
-                            <RiArrowDownLine size={16} />
+                            {question.is_downvoted ? (
+                                <RiThumbDownFill size={16} />
+                            ) : (
+                                <RiThumbDownLine size={16} />
+                            )}
                         </Button>
                     </downvoteFetcher.Form>
                 </div>
