@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Sprite } from "./components/sprite";
 import { ToastWrapper } from "./components/toast";
 import "./index.css";
+import "./localstorage";
 import { routes } from "./router";
 
 createRoot(document.getElementById("root")!).render(
