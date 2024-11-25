@@ -100,7 +100,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchTranslations = async (linked_data_id: string) => {
-    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id}`;
+    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const updatedAllTranslations = [...allTranslations];
