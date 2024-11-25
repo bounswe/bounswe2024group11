@@ -13,6 +13,7 @@ import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
 import { QuizDetails } from "./Quiz.schema";
+import { questionTypeToQuestion } from "./Quiz.utils";
 
 const StartQuizComponent = ({
     quiz,
@@ -371,7 +372,10 @@ export const TakeQuizPage = () => {
                     aria-description="Question"
                     className="flex-1 font-display text-lg font-medium tracking-tight"
                 >
-                    {quiz.questions[currentQuestion].question_text}
+                    {questionTypeToQuestion(
+                        quiz.type,
+                        quiz.questions[currentQuestion].question_text,
+                    )}
                 </div>
                 {quiz.questions[currentQuestion].hints?.length && (
                     <div>

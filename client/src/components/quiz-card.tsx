@@ -27,7 +27,7 @@ type QuizCardProps = {
 };
 
 const difficultyText = cva([
-    "flex items-center gap-1 rounded-1 rounded-2 bg-slate-100 px-1 py-1 pr-2 text-xs font-medium text-slate-800",
+    "flex items-center gap-1 rounded-1 rounded-2 bg-slate-100 px-1 py-1 pr-2 text-xs font-medium uppercase text-slate-800",
 ]);
 
 const scoreClass = cva(
@@ -72,7 +72,9 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     <div className="flex items-center gap-1 pb-2">
                         <span className={difficultyText()}>
                             <RiDashboard3Line size={16} />
-                            {quiz.difficulty}
+                            {quiz.difficulty === 1 && "Easy"}
+                            {quiz.difficulty === 2 && "Medium"}
+                            {quiz.difficulty === 3 && "Hard"}
                         </span>
                     </div>
 
@@ -150,7 +152,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                                 </p>
                             </div>
                             <Link
-                                to="#"
+                                to={`/profile/${quiz.author.username}/`}
                                 className={buttonClass({ intent: "secondary" })}
                             >
                                 <span

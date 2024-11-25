@@ -69,12 +69,11 @@ export const forumCreateLoader = (async ({ request }) => {
         ? useQuestionsStore.getState().questions[Number(qid)]
         : null;
 
-    console.log(useQuestionsStore.getState().questions);
-    console.log("relevant quiz", relevantQuiz);
     if (!word) {
         return {
             dictionary: undefined,
             relevantQuiz,
+            relevantQuizType: undefined,
         };
     }
 
@@ -98,12 +97,14 @@ export const forumCreateLoader = (async ({ request }) => {
     console.log("qid", qid);
 
     return {
+        queryWord: word,
         relevantQuiz,
         dictionary: output,
     };
 }) satisfies LoaderFunction;
 
 export const forumCreateAction = (async ({ request }) => {
+    console.log("forum action");
     const formData = await request.formData();
     const tags = JSON.parse(formData.get("tags") as string);
     const title = formData.get("title");

@@ -140,7 +140,10 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                 </div>
             </div>
             {question.quiz_question && (
-                <RelevantQuiz quizQuestion={question.quiz_question} />
+                <RelevantQuiz
+                    quizType={question.quiz_question_type}
+                    quizQuestion={question.quiz_question}
+                />
             )}
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-between">

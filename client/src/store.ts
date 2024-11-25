@@ -12,19 +12,19 @@ type ToastStore = {
 };
 
 type QuestionsStore = {
-    questions: Record<number, QuizQuestion>;
-    add: (question: QuizQuestion) => void;
+    questions: Record<number, { type: number; question: QuizQuestion }>;
+    add: (type: number, question: QuizQuestion) => void;
     remove: (id: number) => void;
 };
 
 export const useQuestionsStore = create<QuestionsStore>((set) => ({
     questions: {},
-    add: (question) => {
+    add: (type, question) => {
         set((state) => {
             return {
                 questions: {
                     ...state.questions,
-                    [question.id]: question,
+                    [question.id]: { type, question },
                 },
             };
         });

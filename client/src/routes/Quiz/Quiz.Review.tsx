@@ -6,6 +6,7 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
 import { quizReviewLoader } from "./Quiz.data";
 import { QuizAnswer, QuizQuestion } from "./Quiz.schema";
+import { questionTypeToQuestion } from "./Quiz.utils";
 
 // const quizSchema = object({
 //     id: number(),
@@ -108,9 +109,11 @@ const optionClass = cva(
 );
 
 const QuizCard = ({
+    quizType,
     question,
     answer,
 }: {
+    quizType: number;
     question: QuizQuestion;
     answer: QuizAnswer | undefined;
 }) => {
@@ -122,7 +125,10 @@ const QuizCard = ({
                         QUESTION ID {question.id}
                     </span>
                     <h2 className="text-lg font-medium">
-                        {question.question_text}
+                        {questionTypeToQuestion(
+                            quizType,
+                            question.question_text,
+                        )}
                     </h2>
                 </div>
                 <Link
@@ -199,6 +205,7 @@ export const QuizReview = () => {
                     <QuizCard
                         key={question.id}
                         question={question}
+                        quizType={quiz.type}
                         answer={savedAnswers.find(
                             (answer) => answer.question === question.id,
                         )}
@@ -211,7 +218,7 @@ export const QuizReview = () => {
                         intent: "secondary",
                         size: "medium",
                     })}
-                    to={`/quizzes/${quiz.id}/`}
+                    to={`/quizzes/`}
                 >
                     <span
                         className={buttonInnerRing({ intent: "secondary" })}

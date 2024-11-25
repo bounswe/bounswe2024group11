@@ -3,6 +3,7 @@ import { RiDeleteBinLine, RiQuestionLine } from "@remixicon/react";
 import { cva } from "cva";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { QuizQuestion } from "../Quiz/Quiz.schema";
+import { questionTypeToQuestion } from "../Quiz/Quiz.utils";
 
 const relevantOptionClass = cva(
     [
@@ -30,9 +31,11 @@ const relevantOptionClass = cva(
 );
 
 export const RelevantQuiz = ({
+    quizType,
     quizQuestion,
     onQuizRemoval,
 }: {
+    quizType: number | null;
     quizQuestion: QuizQuestion;
     onQuizRemoval?: () => void;
 }) => {
@@ -45,7 +48,10 @@ export const RelevantQuiz = ({
                         className="flex-none rounded-full bg-slate-100 p-2 leading-6"
                     />
                     <span className="text-base font-medium leading-8">
-                        {quizQuestion.question_text}
+                        {questionTypeToQuestion(
+                            quizType,
+                            quizQuestion.question_text,
+                        )}
                     </span>
                 </div>
                 {onQuizRemoval && (

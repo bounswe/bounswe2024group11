@@ -48,6 +48,7 @@ export const forumQuestionSchema = object({
     answers: array(answerSchema),
     is_my_forum_question: boolean(),
     quiz_question: nullable(quizQuestionSchema),
+    quiz_question_type: nullable(number()),
 });
 
 export const forumSchema = object({

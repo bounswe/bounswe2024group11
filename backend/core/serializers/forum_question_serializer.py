@@ -24,6 +24,7 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     is_my_forum_question = serializers.SerializerMethodField()
     quiz_question_id = serializers.PrimaryKeyRelatedField(queryset=QuizQuestion.objects.all(), required=False, allow_null=True, write_only=True)
     quiz_question = QuizQuestionSerializer(read_only=True, required=False, source="quiz_question_id", allow_null=True)
+    quiz_question_type = serializers.SerializerMethodField()
 
     class Meta:
         model = ForumQuestion
@@ -31,13 +32,20 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
             'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question", "quiz_question_id"
+            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type"
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
             'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
             'is_my_forum_question', "quiz_question"
         )
+
+    def get_quiz_question_type(self, obj):
+        # Find the relevant quiz, containing the quiz question and then return the type
+        if not obj.quiz_question_id: 
+            return None
+        quiz = Quiz.objects.get(id=obj.quiz_question_id.quiz_id)
+        return quiz.type
 
     def get_answers_count(self, obj):
         return obj.answers.count()

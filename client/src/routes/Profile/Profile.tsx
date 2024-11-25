@@ -1,6 +1,8 @@
 import * as Ariakit from "@ariakit/react";
+import { Button } from "@ariakit/react";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
+import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { homeLoader } from "../Home/Home.data";
 import { profileLoader } from "./Profile.data";
@@ -58,7 +60,7 @@ export const Profile = () => {
         <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <header className="flex flex-row items-center gap-4">
                 <Avatar author={author} size={96} />
-                <div>
+                <div className="flex-1">
                     <h1 className="pt-2 text-2xl font-semibold">
                         {user?.full_name}
                     </h1>
@@ -66,6 +68,17 @@ export const Profile = () => {
                         @{user?.username}
                     </p>
                 </div>
+                <Button
+                    className={buttonClass({
+                        intent: "secondary",
+                        size: "medium",
+                    })}
+                >
+                    <span
+                        className={buttonInnerRing({ intent: "secondary" })}
+                    />
+                    <span>Follow</span>
+                </Button>
             </header>
             <section className="z-20 flex w-full flex-row items-center justify-between">
                 <div className="flex flex-col gap-2">

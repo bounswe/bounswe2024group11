@@ -36,7 +36,7 @@ export const quizzesLoader = (async ({ request }) => {
         const questionStore = useQuestionsStore;
         output.results.forEach((quiz) => {
             quiz.questions.forEach((question) => {
-                questionStore.getState().add({
+                questionStore.getState().add(quiz.type, {
                     id: question.id,
                     question_text: question.question_text,
                     choices: question.choices,
