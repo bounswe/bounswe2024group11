@@ -79,28 +79,33 @@ const ReviewCreateQuiz: React.FC<Props> = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Review your quiz</Text>
-      <View style={styles.section}>
-        <Text>Title: </Text>
-        <Text>{title}</Text>
+      <Text style={styles.title}>Review your quiz</Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Title: </Text>
+          <Text style={styles.sectionText}>{title}</Text>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Description: </Text>
+          <Text style={styles.sectionText}>{description}</Text>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Tags: </Text>
+          <Text style={styles.sectionText}>
+            {tags.map((tag) => tag.name).join(", ")}
+          </Text>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Quiz Type: </Text>
+          <Text style={styles.sectionText}>{quiz_type}</Text>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Question Count: </Text>
+          <Text style={styles.sectionText}>{questionsCount}</Text>
+        </View>
       </View>
-      <View style={styles.section}>
-        <Text>Description: </Text>
-        <Text>{description}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text>Tags: </Text>
-        <Text>{tags.map((tag) => tag.name).join(", ")}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text>Quiz Type: </Text>
-        <Text>{quiz_type}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text>Question Count: </Text>
-        <Text>{questionsCount}</Text>
-      </View>
-      <View>
+      <View style={styles.questionsContainer}>
+        <Text style={styles.questionsTitle}>Questions</Text>
         <FlatList
           data={editedQuestions}
           renderItem={({ item, index }) => (
@@ -144,15 +149,44 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     flex: 1,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 12,
+  },
+  infoContainer: {
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#0f172a",
+    borderRadius: 8,
+    padding: 10,
+  },
   section: {
     flexDirection: "row",
     gap: 10,
+    marginVertical: 4,
+  },
+  sectionTitle: {
+    fontWeight: "bold",
+  },
+  sectionText: {},
+  questionsContainer: {
+    marginVertical: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "#0f172a",
+    padding: 12,
+  },
+  questionsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 12,
   },
   questionContainer: {
     flexDirection: "row",
     gap: 10,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "#0f172a",
     borderRadius: 5,
     padding: 10,
     marginVertical: 4,
@@ -172,6 +206,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 4,
+    backgroundColor: "#e2e8f0",
   },
   buttonContainer: {
     padding: 10,
