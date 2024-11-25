@@ -2,7 +2,7 @@
 
 Below instructions cover dockerization & deployment process of our application for users who wants to test/use the application on their local environments.
 
-Please note that this guide covers this process in the context of **Customer Milestone 1**.
+Please note that this guide covers this process in the context of **Customer Milestone 2**.
 
 ### Pre-Requisites
 
@@ -50,7 +50,7 @@ cp ./client/.env.example ./client/.env
 
 - It is important to use the `docker-compose.yml` file for building the application. `-d` flag runs docker-compose in detached mode to not block the shell during the run.
 
-- Below command is sufficient to build & run the application.
+- Below command is sufficient to build & run the application. Make sure that your Docker Desktop application is running, since below command will require to docker daemon to be up & running.
 
 ```bash
 docker-compose -f docker-compose.yml up --build -d
