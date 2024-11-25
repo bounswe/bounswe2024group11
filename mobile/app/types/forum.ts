@@ -15,7 +15,7 @@ export type Author = {
 export type Question = {
   id: string;
   title: string;
-  body: string;
+  question: string;
   tags: Tag[];
   author: Author;
   created_at: string;
