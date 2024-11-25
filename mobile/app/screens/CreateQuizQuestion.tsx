@@ -8,7 +8,11 @@ import CreateQuizQuestionFooter from "../components/CreateQuizQuestionFooter";
 import CreateQuizQuestionHeader from "../components/CreateQuizQuestionHeader";
 import CreateQuizQuestionHints from "../components/CreateQuizQuestionHints";
 import CreateQuizQuestionOptions from "../components/CreateQuizQuestionOptions";
-import { CreateQuizQuestionType } from "../types/quiz";
+import {
+  CreateQuizQuestionHintType,
+  CreateQuizQuestionType,
+  SuggestedHintsType,
+} from "../types/quiz";
 import { Tag, TagSearchResult } from "../types/tag";
 
 type CreateQuizQuestionScreenRouteProp = RouteProp<
@@ -32,7 +36,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         { choice_text: "", is_correct: false },
         { choice_text: "", is_correct: false },
       ],
-      hints: [],
+      hints: [{ type: "", text: "" }],
       point: 0,
     },
   ]);
@@ -50,6 +54,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     },
   ]);
   const [allTranslations, setAllTranslations] = useState<string[][]>([[]]);
+  const [allHints, setAllHints] = useState<SuggestedHintsType[]>([]);
 
   // const API_URL = "http://54.247.125.93/api/v1";
   const API_URL = "http://10.0.2.2:8000/api/v1";
@@ -138,6 +143,27 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     }
   };
 
+  const fetchHints = async () => {
+    const linked_data_id = questionTags[currentQuestionIndex].linked_data_id;
+    const word = questionTags[currentQuestionIndex].name;
+    const ENDPOINT = `${API_URL}/hint/?synset_id=${linked_data_id.substring(3)}&target_lang=${source_lang}&word=${word}`;
+
+    try {
+      const result = await axios.get(`${ENDPOINT}`);
+
+      const updatedAllHints = [...allHints];
+      updatedAllHints[currentQuestionIndex] = {
+        synonyms: result.data.synonyms,
+        definitions: result.data.definitions,
+        examples: result.data.examples,
+        images: result.data.images,
+      };
+      setAllHints(updatedAllHints);
+    } catch (error) {
+      console.error("Error fetching hints", error);
+    }
+  };
+
   const selectTranslation = (translation: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[currentQuestionIndex].choices.find(
@@ -148,6 +174,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     const keyword =
       type === 2 ? translation : questions[currentQuestionIndex].question_text;
     fetchDifficulty(keyword);
+    fetchHints();
   };
 
   const changeOptionText = (index: number, text: string) => {
@@ -169,6 +196,48 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
       updatedQuestions[currentQuestionIndex].choices[index],
     ];
     setQuestions(updatedQuestions);
+  };
+
+  const selectHintType = (type: string) => {
+    const old_type = questions[currentQuestionIndex].hints[0].type;
+    if (old_type === type) return;
+    if (type === "no") type = "";
+
+    const updatedQuestions = [...questions];
+    updatedQuestions[currentQuestionIndex].hints[0].type = type;
+    updatedQuestions[currentQuestionIndex].hints[0].text = "";
+    setQuestions(updatedQuestions);
+  };
+
+  const selectHintText = (text: string) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[currentQuestionIndex].hints[0].text = text;
+    setQuestions(updatedQuestions);
+  };
+
+  const combineHints = (suggested_hints: SuggestedHintsType) => {
+    const hints: CreateQuizQuestionHintType[] = [];
+    if (suggested_hints?.synonyms.length > 0) {
+      suggested_hints.synonyms.forEach((synonym) => {
+        hints.push({ type: "synonym", text: synonym });
+      });
+    }
+    if (suggested_hints?.definitions.length > 0) {
+      suggested_hints.definitions.forEach((definition) => {
+        hints.push({ type: "definition", text: definition });
+      });
+    }
+    if (suggested_hints?.examples.length > 0) {
+      suggested_hints.examples.forEach((example) => {
+        hints.push({ type: "example", text: example });
+      });
+    }
+    if (suggested_hints?.images.length > 0) {
+      suggested_hints.images.forEach((image) => {
+        hints.push({ type: "image", text: image });
+      });
+    }
+    return hints;
   };
 
   const goToNextQuestion = () => {
@@ -197,7 +266,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         { choice_text: "", is_correct: false },
         { choice_text: "", is_correct: false },
       ],
-      hints: [],
+      hints: [{ type: "", text: "" }],
       point: 0,
     });
     setQuestions(updatedQuestions);
@@ -229,7 +298,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
         { choice_text: "", is_correct: false },
         { choice_text: "", is_correct: false },
       ],
-      hints: [],
+      hints: [{ type: "", text: "" }],
       point: 0,
     });
     setQuestions(updatedQuestions);
@@ -299,7 +368,15 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
           />
         </>
       )}
-      <CreateQuizQuestionHints />
+      {questions[currentQuestionIndex].point > 0 &&
+        combineHints(allHints[currentQuestionIndex]).length > 0 && (
+          <CreateQuizQuestionHints
+            selected_hint={questions[currentQuestionIndex].hints[0]}
+            hints={allHints[currentQuestionIndex]}
+            onSelectHintType={selectHintType}
+            onSelectHintText={selectHintText}
+          />
+        )}
       <CreateQuizQuestionFooter
         goToNextQuestion={goToNextQuestion}
         goToPreviousQuestion={goToPreviousQuestion}
