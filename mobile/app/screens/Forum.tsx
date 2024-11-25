@@ -2,7 +2,13 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
 import ForumQuestionCard from "../components/ForumQuestionCard";
@@ -15,18 +21,22 @@ type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const navigation = useNavigation<ForumScreenNavigationProp>();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchQuestions = async () => {
+      setLoading(true);
       try {
         const result = await axios.get(`${API_URL}`);
         // console.log(result.data.questions);
         setQuestions(result.data.results);
       } catch (error) {
         console.error("Error fetching questions", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -41,20 +51,24 @@ const Forum: React.FC = () => {
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
-      <FlatList
-        data={questions}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() =>
-              navigation.navigate("ForumQuestionDetail", { question: item })
-            }
-          >
-            <ForumQuestionCard item={item} />
-          </TouchableOpacity>
-        )}
-      />
+      {loading ? ( // Show loading spinner while fetching data
+        <ActivityIndicator size="large" color="#2196F3" />
+      ) : (
+        <FlatList
+          data={questions}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() =>
+                navigation.navigate("ForumQuestionDetail", { question: item })
+              }
+            >
+              <ForumQuestionCard item={item} />
+            </TouchableOpacity>
+          )}
+        />
+      )}
       <TouchableOpacity
         style={styles.floatingButton}
         onPress={handleCreateQuestion}
