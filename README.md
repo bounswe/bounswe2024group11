@@ -65,8 +65,8 @@ docker-compose -f docker-compose.yml up --build -d
 
 ```bash
 docker ps # see running containers with their info
-docker-compose down # stop running containers
-docker images prune -a # remove all images built
+docker-compose down # stop and remove running containers
+docker image prune -a # remove all images built
 ```
 
 #### Standards
