@@ -29,6 +29,7 @@ export type RootStackParamList = {
   Register: undefined;
   Forum: undefined;
   ForumQuestionDetail: { question: Question };
+  QuizFeed: undefined;
   QuizDetail: { quiz: QuizOverview };
   ViewQuiz: {
     id: string;
@@ -149,6 +150,7 @@ export const Layout = () => {
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}
             />
+            <Stack.Screen name="QuizFeed" component={QuizFeed} />
             <Stack.Screen name="QuizDetail" component={QuizDetail} />
             <Stack.Screen
               name="ViewQuiz"
