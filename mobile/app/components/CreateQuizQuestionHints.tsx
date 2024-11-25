@@ -32,11 +32,7 @@ const CreateQuizQuestionHints: React.FC<Props> = ({
           >
             <Picker.Item key={"no"} label={"No"} value={"no"} />
             {Object.keys(hints).map((key) => (
-              <Picker.Item
-                key={key}
-                label={key.replace(/\b\w/g, (char) => char.toUpperCase())}
-                value={key}
-              />
+              <Picker.Item key={key} label={key} value={key} />
             ))}
             <Picker.Item key={"custom"} label={"Custom"} value={"custom"} />
           </Picker>
@@ -51,11 +47,7 @@ const CreateQuizQuestionHints: React.FC<Props> = ({
               }
             >
               {Object.values(hints.synonyms).map((hint) => (
-                <Picker.Item
-                  key={hint}
-                  label={hint.replace(/\b\w/g, (char) => char.toUpperCase())}
-                  value={hint}
-                />
+                <Picker.Item key={hint} label={hint} value={hint} />
               ))}
             </Picker>
           ) : selected_hint.type === "definitions" ? (
@@ -66,11 +58,7 @@ const CreateQuizQuestionHints: React.FC<Props> = ({
               }
             >
               {Object.values(hints.definitions).map((hint) => (
-                <Picker.Item
-                  key={hint}
-                  label={hint.replace(/\b\w/g, (char) => char.toUpperCase())}
-                  value={hint}
-                />
+                <Picker.Item key={hint} label={hint} value={hint} />
               ))}
             </Picker>
           ) : selected_hint.type === "examples" ? (
@@ -81,11 +69,7 @@ const CreateQuizQuestionHints: React.FC<Props> = ({
               }
             >
               {Object.values(hints.examples).map((hint) => (
-                <Picker.Item
-                  key={hint}
-                  label={hint.replace(/\b\w/g, (char) => char.toUpperCase())}
-                  value={hint}
-                />
+                <Picker.Item key={hint} label={hint} value={hint} />
               ))}
             </Picker>
           ) : selected_hint.type === "images" ? (
@@ -96,11 +80,7 @@ const CreateQuizQuestionHints: React.FC<Props> = ({
               }
             >
               {Object.values(hints.images).map((hint) => (
-                <Picker.Item
-                  key={hint}
-                  label={hint.replace(/\b\w/g, (char) => char.toUpperCase())}
-                  value={hint}
-                />
+                <Picker.Item key={hint} label={hint} value={hint} />
               ))}
             </Picker>
           ) : selected_hint.type === "custom" ? (

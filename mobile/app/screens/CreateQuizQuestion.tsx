@@ -116,15 +116,14 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
 
     const updatedQuestionTags = [...questionTags];
     updatedQuestionTags[currentQuestionIndex] = {
-      name: questionTextInput.replace(/\b\w/g, (char) => char.toUpperCase()),
+      name: questionTextInput,
       linked_data_id: text.id,
       description: text.description,
     };
     setQuestionTags(updatedQuestionTags);
 
     const updatedQuestions = [...questions];
-    updatedQuestions[currentQuestionIndex].question_text =
-      questionTextInput.replace(/\b\w/g, (char) => char.toUpperCase());
+    updatedQuestions[currentQuestionIndex].question_text = questionTextInput;
     setQuestions(updatedQuestions);
 
     fetchTranslations(text.id);

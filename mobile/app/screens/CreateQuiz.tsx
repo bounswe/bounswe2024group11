@@ -112,9 +112,7 @@ const CreateQuiz: React.FC = () => {
                   style={styles.tag}
                   onPress={() => handleTagRemove(tag)}
                 >
-                  <Text>
-                    {tag.name.replace(/\b\w/g, (char) => char.toUpperCase())} x
-                  </Text>
+                  <Text>{tag.name} x</Text>
                 </TouchableOpacity>
               ))
             ) : (
@@ -149,9 +147,7 @@ const CreateQuiz: React.FC = () => {
                   style={styles.suggestionItem}
                 >
                   <View>
-                    <Text style={styles.suggestionText}>
-                      {tagInput.replace(/\b\w/g, (char) => char.toUpperCase())}
-                    </Text>
+                    <Text style={styles.suggestionText}>{tagInput}</Text>
                     <Text style={styles.suggestionDescription}>
                       {item.description}
                     </Text>

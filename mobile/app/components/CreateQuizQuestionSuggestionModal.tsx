@@ -30,9 +30,7 @@ const CreateQuizQuestionSuggestionModal: React.FC<Props> = ({
             style={styles.suggestionItem}
             onPress={() => onSelect(item)}
           >
-            <Text style={styles.suggestionItemTitle}>
-              {title.replace(/\b\w/g, (char) => char.toUpperCase())}
-            </Text>
+            <Text style={styles.suggestionItemTitle}>{title}</Text>
             <Text>{item.description}</Text>
           </TouchableOpacity>
         )}

@@ -33,8 +33,8 @@ const TranslationPicker: React.FC<Props> = ({
         {translations.map((translation) => (
           <Picker.Item
             key={translation}
-            label={translation.replace(/\b\w/g, (char) => char.toUpperCase())}
-            value={translation.replace(/\b\w/g, (char) => char.toUpperCase())}
+            label={translation}
+            value={translation}
             style={styles.pickerItem}
           />
         ))}
