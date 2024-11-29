@@ -447,13 +447,13 @@ We are aware that some endpoints are not perfectly established, but we won’t s
 
 ## Individual Contributions
 
-1. [Muhammed Emin Arayıcı](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contribution-(Muhammed-Emin-ARAYICI))
-2. [Mücahit Erdoğan Ünlü](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contribution-for-MS2-(M%C3%BCcahit-Erdo%C4%9Fan-%C3%9Cnl%C3%BC))
+1. [Muhammed Emin Arayıcı](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Muhammed-Emin-ARAYICI)
+2. [Mücahit Erdoğan Ünlü](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-M%C3%BCcahit-Erdo%C4%9Fan-%C3%9Cnl%C3%BC)
 3. [Muhammet Emin Çiftçi](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Muhammet-Emin-%C3%87ift%C3%A7i)
-4. [Ozan Oytun Karakaya](https://github.com/bounswe/bounswe2024group11/wiki/Ozan-Oytun-Karakaya-%E2%80%90-Individual-Contributions-Customer-Milestone-2)
-5. [Ceydanur Şen](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contribution-(Ceydanur-%C5%9Een))
+4. [Ozan Oytun Karakaya](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Yunus-Ka%C4%9Fan-Ayd%C4%B1n)
+5. [Ceydanur Şen](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Ceydanur-%C5%9Een)
 6. [Yunus Kağan Aydın](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Yunus-Ka%C4%9Fan-Ayd%C4%B1n)
 7. [Hasan Kerem Şeker](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Hasan-Kerem-%C5%9Eeker)
 8. [Ümit Can Evleksiz](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-%C3%9Cmit-Can-Evleksiz)
-9. [Arda Vural](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Arda-Vural/)
+9. [Arda Vural](https://github.com/bounswe/bounswe2024group11/wiki/Individual-Contributions-%E2%80%90-Arda-Vural)
 
