@@ -1,5 +1,8 @@
-import { RiCloseFill } from "@remixicon/react";
-import { useState } from "react";
+import {
+    RiArrowLeftLine,
+    RiArrowRightLine,
+    RiCloseFill,
+} from "@remixicon/react";
 import { useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
@@ -15,13 +18,13 @@ export const Quizzes = () => {
 
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-    const [sortBy, setSortBy] = useState("newest");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
     const totalPages = Math.ceil(data.count / perPage);
+    const searchTerm = searchParams.get("search") || "";
+    const sortBy = searchParams.get("sort") || "newest";
+    const selectedTagId = searchParams.get("tag");
 
     const handlePageChange = (page: number) => {
         const newParams = new URLSearchParams(searchParams);
@@ -37,12 +40,47 @@ export const Quizzes = () => {
         setSearchParams(newParams);
     };
 
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("search", e.target.value);
+        setSearchParams(newParams);
+    };
+
+    const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("sort", e.target.value);
+        setSearchParams(newParams);
+    };
+
+    const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newParams = new URLSearchParams(searchParams);
+        if (e.target.value) {
+            newParams.set("tag", e.target.value);
+        } else {
+            newParams.delete("tag");
+        }
+        setSearchParams(newParams);
+    };
+
     const filteredQuizzes = data.results
         .filter(
             (quiz) =>
-                quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                (!selectedTagId ||
-                    quiz.tags.some((tag) => tag.id === selectedTagId)),
+                quiz.tags.some((tag) => {
+                    if (!selectedTagId) return true;
+                    return tag.linked_data_id === selectedTagId;
+                }) &&
+                (quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    quiz.description
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                    quiz.tags.some((tag) =>
+                        tag.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase()),
+                    ) ||
+                    quiz.author.username
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())),
         )
         .sort((a, b) => {
             if (sortBy === "newest") {
@@ -58,7 +96,7 @@ export const Quizzes = () => {
             } else if (sortBy === "popular") {
                 return b.num_taken - a.num_taken;
             } else if (sortBy === "most liked") {
-                return b.rating.score - a.rating.score;
+                return (b.rating.score || 0) - (a.rating.score || 0);
             }
             return 0;
         });
@@ -68,7 +106,7 @@ export const Quizzes = () => {
     ).sort((a, b) => a.name.localeCompare(b.name));
 
     const description = logged_in
-        ? `This is your time to shine ${user.full_name}`
+        ? `This is your time to shine, ${user.full_name}`
         : "Test your knowledge of various topics. Log in to track your progress.";
 
     return (
@@ -76,109 +114,125 @@ export const Quizzes = () => {
             <PageHead title="Quizzes" description={description} />
             <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-start justify-between">
+                            <fieldset className="flex flex-col gap-2">
+                                <label
+                                    htmlFor="perPage"
+                                    className="text-sm text-slate-500"
+                                >
+                                    Show quizzes per page:
+                                </label>
+                                <select
+                                    id="perPage"
+                                    value={perPage}
+                                    onChange={handlePerPageChange}
+                                    className={`${inputClass()} w-24`}
+                                >
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </fieldset>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={!data.previous}
+                                    aria-label="Previous Page"
+                                    aria-disabled={!data.previous}
+                                    className={buttonClass({
+                                        intent: "secondary",
+                                        className: "w-16",
+                                    })}
+                                >
+                                    <div
+                                        className={buttonInnerRing({
+                                            intent: "secondary",
+                                        })}
+                                        aria-hidden="true"
+                                    />
+                                    <RiArrowLeftLine size={16} />
+                                </button>
+                                <span className="flex w-12 items-center justify-center gap-1 text-center text-sm text-slate-400">
+                                    <span className="px-1 py-0.5 text-base text-slate-700">
+                                        {currentPage}
+                                    </span>
+                                    <span className="text-xs">/</span>
+                                    <span className="px-1 py-0.5 text-base font-regular">
+                                        {totalPages}
+                                    </span>
+                                </span>
+                                <button
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    disabled={!data.next}
+                                    aria-disabled={!data.next}
+                                    aria-label="Next Page"
+                                    className={buttonClass({
+                                        intent: "secondary",
+                                        className: "w-16",
+                                    })}
+                                >
+                                    <div
+                                        className={buttonInnerRing({
+                                            intent: "secondary",
+                                        })}
+                                        aria-hidden="true"
+                                    />
+                                    <RiArrowRightLine size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-4 sm:flex-row">
                         <div>
-                            <label htmlFor="perPage" className="mr-2">
-                                Questions per page:
-                            </label>
                             <select
-                                id="perPage"
-                                value={perPage}
-                                onChange={handlePerPageChange}
-                                className={`${inputClass()} w-24`}
+                                className={inputClass({
+                                    className: "w-48 cursor-pointer",
+                                })}
+                                value={selectedTagId || ""}
+                                onChange={handleTagChange}
                             >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
+                                <option value="">All Tags</option>
+                                {allTags.map((tag) => (
+                                    <option
+                                        key={tag.linked_data_id}
+                                        value={tag.linked_data_id}
+                                    >
+                                        {tag.name}
+                                    </option>
+                                ))}
                             </select>
                         </div>
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() =>
-                                    handlePageChange(currentPage - 1)
-                                }
-                                disabled={!data.previous}
-                                aria-disabled={!data.previous}
-                                className={buttonClass({
-                                    intent: "secondary",
+                        <div className="flex-grow">
+                            <input
+                                type="text"
+                                placeholder="Search by title, description, or tag"
+                                className={inputClass({
+                                    className: "w-full max-w-sm",
                                 })}
-                            >
-                                <div
-                                    className={buttonInnerRing({
-                                        intent: "secondary",
-                                    })}
-                                />
-                                Previous
-                            </button>
-                            <span className="flex items-center">
-                                Page {currentPage} of {totalPages}
-                            </span>
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                        </div>
+                        <div>
                             <button
-                                onClick={() =>
-                                    handlePageChange(currentPage + 1)
-                                }
-                                disabled={!data.next}
-                                aria-disabled={!data.next}
                                 className={buttonClass({
-                                    intent: "secondary",
+                                    intent: "tertiary",
+                                    size: "medium",
+                                    icon: "left",
                                 })}
+                                onClick={() =>
+                                    setSearchParams(new URLSearchParams())
+                                }
                             >
-                                <div
-                                    className={buttonInnerRing({
-                                        intent: "secondary",
-                                    })}
-                                />
-                                Next
+                                <RiCloseFill size={20} />
+                                Clear All Filters
                             </button>
                         </div>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-4 sm:flex-row">
-                    <div>
-                        <select
-                            className={inputClass({
-                                className: "w-40 cursor-pointer",
-                            })}
-                            value={selectedTagId || ""}
-                            onChange={(e) =>
-                                setSelectedTagId(e.target.value || null)
-                            }
-                        >
-                            <option value="">All Tags</option>
-                            {allTags.map((tag) => (
-                                <option key={tag.id} value={tag.id}>
-                                    {tag.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex-grow">
-                        <input
-                            type="text"
-                            placeholder="Search quizzes..."
-                            className={inputClass({
-                                className: "w-full max-w-sm",
-                            })}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <button
-                            className={buttonClass({
-                                intent: "tertiary",
-                                size: "medium",
-                                icon: "left",
-                            })}
-                            onClick={() => {
-                                setSearchTerm("");
-                                setSelectedTagId(null);
-                                setSortBy("newest");
-                            }}
-                        >
-                            <RiCloseFill size={20} />
-                            Clear All Filters
-                        </button>
                     </div>
                 </div>
                 <div className="flex gap-2">
@@ -192,8 +246,8 @@ export const Quizzes = () => {
                                     type="radio"
                                     value={option}
                                     checked={sortBy === option}
-                                    onChange={(e) => setSortBy(e.target.value)}
                                     className="sr-only"
+                                    onChange={handleSortChange}
                                 />
                                 <span
                                     className={`rounded-full px-4 py-1.5 font-medium transition-all ${
@@ -223,8 +277,15 @@ export const Quizzes = () => {
                     .map((quiz) => (
                         <QuizCard
                             key={quiz.id}
-                            onTagClick={(tag) => setSelectedTagId(tag)}
+                            quiz_key={String(quiz.id)}
                             quiz={quiz}
+                            onTagClick={(tag) => {
+                                const newParams = new URLSearchParams(
+                                    searchParams,
+                                );
+                                newParams.set("tag", tag);
+                                setSearchParams(newParams);
+                            }}
                         />
                     ))}
             </main>

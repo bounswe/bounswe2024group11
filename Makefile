@@ -88,6 +88,7 @@ prod-mobile:
 		exit 1; \
 	fi
 	cd $(ANDROID_DIR) && \
+	./gradlew clean && \
 	./gradlew assembleRelease
 
 .PHONY: dev-build dev-push dev-down dev-scp dev-up dev-bp dev-dsu dev-deploy dev-mobile prod-mobile

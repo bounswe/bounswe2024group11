@@ -14,7 +14,13 @@ import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
 
-import { forumCreateAction, forumLoader } from "./routes/Forum/Forum.data";
+import {
+    forumCreateAction,
+    forumCreateLoader,
+    forumLoader,
+    forumShouldRevalidate,
+} from "./routes/Forum/Forum.data";
+import { NewForum } from "./routes/Forum/NewForum";
 import {
     answerForumAction,
     bookmarkForumAction,
@@ -26,8 +32,16 @@ import {
     upvoteForumAnswerAction,
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
-import { QuizPage } from "./routes/Quiz/Quiz";
-import { quizLoader } from "./routes/Quiz/Quiz.data";
+import { Profile } from "./routes/Profile/Profile";
+import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
+import { TakeQuizPage } from "./routes/Quiz/Quiz";
+import {
+    quizLoader,
+    quizReviewLoader,
+    quizShouldRevalidate,
+    takeQuizAction,
+} from "./routes/Quiz/Quiz.data";
+import { QuizReview } from "./routes/Quiz/Quiz.Review";
 import { Quizzes } from "./routes/Quiz/Quizzes";
 import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
 
@@ -35,6 +49,7 @@ export const routes: RouteObject[] = [
     {
         path: "/",
         element: <Root />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "/",
@@ -57,6 +72,12 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
+                        shouldRevalidate: forumShouldRevalidate,
+                    },
+                    {
+                        path: "forum/new",
+                        element: <NewForum />,
+                        loader: forumCreateLoader,
                         action: forumCreateAction,
                     },
                     {
@@ -98,28 +119,39 @@ export const routes: RouteObject[] = [
                         path: "quizzes",
                         element: <Quizzes />,
                         loader: quizzesLoader,
+                        shouldRevalidate: quizShouldRevalidate,
                     },
                     {
-                        path: "quizzes/:quizId",
-                        element: <QuizPage />,
+                        path: "quizzes/:quizId/",
+                        element: <TakeQuizPage />,
                         loader: quizLoader,
+                        action: takeQuizAction,
                     },
                     {
-                        path: "profile",
-                        element: <div>Profile</div>,
+                        path: "quizzes/:quizId/review",
+                        element: <QuizReview />,
+                        loader: quizReviewLoader,
+                    },
+                    {
+                        path: "profile/",
+                        element: <Profile />,
+                        loader: myProfileLoader,
+                    },
+                    {
+                        path: "profile/:username",
+                        element: <Profile />,
+                        loader: profileLoader,
                     },
                 ],
             },
             {
                 path: "login",
-                errorElement: <ErrorPage />,
                 element: <Login />,
                 action: loginAction,
                 loader: loginLoader,
             },
             {
                 path: "register",
-                errorElement: <ErrorPage />,
                 element: <Register />,
                 action: registerAction,
             },

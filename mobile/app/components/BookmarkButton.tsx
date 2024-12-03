@@ -1,17 +1,56 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface BookmarkButtonProps {
-  is_bookmarked: boolean;
+  initialBookmarkState: number | null;
+  questionId: number;
+  onBookmarkChange: (isBookmarked: number | null) => void;
 }
 
-const BookmarkButton: React.FC<BookmarkButtonProps> = ({ is_bookmarked }) => {
+const BookmarkButton: React.FC<BookmarkButtonProps> = ({
+  initialBookmarkState,
+  questionId,
+  onBookmarkChange,
+}) => {
+  const [isBookmarked, setIsBookmarked] = useState(initialBookmarkState);
+
+  const handleBookmarkToggle = async () => {
+    try {
+      if (isBookmarked) {
+        await axios.delete(
+          `http://138.68.97.90/api/v1/forum-bookmarks/${isBookmarked}/`
+          // `http://10.0.2.2:8000/api/v1/forum-bookmarks/${isBookmarked}/`
+        );
+        console.log("Bookmark removed");
+        setIsBookmarked(null);
+        onBookmarkChange(null);
+      } else {
+        const response = await axios.post(
+          `http://138.68.97.90/api/v1/forum-bookmarks/`,
+          // `http://10.0.2.2:8000/api/v1/forum-bookmarks/`,
+          {
+            forum_question: questionId,
+          }
+        );
+        console.log("Bookmark added:", response.data);
+        setIsBookmarked(response.data.id);
+        onBookmarkChange(response.data.id);
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+    }
+  };
+
   return (
-    <TouchableOpacity style={styles.bookmark_icon}>
+    <TouchableOpacity
+      style={styles.bookmarkIcon}
+      onPress={handleBookmarkToggle}
+    >
       <Icon
-        name={is_bookmarked ? "bookmark" : "bookmark-outline"}
-        color={is_bookmarked ? "gold" : "grey"}
+        name={isBookmarked ? "bookmark" : "bookmark-outline"}
+        color={isBookmarked ? "gold" : "grey"}
         size={24}
       />
     </TouchableOpacity>
@@ -19,7 +58,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ is_bookmarked }) => {
 };
 
 const styles = StyleSheet.create({
-  bookmark_icon: {
+  bookmarkIcon: {
     width: 40,
     height: 40,
     justifyContent: "center",

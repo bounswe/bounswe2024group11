@@ -6,7 +6,10 @@ import {
     number,
     object,
     string,
+    undefinedable,
 } from "valibot";
+import { authorSchema } from "../../schemas";
+import { quizQuestionSchema } from "../Quiz/Quiz.schema";
 
 export type Answer = InferInput<typeof answerSchema>;
 
@@ -16,14 +19,6 @@ const tagSchema = object({
     description: string(),
 });
 export type ForumResponse = InferInput<typeof forumSchema>;
-
-export const authorSchema = object({
-    id: number(),
-    full_name: string(),
-    username: string(),
-    avatar: nullable(string()),
-    email: string(),
-});
 
 export const answerSchema = object({
     id: number(),
@@ -52,6 +47,8 @@ export const forumQuestionSchema = object({
     downvotes_count: number(),
     answers: array(answerSchema),
     is_my_forum_question: boolean(),
+    quiz_question: nullable(quizQuestionSchema),
+    quiz_question_type: nullable(number()),
 });
 
 export const forumSchema = object({
@@ -102,3 +99,17 @@ export const forumAnswerDownvoteSchema = object({
 
 export type Tag = InferInput<typeof tagSchema>;
 export type ForumQuestion = InferInput<typeof forumQuestionSchema>;
+
+const wordSchema = object({
+    id: string(),
+    description: string(),
+});
+
+export type Word = InferInput<typeof wordSchema>;
+
+export const dictionarySchema = object({
+    NOUN: undefinedable(array(wordSchema)),
+    VERB: undefinedable(array(wordSchema)),
+    ADJ: undefinedable(array(wordSchema)),
+    ADV: undefinedable(array(wordSchema)),
+});

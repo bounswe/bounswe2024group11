@@ -111,7 +111,7 @@ android {
 
     namespace 'com.randy_johnson.mobile'
     defaultConfig {
-        applicationId 'com.randy_johnson.mobile'
+        applicationId 'com.randy_johnson.turquiz'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

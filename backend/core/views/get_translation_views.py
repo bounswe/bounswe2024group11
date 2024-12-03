@@ -11,7 +11,7 @@ def get_translation(word_id, target_lang):
     api_key = '9866532b-0a17-4cd6-9bf8-d6c21d1fba60'  
     url = 'https://babelnet.io/v9/getSynset'
     params = {
-        'id': word_id,
+        'id': "bn:" + word_id,
         'targetLang': target_lang,
         'key': api_key,
         'source': 'OMWIKI',
@@ -30,7 +30,7 @@ def get_translation(word_id, target_lang):
                 if lemma.replace("_", " ").lower().strip() not in translations:
                     lemma = lemma.replace("_", " ").lower().strip()
                     translations.append(lemma)
-                    print(lemma)
+                    # print(lemma)
 
     return translations
 
@@ -48,7 +48,7 @@ class TranslationView(APIView):
         responses={200: TranslationSerializer},
         manual_parameters=[
             openapi.Parameter('type', openapi.IN_QUERY, description="Type of question (type1 or type2)", type=openapi.TYPE_STRING),
-            openapi.Parameter('id', openapi.IN_QUERY, description="ID of the word", type=openapi.TYPE_STRING),
+            openapi.Parameter('id', openapi.IN_QUERY, description="ID of the word without `bn:` prefix. E.g., instead of `bn:00007381n` use `00007381n`", type=openapi.TYPE_STRING),
         ]
     )
     def get(self, request):

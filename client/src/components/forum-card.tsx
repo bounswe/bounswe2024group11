@@ -1,9 +1,11 @@
 import { Button, Separator } from "@ariakit/react";
 import {
-    RiArrowDownLine,
-    RiArrowUpLine,
     RiBookmark2Line,
-    RiDeleteBin4Line,
+    RiDeleteBinLine,
+    RiThumbDownFill,
+    RiThumbDownLine,
+    RiThumbUpFill,
+    RiThumbUpLine,
 } from "@remixicon/react";
 import { Link, useFetcher } from "react-router-dom";
 
@@ -14,29 +16,39 @@ import {
     downvoteForumAction,
     upvoteForumAction,
 } from "../routes/Forum/Question.data";
+import { RelevantQuiz } from "../routes/Forum/RelevantQuizQuestion";
 import { getNumberDifference, pluralize } from "../utils";
 import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";
 type ForumCardProps = {
     question: ForumQuestion;
+    onTagClick?: (tag: string) => void;
 };
 
-export const ForumQuestionCard = ({ question }: ForumCardProps) => {
+export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
     const upvoteFetcher = useFetcher<typeof upvoteForumAction>();
     const downvoteFetcher = useFetcher<typeof downvoteForumAction>();
     const bookmarkFetcher = useFetcher<typeof bookmarkForumAction>();
     const deleteFetcher = useFetcher<typeof deleteForumAction>();
 
     return (
-        <div className="relative flex w-full max-w-xl flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
-            <div className="flex flex-col gap-3 pb-3">
+        <div className="relative flex h-full w-full flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
+            <div className="flex flex-1 flex-col gap-3 pb-3">
                 <div className="flex w-full items-center justify-between gap-3">
-                    <div className="flex flex-row items-center justify-start gap-3">
-                        <Avatar author={question.author} size={24} />
-                        <p className="text-sm text-slate-500">
-                            {question.author.username}
-                        </p>
-                    </div>
+                    <Link
+                        className="flex flex-row items-center justify-start gap-3"
+                        to={`/profile/${question.author.username}`}
+                    >
+                        <Avatar author={question.author} size={32} />
+                        <div className="flex flex-col items-start">
+                            <p className="font-medium text-slate-900">
+                                {question.author.full_name}
+                            </p>
+                            <p className="text-sm text-slate-700">
+                                @{question.author.username}
+                            </p>
+                        </div>
+                    </Link>
                     <div className="flex flex-row items-center justify-end gap-3">
                         {question.is_my_forum_question && (
                             <deleteFetcher.Form
@@ -61,7 +73,7 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                                         state: "on",
                                     })}
                                 >
-                                    <RiDeleteBin4Line size={16} />
+                                    <RiDeleteBinLine size={16} />
                                 </Button>
                             </deleteFetcher.Form>
                         )}
@@ -104,27 +116,46 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                         <h2 className="text-xl font-semibold text-slate-900 underline-offset-2 group-hover:underline">
                             {question.title}
                         </h2>
-                        <p className="text-sm text-slate-500">
-                            {question.question}
-                        </p>
+                        <p className="text-slate-700">{question.question}</p>
                     </Link>
-                    <div className="flex flex-row gap-4">
-                        {question.tags.map(({ name }) => (
-                            <span className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500">
-                                {name.toLocaleUpperCase()}
-                            </span>
-                        ))}
+                    <div className="flex flex-row gap-2">
+                        {question.tags.map(
+                            ({ name, linked_data_id, description }) => (
+                                <Button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        onTagClick?.(linked_data_id);
+                                    }}
+                                    aria-label={name}
+                                    key={linked_data_id}
+                                    className="rounded-2 border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500"
+                                    data-linked-id={linked_data_id}
+                                    data-description={description}
+                                >
+                                    {name.toLocaleUpperCase()}
+                                </Button>
+                            ),
+                        )}
                     </div>
                 </div>
             </div>
+            {question.quiz_question && (
+                <RelevantQuiz
+                    quizType={question.quiz_question_type}
+                    quizQuestion={question.quiz_question}
+                />
+            )}
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-between">
-                <div className="flex flex-row items-center gap-1">
+                <Link
+                    className="flex flex-row items-center gap-1 underline-offset-2 hover:underline"
+                    to={`/forum/${question.id}`}
+                >
                     <RiBookmark2Line className="size-5 text-slate-500" />
-                    <p className="text-xs text-slate-500">
+                    <p className="text-sm text-slate-500">
                         {pluralize(question.answers_count, "answer", "answers")}
                     </p>
-                </div>
+                </Link>
                 <div className="flex flex-row items-center gap-2">
                     <upvoteFetcher.Form
                         method="POST"
@@ -148,7 +179,11 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                                 state: question.is_upvoted ? "on" : "off",
                             })}
                         >
-                            <RiArrowUpLine size={16} />
+                            {question.is_upvoted ? (
+                                <RiThumbUpFill size={16} />
+                            ) : (
+                                <RiThumbUpLine size={16} />
+                            )}
                         </Button>
                     </upvoteFetcher.Form>
                     <p className="text-slate- w-6 text-center text-sm">
@@ -179,7 +214,11 @@ export const ForumQuestionCard = ({ question }: ForumCardProps) => {
                                 state: question.is_downvoted ? "on" : "off",
                             })}
                         >
-                            <RiArrowDownLine size={16} />
+                            {question.is_downvoted ? (
+                                <RiThumbDownFill size={16} />
+                            ) : (
+                                <RiThumbDownLine size={16} />
+                            )}
                         </Button>
                     </downvoteFetcher.Form>
                 </div>

@@ -5,24 +5,27 @@ export type Tag = {
 };
 
 export type Author = {
-  full_name: string;
+  id: number;
   username: string;
+  email: string;
+  full_name: string;
   avatar: string;
 };
 
 export type Question = {
   id: string;
   title: string;
-  body: string;
+  question: string;
   tags: Tag[];
   author: Author;
   created_at: string;
   answers_count: number;
-  is_bookmarked: boolean;
-  is_upvoted: boolean;
+  is_bookmarked: number | null;
+  is_upvoted: number | null;
   upvotes_count: number;
-  is_downvoted: boolean;
+  is_downvoted: number | null;
   downvotes_count: number;
+  answers?: Answer[];
 };
 
 export type Answer = {
@@ -30,8 +33,9 @@ export type Answer = {
   body: string;
   author: Author;
   created_at: string;
-  is_upvoted: boolean;
+  is_upvoted: number | null;
   upvotes_count: number;
-  is_downvoted: boolean;
+  is_downvoted: number | null;
   downvotes_count: number;
+  answers?: Answer[];
 };

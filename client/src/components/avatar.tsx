@@ -1,14 +1,15 @@
-import { InferInput } from "valibot";
-import { authorSchema } from "../types/forum";
-
 type AvatarProps = {
-    author: InferInput<typeof authorSchema>;
+    author: {
+        full_name: string;
+        username: string;
+        avatar: string | null;
+    };
     size: number;
 };
 
 export const Avatar = ({ author, size = 40 }: AvatarProps) => {
     return (
-        <div className="">
+        <div className="rounded-full bg-slate-50 ring-1 ring-slate-100">
             <img
                 src={author.avatar ?? undefined}
                 alt={author.full_name}

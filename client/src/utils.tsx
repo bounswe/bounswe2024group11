@@ -1,4 +1,6 @@
-export const BASE_URL = "http://localhost:8000/api/v1";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+export const BASE_URL = `${VITE_API_URL}/api/v1`;
 
 type Logger = {
     log: typeof console.log;
@@ -22,18 +24,6 @@ export const logger: Logger = {
             console.info(...params);
         }
     },
-};
-
-Storage.prototype.setObject = function (key: string, value: object) {
-    this.setItem(key, JSON.stringify(value));
-};
-
-Storage.prototype.getObject = function (key: string) {
-    const item = this.getItem(key);
-    if (!item) {
-        return null;
-    }
-    return JSON.parse(item);
 };
 
 export const getRelativeTime = (
@@ -70,3 +60,43 @@ export const getNumberDifference = (
     if (value1 === null || value2 === null) return 0;
     return value1 - value2;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DebouncedFunction<T extends (...args: any[]) => any> = {
+    (...args: Parameters<T>): void;
+    cancel: () => void;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function debounce<T extends (...args: any[]) => any>(
+    func: T,
+    wait: number = 300,
+): DebouncedFunction<T> {
+    let timeoutId: NodeJS.Timeout | undefined;
+
+    // Create the debounced function
+    const debounced = function (
+        this: ThisParameterType<T>,
+        ...args: Parameters<T>
+    ) {
+        // Clear any existing timeout
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        // Set up new timeout
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    } as DebouncedFunction<T>;
+
+    // Add cancel method
+    debounced.cancel = function () {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = undefined;
+        }
+    };
+
+    return debounced;
+}

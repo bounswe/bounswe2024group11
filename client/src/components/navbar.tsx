@@ -21,6 +21,10 @@ const routes = [
         name: "Leaderboard",
         href: "/leaderboard",
     },
+    {
+        name: "Profile",
+        href: "/profile",
+    },
 ];
 
 type NavbarProps = {
@@ -31,7 +35,7 @@ export const Navbar = ({ user }: NavbarProps) => {
     return (
         <nav
             aria-label="Main navigation"
-            className="fixed top-0 z-10 w-full border-b border-slate-200 bg-[rgba(255,255,255,.92)] px-6 py-3 backdrop-blur-sm"
+            className="fixed top-0 z-50 w-full border-b border-slate-200 bg-[rgba(255,255,255,.92)] px-6 py-3 backdrop-blur-sm"
         >
             <div className="container max-w-screen-xl">
                 <div className="flex items-center gap-2">
@@ -76,6 +80,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                     className={buttonInnerRing({
                                         intent: "destructive",
                                     })}
+                                    aria-hidden="true"
                                 />
                                 <span>Logout</span>
                                 <RiLogoutBoxRLine className="h-4" />
@@ -94,6 +99,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                             className={buttonInnerRing({
                                                 intent: "secondary",
                                             })}
+                                            aria-hidden="true"
                                         />
                                         Register
                                     </Link>
@@ -111,6 +117,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                                             className={buttonInnerRing({
                                                 intent: "secondary",
                                             })}
+                                            aria-hidden="true"
                                         />
                                         Login
                                     </Link>

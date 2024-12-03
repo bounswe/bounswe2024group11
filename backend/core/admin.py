@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, ForumQuestion, Tag, Quiz, QuizQuestion, RateQuiz, QuizQuestionChoice, TakeQuiz, UserAnswer
+from .models import CustomUser, ForumQuestion, Tag, Quiz, QuizQuestion, RateQuiz, QuizQuestionChoice, TakeQuiz, UserAnswer, QuizQuestionHint
 
 # Register your models here.
 admin.site.register(CustomUser)
@@ -11,3 +11,4 @@ admin.site.register(QuizQuestionChoice)
 admin.site.register(RateQuiz)
 admin.site.register(TakeQuiz)
 admin.site.register(UserAnswer)
+admin.site.register(QuizQuestionHint)

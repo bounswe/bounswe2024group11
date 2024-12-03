@@ -1,45 +1,9 @@
 import { LoaderFunction } from "react-router";
-import {
-    array,
-    boolean,
-    InferInput,
-    nullable,
-    number,
-    object,
-    safeParse,
-    string,
-} from "valibot";
+import { array, nullable, number, object, safeParse, string } from "valibot";
 import apiClient from "../../api"; // Axios instance
+import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
-
-export type Quiz = InferInput<typeof quizSchema>;
-
-const quizSchema = object({
-    id: string(),
-    title: string(),
-    description: string(),
-    author: object({
-        full_name: string(),
-        username: string(),
-        avatar: string(),
-    }),
-    created_at: string(),
-    tags: array(
-        object({
-            id: string(),
-            name: string(),
-        }),
-    ),
-    type: number(),
-    num_taken: number(),
-    is_taken: boolean(),
-    question_count: number(),
-    difficulty: string(),
-    rating: object({
-        score: number(),
-        count: number(),
-    }),
-});
+import { quizSchema } from "./Quiz.schema";
 
 const quizzesResponseSchema = object({
     count: number(),
@@ -51,13 +15,13 @@ const quizzesResponseSchema = object({
 export const quizzesLoader = (async ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 1;
-    const per_page = Number(url.searchParams.get("per_page")) || 20;
+    const per_page = Number(url.searchParams.get("per_page")) || 10;
 
     try {
         const response = await apiClient.get("/quizzes/", {
             params: { page, per_page },
         });
-
+        //logger.log(response.data);
         const data = response.data; // Extract data from the axios response
         const { output, issues, success } = safeParse(
             quizzesResponseSchema,
@@ -69,9 +33,22 @@ export const quizzesLoader = (async ({ request }) => {
             throw new Error(`Failed to parse quizzes response: ${issues}`);
         }
 
+        const questionStore = useQuestionsStore;
+        output.results.forEach((quiz) => {
+            quiz.questions.forEach((question) => {
+                questionStore.getState().add(quiz.type, {
+                    id: question.id,
+                    question_text: question.question_text,
+                    choices: question.choices,
+                    hints: question.hints ?? null,
+                });
+            });
+        });
+        console.log("question Store:", questionStore.getState().questions);
+
         return output;
     } catch (error) {
         logger.error("Error fetching quizzes", error);
-        throw new Error("Failed to fetch quizzes");
+        throw new Error("Failed to load quizzes");
     }
 }) satisfies LoaderFunction;
