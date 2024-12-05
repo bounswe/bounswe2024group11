@@ -1,23 +1,38 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { useAuth } from "../context/AuthContext"; // Import the context
+import UserCard from "../components/UserCard";
 
-export default function Profile() {
+const Profile: React.FC = () => {
+  const { authState } = useAuth();
+
+  if (!authState || !authState.authenticated || !authState.user) {
+    return (
+      <View style={styles.container}>
+        <Text>You need to log in to see this page</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This is the Profile of a</Text>
-      <Text style={styles.text}>Legend</Text>
+      <UserCard user={authState.user} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 20,
+    alignItems: "flex-start",
   },
-  text: {
-    fontSize: 24,
+  profileInfo: {
+    marginTop: 20,
+  },
+  title: {
     fontWeight: "bold",
   },
 });
+
+export default Profile;
