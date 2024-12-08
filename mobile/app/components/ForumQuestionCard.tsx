@@ -60,7 +60,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
         <Text style={styles.title}>{question.title}</Text>
         <Text style={styles.body}>{question.question}</Text>
         <View style={styles.tagsContainer}>
-          {question.tags.map((tag, index) => (
+          {(question.tags || []).map((tag, index) => (
             <Text key={`${tag.id}-${index}`} style={styles.tag}>
               #{tag.name}
             </Text>
