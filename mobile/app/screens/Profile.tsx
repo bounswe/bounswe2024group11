@@ -1,99 +1,117 @@
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  FlatList,
-  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { RootStackParamList } from "../../App";
+import ForumQuestionCard from "../components/ForumQuestionCard";
 import UserCard from "../components/UserCard";
+import { Question } from "../types/forum";
+import { useAuth } from "../context/AuthContext";
 
-interface BookmarkedQuestion {
-  id: number;
-  user: number;
-  forum_question: number; // ID of the question
-  created_at: string;
-}
+// API Endpoints
+const API_URL_BOOKMARKS = "http://138.68.97.90/api/v1/forum-bookmarks/";
+const API_URL_UPVOTES = "http://138.68.97.90/api/v1/forum-upvote/";
+const FORUM_QUESTION_URL = "http://138.68.97.90/api/v1/forum-questions/";
 
-interface UpvotedQuestion {
-  id: number;
-  user: number;
-  forum_question: number; // ID of the question
-  created_at: string;
-}
+type ProfileScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const Profile: React.FC = () => {
   const { authState } = useAuth();
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<
-    BookmarkedQuestion[]
-  >([]);
-  const [upvotedQuestions, setUpvotedQuestions] = useState<UpvotedQuestion[]>(
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Question[]>(
     []
   );
-  const [loading, setLoading] = useState(false);
+  const [upvotedQuestions, setUpvotedQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null);
 
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    if (authState?.user) {
-      fetchBookmarkedQuestions();
-      fetchUpvotedQuestions();
-    }
-  }, [authState]);
-
-  const fetchBookmarkedQuestions = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        "http://138.68.97.90:8000/api/v1/forum-bookmarks/",
-        {
-          headers: {
-            Authorization: `Bearer ${authState?.token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch bookmarked questions");
+    const fetchQuestions = async () => {
+      setLoading(true);
+      setError(null);
+      if (!authState?.token) {
+        setError("You need to be logged in to fetch questions.");
+        setLoading(false);
+        return;
       }
 
-      const data = await response.json();
-      setBookmarkedQuestions(data.results); // Extract the results array
-    } catch (err) {
-      const errorMessage = (err as Error).message || "An error occurred";
-      setError(errorMessage);
-    }
-  };
-
-  const fetchUpvotedQuestions = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        "http://138.68.97.90:8000/api/v1/forum-upvote/", // Adjust API endpoint for upvotes
-        {
+      try {
+        // Fetch bookmarked questions
+        const bookmarksResult = await axios.get(`${API_URL_BOOKMARKS}`, {
           headers: {
-            Authorization: `Bearer ${authState?.token}`,
+            Authorization: `Bearer ${authState.token}`,
           },
-        }
-      );
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch upvoted questions");
+        // Fetch upvoted questions
+        const upvotesResult = await axios.get(`${API_URL_UPVOTES}`, {
+          headers: {
+            Authorization: `Bearer ${authState.token}`,
+          },
+        });
+
+        // Fetch the full details of each forum question using the forum_question ID
+        const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
+          async (item: any) => {
+            const questionResponse = await axios.get(
+              `${FORUM_QUESTION_URL}${item.forum_question}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${authState.token}`,
+                },
+              }
+            );
+            return questionResponse.data; // Return the question data
+          }
+        );
+
+        const upvotedQuestionsPromises = upvotesResult.data.results.map(
+          async (item: any) => {
+            const questionResponse = await axios.get(
+              `${FORUM_QUESTION_URL}${item.forum_question}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${authState.token}`,
+                },
+              }
+            );
+            return questionResponse.data; // Return the question data
+          }
+        );
+
+        const bookmarkedQuestionsData = await Promise.all(
+          bookmarkedQuestionsPromises
+        );
+        const upvotedQuestionsData = await Promise.all(
+          upvotedQuestionsPromises
+        );
+
+        setBookmarkedQuestions(bookmarkedQuestionsData); // Set the bookmarked questions
+        setUpvotedQuestions(upvotedQuestionsData); // Set the upvoted questions
+      } catch (error) {
+        setError("Error fetching questions");
+        console.error("Error fetching questions", error);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await response.json();
-      setUpvotedQuestions(data.results); // Extract the results array
-    } catch (err) {
-      const errorMessage = (err as Error).message || "An error occurred";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
+    if (isFocused) {
+      fetchQuestions();
     }
-  };
+  }, [isFocused, authState?.token]);
 
   if (!authState?.authenticated || !authState?.user) {
     return (
@@ -104,57 +122,57 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <UserCard user={authState.user} />
 
-      <View style={styles.bookmarkedContainer}>
+      <View style={styles.questionsContainer}>
         <Text style={styles.title}>Bookmarked Questions</Text>
 
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+        {loading && <ActivityIndicator size="large" color="#2196F3" />}
         {error && <Text style={styles.errorText}>{error}</Text>}
 
         {!loading && !error && (
-          <FlatList
-            data={bookmarkedQuestions}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.questionCard}>
-                <Text style={styles.questionTitle}>
-                  Bookmarked Question ID: {item.forum_question}
-                </Text>
-                <Text style={styles.questionBody}>
-                  Bookmarked at: {new Date(item.created_at).toLocaleString()}
-                </Text>
-              </View>
+          <>
+            {/* Render Bookmarked Questions */}
+            {bookmarkedQuestions.length > 0 ? (
+              bookmarkedQuestions.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() =>
+                    navigation.navigate("ForumQuestionDetail", {
+                      question: item,
+                    })
+                  }
+                >
+                  <ForumQuestionCard item={item} />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text>No bookmarked questions.</Text>
             )}
-          />
+
+            {/* Render Upvoted Questions */}
+            <Text style={styles.title}>Upvoted Questions</Text>
+            {upvotedQuestions.length > 0 ? (
+              upvotedQuestions.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() =>
+                    navigation.navigate("ForumQuestionDetail", {
+                      question: item,
+                    })
+                  }
+                >
+                  <ForumQuestionCard item={item} />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text>No upvoted questions.</Text>
+            )}
+          </>
         )}
       </View>
-
-      <View style={styles.bookmarkedContainer}>
-        <Text style={styles.title}>Upvoted Questions</Text>
-
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-        {error && <Text style={styles.errorText}>{error}</Text>}
-
-        {!loading && !error && (
-          <FlatList
-            data={upvotedQuestions}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.questionCard}>
-                <Text style={styles.questionTitle}>
-                  Upvoted Question ID: {item.forum_question}
-                </Text>
-                <Text style={styles.questionBody}>
-                  Upvoted at: {new Date(item.created_at).toLocaleString()}
-                </Text>
-              </View>
-            )}
-          />
-        )}
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -162,9 +180,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: "flex-start",
   },
-  bookmarkedContainer: {
+  questionsContainer: {
     marginTop: 20,
     width: "100%",
   },
@@ -172,21 +189,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     marginBottom: 10,
-  },
-  questionCard: {
-    marginBottom: 15,
-    padding: 10,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 5,
-  },
-  questionTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  questionBody: {
-    fontSize: 14,
-    color: "#555",
   },
   errorText: {
     color: "red",
