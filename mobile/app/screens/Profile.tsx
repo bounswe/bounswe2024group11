@@ -31,6 +31,7 @@ const Profile: React.FC = () => {
     []
   );
   const [upvotedQuestions, setUpvotedQuestions] = useState<Question[]>([]);
+  const [myQuestions, setMyQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null);
 
@@ -61,6 +62,26 @@ const Profile: React.FC = () => {
             Authorization: `Bearer ${authState.token}`,
           },
         });
+
+        const myQuestionsResult = await axios.get(`${FORUM_QUESTION_URL}`, {
+          headers: {
+            Authorization: `Bearer ${authState.token}`,
+          },
+        });
+
+        const myQuestionsPromises = myQuestionsResult.data.results
+          .filter((item: any) => item.is_my_forum_question)
+          .map(async (item: any) => {
+            const questionResponse = await axios.get(
+              `${FORUM_QUESTION_URL}${item.id}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${authState.token}`,
+                },
+              }
+            );
+            return questionResponse.data;
+          });
 
         // Fetch the full details of each forum question using the forum_question ID
         const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
@@ -98,6 +119,9 @@ const Profile: React.FC = () => {
           upvotedQuestionsPromises
         );
 
+        const myQuestionsData = await Promise.all(myQuestionsPromises);
+
+        setMyQuestions(myQuestionsData); // Set the my questions
         setBookmarkedQuestions(bookmarkedQuestionsData); // Set the bookmarked questions
         setUpvotedQuestions(upvotedQuestionsData); // Set the upvoted questions
       } catch (error) {
@@ -126,14 +150,38 @@ const Profile: React.FC = () => {
       <UserCard user={authState.user} />
 
       <View style={styles.questionsContainer}>
-        <Text style={styles.title}>Bookmarked Questions</Text>
+        {/* Render My Questions */}
+        <Text style={styles.title}>My Questions</Text>
 
         {loading && <ActivityIndicator size="large" color="#2196F3" />}
         {error && <Text style={styles.errorText}>{error}</Text>}
 
         {!loading && !error && (
           <>
-            {/* Render Bookmarked Questions */}
+            {myQuestions.length > 0 ? (
+              myQuestions.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() =>
+                    navigation.navigate("ForumQuestionDetail", {
+                      question: item,
+                    })
+                  }
+                >
+                  <ForumQuestionCard item={item} />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text>No questions posted by you.</Text>
+            )}
+          </>
+        )}
+
+        {/* Render Bookmarked Questions */}
+        <Text style={styles.title}>Bookmarked Questions</Text>
+        {loading && <ActivityIndicator size="large" color="#2196F3" />}
+        {!loading && !error && (
+          <>
             {bookmarkedQuestions.length > 0 ? (
               bookmarkedQuestions.map((item) => (
                 <TouchableOpacity
@@ -150,9 +198,14 @@ const Profile: React.FC = () => {
             ) : (
               <Text>No bookmarked questions.</Text>
             )}
+          </>
+        )}
 
-            {/* Render Upvoted Questions */}
-            <Text style={styles.title}>Upvoted Questions</Text>
+        {/* Render Upvoted Questions */}
+        <Text style={styles.title}>Upvoted Questions</Text>
+        {loading && <ActivityIndicator size="large" color="#2196F3" />}
+        {!loading && !error && (
+          <>
             {upvotedQuestions.length > 0 ? (
               upvotedQuestions.map((item) => (
                 <TouchableOpacity
