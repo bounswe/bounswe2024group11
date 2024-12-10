@@ -32,6 +32,7 @@ const Profile: React.FC = () => {
   const { authState } = useAuth();
 
   const [myQuizzes, setMyQuizzes] = useState<QuizOverview[]>([]);
+  const [myTakenQuizzes, setMyTakenQuizzes] = useState<QuizOverview[]>([]);
   const [myQuestions, setMyQuestions] = useState<Question[]>([]);
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Question[]>(
     []
@@ -96,6 +97,20 @@ const Profile: React.FC = () => {
             return quizResponse.data;
           });
 
+        const myTakenQuizzesPromises = myQuizzesResult.data.results
+          .filter((item: any) => item.is_taken)
+          .map(async (item: any) => {
+            const quizResponse = await axios.get(
+              `${API_URL_QUIZZES}${item.id}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${authState.token}`,
+                },
+              }
+            );
+            return quizResponse.data;
+          });
+
         const myQuestionsPromises = myQuestionsResult.data.results
           .filter((item: any) => item.is_my_forum_question)
           .map(async (item: any) => {
@@ -139,7 +154,7 @@ const Profile: React.FC = () => {
         );
 
         const myQuizzesData = await Promise.all(myQuizzesPromises);
-
+        const myTakenQuizzesData = await Promise.all(myTakenQuizzesPromises);
         const myQuestionsData = await Promise.all(myQuestionsPromises);
 
         const bookmarkedQuestionsData = await Promise.all(
@@ -150,6 +165,7 @@ const Profile: React.FC = () => {
         );
 
         setMyQuizzes(myQuizzesData);
+        setMyTakenQuizzes(myTakenQuizzesData);
         setMyQuestions(myQuestionsData);
         setBookmarkedQuestions(bookmarkedQuestionsData);
         setUpvotedQuestions(upvotedQuestionsData);
@@ -177,7 +193,7 @@ const Profile: React.FC = () => {
   // TabView scenes
   const MyQuizzesRoute = () => (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>My Quizzes</Text>
+      {/*<Text style={styles.title}>My Quizzes</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -201,9 +217,37 @@ const Profile: React.FC = () => {
       )}
     </ScrollView>
   );
+
+  const MyTakenQuizzesRoute = () => (
+    <ScrollView style={styles.container}>
+      {/*<Text style={styles.title}>My Taken Quizzes</Text>*/}
+      {loading && <ActivityIndicator size="large" color="#5BADCE" />}
+      {!loading && !error && (
+        <>
+          {myTakenQuizzes.length > 0 ? (
+            myTakenQuizzes.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() =>
+                  navigation.navigate("QuizDetail", {
+                    quiz: item,
+                  })
+                }
+              >
+                <QuizCard item={item} />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No quizzes taken by you.</Text>
+          )}
+        </>
+      )}
+    </ScrollView>
+  );
+
   const MyQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>My Questions</Text>
+      {/*<Text style={styles.title}>My Questions</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {error && <Text style={styles.errorText}>{error}</Text>}
       {!loading && !error && (
@@ -231,7 +275,7 @@ const Profile: React.FC = () => {
 
   const BookmarkedQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Bookmarked Questions</Text>
+      {/*<Text style={styles.title}>Bookmarked Questions</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -258,7 +302,7 @@ const Profile: React.FC = () => {
 
   const UpvotedQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Upvoted Questions</Text>
+      {/* <Text style={styles.title}>Upvoted Questions</Text> */}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -285,6 +329,7 @@ const Profile: React.FC = () => {
 
   const renderScene = SceneMap({
     myQuizzes: MyQuizzesRoute,
+    myTakenQuizzes: MyTakenQuizzesRoute,
     myQuestions: MyQuestionsRoute,
     bookmarkedQuestions: BookmarkedQuestionsRoute,
     upvotedQuestions: UpvotedQuestionsRoute,
@@ -298,6 +343,7 @@ const Profile: React.FC = () => {
           index: 0,
           routes: [
             { key: "myQuizzes", title: "My Quizzes" },
+            { key: "myTakenQuizzes", title: "My Taken Quizzes" },
             { key: "myQuestions", title: "My Questions" },
             { key: "bookmarkedQuestions", title: "Bookmarked Questions" },
             { key: "upvotedQuestions", title: "Upvoted Questions" },
