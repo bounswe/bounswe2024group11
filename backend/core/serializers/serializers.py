@@ -6,6 +6,7 @@ from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestio
                      Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
+from core.utils import compress_image_tinify
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -18,34 +19,44 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    avatar = serializers.CharField(required=False, allow_null=True)  # Add these parameters
+    avatar_file = serializers.ImageField(write_only=True, required=False)
     password = serializers.CharField(write_only=True)
     
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'full_name', "avatar")
+        fields = ('username', 'password', 'email', 'full_name', 'avatar', 'avatar_file')
 
     def set_avatar(self, user, validated_data):
-        if validated_data.get('avatar', None):
-            user.avatar = validated_data['avatar']
-            user.save()
-            return
-        unique_seed = Faker().name()  # Generate a unique seed for the avatar
+        if validated_data.get('avatar_file', None):
+            compressed_url = compress_image_tinify(validated_data['avatar_file'])
+            if compressed_url:
+                user.avatar = compressed_url
+                user.save()
+                return
+                
+        # If no avatar_file or compression fails, use default avatar
+        unique_seed = Faker().name()
         avatar_url = f"https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed={unique_seed}"
         user.avatar = avatar_url
         user.save()
 
     def create(self, validated_data):
-        # Use Django's User model manager to create a new user
+        # Remove avatar_file from validated_data before creating user
+        avatar_file = validated_data.pop('avatar_file', None)
+        validated_data.pop('avatar', None)  # Remove avatar field if present
+        
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             email=validated_data['email'],
             full_name=validated_data['full_name'],
         )
-        self.set_avatar(user, validated_data)
+        
+        # Handle avatar separately
+        self.set_avatar(user, {'avatar_file': avatar_file} if avatar_file else {})
 
         return user
-
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:

@@ -18,7 +18,7 @@ export const Avatar = ({ author, size = 40 }: AvatarProps) => {
                     height: size,
                     aspectRatio: "1 / 1",
                 }}
-                className="h-full w-full rounded-full"
+                className="h-full w-full rounded-full object-cover"
             />
         </div>
     );
