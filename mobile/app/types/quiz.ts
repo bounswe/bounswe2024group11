@@ -37,6 +37,7 @@ export type QuizOverview = {
   num_taken: number;
   is_taken: boolean;
   rating: rating;
+  is_my_quiz: boolean; // This field is used in the profile tab screen
   questions: QuizQuestionType[];
 };
 
