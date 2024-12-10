@@ -356,6 +356,7 @@ const Profile: React.FC = () => {
           <TabBar
             {...props}
             style={styles.tabBar}
+            scrollEnabled={true}
             indicatorStyle={styles.tabIndicator}
             tabStyle={styles.tab}
             labelStyle={styles.tabLabel}
