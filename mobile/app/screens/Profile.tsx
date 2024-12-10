@@ -4,13 +4,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { RootStackParamList } from "../../App";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import UserCard from "../components/UserCard";
@@ -32,7 +32,7 @@ const Profile: React.FC = () => {
   );
   const [upvotedQuestions, setUpvotedQuestions] = useState<Question[]>([]);
   const [myQuestions, setMyQuestions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const navigation = useNavigation<ProfileScreenNavigationProp>();
@@ -49,14 +49,12 @@ const Profile: React.FC = () => {
       }
 
       try {
-        // Fetch bookmarked questions
         const bookmarksResult = await axios.get(`${API_URL_BOOKMARKS}`, {
           headers: {
             Authorization: `Bearer ${authState.token}`,
           },
         });
 
-        // Fetch upvoted questions
         const upvotesResult = await axios.get(`${API_URL_UPVOTES}`, {
           headers: {
             Authorization: `Bearer ${authState.token}`,
@@ -83,7 +81,6 @@ const Profile: React.FC = () => {
             return questionResponse.data;
           });
 
-        // Fetch the full details of each forum question using the forum_question ID
         const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
           async (item: any) => {
             const questionResponse = await axios.get(
@@ -94,7 +91,7 @@ const Profile: React.FC = () => {
                 },
               }
             );
-            return questionResponse.data; // Return the question data
+            return questionResponse.data;
           }
         );
 
@@ -108,7 +105,7 @@ const Profile: React.FC = () => {
                 },
               }
             );
-            return questionResponse.data; // Return the question data
+            return questionResponse.data;
           }
         );
 
@@ -121,9 +118,9 @@ const Profile: React.FC = () => {
 
         const myQuestionsData = await Promise.all(myQuestionsPromises);
 
-        setMyQuestions(myQuestionsData); // Set the my questions
-        setBookmarkedQuestions(bookmarkedQuestionsData); // Set the bookmarked questions
-        setUpvotedQuestions(upvotedQuestionsData); // Set the upvoted questions
+        setMyQuestions(myQuestionsData);
+        setBookmarkedQuestions(bookmarkedQuestionsData);
+        setUpvotedQuestions(upvotedQuestionsData);
       } catch (error) {
         setError("Error fetching questions");
         console.error("Error fetching questions", error);
@@ -145,87 +142,131 @@ const Profile: React.FC = () => {
     );
   }
 
-  return (
+  // TabView scenes
+  const MyQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      <UserCard user={authState.user} />
-
-      <View style={styles.questionsContainer}>
-        {/* Render My Questions */}
-        <Text style={styles.title}>My Questions</Text>
-
-        {loading && <ActivityIndicator size="large" color="#2196F3" />}
-        {error && <Text style={styles.errorText}>{error}</Text>}
-
-        {!loading && !error && (
-          <>
-            {myQuestions.length > 0 ? (
-              myQuestions.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() =>
-                    navigation.navigate("ForumQuestionDetail", {
-                      question: item,
-                    })
-                  }
-                >
-                  <ForumQuestionCard item={item} />
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text>No questions posted by you.</Text>
-            )}
-          </>
-        )}
-
-        {/* Render Bookmarked Questions */}
-        <Text style={styles.title}>Bookmarked Questions</Text>
-        {loading && <ActivityIndicator size="large" color="#2196F3" />}
-        {!loading && !error && (
-          <>
-            {bookmarkedQuestions.length > 0 ? (
-              bookmarkedQuestions.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() =>
-                    navigation.navigate("ForumQuestionDetail", {
-                      question: item,
-                    })
-                  }
-                >
-                  <ForumQuestionCard item={item} />
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text>No bookmarked questions.</Text>
-            )}
-          </>
-        )}
-
-        {/* Render Upvoted Questions */}
-        <Text style={styles.title}>Upvoted Questions</Text>
-        {loading && <ActivityIndicator size="large" color="#2196F3" />}
-        {!loading && !error && (
-          <>
-            {upvotedQuestions.length > 0 ? (
-              upvotedQuestions.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() =>
-                    navigation.navigate("ForumQuestionDetail", {
-                      question: item,
-                    })
-                  }
-                >
-                  <ForumQuestionCard item={item} />
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text>No upvoted questions.</Text>
-            )}
-          </>
-        )}
-      </View>
+      <Text style={styles.title}>My Questions</Text>
+      {loading && <ActivityIndicator size="large" color="#5BADCE" />}
+      {error && <Text style={styles.errorText}>{error}</Text>}
+      {!loading && !error && (
+        <>
+          {myQuestions.length > 0 ? (
+            myQuestions.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() =>
+                  navigation.navigate("ForumQuestionDetail", {
+                    question: item,
+                  })
+                }
+              >
+                <ForumQuestionCard item={item} />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No questions posted by you.</Text>
+          )}
+        </>
+      )}
     </ScrollView>
+  );
+
+  const BookmarkedQuestionsRoute = () => (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Bookmarked Questions</Text>
+      {loading && <ActivityIndicator size="large" color="#5BADCE" />}
+      {!loading && !error && (
+        <>
+          {bookmarkedQuestions.length > 0 ? (
+            bookmarkedQuestions.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() =>
+                  navigation.navigate("ForumQuestionDetail", {
+                    question: item,
+                  })
+                }
+              >
+                <ForumQuestionCard item={item} />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No bookmarked questions.</Text>
+          )}
+        </>
+      )}
+    </ScrollView>
+  );
+
+  const UpvotedQuestionsRoute = () => (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Upvoted Questions</Text>
+      {loading && <ActivityIndicator size="large" color="#5BADCE" />}
+      {!loading && !error && (
+        <>
+          {upvotedQuestions.length > 0 ? (
+            upvotedQuestions.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() =>
+                  navigation.navigate("ForumQuestionDetail", {
+                    question: item,
+                  })
+                }
+              >
+                <ForumQuestionCard item={item} />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No upvoted questions.</Text>
+          )}
+        </>
+      )}
+    </ScrollView>
+  );
+
+  const renderScene = SceneMap({
+    myQuestions: MyQuestionsRoute,
+    bookmarkedQuestions: BookmarkedQuestionsRoute,
+    upvotedQuestions: UpvotedQuestionsRoute,
+  });
+
+  return (
+    <View style={{ flex: 1 }}>
+      <UserCard user={authState.user} />
+      <TabView
+        navigationState={{
+          index: 0,
+          routes: [
+            { key: "myQuestions", title: "My" },
+            { key: "bookmarkedQuestions", title: "Bookmarked" },
+            { key: "upvotedQuestions", title: "Upvoted" },
+          ],
+        }}
+        renderScene={renderScene}
+        onIndexChange={() => {}}
+        initialLayout={{ width: 360 }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            style={styles.tabBar}
+            indicatorStyle={styles.tabIndicator}
+            tabStyle={styles.tab}
+            labelStyle={styles.tabLabel}
+            renderLabel={({ route, focused }) => (
+              <Text
+                style={{
+                  color: focused ? "#ffffff" : "#d1d1d1",
+                  fontWeight: "bold",
+                }}
+              >
+                {route.title}
+              </Text>
+            )}
+          />
+        )}
+      />
+    </View>
   );
 };
 
@@ -233,10 +274,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-  },
-  questionsContainer: {
-    marginTop: 20,
-    width: "100%",
   },
   title: {
     fontWeight: "bold",
@@ -246,6 +283,19 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginTop: 10,
+  },
+  tabBar: {
+    backgroundColor: "#5BADCE",
+  },
+  tab: {
+    padding: 10,
+  },
+  tabLabel: {
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  tabIndicator: {
+    backgroundColor: "#333",
   },
 });
 
