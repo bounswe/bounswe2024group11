@@ -21,8 +21,8 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
 const styles = StyleSheet.create({
   card: {
-    margin: 10,
-    padding: 10,
+    margin: 24,
+    padding: 24,
   },
   container: {
     flexDirection: "row",
