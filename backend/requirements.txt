@@ -31,3 +31,4 @@ python-dotenv==1.0.1
 drf-nested-routers==0.91.0
 rdflib==7.0.0
 python-datamuse==2.0.1
+Pillow>=10.1.0

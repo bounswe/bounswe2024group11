@@ -78,7 +78,6 @@ export const Register = () => {
                     action="/register"
                     encType="multipart/form-data"
                 >
-                    {/* Avatar Upload Section */}
                     <div className="flex flex-col items-center gap-2">
                         <div
                             onClick={handleAvatarClick}
@@ -109,7 +108,7 @@ export const Register = () => {
                             ref={fileInputRef}
                             type="file"
                             accept="image/*"
-                            name="avatar"
+                            name="avatar_file"
                             onChange={handleAvatarChange}
                             className="hidden"
                         />

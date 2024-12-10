@@ -18,7 +18,7 @@ export const registerRequestSchema = object({
     password: string(),
     email: string(),
     full_name: string(),
-    avatar: nullable(file()),
+    avatar_file: nullable(file()),
 });
 
 const registerResponseSuccessSchema = object({
@@ -37,7 +37,7 @@ export const registerAction = async ({ request }: { request: Request }) => {
     console.log("Register action triggered");
 
     try {
-        // Extract and validate form data
+        // Extract form data
         const formData = await request.formData();
         const matchingPasswords =
             formData.get("password") === formData.get("confirm_password");
@@ -55,23 +55,43 @@ export const registerAction = async ({ request }: { request: Request }) => {
         }
 
         formData.delete("confirm_password");
+
+        // Create a new FormData for the API request
+        const apiFormData = new FormData();
+
+        // Get the file separately
+        const avatarFile = formData.get("avatar_file");
+
+        // Add all other fields to FormData
+        for (const [key, value] of formData.entries()) {
+            if (key !== "avatar_file") {
+                apiFormData.append(key, value);
+            }
+        }
+
+        // Add the file if it exists and is not empty
+        if (avatarFile instanceof File && avatarFile.size > 0) {
+            apiFormData.append("avatar_file", avatarFile);
+        }
+
+        // Validate the request data
         const requestBody = Object.fromEntries(formData.entries());
-        const {
-            output: validatedRequest,
-            issues: requestIssues,
-            success: isRequestValid,
-        } = safeParse(registerRequestSchema, requestBody);
+        const { success: isRequestValid, issues: requestIssues } = safeParse(
+            registerRequestSchema,
+            requestBody,
+        );
 
         if (!isRequestValid) {
             logger.error("Invalid request body", requestIssues);
             return { error: "Invalid request body" };
         }
 
-        // Make the API request
-        const response = await apiClient.post(
-            "/auth/register/",
-            validatedRequest,
-        );
+        // Make the API request with FormData
+        const response = await apiClient.post("/auth/register/", apiFormData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
 
         const {
             output: validatedResponse,
@@ -84,7 +104,6 @@ export const registerAction = async ({ request }: { request: Request }) => {
             return { error: "Invalid response from server" };
         }
 
-        console.log(validatedResponse);
         const errorMessages =
             "username" in validatedResponse
                 ? validatedResponse.username
@@ -121,7 +140,6 @@ export const registerAction = async ({ request }: { request: Request }) => {
     } catch (error) {
         logger.error("An error occurred during registration", error);
 
-        // Show a generic error to the user
         useToastStore.getState().add({
             type: "error",
             id: "register-failed",
