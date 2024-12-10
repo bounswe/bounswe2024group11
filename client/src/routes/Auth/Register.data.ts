@@ -1,7 +1,8 @@
 import { redirect } from "react-router";
 import {
     array,
-    null_,
+    file,
+    nullable,
     object,
     record,
     safeParse,
@@ -17,7 +18,7 @@ export const registerRequestSchema = object({
     password: string(),
     email: string(),
     full_name: string(),
-    avatar: union([string(), null_()]), // Avatar can be string or null
+    avatar: nullable(file()),
 });
 
 const registerResponseSuccessSchema = object({
