@@ -8,7 +8,7 @@ Please note that this guide covers this process in the context of **Customer Mil
 
 - Docker
 - Docker-Compose
-- It is sufficient to have the Docker Desktop application for having both of these application above. You can access the necessary document [here](https://docs.docker.com/desktop/). 
+- It is sufficient to have the Docker Desktop application for having both of these application above. You can access the necessary document [here](https://docs.docker.com/desktop/).
 
 ### Steps
 
@@ -55,11 +55,14 @@ cp ./client/.env.example ./client/.env
 ```bash
 docker-compose -f docker-compose.yml up --build -d
 ```
+
 #### View the Running Application
+
 - You can use Docker Desktop application for viewing running containers and their conditions.
 - You can simply browse "http://localhost" for viewing the homepage of our client application for further use.
 
 #### Closing the Running Application
+
 - Again, Docker Desktop application is sufficient to stop or remove the built containers, images, builds and volumes.
 - Or you can use the shell for this purpose.
 
@@ -74,3 +77,11 @@ docker image prune -a # remove all images built
 In LAB-5, the team made significant efforts to document and adhere to the project's standards, namely WAI-ARIA, WCAG, and SVG.
 
 Responsible individuals: Arda Vural, Hasan Kerem Seker, M. Emin Ciftci, Umit Can Evleksiz.
+
+#### Checklist Items for Lab 8
+
+Primary features (e.g. semantic search, user management),
+Domain-specific features (e.g. why they're specific, how they're implemented),
+API and its documentation (e.g. endpoints, expected inputs, outputs),
+Standard(s) being followed (e.g. its documentation, implementation),
+Testing strategies (e.g. unit test coverage, integration testing, tools).
