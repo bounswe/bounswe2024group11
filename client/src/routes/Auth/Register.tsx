@@ -1,17 +1,34 @@
-import { Form, Link } from "react-router-dom";
-import { buttonClass, buttonInnerRing } from "../../components/button";
-
+import { RiCamera2Fill } from "@remixicon/react";
+import { cva } from "cva";
 import { useEffect, useRef, useState } from "react";
+import { Form, Link } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
+import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass, labelClass } from "../../components/input";
 import { Logo } from "../../components/logo";
 import { registerAction } from "./Register.data";
+
+export const avatarContainerStyles = cva(
+    "flex h-24 w-24 items-center justify-center overflow-hidden rounded-full transition-all duration-200 hover:opacity-90",
+    {
+        variants: {
+            hasPreview: {
+                true: "",
+                false: "border-2 border-dashed border-slate-300 bg-slate-100",
+            },
+        },
+        defaultVariants: {
+            hasPreview: false,
+        },
+    },
+);
 
 export const Register = () => {
     const actionData = useActionData<typeof registerAction>();
     const mismatchedPasswords = actionData?.error === "Passwords do not match";
     const passwordRef = useRef<HTMLInputElement>(null);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (mismatchedPasswords) {
@@ -20,8 +37,18 @@ export const Register = () => {
     }, [mismatchedPasswords]);
 
     const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const url = event.target.value;
-        setAvatarPreview(url || null); // Update the preview only if a value is provided
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setAvatarPreview(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleAvatarClick = () => {
+        fileInputRef.current?.click();
     };
 
     const usedUsername = actionData?.error === "Username is already taken";
@@ -49,7 +76,44 @@ export const Register = () => {
                     className="flex w-full flex-col gap-6"
                     method="POST"
                     action="/register"
+                    encType="multipart/form-data"
                 >
+                    <div className="flex flex-col items-center gap-2">
+                        <div
+                            onClick={handleAvatarClick}
+                            className="group relative cursor-pointer"
+                        >
+                            <div
+                                className={avatarContainerStyles({
+                                    hasPreview: !!avatarPreview,
+                                })}
+                            >
+                                {avatarPreview ? (
+                                    <img
+                                        src={avatarPreview}
+                                        alt="Avatar preview"
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <RiCamera2Fill className="h-8 w-8 text-slate-400" />
+                                )}
+                            </div>
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="rounded bg-black bg-opacity-50 p-1 text-xs text-white">
+                                    Change Photo
+                                </div>
+                            </div>
+                        </div>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            name="avatar_file"
+                            onChange={handleAvatarChange}
+                            className="hidden"
+                        />
+                    </div>
+
                     <fieldset className="flex flex-col gap-3">
                         <label className={labelClass()}>
                             <span>
@@ -128,28 +192,6 @@ export const Register = () => {
                                 required
                             />
                         </label>
-
-                        <label className={labelClass()}>
-                            <span>Avatar URI</span>
-                            <input
-                                type="url"
-                                name="avatar"
-                                autoComplete="avatar"
-                                className={inputClass()}
-                                placeholder="https://example.com/avatar.jpg"
-                                onChange={handleAvatarChange}
-                            />
-                        </label>
-
-                        {avatarPreview && (
-                            <div className="flex items-center justify-center">
-                                <img
-                                    src={avatarPreview}
-                                    alt="Avatar Preview"
-                                    className="h-20 w-20 rounded-full border-2 border-cyan-600"
-                                />
-                            </div>
-                        )}
                     </fieldset>
 
                     <div className="flex flex-col gap-2">
@@ -187,3 +229,5 @@ export const Register = () => {
         </div>
     );
 };
+
+export default Register;
