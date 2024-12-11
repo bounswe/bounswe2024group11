@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .serializers import ForumBookmarkSerializer, TagSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumBookmark, TakeQuiz, UserAchievement
-from backend.core import models
+from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement
+from core import models
 
 
 
