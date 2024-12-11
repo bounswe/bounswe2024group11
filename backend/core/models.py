@@ -16,7 +16,7 @@ class Achievement(models.Model):
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     full_name = models.CharField(max_length=100)
     avatar = models.CharField(max_length=1000, blank=True, null=True)
     achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)

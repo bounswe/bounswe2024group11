@@ -45,7 +45,6 @@ router.register(r'forum-upvote', ForumUpvoteViewSet, basename='forum-upvote')
 router.register(r'forum-downvote', ForumDownvoteViewSet, basename='forum-downvote')
 router.register(r'forum-answer-upvote', ForumAnswerUpvoteViewSet, basename='forum-answer-upvote')
 router.register(r'forum-answer-downvote', ForumAnswerDownvoteViewSet, basename='forum-answer-downvote')
-router.register(r'profile', ProfileView, basename='profile')
 
 forum_question_router = routers.NestedDefaultRouter(router, r'forum-questions', lookup='forum_question')
 forum_question_router.register(r'answers', ForumAnswerViewSet, basename='forum-question-answers')

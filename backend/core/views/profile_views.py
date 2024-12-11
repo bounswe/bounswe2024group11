@@ -5,11 +5,12 @@ from core.serializers.profile_serializer import ProfileSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.contrib.auth import get_user_model
+from ..permissions import IsAuthorOrReadOnly
 
 User = get_user_model()
 
 class ProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     @swagger_auto_schema(
         operation_summary="Retrieve User Profile",

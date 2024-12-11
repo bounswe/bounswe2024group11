@@ -4,6 +4,7 @@ from .serializers import ForumBookmarkSerializer, TagSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement
 from core import models
+from django.db.models import Sum
 
 
 
@@ -67,8 +68,14 @@ class ProfileSerializer(serializers.ModelSerializer):
                 ).delete()
 
         interests_data = validated_data.pop('interests', None)
+        print(interests_data)
+        # find the unique entry in tags using linked_data_id as the unique identifier from tags model
+        tag_ids = [tag['linked_data_id'] for tag in interests_data]
+        tags = models.Tag.objects.filter(linked_data_id__in=tag_ids)
+        print(tags)
         if interests_data is not None:
-            instance.interests.set(interests_data)
+            instance.interests.set([1])
+            instance.save()
 
         return super().update(instance, validated_data)
     
@@ -84,11 +91,13 @@ class ProfileSerializer(serializers.ModelSerializer):
         quizzes = TakeQuiz.objects.filter(user=obj)
         return TakeQuizSerializer(quizzes, many=True).data
     
+
     def get_score(self, obj):
         # Change from Python sum to database aggregation
         return TakeQuiz.objects.filter(user=obj).aggregate(
-            total_score=models.Sum('score')
+            total_score=Sum('score')  # Use the correct Sum function
         )['total_score'] or 0
+
     
     def get_achievements(self, obj):
         from .serializers import UserAchievementSerializer
