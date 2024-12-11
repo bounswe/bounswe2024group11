@@ -73,6 +73,28 @@ class TagSerializer(serializers.ModelSerializer):
         )
         return tag
 
+    def to_internal_value(self, data):
+        if not isinstance(data, dict):
+            self.fail('invalid')
+
+        linked_data_id = data.get('linked_data_id')
+        if not linked_data_id:
+            self.fail('required', field_name='linked_data_id')
+
+        try:
+            # Fetch the existing tag and return it as a dictionary
+            tag = Tag.objects.get(linked_data_id=linked_data_id)
+            return {
+                'id': tag.id,
+                'name': tag.name,
+                'linked_data_id': tag.linked_data_id,
+                'description': tag.description,
+            }
+        except Tag.DoesNotExist:
+            # If the tag does not exist, validate it as a new tag
+            return super().to_internal_value(data)
+
+
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
     upvotes_count = serializers.SerializerMethodField()
