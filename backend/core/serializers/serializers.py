@@ -61,7 +61,39 @@ class RegisterSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('name', 'linked_data_id', 'description')
+        fields = ('id', 'name', 'linked_data_id', 'description')
+        
+    def create(self, validated_data):
+        tag, created = Tag.objects.get_or_create(
+            linked_data_id=validated_data['linked_data_id'],
+            defaults={
+                'name': validated_data['name'],
+                'description': validated_data.get('description', '')
+            }
+        )
+        return tag
+
+    def to_internal_value(self, data):
+        if not isinstance(data, dict):
+            self.fail('invalid')
+
+        linked_data_id = data.get('linked_data_id')
+        if not linked_data_id:
+            self.fail('required', field_name='linked_data_id')
+
+        try:
+            # Fetch the existing tag and return it as a dictionary
+            tag = Tag.objects.get(linked_data_id=linked_data_id)
+            return {
+                'id': tag.id,
+                'name': tag.name,
+                'linked_data_id': tag.linked_data_id,
+                'description': tag.description,
+            }
+        except Tag.DoesNotExist:
+            # If the tag does not exist, validate it as a new tag
+            return super().to_internal_value(data)
+
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)
