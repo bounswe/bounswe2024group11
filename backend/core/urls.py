@@ -7,6 +7,7 @@ from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
 from .views.quiz_views import QuizViewSet
 from .views.rate_quiz_views import RateQuizViewSet
 from .views.take_quiz_views import TakeQuizViewSet
+from .views.profile_views import ProfileView
 from .views.hint_views import HintView
 from .views.forum_bookmark_views import ForumBookmarkViewSet
 from .views.semantic_search_views import ForumSemanticSearchView, QuizSemanticSearchView
@@ -60,8 +61,9 @@ urlpatterns = [
     path('token/verify/', DecoratedTokenVerifyView.as_view(), name='token_verify'),
     path('auth/register/', RegisterView.as_view(), name='register'),
     path("tagging/", TaggingView.as_view(), name="tagging"),
-     path('hint/', HintView.as_view(), name='babelnet-hint'),
+    path('hint/', HintView.as_view(), name='babelnet-hint'),
     path("get-translation/", TranslationView.as_view(), name="get-translation"),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
     path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"),
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
