@@ -61,7 +61,17 @@ class RegisterSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('name', 'linked_data_id', 'description')
+        fields = ('id', 'name', 'linked_data_id', 'description')
+        
+    def create(self, validated_data):
+        tag, created = Tag.objects.get_or_create(
+            linked_data_id=validated_data['linked_data_id'],
+            defaults={
+                'name': validated_data['name'],
+                'description': validated_data.get('description', '')
+            }
+        )
+        return tag
 
 class ForumAnswerSerializer(serializers.ModelSerializer):
     author = UserInfoSerializer(read_only=True)

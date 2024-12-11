@@ -16,10 +16,11 @@ class Achievement(models.Model):
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=100)
     avatar = models.CharField(max_length=1000, blank=True, null=True)
     achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)
+    interests = models.ManyToManyField('Tag', related_name='interested_users', blank=True)
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -39,13 +40,15 @@ class ForumQuestion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField('Tag')
     quiz_question_id = models.ForeignKey('QuizQuestion', on_delete=models.CASCADE, null=True, blank=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return self.title
     
 class Tag(models.Model):
     name = models.CharField(max_length=100)
-    linked_data_id = models.CharField(max_length=100)
+    linked_data_id = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=1000)
 
     def __str__(self):
@@ -103,7 +106,6 @@ class TakeQuiz(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
-    
 
 class UserAnswer(models.Model):
     question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
@@ -113,19 +115,12 @@ class UserAnswer(models.Model):
     
     class Meta:
         unique_together = ['question', 'take_quiz']
-
-    # def clean(self):
-
-    #     # Ensure that the question belongs to the same quiz
-    #     if self.question.quiz.id != self.take_quiz.quiz.id:
-    #         raise ValidationError("The question must belong to the same quiz.")
-    #     if self.answer.question.id != self.question.id:
-    #         raise ValidationError("The answer must belong to the same question.")
-    
-    # def save(self, *args, **kwargs):
-    #     # Perform custom validation before saving
-    #     self.clean()
-    #     super().save(*args, **kwargs)
+        
+    def clean(self):
+        if self.question.quiz.id != self.take_quiz.quiz.id:
+            raise ValidationError("The question must belong to the same quiz.")
+        if self.answer and self.answer.question.id != self.question.id:  # Add null check
+            raise ValidationError("The answer must belong to the same question.")
 
     def __str__(self):
         return self.answer.choice_text

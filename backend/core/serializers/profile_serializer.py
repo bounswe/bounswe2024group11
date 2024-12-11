@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .serializers import ForumBookmarkSerializer
+from .serializers import ForumBookmarkSerializer, TagSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from ..models import ForumBookmark, TakeQuiz, UserAchievement
+from backend.core import models
 
 
 
@@ -11,6 +12,7 @@ class AchievementSerializer(serializers.ModelSerializer):
         model = Achievement
         fields = ('id', 'slug', 'title', 'description', 'created_at')
         read_only_fields = ('id', 'created_at')
+        ordering = ['-created_at']
         
 class UserAchievementSerializer(serializers.ModelSerializer):
     achievement = AchievementSerializer(read_only=True)
@@ -24,9 +26,11 @@ User = get_user_model()
 
 class ProfileSerializer(serializers.ModelSerializer):
     bookmarked_forums = serializers.SerializerMethodField()
-    taken_quizzes = serializers.SerializerMethodField()
+    quizzes_taken = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
-    achievements = serializers.SerializerMethodField()
+    achievements = UserAchievementSerializer(many=True, source='userachievement_set') 
+    interests = TagSerializer(many=True)
+
 
     class Meta:
         model = User
@@ -35,26 +39,59 @@ class ProfileSerializer(serializers.ModelSerializer):
             'email', 
             'full_name', 
             'avatar', 
-            'taken_quizzes', 
+            'quizzes_taken', 
             'bookmarked_forums', 
             'score',
-            'achievements'
+            'achievements',
+            'interests'
         ]
         read_only_fields = ['id']
+        
+    def update(self, instance, validated_data):
+        achievements_data = validated_data.pop('userachievement_set', None)
+        if achievements_data is not None:
+            if not achievements_data:
+                instance.achievements.clear()
+            else:
+                current_achievements = set()
+                for achievement_data in achievements_data:
+                    achievement = achievement_data['achievement']
+                    user_achievement, created = UserAchievement.objects.get_or_create(
+                        user=instance,
+                        achievement=achievement
+                    )
+                    current_achievements.add(user_achievement.achievement.id)
+                
+                instance.userachievement_set.exclude(
+                    achievement__id__in=current_achievements
+                ).delete()
+
+        interests_data = validated_data.pop('interests', None)
+        if interests_data is not None:
+            instance.interests.set(interests_data)
+
+        return super().update(instance, validated_data)
+    
+        
+    def get_context_data(self):
+        return {'request': self.context.get('request')}
     
     def get_bookmarked_forums(self, obj):
         bookmarks = ForumBookmark.objects.filter(user=obj)
         return ForumBookmarkSerializer(bookmarks, many=True).data
  
-    def get_taken_quizzes(self, obj):
+    def get_quizzes_taken(self, obj):
         quizzes = TakeQuiz.objects.filter(user=obj)
         return TakeQuizSerializer(quizzes, many=True).data
     
     def get_score(self, obj):
-        quizzes = TakeQuiz.objects.filter(user=obj)
-        return sum([quiz.score for quiz in quizzes])
+        # Change from Python sum to database aggregation
+        return TakeQuiz.objects.filter(user=obj).aggregate(
+            total_score=models.Sum('score')
+        )['total_score'] or 0
     
     def get_achievements(self, obj):
         from .serializers import UserAchievementSerializer
         user_achievements = UserAchievement.objects.filter(user=obj).order_by('-earned_at')
         return UserAchievementSerializer(user_achievements, many=True).data
+    
