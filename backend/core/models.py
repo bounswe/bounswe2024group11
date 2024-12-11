@@ -4,11 +4,33 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError  # Import ValidationError
 
+class Achievement(models.Model):
+    id = models.AutoField(primary_key=True)
+    slug = models.SlugField(max_length=100, unique=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
 
 class CustomUser(AbstractUser):
     email = models.EmailField()
     full_name = models.CharField(max_length=100)
     avatar = models.CharField(max_length=1000, blank=True, null=True)
+    achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)
+
+class UserAchievement(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    earned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'achievement')
+
+    def __str__(self):
+        return f"{self.user.username} earned {self.achievement.title}"
 
 class ForumQuestion(models.Model):
     title = models.CharField(max_length=100)
