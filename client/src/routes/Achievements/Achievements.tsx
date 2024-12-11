@@ -33,9 +33,10 @@ const AchievementBadge = ({
     is_earned: boolean;
 }) => {
     return (
-        <div className="flex flex-col" role="article">
-            <Ariakit.HovercardProvider placement="bottom-start">
+        <div className="flex flex-col" role="definition">
+            <Ariakit.HovercardProvider placement="bottom">
                 <Ariakit.HovercardAnchor
+                    href="#"
                     className={badgeClass({ earned: is_earned })}
                     aria-label={`${achievement.title} achievement ${is_earned ? "earned" : "not earned yet"}`}
                 >
@@ -49,13 +50,13 @@ const AchievementBadge = ({
                             className="h-16 w-16"
                         />
                     </span>
-                    <span className="text-sm font-medium text-slate-700">
+                    <span className="select-none text-sm font-medium text-slate-700">
                         {achievement.title}
                     </span>
                 </Ariakit.HovercardAnchor>
                 <Ariakit.Hovercard
                     gutter={16}
-                    className="z-50 rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
+                    className="relative z-50 rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
                     role="tooltip"
                 >
                     <div className="flex w-80 flex-col items-center gap-2">
@@ -69,13 +70,20 @@ const AchievementBadge = ({
                                 role="presentation"
                             />
                         </span>
-                        <div className="text-center">
-                            <Ariakit.HovercardHeading className="text-md font-medium">
-                                {achievement.title}
-                            </Ariakit.HovercardHeading>
-                            <p className="text-sm text-slate-400">
-                                {achievement.description}
-                            </p>
+                        <div className="flex w-full flex-col gap-2 text-center">
+                            <div>
+                                <Ariakit.HovercardHeading className="text-lg font-medium">
+                                    {achievement.title}
+                                </Ariakit.HovercardHeading>
+                                <p className="text-base text-slate-400">
+                                    {achievement.description}
+                                </p>
+                            </div>
+                            {is_earned && (
+                                <span className="rounded-1 bg-slate-700 text-sm text-slate-300">
+                                    Earned on {new Date().toLocaleDateString()}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </Ariakit.Hovercard>
