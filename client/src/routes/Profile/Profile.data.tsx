@@ -2,7 +2,7 @@ import { LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api"; // Axios instance
 import { logger } from "../../utils";
-import { forumSchema } from "../Forum/Forum.schema";
+import { profileSchema } from "./Profile.schema";
 
 export const myProfileLoader = (async () => {
     const user = getUserOrRedirect();
@@ -10,19 +10,17 @@ export const myProfileLoader = (async () => {
         return redirect("/login");
     }
 
-    if ("username" in user) return redirect(`/profile/${user.username}`);
+    if ("username" in user) return redirect(`/profile/${user.username}/`);
 }) satisfies LoaderFunction;
 
 export const profileLoader = (async ({ params }) => {
-    if (!getUserOrRedirect()) {
-        return redirect("/login");
-    }
+    const userName = params.username ?? "";
 
     try {
-        const response = await apiClient.get("/forum-questions/");
+        const response = await apiClient.get(`/profile/${userName}/`);
 
         const { output, success, issues } = safeParse(
-            forumSchema,
+            profileSchema,
             response.data,
         );
         if (!success) {
@@ -30,28 +28,7 @@ export const profileLoader = (async ({ params }) => {
             throw new Error("Failed to parse forum response");
         }
 
-        const myQuestions = output.results.filter(
-            (question) => question.author.username === params.username,
-        );
-
-        const bookMarkedQuestions = output.results.filter(
-            (question) => question.is_bookmarked,
-        );
-
-        const upvotedQuestions = output.results.filter(
-            (question) => question.is_upvoted,
-        );
-
-        const downvotedQuestions = myQuestions.filter(
-            (question) => question.is_downvoted,
-        );
-
-        return {
-            my: myQuestions,
-            bookMarked: bookMarkedQuestions,
-            upvoted: upvotedQuestions,
-            downvoted: downvotedQuestions,
-        };
+        return output;
     } catch (error) {
         logger.error(`Error fetching profile:`, error);
         throw new Error(`Failed to load profile`);

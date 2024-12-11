@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 from rest_framework import serializers
 
+
 from ..models import (CustomUser, Quiz, QuizQuestion, QuizQuestionChoice, TakeQuiz, UserAnswer)
 
 User = get_user_model()
@@ -113,3 +114,9 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+    def clean(self):
+        if self.question.quiz.id != self.take_quiz.quiz.id:
+            raise ValidationError("The question must belong to the same quiz.")
+        if self.answer and self.answer.question.id != self.question.id:  # Add null check
+            raise ValidationError("The answer must belong to the same question.")
