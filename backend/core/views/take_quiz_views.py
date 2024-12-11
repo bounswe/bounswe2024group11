@@ -134,7 +134,7 @@ class TakeQuizViewSet(viewsets.ModelViewSet):
         -H 'accept: application/json'
         ```
         """,
-        responses={200: openapi.Response("List of quizzes", paginated_quiz_response)},
+        responses={200: openapi.Response("List of quizzes", paginated_quiz_response), 400: "Bad Request", 404: "Not Found", 403: "Forbidden", 401: "Unauthorized", 405: "Method Not Allowed"},
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -161,7 +161,7 @@ class TakeQuizViewSet(viewsets.ModelViewSet):
         }'
         ```""",
         request_body=example_request_body,
-        responses={201: openapi.Response("Created quiz", example_response_body)},
+        responses={201: openapi.Response("Created quiz", example_response_body), 400: "Bad Request", 404: "Not Found", 403: "Forbidden", 401: "Unauthorized", 405: "Method Not Allowed"},
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
@@ -174,7 +174,7 @@ class TakeQuizViewSet(viewsets.ModelViewSet):
         -H 'accept: application/json'
 
         ```""",
-        responses={200: openapi.Response("Quiz details", example_response_body)},
+        responses={200: openapi.Response("Quiz details", example_response_body), 400: "Bad Request", 404: "Not Found", 403: "Forbidden", 401: "Unauthorized", 405: "Method Not Allowed"},
     )
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
@@ -200,7 +200,7 @@ class TakeQuizViewSet(viewsets.ModelViewSet):
         ```
         """,
         request_body=example_request_body,
-        responses={200: openapi.Response("Updated quiz", example_response_body)},
+        responses={200: openapi.Response("Updated quiz", example_response_body), 400: "Bad Request", 404: "Not Found", 403: "Forbidden", 401: "Unauthorized", 405: "Method Not Allowed"},
     )
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
@@ -225,7 +225,7 @@ class TakeQuizViewSet(viewsets.ModelViewSet):
         }'
         ```""",
         request_body=example_request_body,
-        responses={200: openapi.Response("Partially updated quiz", example_response_body)},
+        responses={200: openapi.Response("Partially updated quiz", example_response_body), 400: "Bad Request", 404: "Not Found", 403: "Forbidden", 401: "Unauthorized", 405: "Method Not Allowed"},
     )
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
@@ -238,7 +238,7 @@ class TakeQuizViewSet(viewsets.ModelViewSet):
   -H 'accept: application/json' \
   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNDkzMzA4LCJpYXQiOjE3MzI4ODg1MDgsImp0aSI6IjljODc5ZWUwYjVlNTQ5MmU4ODljYjhiOTU2NjQ5ZjNiIiwidXNlcl9pZCI6MjV9.KUGD2rWZbq2q46KxeflWcm4ypbw4uB6eprSwMZTXAgM'
         ```""",
-        responses={204: "No Content"},
+        responses={204: "No Content", 400: "Bad Request", 404: "Not Found", 403: "Forbidden", 401: "Unauthorized", 405: "Method Not Allowed"},
     )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
