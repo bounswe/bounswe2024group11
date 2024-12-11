@@ -11,7 +11,7 @@ from django.db.models import Sum
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievement
-        fields = ('id', 'slug', 'title', 'description', 'created_at')
+        fields = ('id', 'slug', 'title', 'description', 'created_at', 'category')
         read_only_fields = ('id', 'created_at')
         ordering = ['-created_at']
 
