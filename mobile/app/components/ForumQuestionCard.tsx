@@ -7,6 +7,7 @@ import AuthorView from "./AuthorView";
 import BookmarkButton from "./BookmarkButton";
 import VoteButtonsView from "./VoteButtonsView";
 import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
 
 interface ForumQuestionCardProps {
   item: Question;
@@ -53,6 +54,9 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
         <View style={styles.container}>
           <AuthorView author={item.author} />
           <View style={styles.buttonsContainer}>
+            {question.is_my_forum_question && (
+              <EditButton questionId={question.id} />
+            )}
             {question.is_my_forum_question && (
               <DeleteButton questionId={Number(question.id)} />
             )}
