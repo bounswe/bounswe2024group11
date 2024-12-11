@@ -10,6 +10,7 @@ import {
 } from "valibot";
 
 const quizTagSchema = object({
+    id: number(),
     name: string(),
     linked_data_id: string(),
     description: string(),

@@ -1,0 +1,233 @@
+[
+  {
+    "model": "core.achievement",
+    "pk": 1,
+    "fields": {
+      "title": "First Quiz",
+      "slug": "first-quiz",
+      "description": "Complete your first quiz",
+      "category": "first_steps",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 2,
+    "fields": {
+      "title": "First Question",
+      "slug": "first-question",
+      "description": "Create your first forum question",
+      "category": "first_steps",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 3,
+    "fields": {
+      "title": "First Answer",
+      "slug": "first-answer",
+      "description": "Leave your first forum answer",
+      "category": "first_steps",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 4,
+    "fields": {
+      "title": "First Follow",
+      "slug": "first-follow",
+      "description": "Follow your first user",
+      "category": "first_steps",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 5,
+    "fields": {
+      "title": "First Bookmark",
+      "slug": "first-bookmark",
+      "description": "Bookmark your first forum question",
+      "category": "first_steps",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 6,
+    "fields": {
+      "title": "Quiz Creator",
+      "slug": "quiz-creator",
+      "description": "Create your first quiz",
+      "category": "first_steps",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 7,
+    "fields": {
+      "title": "Quiz Fan",
+      "slug": "quiz-fan",
+      "description": "Take 10 quizzes",
+      "category": "growing_engagement",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 8,
+    "fields": {
+      "title": "Quiz Champion",
+      "slug": "quiz-champion",
+      "description": "Take 25 quizzes",
+      "category": "growing_engagement",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 9,
+    "fields": {
+      "title": "Perfect Scorer",
+      "slug": "perfect-scorer",
+      "description": "Take 5 quizzes with 100% score",
+      "category": "growing_engagement",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 10,
+    "fields": {
+      "title": "Quiz Expert",
+      "slug": "quiz-expert",
+      "description": "Create 10 quizzes",
+      "category": "quiz_creation",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 11,
+    "fields": {
+      "title": "Popular Teacher",
+      "slug": "popular-teacher",
+      "description": "Have your quizzes taken 10 times",
+      "category": "quiz_creation",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 12,
+    "fields": {
+      "title": "Active Questioner",
+      "slug": "active-questioner",
+      "description": "Create 10 forum questions",
+      "category": "forum_mastery",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 13,
+    "fields": {
+      "title": "Question Expert",
+      "slug": "question-expert",
+      "description": "Create 25 forum questions",
+      "category": "forum_mastery",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 14,
+    "fields": {
+      "title": "Helpful Member",
+      "slug": "helpful-member",
+      "description": "Get 10 upvotes on an answer",
+      "category": "forum_mastery",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 15,
+    "fields": {
+      "title": "Answer Guru",
+      "slug": "answer-guru",
+      "description": "Get 100 upvotes on an answer",
+      "category": "forum_mastery",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 16,
+    "fields": {
+      "title": "Save Expert",
+      "slug": "save-expert",
+      "description": "Bookmark 10 forum questions",
+      "category": "forum_mastery",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 17,
+    "fields": {
+      "title": "New Friend",
+      "slug": "new-friend",
+      "description": "Get 10 followers",
+      "category": "community",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 18,
+    "fields": {
+      "title": "Rising Star",
+      "slug": "rising-star",
+      "description": "Get 50 followers",
+      "category": "community",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 19,
+    "fields": {
+      "title": "Community Builder",
+      "slug": "community-builder",
+      "description": "Follow 10 people",
+      "category": "community",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 20,
+    "fields": {
+      "title": "Getting Started",
+      "slug": "getting-started",
+      "description": "Select your first 3 interests",
+      "category": "interests",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.achievement",
+    "pk": 21,
+    "fields": {
+      "title": "Diverse Learner",
+      "slug": "diverse-learner",
+      "description": "Select 10 different interests",
+      "category": "interests",
+      "created_at": "2024-11-01T00:00:00Z"
+    }
+  }
+]
