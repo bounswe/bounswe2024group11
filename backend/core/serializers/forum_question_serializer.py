@@ -1,3 +1,7 @@
+import requests
+import os
+from dotenv import load_dotenv
+
 from faker import Faker
 from rest_framework import serializers
 from ..views.difficulty_views import get_difficulty
@@ -7,6 +11,10 @@ from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestio
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from .serializers import QuizQuestionSerializer, QuizQuestionChoiceSerializer, UserInfoSerializer, TagSerializer, ForumAnswerSerializer
+
+load_dotenv()
+api_key = os.getenv('BABELNET_API_KEY')
+
 User = get_user_model()
 queryset = User.objects.all()
 
@@ -25,6 +33,7 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     quiz_question_id = serializers.PrimaryKeyRelatedField(queryset=QuizQuestion.objects.all(), required=False, allow_null=True, write_only=True)
     quiz_question = QuizQuestionSerializer(read_only=True, required=False, source="quiz_question_id", allow_null=True)
     quiz_question_type = serializers.SerializerMethodField()
+    related_forum_questions = serializers.SerializerMethodField()  
 
     class Meta:
         model = ForumQuestion
@@ -32,7 +41,8 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
             'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type"
+            'is_my_forum_question', "quiz_question", "quiz_question_id", 
+            "quiz_question_type", "related_forum_questions"  
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
@@ -83,6 +93,14 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             return False
         return obj.author == user
 
+    def get_related_forum_questions(self, obj):
+        if self.context.get('include_related_questions', False):
+            related_questions = helper(obj)
+            return ForumQuestionSerializer(
+                related_questions, many=True, context=self.context
+            ).data
+        return None
+
     def create(self, validated_data):
         # Extract tags from validated_data
         tags_data = validated_data.pop('tags')
@@ -108,3 +126,36 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             instance.tags.add(tag)
 
         return instance
+
+
+def helper(obj):
+    max_number_of_related_questions = 4
+    if obj.tags.count() == 0:
+        return ForumQuestion.objects.none()
+    
+    all_ids = []
+    for tag in obj.tags.all():
+        all_ids = all_ids + get_ids(tag.linked_data_id)
+
+    # return all_ids  
+    return ForumQuestion.objects.filter(tags__linked_data_id__in=all_ids).exclude(id=obj.id).order_by('-created_at')[:max_number_of_related_questions]
+
+
+def get_ids(word_id):
+    return_array = [word_id]
+
+    url = 'https://babelnet.io/v9/getOutgoingEdges'
+    params = {
+        'id': word_id,
+        'key': api_key,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        raise Exception(f"Error fetching from BabelNet API. Status code: {response.status_code}")
+    
+    data = response.json()
+    for value in data:
+        if value.get("language") == "EN" or value.get("language") == "TR":
+            return_array.append(value.get("target"))    
+    
+    return return_array
