@@ -97,7 +97,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                                     ),
                                 })}
                             >
-                                {quiz.rating.score}
+                                {quiz.rating.score || "N/A"}
                             </span>
                         }
                     ></TooltipAnchor>

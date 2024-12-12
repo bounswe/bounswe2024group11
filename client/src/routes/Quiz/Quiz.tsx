@@ -225,6 +225,7 @@ export const TakeQuizPage = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
     const solvedQuiz = useActionData<typeof takeQuizAction>();
+    const dialogRef = useRef<HTMLAnchorElement>(null);
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [hints, setHints] = useState<Record<number, boolean>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);
@@ -286,11 +287,6 @@ export const TakeQuizPage = () => {
         setAnsweredQuestions([...answeredQuestions, currentQuestion]);
         setShowAnswer(true);
     };
-
-    const isPrevDisabled = currentQuestion === 0;
-    const isNextDisabled =
-        currentQuestion === quiz.questions.length - 1 ||
-        !answers[currentQuestion];
 
     const progress =
         (Object.keys(answers).length / quiz.questions.length) * 100;
@@ -507,8 +503,13 @@ export const TakeQuizPage = () => {
                         )}
                     </ul>
                     {showAnswer && (
-                        <div
-                            className={`mt-4 rounded-2 p-3 ${
+                        <a
+                            role="alert"
+                            aria-atomic="true"
+                            href="#"
+                            aria-live="polite"
+                            ref={dialogRef}
+                            className={`mt-4 flex rounded-2 p-3 ${
                                 selectedOption ===
                                 String(
                                     quiz.questions[
@@ -527,7 +528,7 @@ export const TakeQuizPage = () => {
                             )
                                 ? "Correct answer!"
                                 : "Incorrect answer."}
-                        </div>
+                        </a>
                     )}
                 </div>
             )}
@@ -597,7 +598,10 @@ export const TakeQuizPage = () => {
                             size: "medium",
                         })}
                         disabled={!selectedOption}
-                        onClick={handleCheckAnswer}
+                        onClick={() => {
+                            handleCheckAnswer();
+                            dialogRef.current?.focus();
+                        }}
                     >
                         <span
                             className={buttonInnerRing({ intent: "primary" })}
