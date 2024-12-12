@@ -1,9 +1,11 @@
+import { Portal } from "@ariakit/react";
 import {
+    RiAddFill,
     RiArrowLeftLine,
     RiArrowRightLine,
     RiCloseFill,
 } from "@remixicon/react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass } from "../../components/input";
@@ -289,6 +291,17 @@ export const Quizzes = () => {
                         />
                     ))}
             </main>
+
+            <Portal className="fixed bottom-10 right-10 z-10">
+                <Link
+                    to="/quizzes/new"
+                    className={buttonClass({ intent: "primary", icon: "left" })}
+                >
+                    <span className={buttonInnerRing({ intent: "primary" })} />
+                    <RiAddFill size={20} />
+                    <span>Create a Quiz</span>
+                </Link>
+            </Portal>
         </div>
     );
 };
