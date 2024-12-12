@@ -10,7 +10,7 @@ const getImageSrcFromSlug = (slug: string) => {
 };
 
 const badgeClass = cva(
-    "flex flex-row items-center gap-2 rounded-2 px-2 py-1 transition-all hover:bg-slate-200",
+    "flex flex-row items-center gap-1 rounded-2 px-1 py-1 transition-all hover:bg-slate-200",
     {
         variants: {
             earned: {
@@ -42,12 +42,12 @@ const AchievementBadge = ({
                 >
                     <span className="select-none text-2xl">
                         <img
-                            width={96}
-                            height={96}
+                            width={64}
+                            height={64}
                             src={getImageSrcFromSlug(achievement.slug)}
                             alt=""
                             role="presentation"
-                            className="h-16 w-16"
+                            className="h-14 w-14"
                         />
                     </span>
                     <span className="select-none text-sm font-medium text-slate-700">
@@ -59,6 +59,7 @@ const AchievementBadge = ({
                     className="relative z-50 rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
                     role="tooltip"
                 >
+                    <div className="absolute inset-1 rounded-1 ring ring-cyan-700"></div>
                     <div className="flex w-80 flex-col items-center gap-2">
                         <span className="select-none text-2xl">
                             <img
@@ -70,7 +71,7 @@ const AchievementBadge = ({
                                 role="presentation"
                             />
                         </span>
-                        <div className="flex w-full flex-col gap-2 text-center">
+                        <div className="flex w-full flex-col gap-4 text-center">
                             <div>
                                 <Ariakit.HovercardHeading className="text-lg font-medium">
                                     {achievement.title}
@@ -80,8 +81,11 @@ const AchievementBadge = ({
                                 </p>
                             </div>
                             {is_earned && (
-                                <span className="rounded-1 bg-slate-700 text-sm text-slate-300">
-                                    Earned on {new Date().toLocaleDateString()}
+                                <span className="rounded-1 bg-slate-700 py-1 text-sm text-slate-300">
+                                    Earned on{" "}
+                                    <span className="font-medium text-white">
+                                        {new Date().toLocaleDateString()}
+                                    </span>
                                 </span>
                             )}
                         </div>
@@ -100,7 +104,7 @@ export const Achievements = () => {
         ),
     ];
     return (
-        <main className="container flex max-w-screen-xl flex-col gap-10 py-10">
+        <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <PageHead
                 title="Achievements"
                 description="Here are all of the badges you can get by using Turquiz"
@@ -143,6 +147,6 @@ export const Achievements = () => {
                     );
                 })}
             </nav>
-        </main>
+        </div>
     );
 };
