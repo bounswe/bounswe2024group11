@@ -159,7 +159,7 @@ const EndQuizComponent = ({
     totalQuestions: number;
     quizId: number;
 }) => {
-    const successful = correctAnswers === totalQuestions * 0.7;
+    const successful = correctAnswers >= totalQuestions * 0.7;
     const { logged_in, user } =
         useRouteLoaderData<typeof homeLoader>("home-main");
     return (
