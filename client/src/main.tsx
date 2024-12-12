@@ -10,7 +10,7 @@ import { routes } from "./router";
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <Sprite />
-        <div>
+        <div className="bg-slate-100/10">
             <RouterProvider router={createBrowserRouter(routes)} />
         </div>
         <ToastWrapper />

@@ -14,6 +14,8 @@ import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
 import { registerAction } from "./routes/Auth/Register.data";
 
+import { Achievements } from "./routes/Achievements/Achievements";
+import { achievementsLoader } from "./routes/Achievements/Achievements.data";
 import {
     forumCreateAction,
     forumCreateLoader,
@@ -62,6 +64,11 @@ export const routes: RouteObject[] = [
                         element: <Home />,
                         loader: homeLoader,
                         id: "home",
+                    },
+                    {
+                        path: "achievements",
+                        element: <Achievements />,
+                        loader: achievementsLoader,
                     },
                     {
                         path: "leaderboard",

@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
+import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
 import { homeLoader } from "../Home/Home.data";
 
@@ -290,6 +292,17 @@ export const Leaderboard = () => {
                     ))}
                 </tbody>
             </table>
+            <div className="flex justify-center">
+                <Link
+                    to="/achievements"
+                    className={buttonClass({ intent: "secondary" })}
+                >
+                    <span
+                        className={buttonInnerRing({ intent: "secondary" })}
+                    />
+                    <span>See Achievements</span>
+                </Link>
+            </div>
         </div>
     );
 };
