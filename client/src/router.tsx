@@ -36,6 +36,8 @@ import {
 import { homeLoader } from "./routes/Home/Home.data";
 import { Profile } from "./routes/Profile/Profile";
 import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
+import { NewQuiz } from "./routes/Quiz/NewQuiz";
+import { newQuizLoader } from "./routes/Quiz/NewQuiz.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
@@ -126,6 +128,12 @@ export const routes: RouteObject[] = [
                         path: "quizzes",
                         element: <Quizzes />,
                         loader: quizzesLoader,
+                        shouldRevalidate: quizShouldRevalidate,
+                    },
+                    {
+                        path: "quizzes/new",
+                        element: <NewQuiz />,
+                        loader: newQuizLoader,
                         shouldRevalidate: quizShouldRevalidate,
                     },
                     {
