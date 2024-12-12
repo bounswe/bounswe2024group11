@@ -123,8 +123,13 @@ class UserAnswer(models.Model):
         if self.answer and self.answer.question.id != self.question.id:  # Add null check
             raise ValidationError("The answer must belong to the same question.")
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.answer.choice_text
+        return str(self.id)
+    
 
 class RateQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)

@@ -219,7 +219,8 @@ class QuizSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return None
         if self.context.get('include_my_answers', False):
-            take_quiz = TakeQuiz.objects.filter(quiz=obj, user=user).first()
+            # take the last answers of the user
+            take_quiz = TakeQuiz.objects.filter(quiz=obj, user=user).last()
             if take_quiz:
                 return TakeQuizSerializer(take_quiz).data
         return None
