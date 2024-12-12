@@ -28,3 +28,12 @@ class QuizViewSet(viewsets.ModelViewSet):
         if self.action == 'list':  # If listing, allow anyone
             return [permissions.AllowAny()]
         return super().get_permissions()
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        # Add a flag to the context based on the action
+        if self.action == 'retrieve':  # 'retrieve' is the detail action
+            context['include_my_answers'] = True
+        else:
+            context['include_my_answers'] = False
+        return context
