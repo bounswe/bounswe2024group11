@@ -10,7 +10,6 @@ import {
 } from "valibot";
 
 const quizTagSchema = object({
-    id: number(),
     name: string(),
     linked_data_id: string(),
     description: string(),
@@ -145,6 +144,35 @@ export const quizSchema = object({
     }),
 });
 
+export const quizQuestionCreateSchema = object({
+    question_text: string(),
+    question_point: optional(number()),
+    choices: array(
+        object({
+            choice_text: string(),
+            is_correct: boolean(),
+        }),
+    ),
+    hints: optional(
+        array(
+            object({
+                type: string(),
+                text: string(),
+            }),
+        ),
+    ),
+});
+
+export const quizCreateSchema = object({
+    title: string(),
+    description: string(),
+    tags: array(quizTagSchema),
+    type: number(),
+    questions: array(quizQuestionCreateSchema),
+});
+
 export type CompletedQuiz = InferInput<typeof completedQuizSchema>;
 export type QuizOverview = InferInput<typeof quizOverviewSchema>;
 export type QuizDetails = InferInput<typeof quizDetailsSchema>;
+export type QuizCreate = InferInput<typeof quizCreateSchema>;
+export type QuizQuestionCreate = InferInput<typeof quizQuestionCreateSchema>;
