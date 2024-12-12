@@ -1,7 +1,7 @@
 import { cva } from "cva";
 
 export const inputClass = cva(
-    "rounded-md carret-cyan-900 font-normal text-cya rounded-1 border-none px-3 py-2 text-sm leading-6 tracking-tight text-cyan-900 outline-none ring-1 transition-all duration-300 focus:outline-none focus:ring-2",
+    "rounded-md carret-cyan-900 font-normal text-cya rounded-1 border-none px-3 py-2 text-sm leading-6 tracking-tight text-cyan-900 outline-none ring-1 transition-all duration-300 focus:outline-none focus:ring-2 disabled:bg-slate-200 disabled:hover:ring-transparent",
     {
         variants: {
             invalid: {

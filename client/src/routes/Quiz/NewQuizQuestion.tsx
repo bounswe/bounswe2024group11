@@ -1,10 +1,12 @@
-import { Button } from "@ariakit/react";
+import { Button, Separator } from "@ariakit/react";
 import { RiInformation2Fill } from "@remixicon/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import useSWR from "swr";
+import { useDebounce } from "use-debounce";
 import apiClient from "../../api";
 import { inputClass, labelClass } from "../../components/input";
+import { Tag } from "../Forum/Forum.schema";
 import { QuizCreate, QuizQuestionCreate } from "./Quiz.schema";
 
 const getQuestionQueryLabel = (type: number) => {
@@ -41,6 +43,35 @@ type NewQuizQuestionProps = {
     addQuestion: (question: QuizQuestionCreate) => void;
 };
 
+const useTaggingSearch = (search: string, quiz: QuizCreate) => {
+    // Debounce the search term with a 500ms delay
+    const [debouncedSearch] = useDebounce(search, 500);
+
+    // Memoize the fetcher function to prevent unnecessary recreations
+    const fetcher = useMemo(
+        () => () => {
+            return apiClient
+                .get("/tagging2/", {
+                    params: {
+                        word: debouncedSearch,
+                        lang: quiz.type === 2 ? "tr" : "en",
+                    },
+                })
+                .then((res) => res.data);
+        },
+        [debouncedSearch, quiz.type],
+    );
+
+    // Use SWR with the debounced search term
+    const { data, error, isLoading } = useSWR(
+        debouncedSearch ? `/tagging/${debouncedSearch}/${quiz.type % 2}` : null,
+        fetcher,
+        { revalidateOnFocus: false },
+    );
+
+    return { data, error, isLoading };
+};
+
 export const NewQuizQuestion = ({
     qIndex,
     quiz,
@@ -51,14 +82,10 @@ export const NewQuizQuestion = ({
         localStorage.getItem("quiz-info-shown") !== "true",
     );
     const [search, setSearch] = useState("");
-    const { data, error, isLoading } = useSWR(`/tagging/${search}`, () => {
-        return apiClient.get("/tagging2/", {
-            params: {
-                word: search,
-                lang: quiz.type === 2 ? "tr" : "en",
-            },
-        });
-    });
+
+    const { data, error, isLoading } = useTaggingSearch(search, quiz);
+
+    const [correctAnswer, setCorrectAnswer] = useState<Tag>();
     const [wrongAnswers, setWrongAnswers] = useState<
         { id: number; word: string }[]
     >([
@@ -101,7 +128,6 @@ export const NewQuizQuestion = ({
                 </label>
             </div>
             <div>
-                <div className={labelClass()}>Choices</div>
                 {isLoading && (
                     <div>
                         <Discuss
@@ -110,8 +136,18 @@ export const NewQuizQuestion = ({
                         />
                     </div>
                 )}
-
+                {correctAnswer && correctAnswer.name}
+                <Separator className="my-4" />
                 <div className="flex flex-col gap-2">
+                    <label className={labelClass()}>
+                        Correct Option
+                        <input
+                            className={inputClass()}
+                            type="text"
+                            value={correctAnswer?.name}
+                            disabled
+                        />
+                    </label>
                     {wrongAnswers.map((wrongAnswer, id) => (
                         <label className={labelClass()}>
                             Incorrect Option {id + 1}
