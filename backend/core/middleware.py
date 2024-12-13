@@ -1,7 +1,7 @@
 from django.db import transaction, IntegrityError, models
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework.response import Response
-from .achievements.services import AchievementService
+from .achievements.services import AchievementService, AchievementNotFoundException
 from .serializers.achievement import AchievementSerializer, UserAchievementSerializer
 import json
 
@@ -32,8 +32,10 @@ class AchievementMiddleware(MiddlewareMixin):
                                 response_content['achievement'] = None
                                 response.content = json.dumps(response_content)
 
+                except AchievementNotFoundException as e:
+                    print(str(e))
                 except Exception as e:
-                    print(e)
-                    pass
+                    print(str(e))
+
 
         return response
