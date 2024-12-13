@@ -29,7 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     bookmarked_forums = serializers.SerializerMethodField()
     quizzes_taken = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
-    achievements = UserAchievementSerializer(many=True, source='userachievement_set')
+    achievements = UserAchievementSerializer(many=True, source='userachievement_set', read_only=True)
     interests = TagSerializer(many=True)
 
 
