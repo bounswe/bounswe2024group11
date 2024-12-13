@@ -14,7 +14,7 @@ queryset = User.objects.all()
 
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)  # For nested representation of tags
+    tags = TagSerializer(many=True, required=False)  # For nested representation of tags
     author = UserInfoSerializer(read_only=True)
     answers = ForumAnswerSerializer(many=True, read_only=True, required=False)
     answers_count = serializers.SerializerMethodField()
@@ -102,9 +102,10 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         forum_question = ForumQuestion.objects.create(**validated_data)
         image_file = validated_data.get('image_file', None)
         # Add tags to the ForumQuestion instance
-        for tag_data in tags_data:
-            tag, created = Tag.objects.get_or_create(**tag_data)
-            forum_question.tags.add(tag)
+        if tags_data:
+            for tag_data in tags_data:
+                tag, created = Tag.objects.get_or_create(**tag_data)
+                forum_question.tags.add(tag)
 
         # Set the image URL
         if image_file:
@@ -124,9 +125,10 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             self.set_image_url(instance, validated_data)
 
         # Update tags
-        instance.tags.clear()
-        for tag_data in tags_data:
-            tag, created = Tag.objects.get_or_create(**tag_data)
-            instance.tags.add(tag)
+        if tags_data:
+            instance.tags.clear()
+            for tag_data in tags_data:
+                tag, created = Tag.objects.get_or_create(**tag_data)
+                instance.tags.add(tag)
 
         return instance

@@ -21,8 +21,8 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = ForumQuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     pagination_class = ForumQuestionPagination
-    parser_classes = (MultiPartParser, FormParser)  # Add this
-    
+    # parser_classes = (MultiPartParser, FormParser)  # Add this
+
 
     def get_parsers(self):
         if getattr(self, 'swagger_fake_view', False):
