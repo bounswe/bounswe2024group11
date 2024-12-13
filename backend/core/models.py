@@ -233,3 +233,15 @@ class Follow(models.Model):
 
     def __str__(self):
         return f"{self.follower} followed {self.following}"
+
+class Block(models.Model):
+    blocker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blocking')
+    blocking = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blockers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("blocker", "blocking")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.blocker} blocked {self.blocking}"
