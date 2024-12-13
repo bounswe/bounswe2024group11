@@ -32,15 +32,9 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
     
 
     def perform_create(self, serializer):
-        # Set the author to the current authenticated user
-        print(serializer.validated_data)
         serializer.save(author=self.request.user)
 
     def list(self, request, *args, **kwargs):
-        # queryset = ForumQuestion.objects.all().order_by('-created_at')
-        # serializer = ForumQuestionSerializer(queryset, many=True, context={'request': request})
-        # return Response(serializer.data)
-
         """
         Handle pagination explicitly.
         """
@@ -56,16 +50,16 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = ForumQuestionSerializer(instance, context={'request': request})
+        serializer = ForumQuestionSerializer(instance, context={'request': request, 'include_related_questions': True})
         return Response(serializer.data)
-    
+
     def get_permissions(self):
         if self.action == 'list':  # If listing, allow anyone
             return [permissions.AllowAny()]
         return super().get_permissions()
+    
     
 class ForumAnswerViewSet(viewsets.ModelViewSet):
     queryset = ForumAnswer.objects.all().order_by('created_at')
