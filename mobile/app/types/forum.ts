@@ -22,6 +22,7 @@ export type Question = {
   answers_count: number;
   is_bookmarked: number | null;
   is_upvoted: number | null;
+  is_my_forum_question: number | null;
   upvotes_count: number;
   is_downvoted: number | null;
   downvotes_count: number;

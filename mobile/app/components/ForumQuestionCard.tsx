@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Question } from "../types/forum";
 import AuthorView from "./AuthorView";
 import BookmarkButton from "./BookmarkButton";
 import VoteButtonsView from "./VoteButtonsView";
+import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
 
 interface ForumQuestionCardProps {
   item: Question;
@@ -51,11 +53,19 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
       <Card style={styles.card}>
         <View style={styles.container}>
           <AuthorView author={item.author} />
-          <BookmarkButton
-            initialBookmarkState={question.is_bookmarked}
-            questionId={Number(question.id)}
-            onBookmarkChange={handleBookmarkChange}
-          />
+          <View style={styles.buttonsContainer}>
+            {question.is_my_forum_question && (
+              <EditButton questionId={question.id} />
+            )}
+            {question.is_my_forum_question && (
+              <DeleteButton questionId={Number(question.id)} />
+            )}
+            <BookmarkButton
+              initialBookmarkState={question.is_bookmarked}
+              questionId={Number(question.id)}
+              onBookmarkChange={handleBookmarkChange}
+            />
+          </View>
         </View>
         <Text style={styles.title}>{question.title}</Text>
         <Text style={styles.body}>{question.question}</Text>
@@ -97,6 +107,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   title: {
     fontSize: 18,
