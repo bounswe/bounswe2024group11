@@ -106,11 +106,8 @@ export const forumCreateLoader = (async ({ request }) => {
 export const forumCreateAction = (async ({ request }) => {
     console.log("forum action");
     const formData = await request.formData();
-    const tags = JSON.parse(formData.get("tags") as string); // Convert from JSON string to array
-    logger.log(tags);
+    formData.set("tags_string", formData.get("tags") || "");
 
-    // Modify these specific fields in the original FormData
-    formData.set("tags", tags);
     //formData.set("quiz_question_id", quiz_question_id);
 
     const response = await apiClient.post("/forum-questions/", formData, {

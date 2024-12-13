@@ -16,6 +16,7 @@ queryset = User.objects.all()
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)  # For nested representation of tags
+    tags_string = serializers.CharField(max_length=None, required=False, allow_null=True, write_only=True)
     author = UserInfoSerializer(read_only=True)
     answers = ForumAnswerSerializer(many=True, read_only=True, required=False)
     answers_count = serializers.SerializerMethodField()
@@ -37,17 +38,19 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
             'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type", "image_file", "image_url"
+            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type", "image_file", "image_url","tags_string"
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
             'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question", "image_url"
+            'is_my_forum_question', "quiz_question", "image_url", "tags"
         )
     def to_internal_value(self, data):
         if 'tags' in data and isinstance(data['tags'], str):
             try:
-                data['tags'] = json.loads(data['tags'])
+                print(data['tags'])
+                pass
+                #data['tags'] = json.loads(data['tags'])
             except json.JSONDecodeError:
                 raise serializers.ValidationError({"tags": "Invalid JSON format for tags"})
         return super().to_internal_value(data)
@@ -109,7 +112,7 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Extract tags from validated_data
         print(validated_data)
-        tags_data = validated_data.pop('tags', None)
+        tags_data = json.loads(validated_data.pop('tags_string', None))
         image_file = validated_data.pop('image_file', None)
         forum_question = ForumQuestion.objects.create(**validated_data)
         # Add tags to the ForumQuestion instance
@@ -126,7 +129,7 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         return forum_question
     
     def update(self, instance, validated_data):
-        tags_data = validated_data.pop('tags', None)
+        tags_data = json.loads(validated_data.pop('tags_string', None))
         image_file = validated_data.get('image_file', None)
 
         instance.title = validated_data.get('title', instance.title)
