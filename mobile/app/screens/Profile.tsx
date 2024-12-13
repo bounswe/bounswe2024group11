@@ -195,6 +195,14 @@ const Profile: React.FC = () => {
           : question
       )
     );
+
+    setBookmarkedQuestions((prevBookmarkedQuestions) =>
+      newBookmarkState === null || newBookmarkState === 0
+        ? prevBookmarkedQuestions.filter(
+            (question) => Number(question.id) !== questionId
+          )
+        : prevBookmarkedQuestions
+    );
   };
 
   const handleVoteChange = (
@@ -226,6 +234,14 @@ const Profile: React.FC = () => {
             }
           : question
       )
+    );
+
+    setUpvotedQuestions((prevUpvotedQuestions) =>
+      isUpvoteId === null || isUpvoteId === 0
+        ? prevUpvotedQuestions.filter(
+            (question) => Number(question.id) !== questionId
+          )
+        : prevUpvotedQuestions
     );
   };
 
