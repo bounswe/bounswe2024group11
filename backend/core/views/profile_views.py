@@ -36,7 +36,7 @@ class ProfileView(APIView):
             else:
                 user = request.user
                 
-            serializer = ProfileSerializer(user)
+            serializer = ProfileSerializer(user, context={'request':request})
             return Response(serializer.data, status=status.HTTP_200_OK)
             
         except User.DoesNotExist:
