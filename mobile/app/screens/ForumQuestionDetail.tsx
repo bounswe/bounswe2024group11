@@ -28,7 +28,7 @@ type Props = {
 };
 
 const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
-  const { question } = route.params;
+  const { question, onBookmarkChange, onVoteChange } = route.params;
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [newAnswer, setNewAnswer] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); // Loading state for answers
@@ -94,7 +94,11 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
-      <ForumQuestionCard item={question} />
+      <ForumQuestionCard
+        item={question}
+        onBookmarkChange={onBookmarkChange}
+        onVoteChange={onVoteChange}
+      />
 
       {loading ? (
         // Displaying loading indicator while answers are being fetched
