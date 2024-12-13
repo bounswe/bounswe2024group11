@@ -32,6 +32,25 @@ export const answerSchema = object({
     downvotes_count: nullable(number()),
     forum_question: nullable(number()),
 });
+const innerForumQuestionSchema = object({
+    id: number(),
+    title: string(),
+    question: string(),
+    tags: array(tagSchema),
+    author: authorSchema,
+    created_at: string(),
+    answers_count: number(),
+    is_bookmarked: nullable(number()),
+    is_upvoted: nullable(number()),
+    is_downvoted: nullable(number()),
+    upvotes_count: number(),
+    downvotes_count: number(),
+    answers: array(answerSchema),
+    is_my_forum_question: boolean(),
+    quiz_question: nullable(quizQuestionSchema),
+    quiz_question_type: nullable(number()),
+    image_url: nullable(string()),
+});
 
 export const forumQuestionSchema = object({
     id: number(),
@@ -51,6 +70,7 @@ export const forumQuestionSchema = object({
     quiz_question: nullable(quizQuestionSchema),
     quiz_question_type: nullable(number()),
     image_url: nullable(string()),
+    related_forum_questions: nullable(array(innerForumQuestionSchema)),
 });
 
 export const forumSchema = object({
