@@ -33,6 +33,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     interests = TagSerializer(many=True)
     followings = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
+    blockings = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -48,7 +49,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'achievements',
             'interests',
             'followings',
-            'followers'
+            'followers',
+            'blockings'
         ]
         read_only_fields = ['id']
 
@@ -126,3 +128,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_followings(self, obj):
         followings = User.objects.filter(followers__follower=obj)
         return UserInfoSerializer(followings, many=True, context=self.context).data
+    
+    def get_blockings(self, obj):
+        blockings = User.objects.filter(blockers__blocker=obj)
+        return UserInfoSerializer(blockings, many=True, context=self.context).data
