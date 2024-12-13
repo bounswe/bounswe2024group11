@@ -1,7 +1,3 @@
-import requests
-import os
-from dotenv import load_dotenv
-
 from faker import Faker
 from rest_framework import serializers
 from ..views.difficulty_views import get_difficulty
@@ -11,9 +7,7 @@ from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestio
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from .serializers import QuizQuestionSerializer, QuizQuestionChoiceSerializer, UserInfoSerializer, TagSerializer, ForumAnswerSerializer
-
-load_dotenv()
-api_key = os.getenv('BABELNET_API_KEY')
+from ..utils import get_ids
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -142,23 +136,3 @@ def helper(obj):
         .exclude(id=obj.id)\
         .distinct()\
         .order_by('-created_at')[:max_number_of_related_questions]
-
-
-def get_ids(word_id):
-    return_array = [word_id]
-
-    url = 'https://babelnet.io/v9/getOutgoingEdges'
-    params = {
-        'id': word_id,
-        'key': api_key,
-    }
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-        raise Exception(f"Error fetching from BabelNet API. Status code: {response.status_code}")
-    
-    data = response.json()
-    for value in data:
-        if value.get("language") == "EN" or value.get("language") == "TR":
-            return_array.append(value.get("target"))    
-    
-    return return_array
