@@ -7,6 +7,8 @@ from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestio
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from .serializers import QuizQuestionSerializer, QuizQuestionChoiceSerializer, UserInfoSerializer, TagSerializer, ForumAnswerSerializer
+from core.utils import compress_image_tinify
+
 User = get_user_model()
 queryset = User.objects.all()
 
@@ -25,6 +27,8 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     quiz_question_id = serializers.PrimaryKeyRelatedField(queryset=QuizQuestion.objects.all(), required=False, allow_null=True, write_only=True)
     quiz_question = QuizQuestionSerializer(read_only=True, required=False, source="quiz_question_id", allow_null=True)
     quiz_question_type = serializers.SerializerMethodField()
+    image_file = serializers.ImageField(max_length=None, required=False, allow_null=True, write_only=True)
+    image_url = serializers.CharField(max_length=None, required=False, allow_null=True, read_only=True)
 
     class Meta:
         model = ForumQuestion
@@ -32,13 +36,22 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
             'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type"
+            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type", "image_file", "image_url"
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
             'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question"
+            'is_my_forum_question', "quiz_question", "image_url"
         )
+
+    def set_image_url(self, forum_question, validated_data):
+        if validated_data.get('image_file', None):
+            compressed_image = compress_image_tinify(validated_data['image_file'])
+            if compressed_image:
+                forum_question.image_url = compressed_image
+                forum_question.save()
+            else:
+                raise serializers.ValidationError("Error compressing image")
 
     def get_quiz_question_type(self, obj):
         # Find the relevant quiz, containing the quiz question and then return the type
@@ -87,19 +100,28 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         # Extract tags from validated_data
         tags_data = validated_data.pop('tags')
         forum_question = ForumQuestion.objects.create(**validated_data)
-
+        image_file = validated_data.get('image_file', None)
         # Add tags to the ForumQuestion instance
         for tag_data in tags_data:
             tag, created = Tag.objects.get_or_create(**tag_data)
             forum_question.tags.add(tag)
 
+        # Set the image URL
+        if image_file:
+            self.set_image_url(forum_question, validated_data)
+
         return forum_question
     
     def update(self, instance, validated_data):
         tags_data = validated_data.pop('tags')
+        image_file = validated_data.get('image_file', None)
+
         instance.title = validated_data.get('title', instance.title)
         instance.question = validated_data.get('question', instance.question)
         instance.save()
+
+        if image_file:
+            self.set_image_url(instance, validated_data)
 
         # Update tags
         instance.tags.clear()

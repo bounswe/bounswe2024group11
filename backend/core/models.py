@@ -42,6 +42,7 @@ class ForumQuestion(models.Model):
     tags = models.ManyToManyField('Tag')
     quiz_question_id = models.ForeignKey('QuizQuestion', on_delete=models.CASCADE, null=True, blank=True) 
     updated_at = models.DateTimeField(auto_now=True)
+    image_url = models.CharField(max_length=1000, blank=True, null=True)
 
 
     def __str__(self):
