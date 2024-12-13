@@ -1,6 +1,7 @@
 from django.urls import path
 
 
+
 from .views.get_translation_views import TranslationView
 from .views.difficulty_views import QuestionPointView
 from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
@@ -20,6 +21,7 @@ from .views.jwt_views import DecoratedTokenObtainPairView, DecoratedTokenRefresh
 from .views import follow_views
 from .views import block_views
 from django.contrib import admin
+from .views.interest_views import InterestView
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -71,6 +73,7 @@ urlpatterns = [
     path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
     path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"),
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
+    path('interests/', InterestView.as_view(), name='interests'),
 ]   
 
 urlpatterns += router.urls
