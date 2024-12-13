@@ -106,16 +106,17 @@ export const forumCreateLoader = (async ({ request }) => {
 export const forumCreateAction = (async ({ request }) => {
     console.log("forum action");
     const formData = await request.formData();
-    const tags = JSON.parse(formData.get("tags") as string);
-    const title = formData.get("title");
-    const question = formData.get("question");
-    const quiz_question_id = Number(formData.get("quiz_question_id"));
+    const tags = JSON.parse(formData.get("tags") as string); // Convert from JSON string to array
+    logger.log(tags);
 
-    const response = await apiClient.post("/forum-questions/", {
-        tags,
-        title,
-        question,
-        quiz_question_id: quiz_question_id || null,
+    // Modify these specific fields in the original FormData
+    formData.set("tags", tags);
+    //formData.set("quiz_question_id", quiz_question_id);
+
+    const response = await apiClient.post("/forum-questions/", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
     });
 
     const { issues, success } = safeParse(forumQuestionSchema, response.data);

@@ -50,6 +50,7 @@ export const forumQuestionSchema = object({
     is_my_forum_question: boolean(),
     quiz_question: nullable(quizQuestionSchema),
     quiz_question_type: nullable(number()),
+    image_url: nullable(string()),
 });
 
 export const forumSchema = object({

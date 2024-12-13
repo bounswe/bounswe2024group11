@@ -33,6 +33,7 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Set the author to the current authenticated user
+        print(serializer.validated_data)
         serializer.save(author=self.request.user)
 
     def list(self, request, *args, **kwargs):

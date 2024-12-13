@@ -44,14 +44,16 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'is_my_forum_question', "quiz_question", "image_url"
         )
 
-    def set_image_url(self, forum_question, validated_data):
-        if validated_data.get('image_file', None):
-            compressed_image = compress_image_tinify(validated_data['image_file'])
+    def set_image_url(self, forum_question, image_file):
+        if image_file:
+            compressed_image = compress_image_tinify(image_file)
             if compressed_image:
                 forum_question.image_url = compressed_image
                 forum_question.save()
             else:
                 raise serializers.ValidationError("Error compressing image")
+        else:
+            raise serializers.ValidationError("Image file is required")
 
     def get_quiz_question_type(self, obj):
         # Find the relevant quiz, containing the quiz question and then return the type
@@ -98,9 +100,10 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Extract tags from validated_data
-        tags_data = validated_data.pop('tags')
+        print(validated_data)
+        tags_data = validated_data.pop('tags', None)
+        image_file = validated_data.pop('image_file', None)
         forum_question = ForumQuestion.objects.create(**validated_data)
-        image_file = validated_data.get('image_file', None)
         # Add tags to the ForumQuestion instance
         if tags_data:
             for tag_data in tags_data:
@@ -108,13 +111,14 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
                 forum_question.tags.add(tag)
 
         # Set the image URL
+        print(image_file)
         if image_file:
-            self.set_image_url(forum_question, validated_data)
+            self.set_image_url(forum_question, image_file)
 
         return forum_question
     
     def update(self, instance, validated_data):
-        tags_data = validated_data.pop('tags')
+        tags_data = validated_data.pop('tags', None)
         image_file = validated_data.get('image_file', None)
 
         instance.title = validated_data.get('title', instance.title)
@@ -122,7 +126,7 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         instance.save()
 
         if image_file:
-            self.set_image_url(instance, validated_data)
+            self.set_image_url(instance, image_file)
 
         # Update tags
         if tags_data:
