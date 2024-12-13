@@ -69,7 +69,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name', 'linked_data_id', 'description')
-        
+        read_only_fields = ('id',)
     def create(self, validated_data):
         tag, created = Tag.objects.get_or_create(
             linked_data_id=validated_data['linked_data_id'],

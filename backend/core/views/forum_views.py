@@ -7,6 +7,8 @@ from ..serializers.forum_question_serializer import ForumQuestionSerializer
 from ..permissions import IsAuthorOrReadOnly
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 class ForumQuestionPagination(PageNumberPagination):
     page_size = 10
@@ -19,14 +21,15 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = ForumQuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     pagination_class = ForumQuestionPagination
+    # parser_classes = (MultiPartParser, FormParser)  # Add this
 
-    # def get_serializer_context(self):
-    #     context = super().get_serializer_context()
-    #     if self.action == 'retrieve':  
-    #         context['include_related_questions'] = True
-    #     else:  
-    #         context['include_related_questions'] = False
-    #     return context
+
+    def get_parsers(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return []
+
+        return super().get_parsers()
+    
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

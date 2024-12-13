@@ -7,6 +7,8 @@ from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestio
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from .serializers import QuizQuestionSerializer, QuizQuestionChoiceSerializer, UserInfoSerializer, TagSerializer, ForumAnswerSerializer
+from core.utils import compress_image_tinify
+import json
 from ..utils import get_ids
 
 User = get_user_model()
@@ -14,7 +16,8 @@ queryset = User.objects.all()
 
 
 class ForumQuestionSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)  # For nested representation of tags
+    tags = TagSerializer(many=True, required=False)  # For nested representation of tags
+    tags_string = serializers.CharField(max_length=None, required=False, allow_null=True, write_only=True)
     author = UserInfoSerializer(read_only=True)
     answers = ForumAnswerSerializer(many=True, read_only=True, required=False)
     answers_count = serializers.SerializerMethodField()
@@ -27,6 +30,8 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     quiz_question_id = serializers.PrimaryKeyRelatedField(queryset=QuizQuestion.objects.all(), required=False, allow_null=True, write_only=True)
     quiz_question = QuizQuestionSerializer(read_only=True, required=False, source="quiz_question_id", allow_null=True)
     quiz_question_type = serializers.SerializerMethodField()
+    image_file = serializers.ImageField(max_length=None, required=False, allow_null=True, write_only=True)
+    image_url = serializers.CharField(max_length=None, required=False, allow_null=True, read_only=True)
     related_forum_questions = serializers.SerializerMethodField()  
 
     class Meta:
@@ -35,14 +40,33 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'id', 'title', 'question', 'tags', 'author', 'created_at', 
             'answers_count', 'is_bookmarked', 'is_upvoted', 
             'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question", "quiz_question_id", 
-            "quiz_question_type", "related_forum_questions"  
+            'is_my_forum_question', "quiz_question", "quiz_question_id", "quiz_question_type", "image_file", "image_url","tags_string","related_forum_questions" 
         )
         read_only_fields = (
             'author', 'created_at', 'answers_count', 'is_bookmarked', 
             'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
-            'is_my_forum_question', "quiz_question"
+            'is_my_forum_question', "quiz_question", "image_url", "tags"
         )
+    def to_internal_value(self, data):
+        if 'tags' in data and isinstance(data['tags'], str):
+            try:
+                print(data['tags'])
+                pass
+                #data['tags'] = json.loads(data['tags'])
+            except json.JSONDecodeError:
+                raise serializers.ValidationError({"tags": "Invalid JSON format for tags"})
+        return super().to_internal_value(data)
+
+    def set_image_url(self, forum_question, image_file):
+        if image_file:
+            compressed_image = compress_image_tinify(image_file)
+            if compressed_image:
+                forum_question.image_url = compressed_image
+                forum_question.save()
+            else:
+                raise serializers.ValidationError("Error compressing image")
+        else:
+            raise serializers.ValidationError("Image file is required")
 
     def get_quiz_question_type(self, obj):
         # Find the relevant quiz, containing the quiz question and then return the type
@@ -98,27 +122,40 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Extract tags from validated_data
-        tags_data = validated_data.pop('tags')
+        print(validated_data)
+        tags_data = json.loads(validated_data.pop('tags_string', None))
+        image_file = validated_data.pop('image_file', None)
         forum_question = ForumQuestion.objects.create(**validated_data)
-
         # Add tags to the ForumQuestion instance
-        for tag_data in tags_data:
-            tag, created = Tag.objects.get_or_create(**tag_data)
-            forum_question.tags.add(tag)
+        if tags_data:
+            for tag_data in tags_data:
+                tag, created = Tag.objects.get_or_create(**tag_data)
+                forum_question.tags.add(tag)
+
+        # Set the image URL
+        print(image_file)
+        if image_file:
+            self.set_image_url(forum_question, image_file)
 
         return forum_question
     
     def update(self, instance, validated_data):
-        tags_data = validated_data.pop('tags')
+        tags_data = json.loads(validated_data.pop('tags_string', None))
+        image_file = validated_data.get('image_file', None)
+
         instance.title = validated_data.get('title', instance.title)
         instance.question = validated_data.get('question', instance.question)
         instance.save()
 
+        if image_file:
+            self.set_image_url(instance, image_file)
+
         # Update tags
-        instance.tags.clear()
-        for tag_data in tags_data:
-            tag, created = Tag.objects.get_or_create(**tag_data)
-            instance.tags.add(tag)
+        if tags_data:
+            instance.tags.clear()
+            for tag_data in tags_data:
+                tag, created = Tag.objects.get_or_create(**tag_data)
+                instance.tags.add(tag)
 
         return instance
 
