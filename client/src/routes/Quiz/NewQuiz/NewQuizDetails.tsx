@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import { inputClass, labelClass } from "../../../components/input";
 import { useTaggingSearch } from "../../../hooks/tagging";
+import { logger } from "../../../utils";
 import { Tag } from "../../Forum/Forum.schema";
 import { tagOptionClass } from "../../Forum/NewForum";
 import { getQuestionType } from "./NewQuiz";
@@ -19,7 +20,7 @@ export const NewQuizDetails = () => {
     );
 
     useEffect(() => {
-        console.log("effect", quiz.type);
+        logger.log("effect", quiz.type);
     }, [quiz.type]);
 
     const nounOptions: Tag[] =

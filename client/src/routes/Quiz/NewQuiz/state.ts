@@ -1,11 +1,6 @@
 import { create } from "zustand";
 import { Tag } from "../../Forum/Forum.schema";
-import { QuizCreate, QuizQuestionCreate } from "../Quiz.schema";
-
-interface Choice {
-    choice_text: string;
-    is_correct: boolean;
-}
+import { Choice, QuizCreate, QuizQuestionCreate } from "../Quiz.schema";
 
 interface QuizState {
     quiz: QuizCreate;
@@ -27,19 +22,32 @@ interface QuizState {
     getQuizForSubmission: () => QuizCreate;
 }
 
-const createInitialChoices = (): Choice[] => [
-    { choice_text: "", is_correct: true },
-    { choice_text: "", is_correct: false },
-    { choice_text: "", is_correct: false },
-    { choice_text: "", is_correct: false },
-];
+const generateId = (prefix: string) => `${prefix}-${Date.now()}`;
+
+const createInitialChoices = (): Choice[] => {
+    let id = 0;
+    return Array.from({ length: 4 }).map(() => ({
+        id: generateId("choice" + id),
+        choice_text: "",
+        is_correct: id++ % 4 === 0,
+    }));
+};
+
+export const createInitialQuestion = (): QuizQuestionCreate => ({
+    id: generateId("question"),
+    question_tag: null,
+    question_text: "",
+    question_point: 0,
+    choices: createInitialChoices(),
+    hints: [],
+});
 
 const initialQuiz: QuizCreate = {
     title: "",
     description: "",
     tags: [],
     type: 1,
-    questions: [],
+    questions: [createInitialQuestion()],
 };
 
 // Utility function to shuffle array
@@ -98,12 +106,11 @@ export const useQuizStore = create<QuizState>((set, get) => ({
                 ),
             },
         })),
-
     deleteQuestion: (index) =>
-        set((state) => ({
+        set(({ quiz }) => ({
             quiz: {
-                ...state.quiz,
-                questions: state.quiz.questions.filter((_, i) => i !== index),
+                ...quiz,
+                questions: quiz.questions.filter((_, i) => i !== index),
             },
         })),
 
@@ -201,6 +208,10 @@ export const useQuizStore = create<QuizState>((set, get) => ({
         if (!state.quiz.title) errors.push("Title is required");
         if (!state.quiz.description) errors.push("Description is required");
 
+        if (state.quiz.questions.length === 0) {
+            errors.push("At least one question is required");
+        }
+
         state.quiz.questions.forEach((question, index) => {
             if (!question.question_tag) {
                 errors.push(`Question ${index + 1} tag is required`);
@@ -218,8 +229,13 @@ export const useQuizStore = create<QuizState>((set, get) => ({
 
             question.choices.forEach((choice, choiceIndex) => {
                 if (!choice.choice_text.trim()) {
+                    if (choice.is_correct) {
+                        errors.push(
+                            `Correct Choice for Question ${index + 1} is required`,
+                        );
+                    }
                     errors.push(
-                        `Choice ${choiceIndex + 1} for Question ${index + 1} is required`,
+                        `Incorrect Choice ${choiceIndex + 1} for Question ${index + 1} is required`,
                     );
                 }
             });

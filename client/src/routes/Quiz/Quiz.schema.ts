@@ -144,12 +144,20 @@ export const quizSchema = object({
     }),
 });
 
+export const choiceSchema = object({
+    id: string(),
+    choice_text: string(),
+    is_correct: boolean(),
+});
+
 export const quizQuestionCreateSchema = object({
+    id: string(),
     question_tag: nullable(quizTagSchema),
     question_text: string(),
     question_point: optional(number()),
     choices: array(
         object({
+            id: string(),
             choice_text: string(),
             is_correct: boolean(),
         }),
@@ -177,3 +185,4 @@ export type QuizOverview = InferInput<typeof quizOverviewSchema>;
 export type QuizDetails = InferInput<typeof quizDetailsSchema>;
 export type QuizCreate = InferInput<typeof quizCreateSchema>;
 export type QuizQuestionCreate = InferInput<typeof quizQuestionCreateSchema>;
+export type Choice = InferInput<typeof choiceSchema>;

@@ -1,16 +1,20 @@
 import { Button } from "@ariakit/react";
-import { RiAddLine, RiArrowLeftLine, RiCheckLine } from "@remixicon/react";
+import {
+    RiAddLine,
+    RiArrowDownLine,
+    RiArrowLeftLine,
+    RiArrowUpLine,
+    RiCheckLine,
+    RiDeleteBin7Line,
+} from "@remixicon/react";
 import { useState } from "react";
 import { buttonClass, buttonInnerRing } from "../../../components/button";
-import { useTaggingSearch } from "../../../hooks/tagging";
-import { Tag } from "../../Forum/Forum.schema";
-import { getPlaceholder } from "./NewQuiz-utils";
 import { NewQuizQuestionOptions } from "./NewQuizQuestionOptions";
-import { useQuizStore } from "./state";
+import { createInitialQuestion, useQuizStore } from "./state";
 import { WordSelectionView } from "./WordSelectionView";
 
 type NewQuizQuestionProps = {
-    qIndex: number;
+    index: number;
 };
 
 type NewQuizQuestionsProps = {
@@ -18,12 +22,22 @@ type NewQuizQuestionsProps = {
 };
 
 export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
-    const [questionCount, setQuestionCount] = useState(1);
+    const {
+        quiz,
+        setQuizField,
+        addQuestion,
+        updateQuestion,
+        getValidationErrors,
+    } = useQuizStore();
     const [open, setOpen] = useState(false);
     return (
         <div className="flex flex-col gap-4">
-            {Array.from({ length: questionCount }).map((_, index) => (
-                <NewQuizQuestion qIndex={index} />
+            {Array.from({ length: quiz.questions.length }).map((_, index) => (
+                <NewQuizQuestion
+                    data-question-id={quiz.questions[index].id}
+                    key={quiz.questions[index].id}
+                    index={index}
+                />
             ))}
             <div className="grid grid-cols-3 gap-2">
                 <Button
@@ -40,7 +54,7 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
 
                 <Button
                     type="button"
-                    onClick={() => setQuestionCount((prev) => prev + 1)}
+                    onClick={() => addQuestion(createInitialQuestion())}
                     className={buttonClass({
                         intent: "secondary",
                         className: "flex-1",
@@ -55,10 +69,13 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
                         })}
                     ></span>
                 </Button>
-
                 <Button
                     type="submit"
-                    className={buttonClass({ intent: "primary", icon: "left" })}
+                    className={buttonClass({
+                        intent: "primary",
+                        icon: "left",
+                    })}
+                    disabled={getValidationErrors().length > 0}
                 >
                     <RiCheckLine size={16} />
                     Create Quiz
@@ -73,80 +90,82 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
     );
 };
 
-export const NewQuizQuestion = ({ qIndex }: NewQuizQuestionProps) => {
-    const [search, setSearch] = useState("");
-    const { quiz, addQuestion, updateQuestion } = useQuizStore();
-    const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
-        search,
-        quiz,
-    );
+export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
+    const { quiz, deleteQuestion, reorderQuestions } = useQuizStore();
     const [view, setView] = useState<"word" | "options">("word");
-    const [tag, setCorrectAnswer] = useState<Tag>();
-    const [sense, setSense] = useState<"NOUN" | "VERB" | "ADJ" | "ADV">("NOUN");
-
-    const nounOptions: Tag[] =
-        data?.NOUN?.map((word) => ({
-            name: search,
-            linked_data_id: word.id,
-            description: word.description,
-        })) || [];
-    const verbOptions: Tag[] =
-        data?.VERB?.map((word) => ({
-            name: search,
-            linked_data_id: word.id,
-            description: word.description,
-        })) || [];
-    const adjectiveOptions: Tag[] =
-        data?.ADJ?.map((word) => ({
-            name: search,
-            linked_data_id: word.id,
-            description: word.description,
-        })) || [];
-    const adverbOptions: Tag[] =
-        data?.ADV?.map((word) => ({
-            name: search,
-            linked_data_id: word.id,
-            description: word.description,
-        })) || [];
-
-    const handleReset = () => {
-        setCorrectAnswer(undefined);
-        setView("word");
-        setSense("NOUN");
-    };
+    const isFirstQuestion = index === 0;
+    const isLastQuestion = index === quiz.questions.length - 1;
 
     return (
         <fieldset
-            key={qIndex}
+            key={index}
             className="relative flex flex-col gap-2 rounded-2 p-4 ring ring-slate-200"
         >
             <legend className="bg-white px-2 text-sm uppercase tracking-widest text-slate-700">
-                Question {qIndex + 1}
+                Question {index + 1}
             </legend>
 
             {view === "word" && (
                 <WordSelectionView
-                    search={search}
-                    setSearch={setSearch}
-                    isLoading={isLoading}
-                    nounOptions={nounOptions}
-                    adjectiveOptions={adjectiveOptions}
-                    adverbOptions={adverbOptions}
-                    verbOptions={verbOptions}
-                    setSense={setSense}
-                    setCorrectAnswer={setCorrectAnswer}
-                    setView={setView}
-                    placeholder={getPlaceholder(quiz.type)}
+                    index={index}
+                    onChange={() => setView("options")}
                 />
             )}
 
             {view === "options" && (
                 <NewQuizQuestionOptions
-                    qIndex={qIndex}
-                    onReset={handleReset}
-                    sense={sense}
+                    index={index}
+                    onQuestionReset={() => {
+                        setView("word");
+                    }}
                 />
             )}
+            <div className="flex gap-2">
+                <div className="flex-1">
+                    <Button
+                        className={buttonClass({
+                            intent: "tertiary",
+                            size: "medium",
+                            icon: "left",
+                            className: "w-full",
+                        })}
+                        disabled={isLastQuestion}
+                        onClick={() => reorderQuestions(index, index + 1)}
+                    >
+                        <RiArrowDownLine size={16} />
+                        <span>Move Down</span>
+                    </Button>
+                </div>
+                <div className="flex-1">
+                    <Button
+                        className={buttonClass({
+                            intent: "tertiary",
+                            size: "medium",
+                            icon: "left",
+                            className: "w-full",
+                        })}
+                        disabled={isFirstQuestion}
+                        onClick={() => reorderQuestions(index, index - 1)}
+                    >
+                        <RiArrowUpLine size={16} />
+                        <span>Move Up</span>
+                    </Button>
+                </div>
+                <div className="flex-1">
+                    <Button
+                        className={buttonClass({
+                            intent: "destructive",
+                            size: "medium",
+                            icon: "left",
+                            className: "w-full",
+                        })}
+                        onClick={() => deleteQuestion(index)}
+                    >
+                        <RiDeleteBin7Line size={16} />
+                        <span>Delete</span>
+                    </Button>
+                </div>
+            </div>
         </fieldset>
     );
 };

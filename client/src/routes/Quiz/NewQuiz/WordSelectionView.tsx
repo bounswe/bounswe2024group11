@@ -1,37 +1,54 @@
+import { RiInformation2Fill } from "@remixicon/react";
+import { useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import { inputClass, labelClass } from "../../../components/input";
+import { useTaggingSearch } from "../../../hooks/tagging";
 import { Tag } from "../../Forum/Forum.schema";
 import { tagOptionClass } from "../../Forum/NewForum";
+import { getPlaceholder } from "./NewQuiz-utils";
+import { useQuizStore } from "./state";
 
 const indexToSense = ["NOUN", "VERB", "ADJ", "ADV"] as const;
 
 interface WordSelectionViewProps {
-    search: string;
-    setSearch: (value: string) => void;
-    isLoading: boolean;
-    nounOptions: Tag[];
-    adjectiveOptions: Tag[];
-    adverbOptions: Tag[];
-    verbOptions: Tag[];
-    setCorrectAnswer: (tag: Tag) => void;
-    setView: (view: "word" | "options") => void;
-    setSense: (sense: "NOUN" | "VERB" | "ADJ" | "ADV") => void;
-    placeholder: string;
+    index: number;
+    onChange: () => void;
 }
 
 export const WordSelectionView = ({
-    search,
-    setSearch,
-    isLoading,
-    nounOptions,
-    adjectiveOptions,
-    adverbOptions,
-    verbOptions,
-    setCorrectAnswer,
-    setView,
-    setSense,
-    placeholder,
+    index,
+    onChange,
 }: WordSelectionViewProps) => {
+    const [search, setSearch] = useState("");
+    const { quiz, updateQuestion } = useQuizStore();
+    const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
+        search,
+        quiz,
+    );
+    const nounOptions: Tag[] =
+        data?.NOUN?.map((word) => ({
+            name: debouncedSearch,
+            linked_data_id: word.id,
+            description: word.description,
+        })) || [];
+    const verbOptions: Tag[] =
+        data?.VERB?.map((word) => ({
+            name: debouncedSearch,
+            linked_data_id: word.id,
+            description: word.description,
+        })) || [];
+    const adjectiveOptions: Tag[] =
+        data?.ADJ?.map((word) => ({
+            name: debouncedSearch,
+            linked_data_id: word.id,
+            description: word.description,
+        })) || [];
+    const adverbOptions: Tag[] =
+        data?.ADV?.map((word) => ({
+            name: debouncedSearch,
+            linked_data_id: word.id,
+            description: word.description,
+        })) || [];
     const sections = [
         { title: "Nouns", options: nounOptions },
         { title: "Adjectives", options: adjectiveOptions },
@@ -39,15 +56,19 @@ export const WordSelectionView = ({
         { title: "Verbs", options: verbOptions },
     ];
 
+    const noData = sections.every(({ options }) => options.length === 0);
     return (
         <div className="flex flex-col gap-2">
             <label className={labelClass({ className: "flex-1" })}>
+                <span className="text-sm font-medium">
+                    Enter a question word
+                </span>
                 <input
                     className={inputClass()}
                     onChange={(e) => setSearch(e.target.value)}
                     value={search}
                     required
-                    placeholder={placeholder}
+                    placeholder={getPlaceholder(quiz.type)}
                 />
             </label>
             {isLoading && (
@@ -56,6 +77,12 @@ export const WordSelectionView = ({
                         wrapperClass="h-8 w-8 text-slate-500"
                         colors={["#64748b", "#64748b"]}
                     />
+                </div>
+            )}
+            {!isLoading && debouncedSearch && noData && (
+                <div className="flex items-center gap-2 rounded-2 bg-yellow-50 px-3 py-2 text-sm text-slate-500">
+                    <RiInformation2Fill size={16} className="text-yellow-800" />
+                    <span>No data found.</span>
                 </div>
             )}
             <div className="flex flex-col gap-2">
@@ -79,10 +106,10 @@ export const WordSelectionView = ({
                                         role="option"
                                         tabIndex={0}
                                         onClick={() => {
-                                            setCorrectAnswer(tag);
-                                            setView("options");
-                                            setSearch("");
-                                            setSense(indexToSense[i]);
+                                            onChange();
+                                            updateQuestion(index, {
+                                                question_tag: tag,
+                                            });
                                         }}
                                     >
                                         <span className="text-base font-medium">
