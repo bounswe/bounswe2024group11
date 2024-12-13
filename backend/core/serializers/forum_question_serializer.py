@@ -96,10 +96,15 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_related_forum_questions(self, obj):
         if self.context.get('include_related_questions', False):
             related_questions = helper(obj)
-            return ForumQuestionSerializer(
-                related_questions, many=True, context=self.context
-            ).data
+            # return ForumQuestionSerializer(
+            #     related_questions, many=True, context=self.context
+            # ).data
+            return [
+                [i.title, i.question, [tag.name for tag in i.tags.all()]]
+                for i in related_questions
+            ]
         return None
+    
 
     def create(self, validated_data):
         # Extract tags from validated_data
