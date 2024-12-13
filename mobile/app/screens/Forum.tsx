@@ -31,7 +31,6 @@ const Forum: React.FC = () => {
       setLoading(true);
       try {
         const result = await axios.get(`${API_URL}`);
-        // console.log(result.data.questions);
         setQuestions(result.data.results);
       } catch (error) {
         console.error("Error fetching questions", error);
@@ -44,6 +43,51 @@ const Forum: React.FC = () => {
       fetchQuestions();
     }
   }, [isFocused]);
+
+  const handleBookmarkChange = (
+    questionId: number,
+    newBookmarkState: number | null
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        Number(question.id) === questionId
+          ? { ...question, is_bookmarked: newBookmarkState }
+          : question
+      )
+    );
+  };
+
+  const handleVoteChange = (
+    questionId: number,
+    isUpvoteId: number | null,
+    isDownvoteId: number | null
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        Number(question.id) === questionId
+          ? {
+              ...question,
+              is_upvoted: isUpvoteId,
+              is_downvoted: isDownvoteId,
+              upvotes_count: isUpvoteId
+                ? question.is_upvoted
+                  ? question.upvotes_count
+                  : question.upvotes_count + 1
+                : question.is_upvoted
+                  ? question.upvotes_count - 1
+                  : question.upvotes_count,
+              downvotes_count: isDownvoteId
+                ? question.is_downvoted
+                  ? question.downvotes_count
+                  : question.downvotes_count + 1
+                : question.is_downvoted
+                  ? question.downvotes_count - 1
+                  : question.downvotes_count,
+            }
+          : question
+      )
+    );
+  };
 
   const handleCreateQuestion = () => {
     (navigation as any).navigate("CreateQuestion"); // not sure about this solution
@@ -61,10 +105,18 @@ const Forum: React.FC = () => {
             <TouchableOpacity
               key={item.id}
               onPress={() =>
-                navigation.navigate("ForumQuestionDetail", { question: item })
+                navigation.navigate("ForumQuestionDetail", {
+                  question: item,
+                  onBookmarkChange: handleBookmarkChange,
+                  onVoteChange: handleVoteChange,
+                })
               }
             >
-              <ForumQuestionCard item={item} />
+              <ForumQuestionCard
+                item={item}
+                onBookmarkChange={handleBookmarkChange}
+                onVoteChange={handleVoteChange}
+              />
             </TouchableOpacity>
           )}
         />
