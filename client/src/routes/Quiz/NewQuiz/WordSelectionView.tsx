@@ -1,7 +1,7 @@
 import { Discuss } from "react-loader-spinner";
-import { inputClass, labelClass } from "../../components/input";
-import { Tag } from "../Forum/Forum.schema";
-import { tagOptionClass } from "../Forum/NewForum";
+import { inputClass, labelClass } from "../../../components/input";
+import { Tag } from "../../Forum/Forum.schema";
+import { tagOptionClass } from "../../Forum/NewForum";
 
 const indexToSense = ["NOUN", "VERB", "ADJ", "ADV"] as const;
 

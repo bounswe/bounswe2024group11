@@ -37,6 +37,8 @@ export const useTaggingSearch = (search: string, quiz: QuizCreate) => {
 
     const fetcher = useMemo(
         () => async () => {
+            if (!debouncedSearch) return null; // Don't fetch if search is empty
+
             const response = await apiClient.get("/tagging/", {
                 params: {
                     word: debouncedSearch,
@@ -50,11 +52,18 @@ export const useTaggingSearch = (search: string, quiz: QuizCreate) => {
 
     const { data, error, isLoading } = useSWR(cacheKey, fetcher, {
         revalidateOnFocus: false,
-        dedupingInterval: 2000, // Add deduping interval
-        compare: (a, b) => JSON.stringify(a) === JSON.stringify(b), // Custom compare function
+        dedupingInterval: 2000,
+        compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
+        shouldRetryOnError: false, // Add this to prevent unnecessary retries
+        keepPreviousData: false, // Add this to ensure data is cleared when key changes
     });
 
-    return { data, error, isLoading, debouncedSearch } as {
+    return {
+        data,
+        error,
+        isLoading,
+        debouncedSearch,
+    } as {
         data: Dict;
         error: any;
         isLoading: boolean;

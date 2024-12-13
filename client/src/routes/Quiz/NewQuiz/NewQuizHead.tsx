@@ -1,6 +1,6 @@
 import { RiArrowLeftSLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
-import { buttonClass } from "../../components/button";
+import { buttonClass } from "../../../components/button";
 
 export const NewQuizHead = () => {
     return (

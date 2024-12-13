@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction, redirect } from "react-router";
-import apiClient from "../../api";
-import { useToastStore } from "../../store";
+import apiClient from "../../../api";
+import { useToastStore } from "../../../store";
 
 export const newQuizLoader = (async () => {
     return null;

@@ -1,35 +1,28 @@
 import { Button } from "@ariakit/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
-import apiClient from "../../api";
-import { InfoBox } from "../../components/info-box";
-import { inputClass, labelClass } from "../../components/input";
-import { Tag } from "../Forum/Forum.schema";
-import { QuizCreate, QuizQuestionCreate } from "./Quiz.schema";
-import { questionTypeToQuestion } from "./Quiz.utils";
+import apiClient from "../../../api";
+import { InfoBox } from "../../../components/info-box";
+import { inputClass, labelClass } from "../../../components/input";
+import { questionTypeToQuestion } from "../Quiz.utils";
+import { useQuizStore } from "./state";
 
 interface OptionsViewProps {
-    quiz: QuizCreate;
     qIndex: number;
-    tag?: Tag;
     sense: "NOUN" | "VERB" | "ADJ" | "ADV";
     onReset: (id: number) => void;
-    onSettle: (question: QuizQuestionCreate) => void;
-    onUnsettle: (id: number) => void;
 }
 
-export const OptionsView = ({
-    quiz,
+export const NewQuizQuestionOptions = ({
     qIndex,
-    tag,
     sense,
-    onSettle,
-    onUnsettle,
     onReset,
 }: OptionsViewProps) => {
     const [showInfo, setShowInfo] = useState(
         localStorage.getItem("quiz-info-shown") !== "true",
     );
+    const { quiz } = useQuizStore();
+    const tag = quiz.questions[qIndex].question_tag;
     const handleInfoClose = () => {
         setShowInfo(false);
         localStorage.setItem("quiz-info-shown", "true");
@@ -86,27 +79,6 @@ export const OptionsView = ({
                 .then((res) => res.data);
         },
     );
-
-    useEffect(() => {
-        if (wrongAnswers.every(({ word }) => word)) {
-            onSettle({
-                question_text: questionTypeToQuestion(
-                    quiz.type,
-                    tag?.name || "",
-                ),
-                question_point: 3,
-                choices: [
-                    { choice_text: sense, is_correct: true },
-                    { choice_text: wrongAnswers[0].word, is_correct: false },
-                    { choice_text: wrongAnswers[1].word, is_correct: false },
-                    { choice_text: wrongAnswers[2].word, is_correct: false },
-                ],
-            });
-        } else {
-            onUnsettle(qIndex);
-        }
-        console.log(wrongAnswers);
-    }, [wrongAnswers]);
 
     return (
         <div>

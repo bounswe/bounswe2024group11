@@ -145,6 +145,7 @@ export const quizSchema = object({
 });
 
 export const quizQuestionCreateSchema = object({
+    question_tag: nullable(quizTagSchema),
     question_text: string(),
     question_point: optional(number()),
     choices: array(
