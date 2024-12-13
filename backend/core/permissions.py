@@ -14,4 +14,7 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
         try:
             return obj.author == request.user
         except:
-            return obj.user == request.user
+            try:
+                return obj.user == request.user
+            except:
+                return obj.follower == request.user

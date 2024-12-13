@@ -4,11 +4,12 @@ from ..serializers.serializers import FollowSerializer
 from rest_framework.exceptions import PermissionDenied
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from ..permissions import IsAuthorOrReadOnly
 
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     http_method_names = ['get', 'post', 'delete']
     
     @swagger_auto_schema(
