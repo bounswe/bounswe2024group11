@@ -9,6 +9,7 @@ import {
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
+import { Voiceover } from "../../components/voiceover";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
@@ -377,7 +378,14 @@ export const TakeQuizPage = () => {
                         quiz.questions[currentQuestion].question_text,
                     )}
                 </div>
-                {quiz.questions[currentQuestion].hints?.length && (
+                <div>
+                    {(quiz.type === 1 || quiz.type === 3) && (
+                        <Voiceover
+                            text={quiz.questions[currentQuestion].question_text}
+                        />
+                    )}
+                </div>
+                {quiz.questions[currentQuestion].hints?.length ? (
                     <div>
                         <Ariakit.PopoverProvider placement="bottom-end">
                             <Ariakit.PopoverDisclosure
@@ -433,7 +441,7 @@ export const TakeQuizPage = () => {
                             </Ariakit.Popover>
                         </Ariakit.PopoverProvider>
                     </div>
-                )}
+                ) : null}
             </div>
             {quiz.questions[currentQuestion] && (
                 <div>
@@ -471,6 +479,11 @@ export const TakeQuizPage = () => {
                                             }
                                         />
                                         {choice.choice_text}
+                                        {quiz.type === 2 && (
+                                            <Voiceover
+                                                text={choice.choice_text}
+                                            />
+                                        )}
                                     </label>
                                 </li>
                             ),
