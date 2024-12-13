@@ -21,5 +21,5 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Allow users to see only their own follows
-        return self.queryset.filter(user=self.request.user)
+        return self.queryset.filter(follower=self.request.user)
     

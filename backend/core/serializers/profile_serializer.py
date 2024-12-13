@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .serializers import ForumBookmarkSerializer, TagSerializer
+from .serializers import ForumBookmarkSerializer, TagSerializer, UserInfoSerializer, FollowSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag
+from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow
 from core import models
 from django.db.models import Sum
 
@@ -31,6 +31,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
     achievements = UserAchievementSerializer(many=True, source='userachievement_set')
     interests = TagSerializer(many=True)
+    followings = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -44,7 +46,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             'bookmarked_forums',
             'score',
             'achievements',
-            'interests'
+            'interests',
+            'followings',
+            'followers'
         ]
         read_only_fields = ['id']
 
@@ -114,3 +118,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         from .serializers import UserAchievementSerializer
         user_achievements = UserAchievement.objects.filter(user=obj).order_by('-earned_at')
         return UserAchievementSerializer(user_achievements, many=True).data
+
+    def get_followers(self, obj):
+        followers = User.objects.filter(following__following=obj)
+        return UserInfoSerializer(followers, many=True, context=self.context).data
+
+    def get_followings(self, obj):
+        followings = User.objects.filter(followers__follower=obj)
+        return UserInfoSerializer(followings, many=True, context=self.context).data
