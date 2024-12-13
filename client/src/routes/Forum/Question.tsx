@@ -1,4 +1,4 @@
-import { useFetcher } from "react-router-dom";
+import { Link, useFetcher } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass } from "../../components/button";
 import { ForumAnswerCard } from "../../components/forum-answer-card";
@@ -52,6 +52,27 @@ export const ForumQuestion = () => {
                     >
                         Post Comment
                     </button>
+                    {data.related_forum_questions?.map((answer) => {
+                        return (
+                            <Link
+                                className="flex w-full flex-row items-center justify-center gap-4 rounded-1 bg-slate-50 p-3 ring ring-slate-200"
+                                to={`/forum/${answer.id}`}
+                            >
+                                <div className="flex h-8 w-8 flex-col items-center justify-center rounded-1 bg-white text-center ring ring-slate-200">
+                                    {answer.upvotes_count -
+                                        answer.downvotes_count}
+                                </div>
+                                <div className="flex flex-1 flex-col">
+                                    <h2 className="overflow-hidden text-base font-semibold text-slate-900 underline-offset-2 group-hover:underline">
+                                        {answer.title}
+                                    </h2>
+                                    <p className="line-clamp-2 overflow-hidden text-sm text-slate-700">
+                                        {answer.question}
+                                    </p>
+                                </div>
+                            </Link>
+                        );
+                    })}
                 </answerFetcher.Form>
             </main>
         </div>
