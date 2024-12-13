@@ -8,6 +8,7 @@ from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerialize
 from .take_quiz_serializer import TakeQuizSerializer
 from .serializers import QuizQuestionSerializer, QuizQuestionChoiceSerializer, UserInfoSerializer, TagSerializer, ForumAnswerSerializer
 from core.utils import compress_image_tinify
+import json
 
 User = get_user_model()
 queryset = User.objects.all()
@@ -43,6 +44,13 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             'is_upvoted', 'upvotes_count', 'is_downvoted', 'downvotes_count', 'answers',
             'is_my_forum_question', "quiz_question", "image_url"
         )
+    def to_internal_value(self, data):
+        if 'tags' in data and isinstance(data['tags'], str):
+            try:
+                data['tags'] = json.loads(data['tags'])
+            except json.JSONDecodeError:
+                raise serializers.ValidationError({"tags": "Invalid JSON format for tags"})
+        return super().to_internal_value(data)
 
     def set_image_url(self, forum_question, image_file):
         if image_file:
