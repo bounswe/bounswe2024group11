@@ -96,13 +96,9 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     def get_related_forum_questions(self, obj):
         if self.context.get('include_related_questions', False):
             related_questions = helper(obj)
-            # return ForumQuestionSerializer(
-            #     related_questions, many=True, context=self.context
-            # ).data
-            return [
-                [i.title, i.question, [tag.name for tag in i.tags.all()]]
-                for i in related_questions
-            ]
+            return ForumQuestionSerializer(
+                related_questions, many=True, context={'request': self.context['request'], 'include_related_questions': False}
+            ).data
         return None
     
 
@@ -142,8 +138,10 @@ def helper(obj):
     for tag in obj.tags.all():
         all_ids = all_ids + get_ids(tag.linked_data_id)
 
-    # return all_ids  
-    return ForumQuestion.objects.filter(tags__linked_data_id__in=all_ids).exclude(id=obj.id).order_by('-created_at')[:max_number_of_related_questions]
+    return ForumQuestion.objects.filter(tags__linked_data_id__in=all_ids)\
+        .exclude(id=obj.id)\
+        .distinct()\
+        .order_by('-created_at')[:max_number_of_related_questions]
 
 
 def get_ids(word_id):
