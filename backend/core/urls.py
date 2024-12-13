@@ -17,6 +17,7 @@ from rest_framework_nested import routers
 from .views import views
 from .views.tagging_views import TaggingView
 from .views.jwt_views import DecoratedTokenObtainPairView, DecoratedTokenRefreshView, DecoratedTokenVerifyView, RegisterView
+from .views import follow_views
 from django.contrib import admin
 
 from drf_yasg.views import get_schema_view
@@ -45,6 +46,7 @@ router.register(r'forum-upvote', ForumUpvoteViewSet, basename='forum-upvote')
 router.register(r'forum-downvote', ForumDownvoteViewSet, basename='forum-downvote')
 router.register(r'forum-answer-upvote', ForumAnswerUpvoteViewSet, basename='forum-answer-upvote')
 router.register(r'forum-answer-downvote', ForumAnswerDownvoteViewSet, basename='forum-answer-downvote')
+router.register(r'follow', follow_views.FollowViewSet, basename='follow')
 
 forum_question_router = routers.NestedDefaultRouter(router, r'forum-questions', lookup='forum_question')
 forum_question_router.register(r'answers', ForumAnswerViewSet, basename='forum-question-answers')
