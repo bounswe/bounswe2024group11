@@ -1,6 +1,6 @@
 from django.urls import path
 
-
+from .views.feed_views import FeedViewSet
 from .views.get_translation_views import TranslationView
 from .views.difficulty_views import QuestionPointView
 from .views.forum_views import ForumQuestionViewSet, ForumAnswerViewSet
@@ -47,6 +47,7 @@ router.register(r'forum-downvote', ForumDownvoteViewSet, basename='forum-downvot
 router.register(r'forum-answer-upvote', ForumAnswerUpvoteViewSet, basename='forum-answer-upvote')
 router.register(r'forum-answer-downvote', ForumAnswerDownvoteViewSet, basename='forum-answer-downvote')
 router.register(r'follow', follow_views.FollowViewSet, basename='follow')
+router.register(r'feed', FeedViewSet, basename='feed')
 
 forum_question_router = routers.NestedDefaultRouter(router, r'forum-questions', lookup='forum_question')
 forum_question_router.register(r'answers', ForumAnswerViewSet, basename='forum-question-answers')
