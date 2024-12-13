@@ -9,6 +9,8 @@ import {
 } from "@remixicon/react";
 import { Link, useFetcher } from "react-router-dom";
 
+import { cva } from "cva";
+import { useState } from "react";
 import { ForumQuestion } from "../routes/Forum/Forum.schema";
 import {
     bookmarkForumAction,
@@ -24,13 +26,22 @@ type ForumCardProps = {
     question: ForumQuestion;
     onTagClick?: (tag: string) => void;
 };
+const forumPhotoClass = cva("h-full w-full ring-1 ring-slate-200", {
+    variants: {
+        view: {
+            cover: "rounded-1 object-cover",
+            contain: "object-contain",
+        },
+    },
+});
 
 export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
     const upvoteFetcher = useFetcher<typeof upvoteForumAction>();
     const downvoteFetcher = useFetcher<typeof downvoteForumAction>();
     const bookmarkFetcher = useFetcher<typeof bookmarkForumAction>();
     const deleteFetcher = useFetcher<typeof deleteForumAction>();
-
+    const [photoView, setPhotoView] = useState<"cover" | "contain">("cover");
+    const buttonLabel = `Toggle image view mode (currently ${photoView})`;
     return (
         <div className="relative flex h-full w-full flex-col gap-3 rounded-2 bg-white px-6 pb-4 pt-6 shadow-none ring ring-slate-200 transition-all duration-200 hover:ring-slate-300">
             <div className="flex flex-1 flex-col gap-3 pb-3">
@@ -118,6 +129,32 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                         </h2>
                         <p className="text-slate-700">{question.question}</p>
                     </Link>
+                    {question.image_url && (
+                        <div className="relative h-48 w-full">
+                            <Button
+                                onClick={() => {
+                                    setPhotoView(
+                                        photoView === "cover"
+                                            ? "contain"
+                                            : "cover",
+                                    );
+                                }}
+                                aria-label={buttonLabel}
+                                className="h-full w-full"
+                            >
+                                <img
+                                    src={question.image_url}
+                                    alt="Question Image"
+                                    className={forumPhotoClass({
+                                        view: photoView,
+                                    })}
+                                    role="img"
+                                    aria-hidden="true"
+                                />
+                            </Button>
+                        </div>
+                    )}
+
                     <div className="flex flex-row gap-2">
                         {question.tags.map(
                             ({ name, linked_data_id, description }) => (

@@ -1,7 +1,7 @@
 import { Button } from "@ariakit/react";
-import { RiCloseFill } from "@remixicon/react";
+import { RiCamera2Fill, RiCloseFill } from "@remixicon/react";
 import { cva } from "cva";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form, useSearchParams } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
@@ -115,6 +115,36 @@ export const NewForum = () => {
         });
     };
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const handleImageClick = () => {
+        fileInputRef.current?.click();
+    };
+    const [imagePreview, setimagePreview] = useState<string | null>(null);
+    const imageContainerStyles = cva(
+        "flex h-48 w-full items-center justify-center overflow-hidden rounded-1 transition-all duration-200 hover:opacity-90",
+        {
+            variants: {
+                hasPreview: {
+                    true: "",
+                    false: "border-2 border-dashed border-slate-300 bg-slate-100",
+                },
+            },
+            defaultVariants: {
+                hasPreview: false,
+            },
+        },
+    );
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setimagePreview(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("lang", e.target.value);
@@ -150,6 +180,7 @@ export const NewForum = () => {
                     className="flex w-full max-w-screen-sm flex-col gap-4"
                     method="POST"
                     role="form"
+                    encType="multipart/form-data"
                 >
                     <input
                         hidden
@@ -189,6 +220,41 @@ export const NewForum = () => {
                                 }
                             />
                         </label>
+                        <div className="flex w-full flex-col items-center gap-2">
+                            <div
+                                onClick={handleImageClick}
+                                className="group relative w-full cursor-pointer"
+                            >
+                                <div
+                                    className={imageContainerStyles({
+                                        hasPreview: !!imagePreview,
+                                    })}
+                                >
+                                    {imagePreview ? (
+                                        <img
+                                            src={imagePreview}
+                                            alt="Image preview"
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : (
+                                        <RiCamera2Fill className="h-8 w-8 text-slate-400" />
+                                    )}
+                                </div>
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                                    <div className="rounded bg-black bg-opacity-50 p-1 text-xs text-white">
+                                        Change Photo
+                                    </div>
+                                </div>
+                            </div>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                name="image_file"
+                                onChange={handleImageChange}
+                                className="hidden"
+                            />
+                        </div>
                         {data.relevantQuiz && (
                             <div
                                 className="flex flex-col gap-2"

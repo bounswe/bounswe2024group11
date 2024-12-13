@@ -42,6 +42,7 @@ class ForumQuestion(models.Model):
     tags = models.ManyToManyField('Tag')
     quiz_question_id = models.ForeignKey('QuizQuestion', on_delete=models.CASCADE, null=True, blank=True) 
     updated_at = models.DateTimeField(auto_now=True)
+    image_url = models.CharField(max_length=1000, blank=True, null=True)
 
 
     def __str__(self):
@@ -220,3 +221,27 @@ class ForumAnswerDownvote(models.Model):
 
     def __str__(self):
         return f"{self.user} downvoted {self.forum_answer}"
+
+class Follow(models.Model):
+    follower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='following')
+    following = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='followers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("follower", "following")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.follower} followed {self.following}"
+
+class Block(models.Model):
+    blocker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blocking')
+    blocking = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blockers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("blocker", "blocking")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.blocker} blocked {self.blocking}"

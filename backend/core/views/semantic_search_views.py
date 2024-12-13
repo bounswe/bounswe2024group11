@@ -1,7 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import os
-from dotenv import load_dotenv
 
 from rest_framework import serializers, status
 from rest_framework.response import Response
@@ -16,32 +14,9 @@ from ..serializers.forum_question_serializer import ForumQuestionSerializer
 # import pagination
 from rest_framework.pagination import PageNumberPagination
 from django.utils.decorators import method_decorator
+from ..utils import get_ids
 
 
-load_dotenv()
-api_key = os.getenv('BABELNET_API_KEY')
-
-
-def get_ids(word_id):
-    return_array = [word_id]
-
-    url = 'https://babelnet.io/v9/getOutgoingEdges'
-    params = {
-        'id': word_id,
-        'key': api_key,
-    }
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-        raise Exception(f"Error fetching from BabelNet API. Status code: {response.status_code}")
-    
-    data = response.json()
-    for value in data:
-        if value.get("language") == "EN" or value.get("language") == "TR":
-            # if value.get("pointer").get("shortName") != "related":
-            #     return_array.append(value.get("target"))
-            return_array.append(value.get("target"))    
-    
-    return return_array
 
 
 class ForumQuestionPagination(PageNumberPagination):

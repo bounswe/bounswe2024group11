@@ -7,6 +7,8 @@ from ..serializers.forum_question_serializer import ForumQuestionSerializer
 from ..permissions import IsAuthorOrReadOnly
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 class ForumQuestionPagination(PageNumberPagination):
     page_size = 10
@@ -19,17 +21,20 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = ForumQuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     pagination_class = ForumQuestionPagination
-        
+    # parser_classes = (MultiPartParser, FormParser)  # Add this
+
+
+    def get_parsers(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return []
+
+        return super().get_parsers()
+    
 
     def perform_create(self, serializer):
-        # Set the author to the current authenticated user
         serializer.save(author=self.request.user)
 
     def list(self, request, *args, **kwargs):
-        # queryset = ForumQuestion.objects.all().order_by('-created_at')
-        # serializer = ForumQuestionSerializer(queryset, many=True, context={'request': request})
-        # return Response(serializer.data)
-
         """
         Handle pagination explicitly.
         """
@@ -45,16 +50,16 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = ForumQuestionSerializer(instance, context={'request': request})
+        serializer = ForumQuestionSerializer(instance, context={'request': request, 'include_related_questions': True})
         return Response(serializer.data)
-    
+
     def get_permissions(self):
         if self.action == 'list':  # If listing, allow anyone
             return [permissions.AllowAny()]
         return super().get_permissions()
+    
     
 class ForumAnswerViewSet(viewsets.ModelViewSet):
     queryset = ForumAnswer.objects.all().order_by('created_at')

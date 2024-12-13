@@ -3,7 +3,8 @@ from rest_framework import serializers
 from ..views.difficulty_views import get_difficulty
 from django.contrib.auth import get_user_model
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint)
+                    Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz,
+                    ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint, Follow, Block)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from core.utils import compress_image_tinify
@@ -12,11 +13,27 @@ User = get_user_model()
 queryset = User.objects.all()
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    is_followed = serializers.SerializerMethodField()
+    is_blocked = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', "full_name", "avatar")  # Include relevant fields
+        fields = ('id', 'username', 'email', "full_name", "avatar", "is_followed", "is_blocked")  # Include relevant fields
         read_only_fields = ('id', 'username', 'email', "full_name", "avatar")  # Make these fields read-only
-
+    def get_is_followed(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        else:
+            follow_obj = Follow.objects.filter(follower=user, following=obj).first()
+            return follow_obj.id if follow_obj else None
+        
+    def get_is_blocked(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        else:
+            block_obj = Block.objects.filter(blocker=user, blocking=obj).first()
+            return block_obj.id if block_obj else None
 
 class RegisterSerializer(serializers.ModelSerializer):
     avatar = serializers.CharField(required=False, allow_null=True)  # Add these parameters
@@ -62,7 +79,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name', 'linked_data_id', 'description')
-        
+        read_only_fields = ('id',)
     def create(self, validated_data):
         tag, created = Tag.objects.get_or_create(
             linked_data_id=validated_data['linked_data_id'],
@@ -345,5 +362,41 @@ class ForumBookmarkSerializer(serializers.ModelSerializer):
 
         if ForumBookmark.objects.filter(user=user, forum_question=forum_question).exists():
             raise serializers.ValidationError("You have already bookmarked this forum question.")
+
+        return attrs
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ("id", "follower", "following", "created_at")
+        read_only_fields = ("id", "follower", "created_at")
+    
+    def validate(self, attrs):
+        follower = self.context["request"].user
+        following = attrs["following"]
+
+        if follower == following:
+            raise serializers.ValidationError("You cannot follow yourself.")
+
+        if Follow.objects.filter(follower=follower, following=following).exists():
+            raise serializers.ValidationError("You have already followed this user.")
+
+        return attrs
+
+class BlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Block
+        fields = ("id", "blocker", "blocking", "created_at")
+        read_only_fields = ("id", "blocker", "created_at")
+    
+    def validate(self, attrs):
+        blocker = self.context["request"].user
+        blocking = attrs["blocking"]
+
+        if blocker == blocking:
+            raise serializers.ValidationError("You cannot block yourself.")
+
+        if Block.objects.filter(blocker=blocker, blocking=blocking).exists():
+            raise serializers.ValidationError("You have already blocked this user.")
 
         return attrs
