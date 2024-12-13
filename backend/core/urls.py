@@ -19,6 +19,7 @@ from .views.tagging_views import TaggingView
 from .views.jwt_views import DecoratedTokenObtainPairView, DecoratedTokenRefreshView, DecoratedTokenVerifyView, RegisterView
 from .views import follow_views
 from django.contrib import admin
+from .views.achievement_views import AchievementListView
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -69,6 +70,7 @@ urlpatterns = [
     path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
     path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"),
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
+    path('achievements/', AchievementListView.as_view(), name='achievement-list'),
 ]   
 
 urlpatterns += router.urls
