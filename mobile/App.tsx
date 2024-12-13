@@ -29,7 +29,18 @@ export type RootStackParamList = {
   MainTabs: undefined; // Use this for the bottom tabs
   Register: undefined;
   Forum: undefined;
-  ForumQuestionDetail: { question: Question };
+  ForumQuestionDetail: {
+    question: Question;
+    onBookmarkChange: (
+      questionId: number,
+      newBookmarkState: number | null
+    ) => void;
+    onVoteChange: (
+      questionId: number,
+      isUpvoteId: number | null,
+      isDownvoteId: number | null
+    ) => void;
+  };
   QuizFeed: undefined;
   QuizDetail: { quiz: QuizOverview };
   ViewQuiz: {
