@@ -6,13 +6,13 @@ import { OptionsView } from "./OptionsView";
 import { QuizCreate, QuizQuestionCreate } from "./Quiz.schema";
 import { WordSelectionView } from "./WordSelectionView";
 
-interface NewQuizQuestionProps {
+type NewQuizQuestionProps = {
     qIndex: number;
     quiz: QuizCreate;
     onSettle: (question: QuizQuestionCreate) => void;
-    onUnsettle: (question: QuizQuestionCreate) => void;
+    onUnsettle: (id: number) => void;
     addQuestion: (question: QuizQuestionCreate) => void;
-}
+};
 
 export const NewQuizQuestion = ({
     qIndex,
@@ -27,13 +27,7 @@ export const NewQuizQuestion = ({
     );
     const [view, setView] = useState<"word" | "options">("word");
     const [tag, setCorrectAnswer] = useState<Tag>();
-    const [wrongAnswers, setWrongAnswers] = useState<
-        { id: number; word: string }[]
-    >([
-        { id: 0, word: "" },
-        { id: 1, word: "" },
-        { id: 2, word: "" },
-    ]);
+    const [sense, setSense] = useState<"NOUN" | "VERB" | "ADJ" | "ADV">("NOUN");
 
     const nounOptions: Tag[] =
         data?.NOUN?.map((word) => ({
@@ -83,6 +77,7 @@ export const NewQuizQuestion = ({
                     adjectiveOptions={adjectiveOptions}
                     adverbOptions={adverbOptions}
                     verbOptions={verbOptions}
+                    setSense={setSense}
                     setCorrectAnswer={setCorrectAnswer}
                     setView={setView}
                     placeholder={getPlaceholder(quiz.type)}
@@ -93,9 +88,11 @@ export const NewQuizQuestion = ({
                 <OptionsView
                     quiz={quiz}
                     tag={tag}
-                    wrongAnswers={wrongAnswers}
-                    setWrongAnswers={setWrongAnswers}
+                    qIndex={qIndex}
                     onReset={handleReset}
+                    onSettle={onSettle}
+                    sense={sense}
+                    onUnsettle={onUnsettle}
                 />
             )}
         </fieldset>

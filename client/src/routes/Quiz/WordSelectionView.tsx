@@ -3,6 +3,8 @@ import { inputClass, labelClass } from "../../components/input";
 import { Tag } from "../Forum/Forum.schema";
 import { tagOptionClass } from "../Forum/NewForum";
 
+const indexToSense = ["NOUN", "VERB", "ADJ", "ADV"] as const;
+
 interface WordSelectionViewProps {
     search: string;
     setSearch: (value: string) => void;
@@ -13,6 +15,7 @@ interface WordSelectionViewProps {
     verbOptions: Tag[];
     setCorrectAnswer: (tag: Tag) => void;
     setView: (view: "word" | "options") => void;
+    setSense: (sense: "NOUN" | "VERB" | "ADJ" | "ADV") => void;
     placeholder: string;
 }
 
@@ -26,6 +29,7 @@ export const WordSelectionView = ({
     verbOptions,
     setCorrectAnswer,
     setView,
+    setSense,
     placeholder,
 }: WordSelectionViewProps) => {
     const sections = [
@@ -55,7 +59,7 @@ export const WordSelectionView = ({
                 </div>
             )}
             <div className="flex flex-col gap-2">
-                {sections.map(({ title, options }) => {
+                {sections.map(({ title, options }, i) => {
                     if (options.length === 0) return null;
                     return (
                         <div
@@ -78,6 +82,7 @@ export const WordSelectionView = ({
                                             setCorrectAnswer(tag);
                                             setView("options");
                                             setSearch("");
+                                            setSense(indexToSense[i]);
                                         }}
                                     >
                                         <span className="text-base font-medium">

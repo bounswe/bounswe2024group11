@@ -30,7 +30,7 @@ export const NewQuiz = () => {
         type: 1,
         questions: [],
     });
-
+    console.log("quiz", quiz);
     const [view, setView] = useState<"details" | "questions">("details");
 
     const [settledIndices, setSettledIndices] = useState<Set<number>>(
