@@ -69,7 +69,7 @@ class AchievementListView(APIView):
             serialized_achievement = AchievementSerializer(achievement).data
             achievement_id = achievement.id
             data.append({
-                "achievement_details": serialized_achievement,
+                "achievement": serialized_achievement,
                 "earned_at": user_achievement_map.get(achievement_id)  # None if not acquired
             })
 
