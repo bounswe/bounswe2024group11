@@ -21,25 +21,27 @@ class AchievementListView(APIView):
                 examples={
                     "application/json": [
                         {
-                            "id": 1,
-                            "slug": "first-quiz-created",
-                            "title": "First Quiz Created",
-                            "description": "Awarded for creating your first quiz.",
-                            "category": "Quiz",
-                            "created_at": "2024-12-01T12:00:00Z",
-                            "is_acquired": True,
+                            "achievement_details": {
+                                "id": 1,
+                                "slug": "first-quiz-created",
+                                "title": "First Quiz Created",
+                                "description": "Awarded for creating your first quiz.",
+                                "category": "Quiz",
+                                "created_at": "2024-12-01T12:00:00Z"
+                            },
                             "earned_at": "2024-12-15T10:30:00Z"
                         },
                         {
-                            "id": 2,
-                            "slug": "first-forum-post",
-                            "title": "First Forum Post Created",
-                            "description": "Awarded for creating your first forum post.",
-                            "category": "Forum",
-                            "created_at": "2024-12-02T12:00:00Z",
-                            "is_acquired": False,
+                            "achievement_details": {
+                                "id": 2,
+                                "slug": "first-forum-post",
+                                "title": "First Forum Post Created",
+                                "description": "Awarded for creating your first forum post.",
+                                "category": "Forum",
+                                "created_at": "2024-12-02T12:00:00Z"
+                            },
                             "earned_at": None
-                        },
+                        }
                     ]
                 },
             ),
@@ -61,13 +63,14 @@ class AchievementListView(APIView):
             ua.achievement_id: ua.earned_at for ua in user_achievements
         }
 
-        # Serialize achievements and add `is_acquired` and `earned_at` fields
+        # Serialize achievements and nest fields under `achievement_details`
         data = []
         for achievement in achievements:
             serialized_achievement = AchievementSerializer(achievement).data
             achievement_id = achievement.id
-            serialized_achievement['is_acquired'] = achievement_id in user_achievement_map
-            serialized_achievement['earned_at'] = user_achievement_map.get(achievement_id)  # None if not acquired
-            data.append(serialized_achievement)
+            data.append({
+                "achievement_details": serialized_achievement,
+                "earned_at": user_achievement_map.get(achievement_id)  # None if not acquired
+            })
 
         return Response(data, status=status.HTTP_200_OK)
