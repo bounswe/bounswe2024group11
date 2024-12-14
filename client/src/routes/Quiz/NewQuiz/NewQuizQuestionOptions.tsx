@@ -126,6 +126,18 @@ export const NewQuizQuestionOptions = ({
             .then((res) => res.data);
     });
 
+    const hint = useSWR(`hint-${linked_data_id}`, () => {
+        return apiClient
+            .get("/hint/", {
+                params: {
+                    synset_id: linked_data_id,
+                    target_lang: quiz.type === 2 ? "tr" : "en",
+                    word: tag?.name,
+                },
+            })
+            .then((res) => res.data);
+    });
+
     const difficultyNumber = difficulty.data?.question_point || 10;
     const possibleAnswers = translation.data?.translations || [];
 
