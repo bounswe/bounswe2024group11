@@ -158,6 +158,24 @@ export const routes: RouteObject[] = [
                         path: "profile/:username",
                         element: <Profile />,
                         loader: profileLoader,
+                        children: [
+                            {
+                                path: "block",
+                                action: BlockAction,
+                            },
+                            {
+                                path: "unblock",
+                                action: UnBlockAction,
+                            },
+                            {
+                                path: "follow",
+                                action: FollowAction,
+                            },
+                            {
+                                path: "unfollow",
+                                action: UnFollowAction,
+                            },
+                        ],
                     },
                 ],
             },
