@@ -9,6 +9,7 @@ import {
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
+import { Voiceover } from "../../components/voiceover";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
@@ -377,7 +378,14 @@ export const TakeQuizPage = () => {
                         quiz.questions[currentQuestion].question_text,
                     )}
                 </div>
-                {quiz.questions[currentQuestion].hints?.length && (
+                <div>
+                    {(quiz.type === 1 || quiz.type === 3) && (
+                        <Voiceover
+                            text={quiz.questions[currentQuestion].question_text}
+                        />
+                    )}
+                </div>
+                {quiz.questions[currentQuestion].hints?.length ? (
                     <div>
                         <Ariakit.PopoverProvider placement="bottom-end">
                             <Ariakit.PopoverDisclosure
@@ -433,7 +441,7 @@ export const TakeQuizPage = () => {
                             </Ariakit.Popover>
                         </Ariakit.PopoverProvider>
                     </div>
-                )}
+                ) : null}
             </div>
             {quiz.questions[currentQuestion] && (
                 <div>
@@ -453,7 +461,10 @@ export const TakeQuizPage = () => {
                                                 : "bg-slate-100 text-slate-950 hover:bg-slate-200"
                                         }`}
                                         aria-describedby="question"
-                                        lang={quiz.type === 2 ? "tr" : "en"}
+                                        lang={quiz.type === 2 ? "tr" : "tr"}
+                                        aria-lang={
+                                            quiz.type === 2 ? "tr" : "tr"
+                                        }
                                     >
                                         <input
                                             className="sr-only"
@@ -469,8 +480,25 @@ export const TakeQuizPage = () => {
                                                     String(choice.id),
                                                 )
                                             }
+                                            lang={
+                                                quiz.type === 2
+                                                    ? "tr-TR"
+                                                    : "en-US"
+                                            }
+                                            aria-lang={
+                                                quiz.type === 2
+                                                    ? "tr-TR"
+                                                    : "en-US"
+                                            }
                                         />
-                                        {choice.choice_text}
+                                        <span className="flex-1">
+                                            {choice.choice_text}
+                                        </span>
+                                        {quiz.type == 2 && (
+                                            <Voiceover
+                                                text={choice.choice_text}
+                                            />
+                                        )}
                                     </label>
                                 </li>
                             ),
