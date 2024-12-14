@@ -5,9 +5,13 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface DeleteButtonProps {
   questionId: number;
+  onDelete: (questionId: number) => void;
 }
 
-const DeleteButton: React.FC<DeleteButtonProps> = ({ questionId }) => {
+const DeleteButton: React.FC<DeleteButtonProps> = ({
+  questionId,
+  onDelete,
+}) => {
   const handleDelete = async () => {
     Alert.alert(
       "Delete Question",
@@ -25,6 +29,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ questionId }) => {
                 `http://138.68.97.90/api/v1/forum-questions/${questionId}/`
               );
               console.log("Question deleted");
+              onDelete(questionId);
             } catch (error) {
               console.error("Error deleting question:", error);
             }

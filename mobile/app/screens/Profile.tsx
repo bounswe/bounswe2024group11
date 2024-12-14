@@ -30,7 +30,7 @@ type ProfileScreenNavigationProp =
 
 const Profile: React.FC = () => {
   const { authState } = useAuth();
-
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [myQuizzes, setMyQuizzes] = useState<QuizOverview[]>([]);
   const [myTakenQuizzes, setMyTakenQuizzes] = useState<QuizOverview[]>([]);
   const [myQuestions, setMyQuestions] = useState<Question[]>([]);
@@ -42,145 +42,214 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [index, setIndex] = useState(0); // Tracks the selected tab index
+
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const isFocused = useIsFocused();
+  const fetchQuestions = async () => {
+    setLoading(true);
+    setError(null);
+    if (!authState?.token) {
+      setError("You need to be logged in to fetch questions.");
+      setLoading(false);
+      return;
+    }
 
+    try {
+      const myQuizzesResult = await axios.get(`${API_URL_QUIZZES}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const myQuestionsResult = await axios.get(`${API_URL_FORUM_QUESTIONS}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const bookmarksResult = await axios.get(`${API_URL_BOOKMARKS}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const upvotesResult = await axios.get(`${API_URL_UPVOTES}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const myQuizzesPromises = myQuizzesResult.data.results
+        .filter((item: any) => item.is_my_quiz)
+        .map(async (item: any) => {
+          const quizResponse = await axios.get(
+            `${API_URL_QUIZZES}${item.id}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return quizResponse.data;
+        });
+
+      const myTakenQuizzesPromises = myQuizzesResult.data.results
+        .filter((item: any) => item.is_taken)
+        .map(async (item: any) => {
+          const quizResponse = await axios.get(
+            `${API_URL_QUIZZES}${item.id}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return quizResponse.data;
+        });
+
+      const myQuestionsPromises = myQuestionsResult.data.results
+        .filter((item: any) => item.is_my_forum_question)
+        .map(async (item: any) => {
+          const questionResponse = await axios.get(
+            `${API_URL_FORUM_QUESTIONS}${item.id}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return questionResponse.data;
+        });
+
+      const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
+        async (item: any) => {
+          const questionResponse = await axios.get(
+            `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return questionResponse.data;
+        }
+      );
+
+      const upvotedQuestionsPromises = upvotesResult.data.results.map(
+        async (item: any) => {
+          const questionResponse = await axios.get(
+            `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return questionResponse.data;
+        }
+      );
+
+      const myQuizzesData = await Promise.all(myQuizzesPromises);
+      const myTakenQuizzesData = await Promise.all(myTakenQuizzesPromises);
+      const myQuestionsData = await Promise.all(myQuestionsPromises);
+
+      const bookmarkedQuestionsData = await Promise.all(
+        bookmarkedQuestionsPromises
+      );
+      const upvotedQuestionsData = await Promise.all(upvotedQuestionsPromises);
+
+      setMyQuizzes(myQuizzesData);
+      setMyTakenQuizzes(myTakenQuizzesData);
+      setMyQuestions(myQuestionsData);
+      setBookmarkedQuestions(bookmarkedQuestionsData);
+      setUpvotedQuestions(upvotedQuestionsData);
+    } catch (error) {
+      setError("Error fetching questions");
+      console.error("Error fetching questions", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchQuestions = async () => {
-      setLoading(true);
-      setError(null);
-      if (!authState?.token) {
-        setError("You need to be logged in to fetch questions.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const myQuizzesResult = await axios.get(`${API_URL_QUIZZES}`, {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        });
-
-        const myQuestionsResult = await axios.get(
-          `${API_URL_FORUM_QUESTIONS}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authState.token}`,
-            },
-          }
-        );
-
-        const bookmarksResult = await axios.get(`${API_URL_BOOKMARKS}`, {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        });
-
-        const upvotesResult = await axios.get(`${API_URL_UPVOTES}`, {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        });
-
-        const myQuizzesPromises = myQuizzesResult.data.results
-          .filter((item: any) => item.is_my_quiz)
-          .map(async (item: any) => {
-            const quizResponse = await axios.get(
-              `${API_URL_QUIZZES}${item.id}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return quizResponse.data;
-          });
-
-        const myTakenQuizzesPromises = myQuizzesResult.data.results
-          .filter((item: any) => item.is_taken)
-          .map(async (item: any) => {
-            const quizResponse = await axios.get(
-              `${API_URL_QUIZZES}${item.id}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return quizResponse.data;
-          });
-
-        const myQuestionsPromises = myQuestionsResult.data.results
-          .filter((item: any) => item.is_my_forum_question)
-          .map(async (item: any) => {
-            const questionResponse = await axios.get(
-              `${API_URL_FORUM_QUESTIONS}${item.id}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return questionResponse.data;
-          });
-
-        const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
-          async (item: any) => {
-            const questionResponse = await axios.get(
-              `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return questionResponse.data;
-          }
-        );
-
-        const upvotedQuestionsPromises = upvotesResult.data.results.map(
-          async (item: any) => {
-            const questionResponse = await axios.get(
-              `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return questionResponse.data;
-          }
-        );
-
-        const myQuizzesData = await Promise.all(myQuizzesPromises);
-        const myTakenQuizzesData = await Promise.all(myTakenQuizzesPromises);
-        const myQuestionsData = await Promise.all(myQuestionsPromises);
-
-        const bookmarkedQuestionsData = await Promise.all(
-          bookmarkedQuestionsPromises
-        );
-        const upvotedQuestionsData = await Promise.all(
-          upvotedQuestionsPromises
-        );
-
-        setMyQuizzes(myQuizzesData);
-        setMyTakenQuizzes(myTakenQuizzesData);
-        setMyQuestions(myQuestionsData);
-        setBookmarkedQuestions(bookmarkedQuestionsData);
-        setUpvotedQuestions(upvotedQuestionsData);
-      } catch (error) {
-        setError("Error fetching questions");
-        console.error("Error fetching questions", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (isFocused) {
       fetchQuestions();
     }
   }, [isFocused, authState?.token]);
+
+  const handleDeleteQuestion = async (deletedQuestionId: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter(
+        (question) => Number(question.id) !== deletedQuestionId
+      )
+    );
+    await fetchQuestions();
+  };
+
+  const handleBookmarkChange = async (
+    questionId: number,
+    newBookmarkState: number | null
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        Number(question.id) === questionId
+          ? { ...question, is_bookmarked: newBookmarkState }
+          : question
+      )
+    );
+
+    setBookmarkedQuestions((prevBookmarkedQuestions) =>
+      newBookmarkState === null || newBookmarkState === 0
+        ? prevBookmarkedQuestions.filter(
+            (question) => Number(question.id) !== questionId
+          )
+        : prevBookmarkedQuestions
+    );
+
+    await fetchQuestions();
+  };
+
+  const handleVoteChange = async (
+    questionId: number,
+    isUpvoteId: number | null,
+    isDownvoteId: number | null
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        Number(question.id) === questionId
+          ? {
+              ...question,
+              is_upvoted: isUpvoteId,
+              is_downvoted: isDownvoteId,
+              upvotes_count: isUpvoteId
+                ? question.is_upvoted
+                  ? question.upvotes_count
+                  : question.upvotes_count + 1
+                : question.is_upvoted
+                  ? question.upvotes_count - 1
+                  : question.upvotes_count,
+              downvotes_count: isDownvoteId
+                ? question.is_downvoted
+                  ? question.downvotes_count
+                  : question.downvotes_count + 1
+                : question.is_downvoted
+                  ? question.downvotes_count - 1
+                  : question.downvotes_count,
+            }
+          : question
+      )
+    );
+
+    setUpvotedQuestions((prevUpvotedQuestions) =>
+      isUpvoteId === null || isUpvoteId === 0
+        ? prevUpvotedQuestions.filter(
+            (question) => Number(question.id) !== questionId
+          )
+        : prevUpvotedQuestions
+    );
+
+    await fetchQuestions();
+  };
 
   if (!authState?.authenticated || !authState?.user) {
     return (
@@ -193,7 +262,6 @@ const Profile: React.FC = () => {
   // TabView scenes
   const MyQuizzesRoute = () => (
     <ScrollView style={styles.container}>
-      {/*<Text style={styles.title}>My Quizzes</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -220,7 +288,6 @@ const Profile: React.FC = () => {
 
   const MyTakenQuizzesRoute = () => (
     <ScrollView style={styles.container}>
-      {/*<Text style={styles.title}>My Taken Quizzes</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -247,7 +314,6 @@ const Profile: React.FC = () => {
 
   const MyQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      {/*<Text style={styles.title}>My Questions</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {error && <Text style={styles.errorText}>{error}</Text>}
       {!loading && !error && (
@@ -259,10 +325,17 @@ const Profile: React.FC = () => {
                 onPress={() =>
                   navigation.navigate("ForumQuestionDetail", {
                     question: item,
+                    onBookmarkChange: handleBookmarkChange,
+                    onVoteChange: handleVoteChange,
                   })
                 }
               >
-                <ForumQuestionCard item={item} />
+                <ForumQuestionCard
+                  item={item}
+                  onBookmarkChange={handleBookmarkChange}
+                  onVoteChange={handleVoteChange}
+                  onDelete={handleDeleteQuestion}
+                />
               </TouchableOpacity>
             ))
           ) : (
@@ -275,7 +348,6 @@ const Profile: React.FC = () => {
 
   const BookmarkedQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      {/*<Text style={styles.title}>Bookmarked Questions</Text>*/}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -286,10 +358,17 @@ const Profile: React.FC = () => {
                 onPress={() =>
                   navigation.navigate("ForumQuestionDetail", {
                     question: item,
+                    onBookmarkChange: handleBookmarkChange,
+                    onVoteChange: handleVoteChange,
                   })
                 }
               >
-                <ForumQuestionCard item={item} />
+                <ForumQuestionCard
+                  item={item}
+                  onBookmarkChange={handleBookmarkChange}
+                  onVoteChange={handleVoteChange}
+                  onDelete={handleDeleteQuestion}
+                />
               </TouchableOpacity>
             ))
           ) : (
@@ -302,7 +381,6 @@ const Profile: React.FC = () => {
 
   const UpvotedQuestionsRoute = () => (
     <ScrollView style={styles.container}>
-      {/* <Text style={styles.title}>Upvoted Questions</Text> */}
       {loading && <ActivityIndicator size="large" color="#5BADCE" />}
       {!loading && !error && (
         <>
@@ -313,10 +391,17 @@ const Profile: React.FC = () => {
                 onPress={() =>
                   navigation.navigate("ForumQuestionDetail", {
                     question: item,
+                    onBookmarkChange: handleBookmarkChange,
+                    onVoteChange: handleVoteChange,
                   })
                 }
               >
-                <ForumQuestionCard item={item} />
+                <ForumQuestionCard
+                  item={item}
+                  onBookmarkChange={handleBookmarkChange}
+                  onVoteChange={handleVoteChange}
+                  onDelete={handleDeleteQuestion}
+                />
               </TouchableOpacity>
             ))
           ) : (
@@ -326,6 +411,24 @@ const Profile: React.FC = () => {
       )}
     </ScrollView>
   );
+
+  // TabView configuration
+  const routes = [
+    { key: "myQuizzes", title: `My Quizzes (${myQuizzes.length})` },
+    {
+      key: "myTakenQuizzes",
+      title: `Taken Quizzes (${myTakenQuizzes.length})`,
+    },
+    { key: "myQuestions", title: `My Questions (${myQuestions.length})` },
+    {
+      key: "bookmarkedQuestions",
+      title: `Bookmarked Questions (${bookmarkedQuestions.length})`,
+    },
+    {
+      key: "upvotedQuestions",
+      title: `Upvoted Questions (${upvotedQuestions.length})`,
+    },
+  ];
 
   const renderScene = SceneMap({
     myQuizzes: MyQuizzesRoute,
