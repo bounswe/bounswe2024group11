@@ -1,5 +1,10 @@
 import * as Ariakit from "@ariakit/react";
-import { RiArrowLeftSLine, RiLightbulbFlashLine } from "@remixicon/react";
+import {
+    RiArrowLeftSLine,
+    RiCheckLine,
+    RiCloseLine,
+    RiLightbulbFlashLine,
+} from "@remixicon/react";
 import { useEffect, useRef, useState } from "react";
 import { Form, Link } from "react-router-dom";
 import {
@@ -15,6 +20,7 @@ import { homeLoader } from "../Home/Home.data";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
 import { QuizDetails } from "./Quiz.schema";
 import { questionTypeToQuestion } from "./Quiz.utils";
+import { choiceButton } from "./QuizChoice";
 
 const StartQuizComponent = ({
     quiz,
@@ -477,75 +483,62 @@ export const TakeQuizPage = () => {
                         aria-labelledby={`question-${currentQuestion}`}
                     >
                         {quiz.questions[currentQuestion].choices.map(
-                            (choice, _) => (
-                                <li key={choice.id}>
-                                    <label
-                                        className={`flex cursor-pointer items-center justify-center gap-2 rounded-2 px-4 py-3 text-center text-lg transition-colors duration-200 ${
-                                            showAnswer
-                                                ? choice.is_correct
-                                                    ? "bg-green-600 text-white"
-                                                    : selectedOption ===
-                                                        String(choice.id)
-                                                      ? "bg-red-600 text-white"
-                                                      : "bg-slate-100 text-slate-950"
-                                                : selectedOption ===
-                                                    String(choice.id)
-                                                  ? "bg-cyan-700 text-white"
-                                                  : "bg-slate-100 text-slate-950 hover:bg-slate-200"
-                                        }`}
-                                        aria-describedby="question"
-                                        lang={quiz.type === 2 ? "tr" : "en"}
-                                    >
-                                        <input
-                                            className="sr-only"
-                                            type="radio"
-                                            name="option"
-                                            value={choice.id}
-                                            checked={
-                                                selectedOption ===
-                                                String(choice.id)
-                                            }
-                                            onChange={() =>
-                                                handleOptionChange(
-                                                    String(choice.id),
-                                                )
-                                            }
-                                            disabled={showAnswer}
-                                        />
-                                        {choice.choice_text}
-                                    </label>
-                                </li>
-                            ),
+                            (choice) => {
+                                const isCorrectChoice = choice.is_correct;
+                                const isSelectedChoice =
+                                    selectedOption === String(choice.id);
+
+                                return (
+                                    <li key={choice.id}>
+                                        <label
+                                            className={choiceButton({
+                                                isCorrect: choice.is_correct,
+                                                isSelected: isSelectedChoice,
+                                                showAnswer,
+                                                className: "flex-1",
+                                            })}
+                                            aria-describedby="question"
+                                            lang={quiz.type === 2 ? "tr" : "en"}
+                                        >
+                                            <input
+                                                className="sr-only"
+                                                type="radio"
+                                                name="option"
+                                                value={choice.id}
+                                                checked={isSelectedChoice}
+                                                onChange={() =>
+                                                    handleOptionChange(
+                                                        String(choice.id),
+                                                    )
+                                                }
+                                                disabled={showAnswer}
+                                            />
+
+                                            <span className="flex-1">
+                                                {choice.choice_text}
+                                            </span>
+
+                                            {showAnswer && isSelectedChoice && (
+                                                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
+                                                    {isCorrectChoice ? (
+                                                        <RiCheckLine
+                                                            className="text-green-700"
+                                                            size={20}
+                                                        />
+                                                    ) : (
+                                                        <RiCloseLine
+                                                            className="text-red-700"
+                                                            size={20}
+                                                        />
+                                                    )}
+                                                </div>
+                                            )}
+                                        </label>
+                                    </li>
+                                );
+                            },
                         )}
                     </ul>
-                    {showAnswer && (
-                        <a
-                            role="alert"
-                            aria-atomic="true"
-                            href="#"
-                            aria-live="polite"
-                            ref={dialogRef}
-                            className={`mt-4 flex rounded-2 p-3 ${
-                                selectedOption ===
-                                String(
-                                    quiz.questions[
-                                        currentQuestion
-                                    ].choices.find((c) => c.is_correct)?.id,
-                                )
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
-                            }`}
-                        >
-                            {selectedOption ===
-                            String(
-                                quiz.questions[currentQuestion].choices.find(
-                                    (c) => c.is_correct,
-                                )?.id,
-                            )
-                                ? "Correct answer!"
-                                : "Incorrect answer."}
-                        </a>
-                    )}
                 </div>
             )}
             <div className="grid w-full grid-cols-2 gap-4">
