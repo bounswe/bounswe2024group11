@@ -56,6 +56,7 @@ class TokenObtainPairResponseSerializer(serializers.Serializer):
         username = serializers.CharField()
         email = serializers.EmailField()
         full_name = serializers.CharField()
+        avatar = serializers.URLField()
 
     user = UserResponseSerializer()
 
@@ -78,6 +79,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 'username': user.username,
                 'email': user.email,
                 'full_name': user.full_name,
+                'avatar': user.avatar,
             }
         })
 
