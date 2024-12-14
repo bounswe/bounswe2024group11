@@ -18,7 +18,7 @@ export const profileLoader = (async ({ params }) => {
 
     try {
         const response = await apiClient.get(`/profile/${userName}/`);
-
+        logger.log(response.data);
         const { output, success, issues } = safeParse(
             profileSchema,
             response.data,

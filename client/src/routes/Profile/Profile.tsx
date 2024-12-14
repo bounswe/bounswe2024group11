@@ -1,9 +1,9 @@
 import * as Ariakit from "@ariakit/react";
 import { Button } from "@ariakit/react";
+import { useParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { ForumQuestionCard } from "../../components/forum-card";
 import { homeLoader } from "../Home/Home.data";
 import { profileLoader } from "./Profile.data";
 
@@ -47,38 +47,39 @@ const Badge = ({
 };
 
 export const Profile = () => {
-    const { my, bookMarked, upvoted } = useLoaderData<typeof profileLoader>();
-
+    const { bookmarked_forums, full_name, avatar } =
+        useLoaderData<typeof profileLoader>();
+    const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
     const author = {
-        avatar: "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=David%20Bush",
-        full_name: user?.full_name || "",
-        username: user?.username || "",
+        avatar: avatar,
+        full_name: full_name || "",
+        username: username || "",
     };
     return (
         <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <header className="flex flex-row items-center gap-4">
                 <Avatar author={author} size={96} />
                 <div className="flex-1">
-                    <h1 className="pt-2 text-2xl font-semibold">
-                        {user?.full_name}
-                    </h1>
+                    <h1 className="pt-2 text-2xl font-semibold">{full_name}</h1>
                     <p className="text-lg text-slate-500" aria-label="Username">
-                        @{user?.username}
+                        @{username}
                     </p>
                 </div>
-                <Button
-                    className={buttonClass({
-                        intent: "secondary",
-                        size: "medium",
-                    })}
-                >
-                    <span
-                        className={buttonInnerRing({ intent: "secondary" })}
-                    />
-                    <span>Follow</span>
-                </Button>
+                {user?.username !== username && (
+                    <Button
+                        className={buttonClass({
+                            intent: "secondary",
+                            size: "medium",
+                        })}
+                    >
+                        <span
+                            className={buttonInnerRing({ intent: "secondary" })}
+                        />
+                        <span>Follow</span>
+                    </Button>
+                )}
             </header>
             <section className="z-20 flex w-full flex-row items-center justify-between">
                 <div className="flex flex-col gap-2">
@@ -126,17 +127,17 @@ export const Profile = () => {
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
                     <span>My Forum Questions</span>
                     <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {my.length}
+                        {/* {my.length} */}
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {my.map((post) => (
+                    {/* {my.map((post) => (
                         <ForumQuestionCard
                             onTagClick={() => {}}
                             key={post.id}
                             question={post}
                         />
-                    ))}
+                    ))} */}
                 </div>
             </section>{" "}
             <hr className="my-4" aria-hidden="true" />
@@ -144,17 +145,17 @@ export const Profile = () => {
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
                     <span>Bookmarked Forum Questions</span>
                     <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {bookMarked.length}
+                        {bookmarked_forums.length}
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {bookMarked.map((post) => (
+                    {/* {bookmarked_forums.map((post) => (
                         <ForumQuestionCard
                             onTagClick={() => {}}
                             key={post.id}
                             question={post}
                         />
-                    ))}
+                    ))} */}
                 </div>
             </section>{" "}
             <hr className="my-4" aria-hidden="true" />
@@ -162,17 +163,17 @@ export const Profile = () => {
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
                     <span>Upvoted Forum Questions</span>
                     <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {upvoted.length}
+                        {/* {upvoted.length} */}
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {upvoted.map((post) => (
+                    {/* {upvoted.map((post) => (
                         <ForumQuestionCard
                             onTagClick={() => {}}
                             key={post.id}
                             question={post}
                         />
-                    ))}
+                    ))} */}
                 </div>
             </section>
         </main>

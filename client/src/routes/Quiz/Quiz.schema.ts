@@ -144,7 +144,26 @@ export const quizSchema = object({
         count: number(),
     }),
 });
-
+// eXtremeGoHorse begin
+const quizAnswerSchemaForProfile = object({
+    id: number(),
+    take_quiz: number(),
+    question: number(),
+    answer: number(),
+    is_hint_used: boolean(),
+});
+export const quizzeTakenSchemaForProfile = object({
+    id: number(),
+    quiz: number(),
+    user: number(),
+    date: string(),
+    answers: array(quizAnswerSchemaForProfile),
+    score: number(),
+    correct_answer_count: number(),
+    wrong_answer_count: number(),
+    empty_answer_count: number(),
+});
+// eXtremeGoHorse end
 export type CompletedQuiz = InferInput<typeof completedQuizSchema>;
 export type QuizOverview = InferInput<typeof quizOverviewSchema>;
 export type QuizDetails = InferInput<typeof quizDetailsSchema>;
