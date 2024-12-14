@@ -1,6 +1,6 @@
-import { RiInformation2Fill } from "@remixicon/react";
 import { useState } from "react";
 import { Discuss } from "react-loader-spinner";
+import { InfoBox } from "../../../components/info-box";
 import { inputClass, labelClass } from "../../../components/input";
 import { useTaggingSearch } from "../../../hooks/tagging";
 import { Tag } from "../../Forum/Forum.schema";
@@ -81,14 +81,10 @@ export const WordSelectionView = ({
                     />
                 </div>
             )}
-            {!isLoading && debouncedSearch && noData && (
-                <div className="flex items-center gap-2 rounded-2 bg-yellow-50 px-3 py-2 text-sm text-slate-500 ring ring-yellow-950/10">
-                    <RiInformation2Fill size={16} className="text-yellow-950" />
-                    <span className="text-sm text-yellow-950">
-                        We couldn't find any words to match your search.
-                    </span>
-                </div>
-            )}
+            <InfoBox
+                show={!isLoading && Boolean(debouncedSearch) && noData}
+                message=" We couldn't find any words to match your search."
+            />
             <div className="flex flex-col gap-2">
                 {sections.map(({ title, options, sense }, i) => {
                     if (options.length === 0) return null;

@@ -23,7 +23,7 @@ export const getQuestionType = (type: number) => {
 };
 
 export const NewQuiz = () => {
-    const { quiz, getValidationErrors, resetQuiz } = useQuizStore();
+    const { quiz, getValidationErrors, getQuizForSubmission } = useQuizStore();
     const [view, setView] = useState<"details" | "questions">("details");
     logger.log("quiz", quiz);
 
@@ -43,7 +43,7 @@ export const NewQuiz = () => {
                     <input
                         type="hidden"
                         name="quiz"
-                        value={JSON.stringify(quiz)}
+                        value={JSON.stringify(getQuizForSubmission())}
                     />
                     <header className="flex justify-between gap-4">
                         <h2 className="text-lg font-medium">

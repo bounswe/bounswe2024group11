@@ -22,8 +22,7 @@ type NewQuizQuestionsProps = {
 };
 
 export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
-    const { quiz, addQuestion, getValidationErrors, resetQuiz } =
-        useQuizStore();
+    const { quiz, addQuestion, getValidationErrors } = useQuizStore();
     return (
         <div className="flex flex-col gap-6">
             {Array.from({ length: quiz.questions.length }).map((_, index) => (
@@ -71,6 +70,7 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
                         icon: "left",
                     })}
                     disabled={getValidationErrors().length > 0}
+                    onClick={() => {}}
                 >
                     <RiCheckLine size={16} />
                     Submit Quiz

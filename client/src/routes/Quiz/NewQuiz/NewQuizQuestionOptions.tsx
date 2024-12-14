@@ -86,10 +86,12 @@ export const NewQuizQuestionOptions = ({
     const [showInfo, setShowInfo] = useState(
         localStorage.getItem("quiz-info-shown") !== "true",
     );
-    const [showConfusion, setShowConfusion] = useState(
-        localStorage.getItem("quiz-confusion-shown") !== "true",
-    );
+
     const { quiz, updateQuestion, setCorrectAnswer } = useQuizStore();
+    const [showConfusion, setShowConfusion] = useState(
+        quiz.type === 3 &&
+            localStorage.getItem("quiz-confusion-shown") !== "true",
+    );
     const currentQuestion = quiz.questions[index];
     const tag = currentQuestion.question_tag;
     const handleInfoClose = () => {
