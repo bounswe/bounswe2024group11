@@ -241,7 +241,16 @@ export const useQuizStore = create<QuizState>((set, get) => ({
             },
         })),
 
-    resetQuiz: () => set({ quiz: initialQuiz }),
+    resetQuiz: () => {
+        const state = get();
+        state.quiz.questions.forEach((question) => {
+            question.choices.forEach((choice) => {
+                choice.choice_text = "";
+            });
+            question.hints = [];
+        });
+        return set({ quiz: initialQuiz });
+    },
 
     getValidationErrors: () => {
         const state = get();
