@@ -35,7 +35,14 @@ import {
 } from "./routes/Forum/Question.data";
 import { homeLoader } from "./routes/Home/Home.data";
 import { Profile } from "./routes/Profile/Profile";
-import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
+import {
+    BlockAction,
+    FollowAction,
+    myProfileLoader,
+    profileLoader,
+    UnBlockAction,
+    UnFollowAction,
+} from "./routes/Profile/Profile.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
@@ -148,6 +155,24 @@ export const routes: RouteObject[] = [
                         path: "profile/:username",
                         element: <Profile />,
                         loader: profileLoader,
+                        children: [
+                            {
+                                path: "block",
+                                action: BlockAction,
+                            },
+                            {
+                                path: "unblock",
+                                action: UnBlockAction,
+                            },
+                            {
+                                path: "follow",
+                                action: FollowAction,
+                            },
+                            {
+                                path: "unfollow",
+                                action: UnFollowAction,
+                            },
+                        ],
                     },
                 ],
             },

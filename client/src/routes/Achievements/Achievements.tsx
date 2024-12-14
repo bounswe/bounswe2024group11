@@ -25,12 +25,14 @@ const snakeToTitle = (snake: string) => {
     return snake.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
-const AchievementBadge = ({
+export const AchievementBadge = ({
     achievement,
     is_earned,
+    is_on_profile = true,
 }: {
     achievement: Achievement;
     is_earned: boolean;
+    is_on_profile?: boolean;
 }) => {
     return (
         <div className="flex flex-col" role="definition">
@@ -50,9 +52,11 @@ const AchievementBadge = ({
                             className="h-14 w-14"
                         />
                     </span>
-                    <span className="select-none text-sm font-medium text-slate-700">
-                        {achievement.title}
-                    </span>
+                    {!is_on_profile && (
+                        <span className="select-none pr-2 text-sm font-medium text-slate-700">
+                            {achievement.title}
+                        </span>
+                    )}
                 </Ariakit.HovercardAnchor>
                 <Ariakit.Hovercard
                     gutter={16}
@@ -138,6 +142,7 @@ export const Achievements = () => {
                                         <AchievementBadge
                                             achievement={achievement.item}
                                             is_earned={achievement.is_earned}
+                                            is_on_profile={false}
                                         />
                                     </li>
                                 ))}
