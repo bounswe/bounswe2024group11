@@ -31,7 +31,7 @@ interface QuizState {
 
 const generateId = (prefix: string) => `${prefix}-${Date.now()}`;
 
-const createInitialChoices = (): Choice[] => {
+export const createInitialChoices = (): Choice[] => {
     let id = 0;
     return Array.from({ length: 4 }).map(() => ({
         id: generateId("choice" + id),

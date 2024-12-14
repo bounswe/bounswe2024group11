@@ -10,7 +10,11 @@ import {
 import { useState } from "react";
 import { buttonClass, buttonInnerRing } from "../../../components/button";
 import { NewQuizQuestionOptions } from "./NewQuizQuestionOptions";
-import { createInitialQuestion, useQuizStore } from "./state";
+import {
+    createInitialChoices,
+    createInitialQuestion,
+    useQuizStore,
+} from "./state";
 import { WordSelectionView } from "./WordSelectionView";
 
 type NewQuizQuestionProps = {
@@ -86,8 +90,13 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
 };
 
 export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
-    const { quiz, deleteQuestion, reorderQuestions, setCorrectAnswer } =
-        useQuizStore();
+    const {
+        quiz,
+        deleteQuestion,
+        reorderQuestions,
+        setCorrectAnswer,
+        updateQuestion,
+    } = useQuizStore();
     const alreadyFilled = quiz.questions[index].question_tag !== null;
     const [view, setView] = useState<"word" | "options">(
         alreadyFilled ? "options" : "word",
@@ -117,6 +126,10 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                     onQuestionReset={() => {
                         setView("word");
                         setCorrectAnswer(index, "");
+                        updateQuestion(index, {
+                            question_text: "",
+                            choices: createInitialChoices(),
+                        });
                     }}
                 />
             )}
