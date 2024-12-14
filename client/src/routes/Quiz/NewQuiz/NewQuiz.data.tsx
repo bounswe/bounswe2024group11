@@ -9,14 +9,11 @@ export const newQuizLoader = (async () => {
 
 export const newQuizAction = (async ({ request, params, context }) => {
     const formData = await request.formData();
-    const quiz = formData.get("quiz");
-    if (!quiz) throw new Error("Quiz is required");
-    apiClient
-        .post("/quizzes/", JSON.parse(quiz as string))
-        .catch((error) => {
-            console.error(error);
-            throw new Error("Failed to create quiz");
-        })
+    const quiz = formData.get("quiz") as string;
+    const quizData = JSON.parse(quiz);
+
+    await apiClient
+        .post("/quizzes/", quizData)
         .then(() => {
             useToastStore.getState().add({
                 id: "quiz-created",
@@ -27,6 +24,10 @@ export const newQuizAction = (async ({ request, params, context }) => {
                 type: "success",
             });
             return redirect("/quizzes");
+        })
+        .catch((error) => {
+            console.error(error);
+            throw new Error("Failed to create quiz");
         });
     useQuizStore.getState().resetQuiz();
     return redirect("/quizzes");
