@@ -34,7 +34,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     followings = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
     blockings = serializers.SerializerMethodField()
-    proficiency = serializers.SerializerMethodField()
+    proficiency = serializers.ChoiceField(
+        choices=CustomUser.PROFICIENCY_LEVELS, 
+        required=False  # Allow partial updates
+    )
 
 
     class Meta:
@@ -94,15 +97,13 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.interests.set(interest_instances)
         
         
-        # Handle proficiency updates
         proficiency_data = validated_data.pop('proficiency', None)
         if proficiency_data is not None:
-
             if proficiency_data in dict(CustomUser.PROFICIENCY_LEVELS):  # Validate choice
                 instance.proficiency = proficiency_data
+                instance.save()
             else:
                 raise serializers.ValidationError({"proficiency": "Invalid proficiency level."})
-        instance.save()
          
                
             
@@ -152,6 +153,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     def get_proficiency(self, obj):
         return obj.get_proficiency_display()
+    def to_representation(self, instance):
+        """Customize the representation of proficiency to show the display value."""
+        representation = super().to_representation(instance)
+        representation['proficiency'] = instance.get_proficiency_display()  # Return display name
+        return representation
 
     
     
