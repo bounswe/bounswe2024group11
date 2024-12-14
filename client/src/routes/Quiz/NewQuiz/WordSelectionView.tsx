@@ -20,7 +20,7 @@ export const WordSelectionView = ({
     onChange,
 }: WordSelectionViewProps) => {
     const [search, setSearch] = useState("");
-    const { quiz, updateQuestion, setSense } = useQuizStore();
+    const { quiz, updateQuestion, setSense, setCorrectAnswer } = useQuizStore();
     const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
         search,
         quiz,
@@ -82,9 +82,11 @@ export const WordSelectionView = ({
                 </div>
             )}
             {!isLoading && debouncedSearch && noData && (
-                <div className="flex items-center gap-2 rounded-2 bg-yellow-50 px-3 py-2 text-sm text-slate-500">
-                    <RiInformation2Fill size={16} className="text-yellow-800" />
-                    <span>No data found.</span>
+                <div className="flex items-center gap-2 rounded-2 bg-yellow-50 px-3 py-2 text-sm text-slate-500 ring ring-yellow-950/10">
+                    <RiInformation2Fill size={16} className="text-yellow-950" />
+                    <span className="text-sm text-yellow-950">
+                        We couldn't find any words to match your search.
+                    </span>
                 </div>
             )}
             <div className="flex flex-col gap-2">

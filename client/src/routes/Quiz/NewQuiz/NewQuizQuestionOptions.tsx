@@ -142,7 +142,12 @@ export const NewQuizQuestionOptions = ({
     const possibleAnswers = translation.data?.translations || [];
 
     useEffect(() => {
-        if (possibleAnswers.length > 0 && !currentQuestion.question_tag) {
+        console.log("setting correct answer");
+
+        if (
+            possibleAnswers.length > 0 &&
+            !currentQuestion.choices[0].choice_text
+        ) {
             setCorrectAnswer(index, possibleAnswers[0]);
         }
     }, [possibleAnswers]);
@@ -251,26 +256,26 @@ export const NewQuizQuestionOptions = ({
                 )}
                 <Separator className="my-2 border-slate-200" />
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
                     {currentQuestion.choices.map((choice, i) => (
                         <label
                             data-choice-id={choice.id}
                             key={choice.id}
                             className={labelClass()}
                         >
-                            {choice.is_correct ? (
-                                <span className="text-sm font-medium text-slate-800">
-                                    Correct Option
-                                </span>
-                            ) : (
-                                <span className="text-sm font-medium text-slate-600">
-                                    Option {i + 1}
-                                </span>
-                            )}
-
+                            <span>
+                                {choice.is_correct
+                                    ? "Correct Option"
+                                    : "Option " + (i + 1)}
+                            </span>
                             <input
                                 className={inputClass()}
                                 type="text"
+                                readOnly={
+                                    choice.is_correct ||
+                                    quiz.type === 3 ||
+                                    (i === 0 && possibleAnswers.length !== 0)
+                                }
                                 value={choice.choice_text}
                                 disabled={
                                     choice.is_correct ||

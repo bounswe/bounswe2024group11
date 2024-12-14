@@ -37,7 +37,7 @@ export const NewQuiz = () => {
             <main className="grid grid-cols-8 items-start gap-4">
                 <div className="col-span-8 md:col-span-2"></div>
                 <Form
-                    className="col-span-8 flex w-full flex-col gap-4 self-start md:col-span-4"
+                    className="col-span-8 flex w-full flex-col gap-6 self-start md:col-span-4"
                     method="POST"
                 >
                     <input
@@ -45,6 +45,17 @@ export const NewQuiz = () => {
                         name="quiz"
                         value={JSON.stringify(quiz)}
                     />
+                    <header className="flex justify-between gap-4">
+                        <h2 className="text-lg font-medium">
+                            {view === "details" ? "Quiz Details" : "Questions"}
+                        </h2>
+                        <span className="py-0.5 text-right text-sm text-slate-500">
+                            <span className="text-base font-medium text-slate-700">
+                                {view === "details" ? "1" : "2"}
+                            </span>{" "}
+                            / 2
+                        </span>
+                    </header>
                     {view === "details" && (
                         <>
                             <NewQuizDetails />
@@ -61,7 +72,7 @@ export const NewQuiz = () => {
                                         intent: "primary",
                                     })}
                                 />
-                                Add Questions
+                                Set Questions
                             </Button>
                         </>
                     )}

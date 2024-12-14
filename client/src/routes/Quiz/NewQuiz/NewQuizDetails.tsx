@@ -53,7 +53,6 @@ export const NewQuizDetails = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-medium">Quiz Details</h2>
             <fieldset className="flex flex-col gap-2 rounded-2 bg-slate-100 p-4 ring ring-slate-200">
                 <label className={labelClass()}>
                     Title

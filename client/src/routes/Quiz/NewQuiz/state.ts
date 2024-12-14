@@ -247,6 +247,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
         state.quiz.questions.forEach((question, index) => {
             if (!question.question_text.trim()) {
                 errors.push(`Question ${index + 1}`);
+                return;
             }
 
             const hasCorrectChoice = question.choices.some(

@@ -22,7 +22,8 @@ type NewQuizQuestionsProps = {
 };
 
 export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
-    const { quiz, addQuestion, getValidationErrors } = useQuizStore();
+    const { quiz, addQuestion, getValidationErrors, setCorrectAnswer } =
+        useQuizStore();
     return (
         <div className="flex flex-col gap-6">
             {Array.from({ length: quiz.questions.length }).map((_, index) => (
@@ -85,7 +86,8 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
 };
 
 export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
-    const { quiz, deleteQuestion, reorderQuestions } = useQuizStore();
+    const { quiz, deleteQuestion, reorderQuestions, setCorrectAnswer } =
+        useQuizStore();
     const alreadyFilled = quiz.questions[index].question_tag !== null;
     const [view, setView] = useState<"word" | "options">(
         alreadyFilled ? "options" : "word",
@@ -114,6 +116,7 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                     index={index}
                     onQuestionReset={() => {
                         setView("word");
+                        setCorrectAnswer(index, "");
                     }}
                 />
             )}
