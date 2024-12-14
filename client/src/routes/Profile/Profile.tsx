@@ -5,6 +5,7 @@ import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
+import { AchievementBadge } from "../Achievements/Achievements";
 import { homeLoader } from "../Home/Home.data";
 import { profileLoader } from "./Profile.data";
 
@@ -48,7 +49,7 @@ const Badge = ({
 };
 
 export const Profile = () => {
-    const { bookmarked_forums, full_name, avatar } =
+    const { bookmarked_forums, full_name, avatar, achievements, score } =
         useLoaderData<typeof profileLoader>();
     const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
@@ -90,7 +91,16 @@ export const Profile = () => {
                         role="list"
                         aria-label="User achievements"
                     >
-                        {}
+                        {achievements
+                            .filter((a) => a.earned_at !== null)
+                            .map((a) => (
+                                <li key={a.achievement.slug}>
+                                    <AchievementBadge
+                                        achievement={a.achievement}
+                                        is_earned={true}
+                                    />
+                                </li>
+                            ))}
                     </ul>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -99,29 +109,11 @@ export const Profile = () => {
                         role="status"
                         aria-label="User score"
                     >
-                        700
+                        {score}
                     </span>
                 </div>
             </section>
-            <hr className="my-4" aria-hidden="true" />
-            <section aria-label="User posts" className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>My Forum Questions</span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {/* {my.length} */}
-                    </span>
-                </h2>
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {/* {my.map((post) => (
-                        <ForumQuestionCard
-                            onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
-                        />
-                    ))} */}
-                </div>
-            </section>{" "}
-            <hr className="my-4" aria-hidden="true" />
+            <Ariakit.Separator className="my-4" />
             <section aria-label="User posts" className="flex flex-col gap-4">
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
                     <span>Bookmarked Forum Questions</span>
@@ -138,25 +130,8 @@ export const Profile = () => {
                         />
                     ))}
                 </div>
-            </section>{" "}
-            <hr className="my-4" aria-hidden="true" />
-            <section aria-label="User posts" className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>Upvoted Forum Questions</span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {/* {upvoted.length} */}
-                    </span>
-                </h2>
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {/* {upvoted.map((post) => (
-                        <ForumQuestionCard
-                            onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
-                        />
-                    ))} */}
-                </div>
             </section>
+            <Ariakit.Separator className="my-4" />
         </main>
     );
 };

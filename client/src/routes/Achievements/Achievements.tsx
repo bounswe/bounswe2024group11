@@ -25,7 +25,7 @@ const snakeToTitle = (snake: string) => {
     return snake.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
-const AchievementBadge = ({
+export const AchievementBadge = ({
     achievement,
     is_earned,
 }: {
