@@ -23,6 +23,7 @@ interface QuizState {
     resetQuiz: () => void;
     getValidationErrors: () => string[];
     getQuizForSubmission: () => QuizCreate;
+    setQuestionPoints: (index: number, difficulty: number) => void;
     setSense: (
         questionIndex: number,
         correctSense: "NOUN" | "VERB" | "ADJ" | "ADV",
@@ -229,6 +230,16 @@ export const useQuizStore = create<QuizState>((set, get) => ({
             },
         }));
     },
+
+    setQuestionPoints: (index: number, difficulty: number) =>
+        set((state) => ({
+            quiz: {
+                ...state.quiz,
+                questions: state.quiz.questions.map((q, i) =>
+                    i === index ? { ...q, question_point: difficulty } : q,
+                ),
+            },
+        })),
 
     resetQuiz: () => set({ quiz: initialQuiz }),
 

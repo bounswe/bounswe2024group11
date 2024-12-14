@@ -172,6 +172,7 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                             icon: "left",
                             className: "w-full",
                         })}
+                        disabled={quiz.questions.length === 1}
                         onClick={() => deleteQuestion(index)}
                     >
                         <span

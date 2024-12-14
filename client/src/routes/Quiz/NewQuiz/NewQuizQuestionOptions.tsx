@@ -87,7 +87,8 @@ export const NewQuizQuestionOptions = ({
         localStorage.getItem("quiz-info-shown") !== "true",
     );
 
-    const { quiz, updateQuestion, setCorrectAnswer } = useQuizStore();
+    const { quiz, updateQuestion, setCorrectAnswer, setQuestionPoints } =
+        useQuizStore();
     const [showConfusion, setShowConfusion] = useState(
         quiz.type === 3 &&
             localStorage.getItem("quiz-confusion-shown") !== "true",
@@ -137,14 +138,16 @@ export const NewQuizQuestionOptions = ({
                     word: tag?.name,
                 },
             })
-            .then((res) => res.data);
+            .then((res) => {
+                return res.data;
+            });
     });
 
     const difficultyNumber = difficulty.data?.question_point || 10;
     const possibleAnswers = translation.data?.translations || [];
 
     useEffect(() => {
-        console.log("setting correct answer");
+        console.log("setting correct answer and difficulty");
 
         if (
             possibleAnswers.length > 0 &&
@@ -152,7 +155,14 @@ export const NewQuizQuestionOptions = ({
         ) {
             setCorrectAnswer(index, possibleAnswers[0]);
         }
-    }, [possibleAnswers]);
+
+        if (
+            difficultyNumber &&
+            currentQuestion.question_point !== difficultyNumber
+        ) {
+            setQuestionPoints(index, difficultyNumber);
+        }
+    }, [possibleAnswers, difficultyNumber]);
 
     if (translation.isLoading || difficulty.isLoading) {
         return <OptionsLoading />;
