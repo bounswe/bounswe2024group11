@@ -57,4 +57,12 @@ export const getUserOrRedirect = () => {
     return user;
 };
 
+export const SWR_SETTINGS = {
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+    revalidateFirstPage: false,
+} as const;
+
 export default apiClient;

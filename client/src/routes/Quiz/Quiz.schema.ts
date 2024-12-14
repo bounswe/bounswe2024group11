@@ -10,7 +10,6 @@ import {
 } from "valibot";
 
 const quizTagSchema = object({
-    id: number(),
     name: string(),
     linked_data_id: string(),
     description: string(),
@@ -144,6 +143,43 @@ export const quizSchema = object({
         count: number(),
     }),
 });
+
+export const choiceSchema = object({
+    id: string(),
+    choice_text: string(),
+    is_correct: boolean(),
+});
+
+export const quizQuestionCreateSchema = object({
+    id: string(),
+    question_tag: nullable(quizTagSchema),
+    question_text: string(),
+    question_point: optional(number()),
+    choices: array(
+        object({
+            id: string(),
+            choice_text: string(),
+            is_correct: boolean(),
+        }),
+    ),
+    hints: optional(
+        array(
+            object({
+                type: string(),
+                text: string(),
+            }),
+        ),
+    ),
+});
+
+export const quizCreateSchema = object({
+    title: string(),
+    description: string(),
+    tags: array(quizTagSchema),
+    type: number(),
+    questions: array(quizQuestionCreateSchema),
+});
+
 // eXtremeGoHorse begin
 const quizAnswerSchemaForProfile = object({
     id: number(),
@@ -167,3 +203,6 @@ export const quizzeTakenSchemaForProfile = object({
 export type CompletedQuiz = InferInput<typeof completedQuizSchema>;
 export type QuizOverview = InferInput<typeof quizOverviewSchema>;
 export type QuizDetails = InferInput<typeof quizDetailsSchema>;
+export type QuizCreate = InferInput<typeof quizCreateSchema>;
+export type QuizQuestionCreate = InferInput<typeof quizQuestionCreateSchema>;
+export type Choice = InferInput<typeof choiceSchema>;

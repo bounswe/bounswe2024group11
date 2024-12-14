@@ -277,11 +277,6 @@ export const TakeQuizPage = () => {
     const progress =
         (Object.keys(answers).length / quiz.questions.length) * 100;
 
-    const formatTime = (seconds: number) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-    };
     const [hintOpen, setHintOpen] = useState(false);
     const showHint = (questionIndex: number) => {
         const hint = quiz.questions[questionIndex].hints;
@@ -361,7 +356,6 @@ export const TakeQuizPage = () => {
                     <div>
                         {currentQuestion + 1} / {quiz.questions.length}
                     </div>
-                    <div>{formatTime(timeRemaining)} mins left</div>
                 </div>
             </div>
             <div className="flex gap-4">
