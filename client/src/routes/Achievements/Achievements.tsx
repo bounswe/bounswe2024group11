@@ -2,6 +2,7 @@ import * as Ariakit from "@ariakit/react";
 import { cva } from "cva";
 import { useLoaderData } from "react-router-typesafe";
 import { PageHead } from "../../components/page-head";
+import { snakeToTitle } from "../../utils";
 import { Achievement } from "./Achievement.schema";
 import { achievementsLoader } from "./Achievements.data";
 
@@ -15,15 +16,11 @@ const badgeClass = cva(
         variants: {
             earned: {
                 true: "bg-slate-100 opacity-100 ring ring-slate-200 ring-offset-1",
-                false: "opacity-50 hover:opacity-100",
+                false: "grayscale hover:opacity-100 hover:grayscale-0",
             },
         },
     },
 );
-
-const snakeToTitle = (snake: string) => {
-    return snake.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-};
 
 export const AchievementBadge = ({
     achievement,
