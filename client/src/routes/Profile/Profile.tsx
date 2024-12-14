@@ -49,8 +49,14 @@ const Badge = ({
 };
 
 export const Profile = () => {
-    const { bookmarked_forums, full_name, avatar, achievements, score } =
-        useLoaderData<typeof profileLoader>();
+    const {
+        bookmarked_forums,
+        full_name,
+        avatar,
+        achievements,
+        score,
+        quizzes_taken,
+    } = useLoaderData<typeof profileLoader>();
     const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
@@ -132,6 +138,23 @@ export const Profile = () => {
                 </div>
             </section>
             <Ariakit.Separator className="my-4" />
+            <section aria-label="User posts" className="flex flex-col gap-4">
+                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
+                    <span>Quizzes Taken</span>
+                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
+                        {bookmarked_forums.length}
+                    </span>
+                </h2>
+                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+                    {/* {quizzes_taken.map((quiz) => (
+                        <QuizCard
+                            key={quiz.id}
+                            quiz={quiz}
+                            onTagClick={() => {}}
+                        />
+                    ))} */}
+                </div>
+            </section>
         </main>
     );
 };
