@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import ForumQuestion, Quiz, Follow, Tag
 from ..serializers.forum_question_serializer import ForumQuestionSerializer
 from ..serializers.serializers import QuizSerializer
+from ..utils import get_ids
 
 
 class FeedViewSet(ViewSet):
@@ -18,46 +19,45 @@ class FeedViewSet(ViewSet):
         """
         user = request.user
 
-        # Retrieve the followed users using the Follow model
         followed_users = Follow.objects.filter(follower=user).values_list('following', flat=True)
 
-        # Fetch the 4 most recent forum questions by followed users
-        forum_questions_by_followed_users = ForumQuestion.objects.filter(
+        forum_questions_by_followed_users = ForumQuestion.objects.filter(       # Forum questions by followed users
             author__id__in=followed_users
         ).order_by('-created_at')[:4]
 
-        # Fetch the 4 most recent quizzes by followed users
-        quizzes_by_followed_users = Quiz.objects.filter(
+        quizzes_by_followed_users = Quiz.objects.filter(                        # Quizzes by followed users
             author__id__in=followed_users
         ).order_by('-created_at')[:4]
 
-        # Fetch the user's interest tags
         interest_tags = user.interests.all()
 
-        # Fetch forum questions related to the user's interests
-        forum_questions_by_interests = ForumQuestion.objects.filter(
+        forum_questions_by_interests = ForumQuestion.objects.filter(        # Forum questions related to user's interests
             tags__in=interest_tags
         ).distinct().order_by('-created_at')[:4]
 
-        # Fetch quizzes related to the user's interests
-        quizzes_by_interests = Quiz.objects.filter(
+        quizzes_by_interests = Quiz.objects.filter(                         # Quizzes related to user's interests
             tags__in=interest_tags
         ).distinct().order_by('-created_at')[:4]
 
-        # Fetch semantically related tags for forum questions
-        related_tags_for_forum_questions = (
-            Tag.objects.filter(
-                forumquestion__in=ForumQuestion.objects.filter(tags__in=interest_tags)
-            )
+        interest_tag_ids = [tag.linked_data_id for tag in interest_tags]
+        all_related_ids = set()
+        for tag_id in interest_tag_ids:
+            try:
+                related_ids = get_ids(tag_id)  # Use the provided get_ids method
+                all_related_ids.update(related_ids)
+            except Exception as e:
+                print(f"Error fetching related IDs for {tag_id}: {e}")
+        
+        related_tags = Tag.objects.filter(linked_data_id__in=all_related_ids).exclude(id__in=interest_tags)
+
+        related_tags_for_forum_questions = (                                # Semantically related tags for forum questions
+            related_tags.filter(forumquestion__isnull=False)
             .distinct()
-            .order_by('-forumquestion__created_at')[:5]
+            .order_by("-forumquestion__created_at")[:5]
         )
 
-        # Fetch semantically related tags for quizzes
-        related_tags_for_quizzes = (
-            Tag.objects.filter(
-                quiz__in=Quiz.objects.filter(tags__in=interest_tags)
-            )
+        related_tags_for_quizzes = (                                        # Semantically related tags for quizzes
+            related_tags.filter(quiz__isnull=False)
             .distinct()
             .order_by('-quiz__created_at')[:5]
         )
@@ -94,3 +94,18 @@ class FeedViewSet(ViewSet):
             "related_tags_for_quizzes": related_tags_for_quizzes_serialized,
         }
         return Response(feed_data)
+    
+
+def helper(obj):
+    max_number_of_related_questions = 4
+    if obj.tags.count() == 0:
+        return ForumQuestion.objects.none()
+    
+    all_ids = []
+    for tag in obj.tags.all():
+        all_ids = all_ids + get_ids(tag.linked_data_id)
+
+    return ForumQuestion.objects.filter(tags__linked_data_id__in=all_ids)\
+        .exclude(id=obj.id)\
+        .distinct()\
+        .order_by('-created_at')[:max_number_of_related_questions]
