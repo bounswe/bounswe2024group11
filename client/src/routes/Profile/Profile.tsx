@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
+import { ForumQuestionCard } from "../../components/forum-card";
 import { homeLoader } from "../Home/Home.data";
 import { profileLoader } from "./Profile.data";
 
@@ -89,27 +90,7 @@ export const Profile = () => {
                         role="list"
                         aria-label="User achievements"
                     >
-                        <li>
-                            <Badge
-                                icon="🏆"
-                                title="Accuracy Monster"
-                                description="Solve 10 quizzes with 100% accuracy."
-                            />
-                        </li>
-                        <li>
-                            <Badge
-                                icon="🏅"
-                                title="Linker"
-                                description="Refer to a quiz question in a forum post."
-                            />
-                        </li>
-                        <li>
-                            <Badge
-                                icon="🎖️"
-                                title="The Popular Guy"
-                                description="Get 100 upvotes on a forum post."
-                            />
-                        </li>
+                        {}
                     </ul>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -149,13 +130,13 @@ export const Profile = () => {
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {/* {bookmarked_forums.map((post) => (
+                    {bookmarked_forums.map((post) => (
                         <ForumQuestionCard
                             onTagClick={() => {}}
                             key={post.id}
                             question={post}
                         />
-                    ))} */}
+                    ))}
                 </div>
             </section>{" "}
             <hr className="my-4" aria-hidden="true" />
