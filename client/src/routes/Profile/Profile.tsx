@@ -1,13 +1,20 @@
 import * as Ariakit from "@ariakit/react";
 import { Button } from "@ariakit/react";
-import { useParams } from "react-router-dom";
+import { useFetcher, useParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
+import { QuizCard } from "../../components/quiz-card";
 import { AchievementBadge } from "../Achievements/Achievements";
 import { homeLoader } from "../Home/Home.data";
-import { profileLoader } from "./Profile.data";
+import {
+    BlockAction,
+    FollowAction,
+    profileLoader,
+    UnBlockAction,
+    UnFollowAction,
+} from "./Profile.data";
 
 const Badge = ({
     icon,
@@ -56,7 +63,14 @@ export const Profile = () => {
         achievements,
         score,
         quizzes_taken,
+        is_blocked,
+        is_following,
+        id,
     } = useLoaderData<typeof profileLoader>();
+    const blockFetcher = useFetcher<typeof BlockAction>();
+    const unblockFetcher = useFetcher<typeof UnBlockAction>();
+    const followFetcher = useFetcher<typeof FollowAction>();
+    const unfollowFetcher = useFetcher<typeof UnFollowAction>();
     const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
@@ -75,34 +89,103 @@ export const Profile = () => {
                         @{username}
                     </p>
                 </div>
-                {user?.username !== username && logged_in && (
-                    <Button
-                        className={buttonClass({
-                            intent: "destructive",
-                            size: "medium",
-                        })}
-                    >
-                        <span
-                            className={buttonInnerRing({
-                                intent: "destructive",
-                            })}
-                        />
-                        <span>Block</span>
-                    </Button>
-                )}
-                {user?.username !== username && logged_in && (
-                    <Button
-                        className={buttonClass({
-                            intent: "secondary",
-                            size: "medium",
-                        })}
-                    >
-                        <span
-                            className={buttonInnerRing({ intent: "secondary" })}
-                        />
-                        <span>Follow</span>
-                    </Button>
-                )}
+                {user?.username !== username &&
+                    logged_in &&
+                    (!is_blocked ? (
+                        <blockFetcher.Form method="POST" action={`block/`}>
+                            <Button
+                                className={buttonClass({
+                                    intent: "destructive",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "destructive",
+                                    })}
+                                />
+                                <span>Block</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="blocking"
+                                value={id}
+                            ></input>
+                        </blockFetcher.Form>
+                    ) : (
+                        <unblockFetcher.Form method="POST" action={`unblock/`}>
+                            <Button
+                                className={buttonClass({
+                                    intent: "tertiary",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "tertiary",
+                                    })}
+                                />
+                                <span>Unblock</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="blocking"
+                                value={is_blocked}
+                            ></input>
+                        </unblockFetcher.Form>
+                    ))}
+                {user?.username !== username &&
+                    logged_in &&
+                    (is_following ? (
+                        <unfollowFetcher.Form
+                            method="POST"
+                            action={`unfollow/`}
+                        >
+                            <Button
+                                className={buttonClass({
+                                    intent: "destructive",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "destructive",
+                                    })}
+                                />
+                                <span>Unfollow</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="following"
+                                value={is_following}
+                            ></input>
+                        </unfollowFetcher.Form>
+                    ) : (
+                        <followFetcher.Form method="POST" action={`follow/`}>
+                            <Button
+                                className={buttonClass({
+                                    intent: "secondary",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "secondary",
+                                    })}
+                                />
+                                <span>Follow</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="following"
+                                value={id}
+                            ></input>{" "}
+                        </followFetcher.Form>
+                    ))}
             </header>
             <section className="z-20 flex w-full flex-row items-center justify-between">
                 <div className="flex flex-col gap-2">
@@ -157,17 +240,17 @@ export const Profile = () => {
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
                     <span>Quizzes Taken</span>
                     <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {bookmarked_forums.length}
+                        {quizzes_taken.length}
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {/* {quizzes_taken.map((quiz) => (
+                    {quizzes_taken.map((quiz) => (
                         <QuizCard
-                            key={quiz.id}
+                            quiz_key={String(quiz.id)}
                             quiz={quiz}
                             onTagClick={() => {}}
                         />
-                    ))} */}
+                    ))}
                 </div>
             </section>
         </main>
