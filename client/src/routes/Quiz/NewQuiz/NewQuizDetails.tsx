@@ -10,7 +10,28 @@ import { getQuestionType } from "./NewQuiz";
 import { useQuizStore } from "./state";
 
 export const NewQuizDetails = () => {
+    const [showMenu, setShowMenu] = useState(false);
     const [search, setSearch] = useState("");
+
+    const handleTagSelect = (tag: Tag) => {
+        const alreadySelected = quiz.tags.some(
+            (t) => t.linked_data_id === tag.linked_data_id,
+        );
+
+        if (alreadySelected) {
+            removeTag(tag.linked_data_id);
+        } else {
+            addTag(tag);
+        }
+
+        setSearch("");
+        setShowMenu(false); // Immediately hide the menu
+    };
+
+    const handleSearchChange = (value: string) => {
+        setSearch(value);
+        setShowMenu(value.length > 0);
+    };
 
     const { quiz, setQuizField, removeTag, setType, addTag } = useQuizStore();
     const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
@@ -99,7 +120,7 @@ export const NewQuizDetails = () => {
                     <input
                         className={inputClass()}
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         required
                         placeholder={quiz.type === 2 ? "otoyol" : "highway"}
                     />
@@ -150,7 +171,7 @@ export const NewQuizDetails = () => {
                         </span>
                     </div>
                 )}
-                {!isLoading && (
+                {!isLoading && showMenu && (
                     <div className="flex flex-col gap-2">
                         {[
                             { title: "Nouns", options: nounOptions },
@@ -179,19 +200,7 @@ export const NewQuizDetails = () => {
                                             <div
                                                 key={tag.linked_data_id}
                                                 onClick={() => {
-                                                    const alreadySelected =
-                                                        quiz.tags.some(
-                                                            (t) =>
-                                                                t.linked_data_id ===
-                                                                tag.linked_data_id,
-                                                        );
-                                                    if (alreadySelected) {
-                                                        removeTag(
-                                                            tag.linked_data_id,
-                                                        );
-                                                    } else {
-                                                        addTag(tag);
-                                                    }
+                                                    handleTagSelect(tag);
                                                 }}
                                                 className={tagOptionClass({
                                                     selected: quiz.tags.some(

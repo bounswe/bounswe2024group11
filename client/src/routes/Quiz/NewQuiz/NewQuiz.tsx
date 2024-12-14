@@ -47,7 +47,15 @@ export const NewQuiz = () => {
                     />
                     <header className="flex justify-between gap-4">
                         <h2 className="text-lg font-medium">
-                            {view === "details" ? "Quiz Details" : "Questions"}
+                            {view === "details" && "Quiz Details"}
+                            {view === "questions" && (
+                                <span className="flex gap-3">
+                                    Questions{" "}
+                                    <span className="flex items-center rounded-1 bg-slate-50 px-2 text-sm ring ring-slate-200">
+                                        {quiz.questions.length}
+                                    </span>
+                                </span>
+                            )}
                         </h2>
                         <span className="py-0.5 text-right text-sm text-slate-500">
                             <span className="text-base font-medium text-slate-700">

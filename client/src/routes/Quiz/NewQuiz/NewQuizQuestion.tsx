@@ -74,7 +74,6 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
                         icon: "left",
                     })}
                     disabled={getValidationErrors().length > 0}
-                    onClick={() => {}}
                 >
                     <RiCheckLine size={16} />
                     Submit Quiz
@@ -129,6 +128,9 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                         updateQuestion(index, {
                             question_text: "",
                             choices: createInitialChoices(),
+                            hints: [],
+                            question_point: 0,
+                            question_tag: null,
                         });
                     }}
                 />
