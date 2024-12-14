@@ -3,19 +3,21 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-interface DeleteButtonProps {
+interface DeleteAnswerButtonProps {
   questionId: number;
-  onDelete: (questionId: number) => void;
+  answerId: number;
+  onDelete: (questionId: number, answerId: number) => void; // Update this to expect two arguments
 }
 
-const DeleteButton: React.FC<DeleteButtonProps> = ({
+const DeleteAnswerButton: React.FC<DeleteAnswerButtonProps> = ({
   questionId,
+  answerId,
   onDelete,
 }) => {
   const handleDelete = async () => {
     Alert.alert(
-      "Delete Question",
-      "Are you sure you want to delete this question?",
+      "Delete Answer",
+      "Are you sure you want to delete this answer?",
       [
         {
           text: "Cancel",
@@ -26,12 +28,12 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
           onPress: async () => {
             try {
               await axios.delete(
-                `http://138.68.97.90/api/v1/forum-questions/${questionId}/`
+                `http://138.68.97.90/api/v1/forum-questions/${questionId}/answers/${answerId}/`
               );
-              console.log("Question deleted");
-              onDelete(questionId);
+              console.log("Answer deleted");
+              onDelete(questionId, answerId); // Call onDelete to update the UI
             } catch (error) {
-              console.error("Error deleting question:", error);
+              console.error("Error deleting answer:", error);
             }
           },
         },
@@ -57,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeleteButton;
+export default DeleteAnswerButton;

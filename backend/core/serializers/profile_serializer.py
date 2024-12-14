@@ -35,6 +35,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     bookmarked_forums = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
+    proficiency = serializers.ChoiceField(
+        choices=CustomUser.PROFICIENCY_LEVELS, 
+        required=False  # Allow partial updates
+    )
 
 
     class Meta:
@@ -54,10 +58,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             'blockings',
             'is_following',
             'is_blocked',
+            'proficiency',
         ]
         read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums", "is_following", "is_blocked"]
 
     def update(self, instance, validated_data):
+        print(validated_data)
         achievements_data = validated_data.pop('userachievement_set', None)
         if achievements_data is not None:
             if not achievements_data:
@@ -92,6 +98,18 @@ class ProfileSerializer(serializers.ModelSerializer):
 
             # Update the interests of the instance
             instance.interests.set(interest_instances)
+        
+        
+        proficiency_data = validated_data.pop('proficiency', None)
+        if proficiency_data is not None:
+            if proficiency_data in dict(CustomUser.PROFICIENCY_LEVELS):  # Validate choice
+                instance.proficiency = proficiency_data
+                instance.save()
+            else:
+                raise serializers.ValidationError({"proficiency": "Invalid proficiency level."})
+         
+               
+            
 
 
         return super().update(instance, validated_data)
@@ -168,3 +186,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_blockings(self, obj):
         blockings = User.objects.filter(blockers__blocker=obj)
         return UserInfoSerializer(blockings, many=True, context=self.context).data
+    
+    def get_proficiency(self, obj):
+        return obj.get_proficiency_display()
+    def to_representation(self, instance):
+        """Customize the representation of proficiency to show the display value."""
+        representation = super().to_representation(instance)
+        representation['proficiency'] = instance.get_proficiency_display()  # Return display name
+        return representation
+
+    
+    
