@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer
+from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer, QuizSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser, Block
+from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser, Block, Quiz
 from core import models
 from django.db.models import Sum
 from .forum_question_serializer import ForumQuestionSerializer
@@ -138,8 +138,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
     def get_quizzes_taken(self, obj):
-        quizzes = TakeQuiz.objects.filter(user=obj)
-        return TakeQuizSerializer(quizzes, many=True).data
+        take_quizzes = TakeQuiz.objects.filter(user=obj)
+        quiz_ids = take_quizzes.values_list('quiz', flat=True) 
+        quizzes = Quiz.objects.filter(id__in=quiz_ids)
+        return QuizSerializer(quizzes, many=True, context=self.context).data 
+        
 
 
     def get_score(self, obj):
