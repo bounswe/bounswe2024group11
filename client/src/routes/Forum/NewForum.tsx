@@ -389,11 +389,12 @@ export const NewForum = () => {
                                             aria-label={`Available ${title.toLowerCase()}`}
                                         >
                                             {options.map((tag) => (
-                                                <div
+                                                <Button
                                                     key={tag.linked_data_id}
-                                                    onClick={() =>
-                                                        handleTagClick(tag)
-                                                    }
+                                                    onClick={() => {
+                                                        setTagQuery("");
+                                                        handleTagClick(tag);
+                                                    }}
                                                     className={tagOptionClass({
                                                         selected:
                                                             selectedTags.some(
@@ -416,7 +417,7 @@ export const NewForum = () => {
                                                     <span className="text-xs opacity-80">
                                                         {tag.description}
                                                     </span>
-                                                </div>
+                                                </Button>
                                             ))}
                                             {options.length === 0 && (
                                                 <span className="text-xs text-slate-500">
