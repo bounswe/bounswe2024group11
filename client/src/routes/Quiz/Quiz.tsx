@@ -491,8 +491,10 @@ export const TakeQuizPage = () => {
                                                     : "en-US"
                                             }
                                         />
-                                        {choice.choice_text}
-                                        {quiz.type === 2 && (
+                                        <span className="flex-1">
+                                            {choice.choice_text}
+                                        </span>
+                                        {quiz.type > 0 && (
                                             <Voiceover
                                                 text={choice.choice_text}
                                             />
