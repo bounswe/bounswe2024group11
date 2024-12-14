@@ -25,20 +25,18 @@ const Forum: React.FC = () => {
 
   const navigation = useNavigation<ForumScreenNavigationProp>();
   const isFocused = useIsFocused();
-
+  const fetchQuestions = async () => {
+    setLoading(true);
+    try {
+      const result = await axios.get(`${API_URL}`);
+      setQuestions(result.data.results);
+    } catch (error) {
+      console.error("Error fetching questions", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchQuestions = async () => {
-      setLoading(true);
-      try {
-        const result = await axios.get(`${API_URL}`);
-        setQuestions(result.data.results);
-      } catch (error) {
-        console.error("Error fetching questions", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (isFocused) {
       fetchQuestions();
     }
@@ -93,6 +91,14 @@ const Forum: React.FC = () => {
     (navigation as any).navigate("CreateQuestion"); // not sure about this solution
   };
 
+  const handleDeleteQuestion = (deletedQuestionId: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter(
+        (question) => Number(question.id) !== deletedQuestionId
+      )
+    );
+  };
+
   return (
     <View style={{ flex: 1, padding: 10 }}>
       {loading ? ( // Show loading spinner while fetching data
@@ -116,6 +122,7 @@ const Forum: React.FC = () => {
                 item={item}
                 onBookmarkChange={handleBookmarkChange}
                 onVoteChange={handleVoteChange}
+                onDelete={handleDeleteQuestion}
               />
             </TouchableOpacity>
           )}
