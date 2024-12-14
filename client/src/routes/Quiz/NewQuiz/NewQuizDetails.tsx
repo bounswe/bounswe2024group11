@@ -197,7 +197,7 @@ export const NewQuizDetails = () => {
                                         aria-label={`Available ${title.toLowerCase()}`}
                                     >
                                         {options.map((tag) => (
-                                            <div
+                                            <button
                                                 key={tag.linked_data_id}
                                                 onClick={() => {
                                                     handleTagSelect(tag);
@@ -223,7 +223,7 @@ export const NewQuizDetails = () => {
                                                 <span className="text-xs opacity-80">
                                                     {tag.description}
                                                 </span>
-                                            </div>
+                                            </button>
                                         ))}
                                         {options.length === 0 && (
                                             <span className="text-xs text-slate-500">

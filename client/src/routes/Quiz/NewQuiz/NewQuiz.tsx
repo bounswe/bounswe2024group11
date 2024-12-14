@@ -3,7 +3,6 @@ import { RiArrowRightLine, RiErrorWarningLine } from "@remixicon/react";
 import { useState } from "react";
 import { Form } from "react-router-dom";
 import { buttonClass, buttonInnerRing } from "../../../components/button";
-import { logger } from "../../../utils";
 import { NewQuizDetails } from "./NewQuizDetails";
 import { NewQuizHead } from "./NewQuizHead";
 import { NewQuizQuestions } from "./NewQuizQuestion";
@@ -25,7 +24,6 @@ export const getQuestionType = (type: number) => {
 export const NewQuiz = () => {
     const { quiz, getValidationErrors, getQuizForSubmission } = useQuizStore();
     const [view, setView] = useState<"details" | "questions">("details");
-    logger.log("quiz", quiz);
 
     return (
         <div
