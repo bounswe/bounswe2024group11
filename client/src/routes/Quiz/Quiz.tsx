@@ -494,7 +494,7 @@ export const TakeQuizPage = () => {
                                         <span className="flex-1">
                                             {choice.choice_text}
                                         </span>
-                                        {quiz.type > 0 && (
+                                        {quiz.type == 2 && (
                                             <Voiceover
                                                 text={choice.choice_text}
                                             />
