@@ -55,5 +55,5 @@ def get_ids(word_id):
         # if value.get("language") == "EN" or value.get("language") == "TR":
             # if value.get("pointer").get("shortName") != "related":
         return_array.append(value.get("target"))    # Indent this to the right when activating the language if statement
-    # print(len(return_array))          # Debugging
+    # print(len(return_array))      # Debugging
     return return_array

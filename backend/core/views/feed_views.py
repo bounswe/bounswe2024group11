@@ -55,12 +55,28 @@ class FeedViewSet(ViewSet):
             .distinct()
             .order_by("-forumquestion__created_at")[:5]
         )
+        unique_tags_forum = []
+        seen_linked_ids = set()
+        for tag in related_tags_for_forum_questions:
+            if tag.linked_data_id not in seen_linked_ids:
+                unique_tags_forum.append(tag)
+                seen_linked_ids.add(tag.linked_data_id)
+                if len(unique_tags_forum) == 5:  # Stop when we reach 5 unique tags
+                    break
 
         related_tags_for_quizzes = (                                        # Semantically related tags for quizzes
             related_tags.filter(quiz__isnull=False)
             .distinct()
             .order_by('-quiz__created_at')[:5]
         )
+        unique_tags_quiz = []
+        seen_linked_ids = set()
+        for tag in related_tags_for_quizzes:
+            if tag.linked_data_id not in seen_linked_ids:
+                unique_tags_quiz.append(tag)
+                seen_linked_ids.add(tag.linked_data_id)
+                if len(unique_tags_quiz) == 5:  # Stop when we reach 5 unique tags
+                    break
 
         # Serialize the data
         forum_questions_serialized = ForumQuestionSerializer(
@@ -77,11 +93,11 @@ class FeedViewSet(ViewSet):
         ).data
         related_tags_for_forum_questions_serialized = [
             {"name": tag.name, "description": tag.description, "linked_data_id": tag.linked_data_id}
-            for tag in related_tags_for_forum_questions
+            for tag in unique_tags_forum
         ]
         related_tags_for_quizzes_serialized = [
             {"name": tag.name, "description": tag.description, "linked_data_id": tag.linked_data_id}
-            for tag in related_tags_for_quizzes
+            for tag in unique_tags_quiz
         ]
 
         # Combine and return the results
