@@ -1,12 +1,12 @@
 import React, { createContext, ReactNode, useEffect, useRef } from "react";
 
-export interface SpeechContextType {
+export type SpeechContextType = {
     speak: (text: string) => void;
-}
+};
 
-interface SpeechProviderProps {
+type SpeechProviderProps = {
     children: ReactNode;
-}
+};
 
 export const SpeechContext = createContext<SpeechContextType | null>(null);
 

@@ -10,10 +10,10 @@ import { useQuizStore } from "./state";
 
 const indexToSense = ["NOUN", "VERB", "ADJ", "ADV"] as const;
 
-interface WordSelectionViewProps {
+type WordSelectionViewProps = {
     index: number;
     onChange: () => void;
-}
+};
 
 export const WordSelectionView = ({
     index,

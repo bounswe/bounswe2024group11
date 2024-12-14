@@ -25,12 +25,12 @@ const hintKeyToTitle = {
 export type Hints = InferInput<typeof hintsSchema>;
 export type HintType = keyof typeof hintKeyToTitle;
 
-interface HintItemProps {
+type HintItemProps = {
     type: HintType;
     text: string;
     isSelected: boolean;
     onSelect: () => void;
-}
+};
 
 const hintOptionClass = cva(
     "rounded-md flex w-full items-center gap-2 rounded-1 px-3 py-2 text-left transition-all",
