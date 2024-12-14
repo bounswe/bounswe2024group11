@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Question } from "../types/forum";
@@ -11,9 +11,24 @@ import EditButton from "./EditButton";
 
 interface ForumQuestionCardProps {
   item: Question;
+  onBookmarkChange: (
+    questionId: number,
+    newBookmarkState: number | null
+  ) => void;
+  onVoteChange: (
+    questionId: number,
+    isUpvoteId: number | null,
+    isDownvoteId: number | null
+  ) => void;
+  onDelete: (questionId: number) => void;
 }
 
-const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
+const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({
+  item,
+  onBookmarkChange,
+  onVoteChange,
+  onDelete,
+}) => {
   const [question, setQuestion] = useState(item);
 
   const handleVoteChange = (
@@ -39,6 +54,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
           ? prevQuestion.downvotes_count - 1
           : prevQuestion.downvotes_count,
     }));
+    onVoteChange(Number(question.id), isUpvoteId, isDownvoteId);
   };
 
   const handleBookmarkChange = (newBookmarkState: number | null) => {
@@ -46,6 +62,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
       ...prevQuestion,
       is_bookmarked: newBookmarkState,
     }));
+    onBookmarkChange(Number(question.id), newBookmarkState);
   };
 
   return (
@@ -58,7 +75,10 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
               <EditButton questionId={question.id} />
             )}
             {question.is_my_forum_question && (
-              <DeleteButton questionId={Number(question.id)} />
+              <DeleteButton
+                questionId={Number(question.id)}
+                onDelete={onDelete}
+              />
             )}
             <BookmarkButton
               initialBookmarkState={question.is_bookmarked}

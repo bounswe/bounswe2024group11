@@ -52,9 +52,8 @@ def get_ids(word_id):
     
     data = response.json()
     for value in data:
-        if value.get("language") == "EN" or value.get("language") == "TR":
+        # if value.get("language") == "EN" or value.get("language") == "TR":
             # if value.get("pointer").get("shortName") != "related":
-            #     return_array.append(value.get("target"))
-            return_array.append(value.get("target"))    
-    
+        return_array.append(value.get("target"))    # Indent this to the right when activating the language if statement
+    # print(len(return_array))      # Debugging
     return return_array
