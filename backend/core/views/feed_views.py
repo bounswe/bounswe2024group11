@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from ..models import ForumQuestion, Quiz, Follow, Tag
+from ..models import Block, ForumQuestion, Quiz, Follow, Tag
 from ..serializers.forum_question_serializer import ForumQuestionSerializer
 from ..serializers.serializers import QuizSerializer
 from ..utils import get_ids
@@ -19,25 +19,27 @@ class FeedViewSet(ViewSet):
         """
         user = request.user
 
+        blocked_users = Block.objects.filter(blocker=user).values_list('blocking__id', flat=True)  # !!!!!! Changed blocked users
+
         followed_users = Follow.objects.filter(follower=user).values_list('following', flat=True)
 
         forum_questions_by_followed_users = ForumQuestion.objects.filter(       # Forum questions by followed users
-            author__id__in=followed_users
-        ).order_by('-created_at')[:4]
+            author__id__in=followed_users 
+        ).exclude(author__id__in=blocked_users).order_by('-created_at')[:4] # !!!!!! Changed filtering for forum questions
 
         quizzes_by_followed_users = Quiz.objects.filter(                        # Quizzes by followed users
             author__id__in=followed_users
-        ).order_by('-created_at')[:4]
+        ).exclude(author__id__in=blocked_users).order_by('-created_at')[:4] # !!!!!! Changed filtering for quizzes
 
         interest_tags = user.interests.all()
 
         forum_questions_by_interests = ForumQuestion.objects.filter(        # Forum questions related to user's interests
             tags__in=interest_tags
-        ).distinct().order_by('-created_at')[:4]
+        ).exclude(author__id__in=blocked_users).distinct().order_by('-created_at')[:4] # !!!!!! Added .exclude(author__id__in=blocked_users)
 
         quizzes_by_interests = Quiz.objects.filter(                         # Quizzes related to user's interests
             tags__in=interest_tags
-        ).distinct().order_by('-created_at')[:4]
+        ).exclude(author__id__in=blocked_users).distinct().order_by('-created_at')[:4]  # !!!!!! Added .exclude(author__id__in=blocked_users)
 
         interest_tag_ids = [tag.linked_data_id for tag in interest_tags]
         all_related_ids = set()
