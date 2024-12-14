@@ -53,7 +53,7 @@ export const buttonClass = cva(
         "disabled:hover:bg-slate-800",
         "disabled:active:ring-0",
         "disabled:cursor-default",
-        "disabled:opacity-50",
+        "disabled:opacity-30",
         "disabled:pointer-events-none",
     ],
     {
@@ -115,7 +115,7 @@ export const buttonClass = cva(
                 none: [],
             },
             size: {
-                small: ["text-xs", "py-1", "px-2"],
+                small: ["text-xs", "py-[6px]", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
                 large: ["text-base", "py-3", "px-6"],
             },

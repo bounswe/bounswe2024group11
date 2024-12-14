@@ -22,31 +22,88 @@ type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true); // Loading state
+  const [refreshing, setRefreshing] = useState(false); // Refreshing state
 
   const navigation = useNavigation<ForumScreenNavigationProp>();
   const isFocused = useIsFocused();
-
+  const fetchQuestions = async () => {
+    setLoading(true);
+    try {
+      const result = await axios.get(`${API_URL}`);
+      setQuestions(result.data.results);
+    } catch (error) {
+      console.error("Error fetching questions", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
   useEffect(() => {
-    const fetchQuestions = async () => {
-      setLoading(true);
-      try {
-        const result = await axios.get(`${API_URL}`);
-        // console.log(result.data.questions);
-        setQuestions(result.data.results);
-      } catch (error) {
-        console.error("Error fetching questions", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (isFocused) {
       fetchQuestions();
     }
   }, [isFocused]);
 
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchQuestions();
+  };
+
+  const handleBookmarkChange = (
+    questionId: number,
+    newBookmarkState: number | null
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        Number(question.id) === questionId
+          ? { ...question, is_bookmarked: newBookmarkState }
+          : question
+      )
+    );
+  };
+
+  const handleVoteChange = (
+    questionId: number,
+    isUpvoteId: number | null,
+    isDownvoteId: number | null
+  ) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        Number(question.id) === questionId
+          ? {
+              ...question,
+              is_upvoted: isUpvoteId,
+              is_downvoted: isDownvoteId,
+              upvotes_count: isUpvoteId
+                ? question.is_upvoted
+                  ? question.upvotes_count
+                  : question.upvotes_count + 1
+                : question.is_upvoted
+                  ? question.upvotes_count - 1
+                  : question.upvotes_count,
+              downvotes_count: isDownvoteId
+                ? question.is_downvoted
+                  ? question.downvotes_count
+                  : question.downvotes_count + 1
+                : question.is_downvoted
+                  ? question.downvotes_count - 1
+                  : question.downvotes_count,
+            }
+          : question
+      )
+    );
+  };
+
   const handleCreateQuestion = () => {
     (navigation as any).navigate("CreateQuestion"); // not sure about this solution
+  };
+
+  const handleDeleteQuestion = (deletedQuestionId: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter(
+        (question) => Number(question.id) !== deletedQuestionId
+      )
+    );
   };
 
   return (
@@ -61,12 +118,23 @@ const Forum: React.FC = () => {
             <TouchableOpacity
               key={item.id}
               onPress={() =>
-                navigation.navigate("ForumQuestionDetail", { question: item })
+                navigation.navigate("ForumQuestionDetail", {
+                  question: item,
+                  onBookmarkChange: handleBookmarkChange,
+                  onVoteChange: handleVoteChange,
+                })
               }
             >
-              <ForumQuestionCard item={item} />
+              <ForumQuestionCard
+                item={item}
+                onBookmarkChange={handleBookmarkChange}
+                onVoteChange={handleVoteChange}
+                onDelete={handleDeleteQuestion}
+              />
             </TouchableOpacity>
           )}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
       )}
       <TouchableOpacity

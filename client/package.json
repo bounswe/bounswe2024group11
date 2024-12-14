@@ -23,9 +23,12 @@
         "js-cookie": "^3.0.5",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
+        "react-loader-spinner": "^6.1.6",
         "react-router": "^6.26.2",
         "react-router-dom": "^6.26.2",
         "react-router-typesafe": "^1.5.0",
+        "swr": "^2.2.5",
+        "use-debounce": "^10.0.4",
         "valibot": "^0.42.1",
         "zustand": "5.0.0-rc.2"
     },

@@ -1,21 +1,14 @@
-import { RouteObject } from "react-router-dom";
+import { RouteObject } from "react-router";
 import { ErrorPage } from "./routes/_error";
 import { Root } from "./routes/_root";
-import { Register } from "./routes/Auth/Register";
-import { Forum } from "./routes/Forum/Forum";
-import { ForumQuestion } from "./routes/Forum/Question";
-import { Home } from "./routes/Home/Home";
-import { HomeMain } from "./routes/Home/Home.main";
-import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
-import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
-
+import { Achievements } from "./routes/Achievements/Achievements";
+import { achievementsLoader } from "./routes/Achievements/Achievements.data";
 import { Login } from "./routes/Auth/Login";
 import { loginAction, loginLoader } from "./routes/Auth/Login.data";
 import { logoutLoader } from "./routes/Auth/Logout.data";
+import Register from "./routes/Auth/Register";
 import { registerAction } from "./routes/Auth/Register.data";
-
-import { Achievements } from "./routes/Achievements/Achievements";
-import { achievementsLoader } from "./routes/Achievements/Achievements.data";
+import { Forum } from "./routes/Forum/Forum";
 import {
     forumCreateAction,
     forumCreateLoader,
@@ -23,6 +16,7 @@ import {
     forumShouldRevalidate,
 } from "./routes/Forum/Forum.data";
 import { NewForum } from "./routes/Forum/NewForum";
+import { ForumQuestion } from "./routes/Forum/Question";
 import {
     answerForumAction,
     bookmarkForumAction,
@@ -33,9 +27,18 @@ import {
     upvoteForumAction,
     upvoteForumAnswerAction,
 } from "./routes/Forum/Question.data";
+import { Home } from "./routes/Home/Home";
 import { homeLoader } from "./routes/Home/Home.data";
+import { HomeMain } from "./routes/Home/Home.main";
+import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
+import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
 import { Profile } from "./routes/Profile/Profile";
 import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
+import { NewQuiz } from "./routes/Quiz/NewQuiz/NewQuiz";
+import {
+    newQuizAction,
+    newQuizLoader,
+} from "./routes/Quiz/NewQuiz/NewQuiz.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
@@ -129,6 +132,13 @@ export const routes: RouteObject[] = [
                         shouldRevalidate: quizShouldRevalidate,
                     },
                     {
+                        path: "quizzes/new",
+                        element: <NewQuiz />,
+                        loader: newQuizLoader,
+                        action: newQuizAction,
+                        shouldRevalidate: quizShouldRevalidate,
+                    },
+                    {
                         path: "quizzes/:quizId/",
                         element: <TakeQuizPage />,
                         loader: quizLoader,
@@ -148,6 +158,24 @@ export const routes: RouteObject[] = [
                         path: "profile/:username",
                         element: <Profile />,
                         loader: profileLoader,
+                        children: [
+                            {
+                                path: "block",
+                                action: BlockAction,
+                            },
+                            {
+                                path: "unblock",
+                                action: UnBlockAction,
+                            },
+                            {
+                                path: "follow",
+                                action: FollowAction,
+                            },
+                            {
+                                path: "unfollow",
+                                action: UnFollowAction,
+                            },
+                        ],
                     },
                 ],
             },

@@ -1,9 +1,11 @@
+import { Portal } from "@ariakit/react";
 import {
+    RiAddFill,
     RiArrowLeftLine,
     RiArrowRightLine,
     RiCloseFill,
 } from "@remixicon/react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass } from "../../components/input";
@@ -62,44 +64,24 @@ export const Quizzes = () => {
         setSearchParams(newParams);
     };
 
-    const filteredQuizzes = data.results
-        .filter(
-            (quiz) =>
-                quiz.tags.some((tag) => {
-                    if (!selectedTagId) return true;
-                    return tag.linked_data_id === selectedTagId;
-                }) &&
-                (quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    quiz.description
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase()) ||
-                    quiz.tags.some((tag) =>
-                        tag.name
-                            .toLowerCase()
-                            .includes(searchTerm.toLowerCase()),
-                    ) ||
-                    quiz.author.username
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase())),
-        )
-        .sort((a, b) => {
-            if (sortBy === "newest") {
-                return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-                );
-            } else if (sortBy === "oldest") {
-                return (
-                    new Date(a.created_at).getTime() -
-                    new Date(b.created_at).getTime()
-                );
-            } else if (sortBy === "popular") {
-                return b.num_taken - a.num_taken;
-            } else if (sortBy === "most liked") {
-                return (b.rating.score || 0) - (a.rating.score || 0);
-            }
-            return 0;
-        });
+    const filteredQuizzes = data.results.sort((a, b) => {
+        if (sortBy === "newest") {
+            return (
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            );
+        } else if (sortBy === "oldest") {
+            return (
+                new Date(a.created_at).getTime() -
+                new Date(b.created_at).getTime()
+            );
+        } else if (sortBy === "popular") {
+            return b.num_taken - a.num_taken;
+        } else if (sortBy === "most liked") {
+            return (b.rating.score || 0) - (a.rating.score || 0);
+        }
+        return 0;
+    });
 
     const allTags = Array.from(
         new Set(data.results.flatMap((quiz) => quiz.tags)),
@@ -289,6 +271,17 @@ export const Quizzes = () => {
                         />
                     ))}
             </main>
+
+            <Portal className="fixed bottom-10 right-10 z-10">
+                <Link
+                    to="/quizzes/new"
+                    className={buttonClass({ intent: "primary", icon: "left" })}
+                >
+                    <span className={buttonInnerRing({ intent: "primary" })} />
+                    <RiAddFill size={20} />
+                    <span>Create a Quiz</span>
+                </Link>
+            </Portal>
         </div>
     );
 };

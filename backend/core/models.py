@@ -17,11 +17,18 @@ class Achievement(models.Model):
 
 
 class CustomUser(AbstractUser):
+    PROFICIENCY_LEVELS = [
+        (1, "Beginner"),
+        (2, "Intermediate"),
+        (3, "Advanced")
+    ]
     email = models.EmailField()
     full_name = models.CharField(max_length=100)
     avatar = models.CharField(max_length=1000, blank=True, null=True)
     achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)
     interests = models.ManyToManyField('Tag', related_name='interested_users', blank=True)
+    score = models.IntegerField(default=0)
+    proficiency = models.IntegerField(choices=PROFICIENCY_LEVELS, default=1)
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -42,6 +49,7 @@ class ForumQuestion(models.Model):
     tags = models.ManyToManyField('Tag')
     quiz_question_id = models.ForeignKey('QuizQuestion', on_delete=models.CASCADE, null=True, blank=True) 
     updated_at = models.DateTimeField(auto_now=True)
+    image_url = models.CharField(max_length=1000, blank=True, null=True)
 
 
     def __str__(self):
@@ -59,7 +67,7 @@ class Quiz(models.Model):
     QUIZ_TYPE_CHOICES = [
         (1, "English to Turkish"),
         (2, "Turkish to English"),
-        (3, "English word to Sense"),
+        (3, "English word to sense"),
     ]
 
     DIFFICULTY_CHOICES = [
@@ -220,3 +228,27 @@ class ForumAnswerDownvote(models.Model):
 
     def __str__(self):
         return f"{self.user} downvoted {self.forum_answer}"
+
+class Follow(models.Model):
+    follower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='following')
+    following = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='followers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("follower", "following")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.follower} followed {self.following}"
+
+class Block(models.Model):
+    blocker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blocking')
+    blocking = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blockers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("blocker", "blocking")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.blocker} blocked {self.blocking}"
