@@ -19,7 +19,7 @@ import {
     upvoteForumAction,
 } from "../routes/Forum/Question.data";
 import { RelevantQuiz } from "../routes/Forum/RelevantQuizQuestion";
-import { getNumberDifference, pluralize } from "../utils";
+import { getNumberDifference, getRelativeTime, pluralize } from "../utils";
 import { Avatar } from "./avatar";
 import { toggleButtonClass } from "./button";
 type ForumCardProps = {
@@ -150,6 +150,10 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                     })}
                                     role="img"
                                     aria-hidden="true"
+                                    onError={(e) => {
+                                        e.currentTarget.src =
+                                            "https://rollerdesignstudio.com/images/f1337d2f-fd51-4031-873a-074920bfb12e444%20resim%20.jpg";
+                                    }}
                                 />
                             </Button>
                         </div>
@@ -184,15 +188,25 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
             )}
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-between">
-                <Link
-                    className="flex flex-row items-center gap-1 underline-offset-2 hover:underline"
-                    to={`/forum/${question.id}`}
-                >
-                    <RiBookmark2Line className="size-5 text-slate-500" />
-                    <p className="text-sm text-slate-500">
-                        {pluralize(question.answers_count, "answer", "answers")}
-                    </p>
-                </Link>
+                <div className="flex items-center gap-6">
+                    <Link
+                        className="flex flex-row items-center gap-1 underline-offset-2 hover:underline"
+                        to={`/forum/${question.id}`}
+                    >
+                        <RiBookmark2Line className="size-5 text-slate-500" />
+                        <p className="text-sm text-slate-500">
+                            {pluralize(
+                                question.answers_count,
+                                "answer",
+                                "answers",
+                            )}
+                        </p>
+                    </Link>
+                    <span className="text-sm text-slate-500">
+                        {getRelativeTime(new Date(question.created_at))}
+                    </span>
+                </div>
+
                 <div className="flex flex-row items-center gap-2">
                     <upvoteFetcher.Form
                         method="POST"

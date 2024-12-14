@@ -75,7 +75,22 @@ export const Profile = () => {
                         @{username}
                     </p>
                 </div>
-                {user?.username !== username && (
+                {user?.username !== username && logged_in && (
+                    <Button
+                        className={buttonClass({
+                            intent: "destructive",
+                            size: "medium",
+                        })}
+                    >
+                        <span
+                            className={buttonInnerRing({
+                                intent: "destructive",
+                            })}
+                        />
+                        <span>Block</span>
+                    </Button>
+                )}
+                {user?.username !== username && logged_in && (
                     <Button
                         className={buttonClass({
                             intent: "secondary",
