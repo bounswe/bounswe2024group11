@@ -177,6 +177,15 @@ const Profile: React.FC = () => {
     }
   }, [isFocused, authState?.token]);
 
+  const handleDeleteQuestion = async (deletedQuestionId: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter(
+        (question) => Number(question.id) !== deletedQuestionId
+      )
+    );
+    await fetchQuestions();
+  };
+
   const handleBookmarkChange = async (
     questionId: number,
     newBookmarkState: number | null
@@ -325,6 +334,7 @@ const Profile: React.FC = () => {
                   item={item}
                   onBookmarkChange={handleBookmarkChange}
                   onVoteChange={handleVoteChange}
+                  onDelete={handleDeleteQuestion}
                 />
               </TouchableOpacity>
             ))
@@ -357,6 +367,7 @@ const Profile: React.FC = () => {
                   item={item}
                   onBookmarkChange={handleBookmarkChange}
                   onVoteChange={handleVoteChange}
+                  onDelete={handleDeleteQuestion}
                 />
               </TouchableOpacity>
             ))
@@ -389,6 +400,7 @@ const Profile: React.FC = () => {
                   item={item}
                   onBookmarkChange={handleBookmarkChange}
                   onVoteChange={handleVoteChange}
+                  onDelete={handleDeleteQuestion}
                 />
               </TouchableOpacity>
             ))
