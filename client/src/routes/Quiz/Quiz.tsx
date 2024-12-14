@@ -461,7 +461,10 @@ export const TakeQuizPage = () => {
                                                 : "bg-slate-100 text-slate-950 hover:bg-slate-200"
                                         }`}
                                         aria-describedby="question"
-                                        lang={quiz.type === 2 ? "tr" : "en"}
+                                        lang={quiz.type === 2 ? "tr" : "tr"}
+                                        aria-lang={
+                                            quiz.type === 2 ? "tr" : "tr"
+                                        }
                                     >
                                         <input
                                             className="sr-only"
@@ -476,6 +479,16 @@ export const TakeQuizPage = () => {
                                                 handleOptionChange(
                                                     String(choice.id),
                                                 )
+                                            }
+                                            lang={
+                                                quiz.type === 2
+                                                    ? "tr-TR"
+                                                    : "en-US"
+                                            }
+                                            aria-lang={
+                                                quiz.type === 2
+                                                    ? "tr-TR"
+                                                    : "en-US"
                                             }
                                         />
                                         {choice.choice_text}
