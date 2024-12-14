@@ -108,16 +108,22 @@ class ProfileSerializer(serializers.ModelSerializer):
         if request:
             user = request.user
             if user.is_authenticated:
-                return Follow.objects.filter(follower=user, following=obj).exists()
-        return False
+                follow_instance = Follow.objects.filter(follower=user, following=obj).first()
+                if follow_instance:
+                    return follow_instance.id
+                return None  # Or another default value if no follow exists
+        return None
     
     def get_is_blocked(self, obj):
         request = self.context.get('request')
         if request:
             user = request.user
             if user.is_authenticated:
-                return Block.objects.filter(blocker=user, blocking=obj).exists()
-        return False
+                block_instance = Block.objects.filter(blocker=user, blocking=obj).first()
+                if block_instance:
+                    return block_instance.id
+                return None  # Or another default value if no block exists
+        return None
     
     def get_bookmarked_forums(self, obj):
         if obj:
