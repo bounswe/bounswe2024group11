@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow
+from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser
 from core import models
 from django.db.models import Sum
 from .forum_question_serializer import ForumQuestionSerializer
@@ -32,7 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     followings = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
     blockings = serializers.SerializerMethodField()
-    bookmarked_forums = ForumQuestionSerializer(many=True, read_only=True, source='forumquestion_set')
+    bookmarked_forums = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -100,9 +100,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         return {'request': self.context.get('request')}
     
     def get_bookmarked_forums(self, obj):
-        bookmarked_forums = ForumBookmark.objects.filter(user=obj).values_list('forum_question', flat=True)
-        forum_questions = ForumQuestion.objects.filter(id__in=bookmarked_forums)
-        return ForumQuestionSerializer(forum_questions, many=True, context=self.context).data
+        if obj:
+            try:
+                user = CustomUser.objects.get(username=obj)
+                forum_question_ids = ForumBookmark.objects.filter(user=user).values_list('forum_question_id', flat=True)
+                forum_questions = ForumQuestion.objects.filter(id__in=forum_question_ids).order_by('-created_at')
+                return ForumQuestionSerializer(forum_questions, many=True, context=self.context).data
+            except CustomUser.DoesNotExist:
+                return []
+        return []
 
 
     def get_quizzes_taken(self, obj):
