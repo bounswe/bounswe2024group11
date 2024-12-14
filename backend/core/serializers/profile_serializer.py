@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .serializers import ForumBookmarkSerializer, TagSerializer, UserInfoSerializer, FollowSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow
+from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser
 from core import models
 from django.db.models import Sum
 
@@ -34,6 +34,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     followings = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
     blockings = serializers.SerializerMethodField()
+    proficiency = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -50,11 +51,13 @@ class ProfileSerializer(serializers.ModelSerializer):
             'interests',
             'followings',
             'followers',
-            'blockings'
+            'blockings',
+            'proficiency',
         ]
         read_only_fields = ['id']
 
     def update(self, instance, validated_data):
+        print(validated_data)
         achievements_data = validated_data.pop('userachievement_set', None)
         if achievements_data is not None:
             if not achievements_data:
@@ -89,6 +92,20 @@ class ProfileSerializer(serializers.ModelSerializer):
 
             # Update the interests of the instance
             instance.interests.set(interest_instances)
+        
+        
+        # Handle proficiency updates
+        proficiency_data = validated_data.pop('proficiency', None)
+        if proficiency_data is not None:
+
+            if proficiency_data in dict(CustomUser.PROFICIENCY_LEVELS):  # Validate choice
+                instance.proficiency = proficiency_data
+            else:
+                raise serializers.ValidationError({"proficiency": "Invalid proficiency level."})
+        instance.save()
+         
+               
+            
 
 
         return super().update(instance, validated_data)
@@ -132,3 +149,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_blockings(self, obj):
         blockings = User.objects.filter(blockers__blocker=obj)
         return UserInfoSerializer(blockings, many=True, context=self.context).data
+    
+    def get_proficiency(self, obj):
+        return obj.get_proficiency_display()
+
+    
+    
