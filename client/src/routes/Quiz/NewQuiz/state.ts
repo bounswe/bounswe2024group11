@@ -259,10 +259,10 @@ export const useQuizStore = create<QuizState>((set, get) => ({
             question.choices.forEach((choice, choiceIndex) => {
                 if (!choice.choice_text.trim()) {
                     if (choice.is_correct) {
-                        errors.push(`Correct Choice for Q${index + 1}`);
+                        errors.push(`Correct Option for Q${index + 1}`);
                     } else {
                         errors.push(
-                            `Choice ${choiceIndex + 1} for Q${index + 1}`,
+                            `Option ${choiceIndex + 1} for Q${index + 1}`,
                         );
                     }
                 }

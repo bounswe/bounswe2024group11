@@ -70,7 +70,7 @@ export const NewQuiz = () => {
                         <NewQuizQuestions onBack={() => setView("details")} />
                     )}
                 </Form>
-                {view === "questions" && (
+                {view === "questions" && getValidationErrors().length > 0 && (
                     <div
                         className="relative col-span-8 h-full rounded-4 p-2 md:col-span-2"
                         role="alert"

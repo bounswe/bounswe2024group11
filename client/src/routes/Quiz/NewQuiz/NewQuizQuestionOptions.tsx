@@ -187,13 +187,29 @@ export const NewQuizQuestionOptions = ({
                     )}
                 </div>
                 {possibleAnswers.length === 0 && quiz.type !== 3 && (
-                    <div className="flex flex-col rounded-2 bg-orange-100 px-3 py-2">
-                        <span className="text-sm font-medium text-orange-900">
-                            No possible answers found.
-                        </span>
-                        <span className="text-sm text-orange-900/70">
-                            Don't sweat, you can still type in your own answer.
-                        </span>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-col rounded-2 bg-orange-100 px-3 py-2">
+                            <span className="text-sm font-medium text-orange-950">
+                                We couldn't find any answers.
+                            </span>
+                            <span className="text-sm text-orange-950/70">
+                                Don't sweat, you can still type in your own
+                                answer.
+                            </span>
+                        </div>
+                        <label className={labelClass()}>
+                            <span>Type your answer</span>
+                            <input
+                                defaultValue={
+                                    currentQuestion.choices[0].choice_text
+                                }
+                                type="text"
+                                className={inputClass()}
+                                onChange={(e) => {
+                                    setCorrectAnswer(index, e.target.value);
+                                }}
+                            />
+                        </label>
                     </div>
                 )}
                 {possibleAnswers.length > 0 && (
@@ -218,7 +234,7 @@ export const NewQuizQuestionOptions = ({
                         </label>
                     </div>
                 )}
-                <Separator className="border-slate-200" />
+                <Separator className="my-2 border-slate-200" />
 
                 <div className="flex flex-col gap-2">
                     {currentQuestion.choices.map((choice, i) => (
