@@ -6,6 +6,7 @@ import { Answer } from "../types/forum";
 import AuthorView from "./AuthorView";
 import VoteAnswerButtonsView from "./VoteAnswerButtonsView";
 import DeleteAnswerButton from "./DeleteAnswerButton";
+import EditAnswerButton from "./EditAnswerButton";
 
 interface ForumAnswerCardProps {
   item: Answer;
@@ -50,11 +51,17 @@ const ForumAnswerCard: React.FC<ForumAnswerCardProps> = ({
           <AuthorView author={item.author} />
           <View style={styles.buttonsContainer}>
             {answer.is_my_answer && (
-              <DeleteAnswerButton
-                questionId={Number(answer.forum_question)}
-                answerId={Number(answer.id)}
-                onDelete={onAnswerDelete}
-              />
+              <>
+                <DeleteAnswerButton
+                  questionId={Number(answer.forum_question)}
+                  answerId={Number(answer.id)}
+                  onDelete={onAnswerDelete}
+                />
+                <EditAnswerButton
+                  questionId={Number(answer.forum_question)}
+                  answerId={Number(answer.id)}
+                />
+              </>
             )}
             <Text style={styles.posted_time}>Posted</Text>
           </View>
