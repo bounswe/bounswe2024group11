@@ -5,9 +5,13 @@ import { buttonClass, buttonInnerRing } from "./button";
 
 export type VoiceoverProps = {
     text: string;
+    label?: string;
 };
 
-export const Voiceover = ({ text }: VoiceoverProps) => {
+export const Voiceover = ({
+    text,
+    label = "Play voiceover",
+}: VoiceoverProps) => {
     const { speak } = useSpeech();
     return (
         <Button
@@ -17,6 +21,7 @@ export const Voiceover = ({ text }: VoiceoverProps) => {
                 size: "medium",
                 icon: "only",
             })}
+            aria-label={label}
         >
             <span
                 className={buttonInnerRing({
@@ -24,7 +29,7 @@ export const Voiceover = ({ text }: VoiceoverProps) => {
                 })}
                 aria-hidden="true"
             />
-            <RiVolumeUpFill size={16} />
+            <RiVolumeUpFill size={16} role="img" aria-label="Volume icon" />
         </Button>
     );
 };

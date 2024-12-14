@@ -461,7 +461,10 @@ export const TakeQuizPage = () => {
                                                 : "bg-slate-100 text-slate-950 hover:bg-slate-200"
                                         }`}
                                         aria-describedby="question"
-                                        lang={quiz.type === 2 ? "tr" : "en"}
+                                        lang={quiz.type === 2 ? "tr" : "tr"}
+                                        aria-lang={
+                                            quiz.type === 2 ? "tr" : "tr"
+                                        }
                                     >
                                         <input
                                             className="sr-only"
@@ -477,9 +480,21 @@ export const TakeQuizPage = () => {
                                                     String(choice.id),
                                                 )
                                             }
+                                            lang={
+                                                quiz.type === 2
+                                                    ? "tr-TR"
+                                                    : "en-US"
+                                            }
+                                            aria-lang={
+                                                quiz.type === 2
+                                                    ? "tr-TR"
+                                                    : "en-US"
+                                            }
                                         />
-                                        {choice.choice_text}
-                                        {quiz.type === 2 && (
+                                        <span className="flex-1">
+                                            {choice.choice_text}
+                                        </span>
+                                        {quiz.type > 0 && (
                                             <Voiceover
                                                 text={choice.choice_text}
                                             />
