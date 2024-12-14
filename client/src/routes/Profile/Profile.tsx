@@ -1,11 +1,20 @@
 import * as Ariakit from "@ariakit/react";
 import { Button } from "@ariakit/react";
+import { useFetcher, useParams } from "react-router-dom";
 import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
+import { QuizCard } from "../../components/quiz-card";
+import { AchievementBadge } from "../Achievements/Achievements";
 import { homeLoader } from "../Home/Home.data";
-import { profileLoader } from "./Profile.data";
+import {
+    BlockAction,
+    FollowAction,
+    profileLoader,
+    UnBlockAction,
+    UnFollowAction,
+} from "./Profile.data";
 
 const Badge = ({
     icon,
@@ -47,38 +56,136 @@ const Badge = ({
 };
 
 export const Profile = () => {
-    const { my, bookMarked, upvoted } = useLoaderData<typeof profileLoader>();
-
+    const {
+        bookmarked_forums,
+        full_name,
+        avatar,
+        achievements,
+        score,
+        quizzes_taken,
+        is_blocked,
+        is_following,
+        id,
+    } = useLoaderData<typeof profileLoader>();
+    const blockFetcher = useFetcher<typeof BlockAction>();
+    const unblockFetcher = useFetcher<typeof UnBlockAction>();
+    const followFetcher = useFetcher<typeof FollowAction>();
+    const unfollowFetcher = useFetcher<typeof UnFollowAction>();
+    const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
     const author = {
-        avatar: "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=David%20Bush",
-        full_name: user?.full_name || "",
-        username: user?.username || "",
+        avatar: avatar,
+        full_name: full_name || "",
+        username: username || "",
     };
     return (
         <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <header className="flex flex-row items-center gap-4">
                 <Avatar author={author} size={96} />
                 <div className="flex-1">
-                    <h1 className="pt-2 text-2xl font-semibold">
-                        {user?.full_name}
-                    </h1>
+                    <h1 className="pt-2 text-2xl font-semibold">{full_name}</h1>
                     <p className="text-lg text-slate-500" aria-label="Username">
-                        @{user?.username}
+                        @{username}
                     </p>
                 </div>
-                <Button
-                    className={buttonClass({
-                        intent: "secondary",
-                        size: "medium",
-                    })}
-                >
-                    <span
-                        className={buttonInnerRing({ intent: "secondary" })}
-                    />
-                    <span>Follow</span>
-                </Button>
+                {user?.username !== username &&
+                    logged_in &&
+                    (!is_blocked ? (
+                        <blockFetcher.Form method="POST" action={`block/`}>
+                            <Button
+                                className={buttonClass({
+                                    intent: "destructive",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "destructive",
+                                    })}
+                                />
+                                <span>Block</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="blocking"
+                                value={id}
+                            ></input>
+                        </blockFetcher.Form>
+                    ) : (
+                        <unblockFetcher.Form method="POST" action={`unblock/`}>
+                            <Button
+                                className={buttonClass({
+                                    intent: "tertiary",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "tertiary",
+                                    })}
+                                />
+                                <span>Unblock</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="blocking"
+                                value={is_blocked}
+                            ></input>
+                        </unblockFetcher.Form>
+                    ))}
+                {user?.username !== username &&
+                    logged_in &&
+                    (is_following ? (
+                        <unfollowFetcher.Form
+                            method="POST"
+                            action={`unfollow/`}
+                        >
+                            <Button
+                                className={buttonClass({
+                                    intent: "destructive",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "destructive",
+                                    })}
+                                />
+                                <span>Unfollow</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="following"
+                                value={is_following}
+                            ></input>
+                        </unfollowFetcher.Form>
+                    ) : (
+                        <followFetcher.Form method="POST" action={`follow/`}>
+                            <Button
+                                className={buttonClass({
+                                    intent: "secondary",
+                                    size: "medium",
+                                })}
+                                type="submit"
+                            >
+                                <span
+                                    className={buttonInnerRing({
+                                        intent: "secondary",
+                                    })}
+                                />
+                                <span>Follow</span>
+                            </Button>
+                            <input
+                                type="hidden"
+                                name="following"
+                                value={id}
+                            ></input>{" "}
+                        </followFetcher.Form>
+                    ))}
             </header>
             <section className="z-20 flex w-full flex-row items-center justify-between">
                 <div className="flex flex-col gap-2">
@@ -88,27 +195,16 @@ export const Profile = () => {
                         role="list"
                         aria-label="User achievements"
                     >
-                        <li>
-                            <Badge
-                                icon="🏆"
-                                title="Accuracy Monster"
-                                description="Solve 10 quizzes with 100% accuracy."
-                            />
-                        </li>
-                        <li>
-                            <Badge
-                                icon="🏅"
-                                title="Linker"
-                                description="Refer to a quiz question in a forum post."
-                            />
-                        </li>
-                        <li>
-                            <Badge
-                                icon="🎖️"
-                                title="The Popular Guy"
-                                description="Get 100 upvotes on a forum post."
-                            />
-                        </li>
+                        {achievements
+                            .filter((a) => a.earned_at !== null)
+                            .map((a) => (
+                                <li key={a.achievement.slug}>
+                                    <AchievementBadge
+                                        achievement={a.achievement}
+                                        is_earned={true}
+                                    />
+                                </li>
+                            ))}
                     </ul>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -117,38 +213,20 @@ export const Profile = () => {
                         role="status"
                         aria-label="User score"
                     >
-                        700
+                        {score}
                     </span>
                 </div>
             </section>
-            <hr className="my-4" aria-hidden="true" />
-            <section aria-label="User posts" className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>My Forum Questions</span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {my.length}
-                    </span>
-                </h2>
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {my.map((post) => (
-                        <ForumQuestionCard
-                            onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
-                        />
-                    ))}
-                </div>
-            </section>{" "}
-            <hr className="my-4" aria-hidden="true" />
+            <Ariakit.Separator className="my-4" />
             <section aria-label="User posts" className="flex flex-col gap-4">
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
                     <span>Bookmarked Forum Questions</span>
                     <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {bookMarked.length}
+                        {bookmarked_forums.length}
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {bookMarked.map((post) => (
+                    {bookmarked_forums.map((post) => (
                         <ForumQuestionCard
                             onTagClick={() => {}}
                             key={post.id}
@@ -156,21 +234,21 @@ export const Profile = () => {
                         />
                     ))}
                 </div>
-            </section>{" "}
-            <hr className="my-4" aria-hidden="true" />
+            </section>
+            <Ariakit.Separator className="my-4" />
             <section aria-label="User posts" className="flex flex-col gap-4">
                 <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>Upvoted Forum Questions</span>
+                    <span>Quizzes Taken</span>
                     <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {upvoted.length}
+                        {quizzes_taken.length}
                     </span>
                 </h2>
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {upvoted.map((post) => (
-                        <ForumQuestionCard
+                    {quizzes_taken.map((quiz) => (
+                        <QuizCard
+                            quiz_key={String(quiz.id)}
+                            quiz={quiz}
                             onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
                         />
                     ))}
                 </div>

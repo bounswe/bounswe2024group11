@@ -1,5 +1,10 @@
 import * as Ariakit from "@ariakit/react";
-import { RiArrowLeftSLine, RiLightbulbFlashLine } from "@remixicon/react";
+import {
+    RiArrowLeftSLine,
+    RiCheckLine,
+    RiCloseLine,
+    RiLightbulbFlashLine,
+} from "@remixicon/react";
 import { useEffect, useRef, useState } from "react";
 import { Form, Link } from "react-router-dom";
 import {
@@ -10,11 +15,14 @@ import {
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
 import { Voiceover } from "../../components/voiceover";
+import { useSound } from "../../contexts/SoundContext";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
+import { HintType } from "./NewQuiz/NewQuizQuestionOptionsHint";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
 import { QuizDetails } from "./Quiz.schema";
 import { questionTypeToQuestion } from "./Quiz.utils";
+import { choiceButton } from "./QuizChoice";
 
 const StartQuizComponent = ({
     quiz,
@@ -160,22 +168,23 @@ const EndQuizComponent = ({
     totalQuestions: number;
     quizId: number;
 }) => {
+    const successful = correctAnswers >= totalQuestions * 0.7;
     const { logged_in, user } =
         useRouteLoaderData<typeof homeLoader>("home-main");
     return (
         <div className="flex flex-col items-center gap-4">
-            <SuccessIllustration />
+            {successful ? <SuccessIllustration /> : <FailIllustration />}
             <div className="rounded-4 bg-cyan-100 px-3 py-1 text-center text-sm font-medium uppercase tracking-widest text-cyan-900">
                 {((correctAnswers / totalQuestions) * 100).toFixed(0)}% accuracy
             </div>
             <div className="flex flex-col items-center gap-2">
                 <h2 className="max-w-lg text-balance text-center font-display text-3xl font-medium text-slate-900">
-                    {correctAnswers > totalQuestions / 2
+                    {successful
                         ? `Great job ${logged_in ? user.full_name : "buddy"}!`
                         : `Quiz Completed!`}
                 </h2>
                 <p className="text-lg text-slate-600">
-                    {correctAnswers > totalQuestions / 2
+                    {successful
                         ? "You've done very well! :)"
                         : "Next time, try harder :("}
                 </p>
@@ -222,16 +231,22 @@ const EndQuizComponent = ({
 
 export const TakeQuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [_, setSelectedOption] = useState("");
+    const [selectedOption, setSelectedOption] = useState("");
     const quiz = useLoaderData<typeof quizLoader>();
     const solvedQuiz = useActionData<typeof takeQuizAction>();
+    const dialogRef = useRef<HTMLAnchorElement>(null);
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [hints, setHints] = useState<Record<number, boolean>>({});
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [isQuizEnded, setIsQuizEnded] = useState(false);
-    const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
+    const [timeRemaining, setTimeRemaining] = useState(600);
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [hintText, setHintText] = useState("");
+    const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
+    const [showAnswer, setShowAnswer] = useState(false);
+    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+    const { playSound } = useSound();
+    const hintType = quiz.questions[currentQuestion]?.hints?.[0]?.type;
 
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -264,27 +279,44 @@ export const TakeQuizPage = () => {
     }, [isQuizStarted, timeRemaining, isQuizEnded]);
 
     const handleOptionChange = (optionId: string) => {
+        if (showAnswer) {
+            return;
+        }
         setSelectedOption(optionId);
         const updatedAnswers = { ...answers, [currentQuestion]: optionId };
         setAnswers(updatedAnswers);
+        setAnsweredQuestions([...answeredQuestions, currentQuestion]);
     };
 
-    const isPrevDisabled = currentQuestion === 0;
-    const isNextDisabled =
-        currentQuestion === quiz.questions.length - 1 ||
-        !answers[currentQuestion];
+    const handleCheckAnswer = () => {
+        if (!selectedOption) return;
+
+        const updatedAnswers = {
+            ...answers,
+            [currentQuestion]: selectedOption,
+        };
+        setAnswers(updatedAnswers);
+        setAnsweredQuestions([...answeredQuestions, currentQuestion]);
+
+        const correctOption = quiz.questions[currentQuestion].choices.find(
+            (o) => o.is_correct === true,
+        );
+        if (correctOption && String(correctOption.id) === selectedOption) {
+            playSound("true");
+        } else {
+            playSound("false");
+        }
+
+        setShowAnswer(true);
+    };
 
     const progress =
         (Object.keys(answers).length / quiz.questions.length) * 100;
 
-    const formatTime = (seconds: number) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-    };
     const [hintOpen, setHintOpen] = useState(false);
     const showHint = (questionIndex: number) => {
         const hint = quiz.questions[questionIndex].hints;
+
         const hinttext = hint?.[0]?.text || "";
         if (hinttext === "") {
             logger.log(`No hint for question ${questionIndex}`);
@@ -296,6 +328,7 @@ export const TakeQuizPage = () => {
             setHintOpen(true);
         }
     };
+
     const prepareAnswers = () => {
         return Object.entries(answers).map(([index, answer]) => ({
             question: quiz.questions[Number(index)].id,
@@ -303,8 +336,15 @@ export const TakeQuizPage = () => {
             is_hint_used: hints[Number(index)] || false,
         }));
     };
+
     const startQuiz = () => {
         setIsQuizStarted(true);
+    };
+
+    const handleNext = () => {
+        setSelectedOption("");
+        setShowAnswer(false);
+        setCurrentQuestion((prev) => prev + 1);
     };
 
     useEffect(() => {
@@ -324,6 +364,10 @@ export const TakeQuizPage = () => {
                 correct++;
             }
         });
+        const successful = correct >= quiz.questions.length * 0.7;
+        if (successful) {
+            playSound("success");
+        }
         setCorrectAnswers(correct);
     };
 
@@ -361,7 +405,6 @@ export const TakeQuizPage = () => {
                     <div>
                         {currentQuestion + 1} / {quiz.questions.length}
                     </div>
-                    <div>{formatTime(timeRemaining)} mins left</div>
                 </div>
             </div>
             <div className="flex gap-4">
@@ -385,63 +428,70 @@ export const TakeQuizPage = () => {
                         />
                     )}
                 </div>
-                {quiz.questions[currentQuestion].hints?.length ? (
-                    <div>
-                        <Ariakit.PopoverProvider placement="bottom-end">
-                            <Ariakit.PopoverDisclosure
-                                className={buttonClass({
-                                    intent: "primary",
-                                    size: "medium",
-                                    icon: "only",
-                                })}
+                {!showAnswer &&
+                    quiz.questions[currentQuestion].hints?.length && (
+                        <div>
+                            <Ariakit.PopoverProvider
+                                open={isDisclaimerOpen}
+                                setOpen={setIsDisclaimerOpen}
+                                placement="bottom-end"
                             >
-                                <span
-                                    className={buttonInnerRing({
+                                <Ariakit.PopoverDisclosure
+                                    className={buttonClass({
                                         intent: "primary",
+                                        size: "medium",
+                                        icon: "only",
                                     })}
-                                    aria-hidden="true"
-                                />
-                                <RiLightbulbFlashLine size={18} />
-                            </Ariakit.PopoverDisclosure>
-                            <Ariakit.Popover className="my-2 flex w-80 flex-col gap-4 rounded-2 bg-white p-4 text-slate-700 shadow-md ring-1 ring-slate-100">
-                                <div className="flex flex-col gap-1">
-                                    <Ariakit.PopoverHeading className="text-md font-medium">
-                                        Using hint for the question{" "}
-                                        {currentQuestion + 1}
-                                    </Ariakit.PopoverHeading>
-                                    <Ariakit.PopoverDescription className="text-sm text-slate-600">
-                                        Using a hint in a question will decrease
-                                        the points earned by 50%.
-                                    </Ariakit.PopoverDescription>
-                                </div>
-                                <div className="flex gap-2">
-                                    <Ariakit.Button
-                                        onClick={() => {}}
-                                        className={buttonClass({
-                                            intent: "tertiary",
-                                            size: "medium",
-                                            className: "flex-1",
+                                >
+                                    <span
+                                        className={buttonInnerRing({
+                                            intent: "primary",
                                         })}
-                                    >
-                                        Cancel
-                                    </Ariakit.Button>
-                                    <Ariakit.Button
-                                        onClick={() =>
-                                            showHint(currentQuestion)
-                                        }
-                                        className={buttonClass({
-                                            intent: "secondary",
-                                            size: "medium",
-                                            className: "flex-1",
-                                        })}
-                                    >
-                                        Accept Hint
-                                    </Ariakit.Button>
-                                </div>
-                            </Ariakit.Popover>
-                        </Ariakit.PopoverProvider>
-                    </div>
-                ) : null}
+                                        aria-hidden="true"
+                                    />
+                                    <RiLightbulbFlashLine size={18} />
+                                </Ariakit.PopoverDisclosure>
+                                <Ariakit.Popover className="z-50 my-2 flex w-80 flex-col gap-4 rounded-2 bg-white p-4 text-slate-700 shadow-md ring-1 ring-slate-100">
+                                    <div className="flex flex-col gap-1">
+                                        <Ariakit.PopoverHeading className="text-md font-medium">
+                                            Using hint for the question{" "}
+                                            {currentQuestion + 1}
+                                        </Ariakit.PopoverHeading>
+                                        <Ariakit.PopoverDescription className="text-sm text-slate-600">
+                                            Using a hint in a question will
+                                            decrease the points earned by 50%.
+                                        </Ariakit.PopoverDescription>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Ariakit.Button
+                                            onClick={() =>
+                                                setIsDisclaimerOpen(false)
+                                            }
+                                            className={buttonClass({
+                                                intent: "tertiary",
+                                                size: "medium",
+                                                className: "flex-1",
+                                            })}
+                                        >
+                                            Cancel
+                                        </Ariakit.Button>
+                                        <Ariakit.Button
+                                            onClick={() =>
+                                                showHint(currentQuestion)
+                                            }
+                                            className={buttonClass({
+                                                intent: "secondary",
+                                                size: "medium",
+                                                className: "flex-1",
+                                            })}
+                                        >
+                                            Accept Hint
+                                        </Ariakit.Button>
+                                    </div>
+                                </Ariakit.Popover>
+                            </Ariakit.PopoverProvider>
+                        </div>
+                    )}
             </div>
             {quiz.questions[currentQuestion] && (
                 <div>
@@ -451,57 +501,65 @@ export const TakeQuizPage = () => {
                         aria-labelledby={`question-${currentQuestion}`}
                     >
                         {quiz.questions[currentQuestion].choices.map(
-                            (choice, _) => (
-                                <li key={choice.id}>
-                                    <label
-                                        className={`flex cursor-pointer items-center justify-center gap-2 rounded-2 px-4 py-3 text-center text-lg transition-colors duration-200 ${
-                                            answers[currentQuestion] ===
-                                            String(choice.id)
-                                                ? "bg-cyan-700 text-white"
-                                                : "bg-slate-100 text-slate-950 hover:bg-slate-200"
-                                        }`}
-                                        aria-describedby="question"
-                                        lang={quiz.type === 2 ? "tr" : "tr"}
-                                        aria-lang={
-                                            quiz.type === 2 ? "tr" : "tr"
-                                        }
-                                    >
-                                        <input
-                                            className="sr-only"
-                                            type="radio"
-                                            name="option"
-                                            value={choice.id}
-                                            checked={
-                                                answers[currentQuestion] ===
-                                                String(choice.id)
-                                            }
-                                            onChange={() =>
-                                                handleOptionChange(
-                                                    String(choice.id),
-                                                )
-                                            }
-                                            lang={
-                                                quiz.type === 2
-                                                    ? "tr-TR"
-                                                    : "en-US"
-                                            }
-                                            aria-lang={
-                                                quiz.type === 2
-                                                    ? "tr-TR"
-                                                    : "en-US"
-                                            }
-                                        />
-                                        <span className="flex-1">
-                                            {choice.choice_text}
-                                        </span>
-                                        {quiz.type == 2 && (
-                                            <Voiceover
-                                                text={choice.choice_text}
+                            (choice) => {
+                                const isCorrectChoice = choice.is_correct;
+                                const isSelectedChoice =
+                                    selectedOption === String(choice.id);
+
+                                return (
+                                    <li key={choice.id}>
+                                        <label
+                                            className={choiceButton({
+                                                isCorrect: choice.is_correct,
+                                                isSelected: isSelectedChoice,
+                                                showAnswer,
+                                                className: "flex-1",
+                                            })}
+                                            aria-describedby="question"
+                                            lang={quiz.type === 2 ? "tr" : "en"}
+                                        >
+                                            <input
+                                                className="sr-only"
+                                                type="radio"
+                                                name="option"
+                                                value={choice.id}
+                                                checked={isSelectedChoice}
+                                                onChange={() =>
+                                                    handleOptionChange(
+                                                        String(choice.id),
+                                                    )
+                                                }
+                                                disabled={showAnswer}
                                             />
-                                        )}
-                                    </label>
-                                </li>
-                            ),
+
+                                            <span className="flex-1">
+                                                {choice.choice_text}
+                                            </span>
+                                            {quiz.type == 2 && (
+                                                <Voiceover
+                                                    text={choice.choice_text}
+                                                />
+                                            )}
+
+                                            {showAnswer && isSelectedChoice && (
+                                                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
+                                                    {isCorrectChoice ? (
+                                                        <RiCheckLine
+                                                            className="text-green-700"
+                                                            size={20}
+                                                        />
+                                                    ) : (
+                                                        <RiCloseLine
+                                                            className="text-red-700"
+                                                            size={20}
+                                                        />
+                                                    )}
+                                                </div>
+                                            )}
+                                        </label>
+                                    </li>
+                                );
+                            },
                         )}
                     </ul>
                 </div>
@@ -513,9 +571,10 @@ export const TakeQuizPage = () => {
                         intent: "tertiary",
                         size: "medium",
                     })}
-                    disabled={isPrevDisabled}
+                    disabled={currentQuestion === 0}
                     onClick={() => {
                         setSelectedOption(answers[currentQuestion - 1] || "");
+                        setShowAnswer(true);
                         setCurrentQuestion((prev) => prev - 1);
                     }}
                 >
@@ -525,14 +584,13 @@ export const TakeQuizPage = () => {
                     />
                     Previous
                 </button>
-                {currentQuestion === quiz.questions.length - 1 ? (
+                {currentQuestion === quiz.questions.length - 1 && showAnswer ? (
                     <Form method="POST" action={`/quizzes/${quiz.id}`}>
                         <input
                             type="hidden"
                             name="answers"
                             value={JSON.stringify(prepareAnswers())}
                         />
-
                         <input type="hidden" name="quizId" value={quiz.id} />
                         <button
                             type="submit"
@@ -551,19 +609,13 @@ export const TakeQuizPage = () => {
                             Finish Quiz
                         </button>
                     </Form>
-                ) : (
+                ) : showAnswer ? (
                     <button
                         className={buttonClass({
                             intent: "secondary",
                             size: "medium",
                         })}
-                        disabled={isNextDisabled}
-                        onClick={() => {
-                            setSelectedOption(
-                                answers[currentQuestion + 1] || "",
-                            );
-                            setCurrentQuestion((prev) => prev + 1);
-                        }}
+                        onClick={handleNext}
                     >
                         <span
                             className={buttonInnerRing({ intent: "secondary" })}
@@ -571,20 +623,48 @@ export const TakeQuizPage = () => {
                         />
                         Next
                     </button>
+                ) : (
+                    <button
+                        className={buttonClass({
+                            intent: "primary",
+                            size: "medium",
+                        })}
+                        disabled={!selectedOption}
+                        onClick={() => {
+                            handleCheckAnswer();
+                            dialogRef.current?.focus();
+                        }}
+                    >
+                        <span
+                            className={buttonInnerRing({ intent: "primary" })}
+                            aria-hidden="true"
+                        />
+                        Check Answer
+                    </button>
                 )}
             </div>
-            {hintOpen && <Hint message={hintText} />}
+            {hintOpen && <Hint type={hintType as HintType} text={hintText} />}
         </main>
     );
 };
 
-const Hint = ({ message }: { message: string }) => {
+const Hint = ({ text, type }: { type: HintType; text: string }) => {
     return (
         <div className="flex flex-col gap-2 rounded-2 bg-orange-200 p-4 text-orange-900 ring-1 ring-orange-500/50">
             <div className="flex items-center gap-2">
                 <RiLightbulbFlashLine size={24} />
             </div>
-            <p className="w-full">{message}</p>
+            <span className="flex flex-1 items-center gap-2">
+                {type === "images" ? (
+                    <img
+                        src={text}
+                        alt="Hint image"
+                        className="h-32 rounded-1 object-cover"
+                    />
+                ) : (
+                    <span>{text}</span>
+                )}
+            </span>
         </div>
     );
 };

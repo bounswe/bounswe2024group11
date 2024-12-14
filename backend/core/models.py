@@ -67,7 +67,7 @@ class Quiz(models.Model):
     QUIZ_TYPE_CHOICES = [
         (1, "English to Turkish"),
         (2, "Turkish to English"),
-        (3, "English word to Sense"),
+        (3, "English word to sense"),
     ]
 
     DIFFICULTY_CHOICES = [
