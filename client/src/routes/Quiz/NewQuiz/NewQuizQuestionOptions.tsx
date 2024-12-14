@@ -111,7 +111,9 @@ export const NewQuizQuestionOptions = ({
     const linked_data_id = tag?.linked_data_id.replace("bn:", "");
 
     const translationResponse = useSWR(
-        quiz.type === 3 ? null : `translation-${linked_data_id}`,
+        quiz.type === 3 && !!linked_data_id
+            ? null
+            : `translation-${linked_data_id}`,
         () => {
             return apiClient
                 .get("/get-translation/", {
@@ -124,38 +126,44 @@ export const NewQuizQuestionOptions = ({
         },
     );
 
-    const difficultyResponse = useSWR(`difficulty-${linked_data_id}`, () => {
-        return apiClient
-            .get("/get-difficulty/", {
-                params: {
-                    keyword: tag?.name,
-                },
-            })
-            .then((res) => res.data);
-    });
+    const difficultyResponse = useSWR(
+        linked_data_id ? `difficulty-${linked_data_id}` : null,
+        () => {
+            return apiClient
+                .get("/get-difficulty/", {
+                    params: {
+                        keyword: tag?.name,
+                    },
+                })
+                .then((res) => res.data);
+        },
+    );
 
-    const hints = useSWR(`hint-${linked_data_id}`, () => {
-        return apiClient
-            .get("/hint/", {
-                params: {
-                    synset_id: linked_data_id,
-                    target_lang: quiz.type === 2 ? "tr" : "en",
-                    word: tag?.name,
-                },
-            })
-            .then((res) => {
-                const {
-                    issues,
-                    output: hints,
-                    success,
-                } = safeParse(hintsSchema, res.data);
-                if (!success) {
-                    console.error(issues);
-                    throw new Error("Failed to parse hints response.");
-                }
-                return hints;
-            });
-    });
+    const hints = useSWR(
+        linked_data_id ? `hint-${linked_data_id}` : null,
+        () => {
+            return apiClient
+                .get("/hint/", {
+                    params: {
+                        synset_id: linked_data_id,
+                        target_lang: quiz.type === 2 ? "tr" : "en",
+                        word: tag?.name,
+                    },
+                })
+                .then((res) => {
+                    const {
+                        issues,
+                        output: hints,
+                        success,
+                    } = safeParse(hintsSchema, res.data);
+                    if (!success) {
+                        console.error(issues);
+                        throw new Error("Failed to parse hints response.");
+                    }
+                    return hints;
+                });
+        },
+    );
 
     const difficultyNumber = difficultyResponse.data?.question_point || 10;
     const possibleAnswers = translationResponse.data?.translations || [];
@@ -270,11 +278,12 @@ export const NewQuizQuestionOptions = ({
                         />
                     )}
                 </div>
-                {possibleAnswers.length === 0 && quiz.type !== 3 && (
+                {possibleAnswers.length === 0 && (
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col rounded-2 bg-orange-100 px-3 py-2">
                             <span className="text-sm font-medium text-orange-950">
-                                We couldn't find any answers.
+                                We don't have an automatic answer for this
+                                question.
                             </span>
                             <span className="text-sm text-orange-950/70">
                                 Don't sweat, you can still type in your own
@@ -341,13 +350,11 @@ export const NewQuizQuestionOptions = ({
                                 type="text"
                                 readOnly={
                                     choice.is_correct ||
-                                    quiz.type === 3 ||
                                     (i === 0 && possibleAnswers.length !== 0)
                                 }
                                 value={choice.choice_text}
                                 disabled={
                                     choice.is_correct ||
-                                    quiz.type === 3 ||
                                     (i === 0 && possibleAnswers.length !== 0)
                                 }
                                 onChange={(e) => {

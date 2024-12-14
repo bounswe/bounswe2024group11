@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { Tag } from "../../Forum/Forum.schema";
 import { Choice, QuizCreate, QuizQuestionCreate } from "../Quiz.schema";
 
-const SENSES = ["NOUN", "VERB", "ADJ", "ADV"] as const;
-
 interface QuizState {
     quiz: QuizCreate;
     setQuizField: (field: keyof QuizCreate, value: any) => void;
@@ -24,10 +22,6 @@ interface QuizState {
     getValidationErrors: () => string[];
     getQuizForSubmission: () => QuizCreate;
     setQuestionPoints: (index: number, difficulty: number) => void;
-    setSense: (
-        questionIndex: number,
-        correctSense: "NOUN" | "VERB" | "ADJ" | "ADV",
-    ) => void;
 }
 
 const generateId = (prefix: string) => `${prefix}-${Date.now()}`;
@@ -303,33 +297,5 @@ export const useQuizStore = create<QuizState>((set, get) => ({
                 choices: shuffleArray(question.choices),
             })),
         };
-    },
-    setSense: (
-        questionIndex: number,
-        correctSense: "NOUN" | "VERB" | "ADJ" | "ADV",
-    ) => {
-        const otherSenses = SENSES.filter((sense) => sense !== correctSense);
-
-        const choices: Choice[] = [
-            {
-                id: generateId("choice-0"),
-                choice_text: correctSense,
-                is_correct: true,
-            },
-            ...otherSenses.map((sense, index) => ({
-                id: generateId(`choice-${index + 1}`),
-                choice_text: sense,
-                is_correct: false,
-            })),
-        ];
-
-        set((state) => ({
-            quiz: {
-                ...state.quiz,
-                questions: state.quiz.questions.map((q, i) =>
-                    i === questionIndex ? { ...q, choices } : q,
-                ),
-            },
-        }));
     },
 }));

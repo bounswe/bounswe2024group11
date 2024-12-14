@@ -20,7 +20,7 @@ export const WordSelectionView = ({
     onChange,
 }: WordSelectionViewProps) => {
     const [search, setSearch] = useState("");
-    const { quiz, updateQuestion, setSense, setCorrectAnswer } = useQuizStore();
+    const { quiz, updateQuestion, setCorrectAnswer } = useQuizStore();
     const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
         search,
         quiz,
@@ -110,9 +110,6 @@ export const WordSelectionView = ({
                                             updateQuestion(index, {
                                                 question_tag: tag,
                                             });
-                                            if (quiz.type === 3) {
-                                                setSense(index, sense);
-                                            }
                                         }}
                                     >
                                         <span className="text-base font-medium">

@@ -1,6 +1,7 @@
 import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import apiClient from "../../../api";
 import { useToastStore } from "../../../store";
+import { logger } from "../../../utils";
 import { useQuizStore } from "./state";
 
 export const newQuizLoader = (async () => {
@@ -12,23 +13,35 @@ export const newQuizAction = (async ({ request, params, context }) => {
     const quiz = formData.get("quiz") as string;
     const quizData = JSON.parse(quiz);
 
-    try {
-        await apiClient.post("/quizzes/", quizData);
+    return apiClient
+        .post("/quizzes/", quizData)
+        .then(() => {
+            useToastStore.getState().add({
+                id: "quiz-created",
+                data: {
+                    message: "Quiz created",
+                    description: "You have successfully created a quiz.",
+                },
+                type: "success",
+            });
 
-        useQuizStore.getState().resetQuiz();
+            return redirect("/quizzes");
+        })
+        .catch((error) => {
+            logger.error(error);
+            useToastStore.getState().add({
+                type: "error",
+                id: "quiz-create-failed",
+                data: {
+                    message: "Quiz creation failed",
+                    description:
+                        "An unexpected error occurred. Please try again.",
+                },
+            });
 
-        useToastStore.getState().add({
-            id: "quiz-created",
-            data: {
-                message: "Quiz created",
-                description: "You have successfully created a quiz.",
-            },
-            type: "success",
+            return redirect("/quizzes");
+        })
+        .finally(() => {
+            useQuizStore.getState().resetQuiz();
         });
-
-        return redirect("/quizzes");
-    } catch (error) {
-        console.error(error);
-        throw new Error("Failed to create quiz");
-    }
 }) satisfies ActionFunction;
