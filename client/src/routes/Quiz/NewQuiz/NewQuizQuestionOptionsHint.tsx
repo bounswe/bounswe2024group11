@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SWRResponse } from "swr";
 import { array, InferInput, object, string } from "valibot";
 import { buttonClass, buttonInnerRing } from "../../../components/button";
+import { CustomHintInput } from "./NewQuizQuestionOptionsHintCustom";
 import { useQuizStore } from "./state"; // Assuming this is the correct path
 
 export const hintsSchema = object({
@@ -139,7 +140,7 @@ export const Hints = ({
                         )}
                     </Ariakit.Disclosure>
                 </div>
-                <Ariakit.DisclosureContent className="flex max-h-64 max-w-full flex-1 flex-col gap-4 overflow-auto rounded-2 bg-white p-4">
+                <Ariakit.DisclosureContent className="flex max-h-80 max-w-full flex-1 flex-col gap-4 overflow-auto rounded-2 bg-white p-4">
                     {Object.entries(hintsData)
                         .filter(([_, value]) => value.length > 0)
                         .map(([key, value]) => {
@@ -174,7 +175,12 @@ export const Hints = ({
                                             </li>
                                         ))}
                                     </ul>
-                                    <Ariakit.Separator className="mt-2 border-slate-200" />
+                                    <CustomHintInput
+                                        hintType={hintType}
+                                        selectedHint={selectedHint}
+                                        onHintSelect={handleHintSelect}
+                                    />
+                                    <Ariakit.Separator className="my-2 border-slate-200" />
                                 </div>
                             );
                         })}
