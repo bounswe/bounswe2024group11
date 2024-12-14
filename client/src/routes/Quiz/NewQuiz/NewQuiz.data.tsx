@@ -1,6 +1,7 @@
 import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import apiClient from "../../../api";
 import { useToastStore } from "../../../store";
+import { useQuizStore } from "./state";
 
 export const newQuizLoader = (async () => {
     return null;
@@ -27,6 +28,6 @@ export const newQuizAction = (async ({ request, params, context }) => {
             });
             return redirect("/quizzes");
         });
-
+    useQuizStore.getState().resetQuiz();
     return redirect("/quizzes");
 }) satisfies ActionFunction;

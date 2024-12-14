@@ -23,7 +23,7 @@ export const getQuestionType = (type: number) => {
 };
 
 export const NewQuiz = () => {
-    const { quiz, getValidationErrors } = useQuizStore();
+    const { quiz, getValidationErrors, resetQuiz } = useQuizStore();
     const [view, setView] = useState<"details" | "questions">("details");
     logger.log("quiz", quiz);
 
@@ -112,7 +112,7 @@ export const NewQuiz = () => {
                                 {getValidationErrors().map((error, index) => (
                                     <li
                                         key={index}
-                                        className="flex items-start gap-2 py-2"
+                                        className="flex items-start gap-1.5 py-2"
                                         tabIndex={0}
                                     >
                                         <RiErrorWarningLine
@@ -120,7 +120,7 @@ export const NewQuiz = () => {
                                             className="h-5 flex-shrink-0 text-red-950"
                                             aria-hidden="true"
                                         />
-                                        <span className="text-sm text-red-950/70">
+                                        <span className="text-sm font-medium text-red-950/70">
                                             {error}
                                         </span>
                                     </li>

@@ -136,7 +136,6 @@ export const useQuizStore = create<QuizState>((set, get) => ({
         }),
 
     updateQuestionChoices: (questionIndex: number, choices: Choice[]) => {
-        // Ensure correct answer is always at index 0
         const sortedChoices = [...choices].sort((a, b) => {
             if (a.is_correct) return -1;
             if (b.is_correct) return 1;

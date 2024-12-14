@@ -22,7 +22,7 @@ type NewQuizQuestionsProps = {
 };
 
 export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
-    const { quiz, addQuestion, getValidationErrors, setCorrectAnswer } =
+    const { quiz, addQuestion, getValidationErrors, resetQuiz } =
         useQuizStore();
     return (
         <div className="flex flex-col gap-6">
