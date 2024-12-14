@@ -25,7 +25,6 @@ export const getQuestionType = (type: number) => {
 export const NewQuiz = () => {
     const { quiz, getValidationErrors } = useQuizStore();
     const [view, setView] = useState<"details" | "questions">("details");
-    logger.log("quiz errors", getValidationErrors());
     logger.log("quiz", quiz);
 
     return (

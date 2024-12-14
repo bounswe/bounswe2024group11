@@ -1,4 +1,4 @@
-import { Button } from "@ariakit/react";
+import { Button, Separator } from "@ariakit/react";
 import {
     RiAddLine,
     RiArrowDownLine,
@@ -24,7 +24,7 @@ type NewQuizQuestionsProps = {
 export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
     const { quiz, addQuestion, getValidationErrors } = useQuizStore();
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
             {Array.from({ length: quiz.questions.length }).map((_, index) => (
                 <NewQuizQuestion
                     data-question-id={quiz.questions[index].id}
@@ -32,6 +32,7 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
                     index={index}
                 />
             ))}
+            <Separator className="border-slate-200" />
             <div className="grid grid-cols-3 gap-2">
                 <Button
                     className={buttonClass({
@@ -55,7 +56,7 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
                     })}
                 >
                     <RiAddLine size={16} />
-                    New Question
+                    Add Question
                     <span
                         className={buttonInnerRing({
                             intent: "secondary",
@@ -71,7 +72,7 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
                     disabled={getValidationErrors().length > 0}
                 >
                     <RiCheckLine size={16} />
-                    Create Quiz
+                    Submit Quiz
                     <span
                         className={buttonInnerRing({
                             intent: "primary",
@@ -97,7 +98,7 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
             key={index}
             className="relative flex flex-col gap-2 rounded-2 p-4 ring ring-slate-200"
         >
-            <legend className="bg-white px-2 text-sm uppercase tracking-widest text-slate-700">
+            <legend className="-ml-4 bg-slate-100 px-3 text-sm uppercase tracking-widest text-slate-700 ring ring-slate-200">
                 Question {index + 1}
             </legend>
 
@@ -125,11 +126,11 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                             icon: "left",
                             className: "w-full",
                         })}
-                        disabled={isLastQuestion}
-                        onClick={() => reorderQuestions(index, index + 1)}
+                        disabled={isFirstQuestion}
+                        onClick={() => reorderQuestions(index, index - 1)}
                     >
-                        <RiArrowDownLine size={16} />
-                        <span>Move Down</span>
+                        <RiArrowUpLine size={16} />
+                        <span>Move Up</span>
                     </Button>
                 </div>
                 <div className="flex-1">
@@ -140,11 +141,11 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                             icon: "left",
                             className: "w-full",
                         })}
-                        disabled={isFirstQuestion}
-                        onClick={() => reorderQuestions(index, index - 1)}
+                        disabled={isLastQuestion}
+                        onClick={() => reorderQuestions(index, index + 1)}
                     >
-                        <RiArrowUpLine size={16} />
-                        <span>Move Up</span>
+                        <RiArrowDownLine size={16} />
+                        <span>Move Down</span>
                     </Button>
                 </div>
                 <div className="flex-1">

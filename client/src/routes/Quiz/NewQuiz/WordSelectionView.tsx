@@ -64,9 +64,7 @@ export const WordSelectionView = ({
     return (
         <div className="flex flex-col gap-2">
             <label className={labelClass({ className: "flex-1" })}>
-                <span className="text-sm font-medium">
-                    Enter a question word
-                </span>
+                <span className="text-sm font-medium">Enter a word</span>
                 <input
                     className={inputClass()}
                     onChange={(e) => setSearch(e.target.value)}

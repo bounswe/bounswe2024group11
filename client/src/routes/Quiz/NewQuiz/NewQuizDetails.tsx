@@ -1,10 +1,9 @@
 import { Button } from "@ariakit/react";
 import { RiCloseFill, RiErrorWarningLine } from "@remixicon/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import { inputClass, labelClass } from "../../../components/input";
 import { useTaggingSearch } from "../../../hooks/tagging";
-import { logger } from "../../../utils";
 import { Tag } from "../../Forum/Forum.schema";
 import { tagOptionClass } from "../../Forum/NewForum";
 import { getQuestionType } from "./NewQuiz";
@@ -18,10 +17,6 @@ export const NewQuizDetails = () => {
         search,
         quiz,
     );
-
-    useEffect(() => {
-        logger.log("effect", quiz.type);
-    }, [quiz.type]);
 
     const nounOptions: Tag[] =
         data?.NOUN?.map((word) => {

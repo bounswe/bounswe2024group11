@@ -142,7 +142,7 @@ export const NewQuizQuestionOptions = ({
     const possibleAnswers = translation.data?.translations || [];
 
     useEffect(() => {
-        if (possibleAnswers.length > 0 && currentQuestion.choices[0]) {
+        if (possibleAnswers.length > 0 && !currentQuestion.question_tag) {
             setCorrectAnswer(index, possibleAnswers[0]);
         }
     }, [possibleAnswers]);
@@ -156,7 +156,7 @@ export const NewQuizQuestionOptions = ({
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4">
                     <div className="flex items-start justify-between gap-8">
-                        <div className="flex flex-1 flex-col items-start gap-2">
+                        <div className="flex flex-1 flex-col items-start gap-4">
                             <span className="flex flex-col items-start gap-1 self-stretch">
                                 <span
                                     className={difficultyTextClass({
@@ -229,6 +229,9 @@ export const NewQuizQuestionOptions = ({
                         <label className={labelClass()}>
                             Select Correct Option
                             <select
+                                defaultValue={
+                                    currentQuestion.choices[0].choice_text
+                                }
                                 className={inputClass()}
                                 onChange={(e) => {
                                     setCorrectAnswer(index, e.target.value);
