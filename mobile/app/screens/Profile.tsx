@@ -46,145 +46,138 @@ const Profile: React.FC = () => {
 
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const isFocused = useIsFocused();
+  const fetchQuestions = async () => {
+    setLoading(true);
+    setError(null);
+    if (!authState?.token) {
+      setError("You need to be logged in to fetch questions.");
+      setLoading(false);
+      return;
+    }
 
+    try {
+      const myQuizzesResult = await axios.get(`${API_URL_QUIZZES}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const myQuestionsResult = await axios.get(`${API_URL_FORUM_QUESTIONS}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const bookmarksResult = await axios.get(`${API_URL_BOOKMARKS}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const upvotesResult = await axios.get(`${API_URL_UPVOTES}`, {
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+
+      const myQuizzesPromises = myQuizzesResult.data.results
+        .filter((item: any) => item.is_my_quiz)
+        .map(async (item: any) => {
+          const quizResponse = await axios.get(
+            `${API_URL_QUIZZES}${item.id}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return quizResponse.data;
+        });
+
+      const myTakenQuizzesPromises = myQuizzesResult.data.results
+        .filter((item: any) => item.is_taken)
+        .map(async (item: any) => {
+          const quizResponse = await axios.get(
+            `${API_URL_QUIZZES}${item.id}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return quizResponse.data;
+        });
+
+      const myQuestionsPromises = myQuestionsResult.data.results
+        .filter((item: any) => item.is_my_forum_question)
+        .map(async (item: any) => {
+          const questionResponse = await axios.get(
+            `${API_URL_FORUM_QUESTIONS}${item.id}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return questionResponse.data;
+        });
+
+      const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
+        async (item: any) => {
+          const questionResponse = await axios.get(
+            `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return questionResponse.data;
+        }
+      );
+
+      const upvotedQuestionsPromises = upvotesResult.data.results.map(
+        async (item: any) => {
+          const questionResponse = await axios.get(
+            `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
+            {
+              headers: {
+                Authorization: `Bearer ${authState.token}`,
+              },
+            }
+          );
+          return questionResponse.data;
+        }
+      );
+
+      const myQuizzesData = await Promise.all(myQuizzesPromises);
+      const myTakenQuizzesData = await Promise.all(myTakenQuizzesPromises);
+      const myQuestionsData = await Promise.all(myQuestionsPromises);
+
+      const bookmarkedQuestionsData = await Promise.all(
+        bookmarkedQuestionsPromises
+      );
+      const upvotedQuestionsData = await Promise.all(upvotedQuestionsPromises);
+
+      setMyQuizzes(myQuizzesData);
+      setMyTakenQuizzes(myTakenQuizzesData);
+      setMyQuestions(myQuestionsData);
+      setBookmarkedQuestions(bookmarkedQuestionsData);
+      setUpvotedQuestions(upvotedQuestionsData);
+    } catch (error) {
+      setError("Error fetching questions");
+      console.error("Error fetching questions", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchQuestions = async () => {
-      setLoading(true);
-      setError(null);
-      if (!authState?.token) {
-        setError("You need to be logged in to fetch questions.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const myQuizzesResult = await axios.get(`${API_URL_QUIZZES}`, {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        });
-
-        const myQuestionsResult = await axios.get(
-          `${API_URL_FORUM_QUESTIONS}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authState.token}`,
-            },
-          }
-        );
-
-        const bookmarksResult = await axios.get(`${API_URL_BOOKMARKS}`, {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        });
-
-        const upvotesResult = await axios.get(`${API_URL_UPVOTES}`, {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        });
-
-        const myQuizzesPromises = myQuizzesResult.data.results
-          .filter((item: any) => item.is_my_quiz)
-          .map(async (item: any) => {
-            const quizResponse = await axios.get(
-              `${API_URL_QUIZZES}${item.id}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return quizResponse.data;
-          });
-
-        const myTakenQuizzesPromises = myQuizzesResult.data.results
-          .filter((item: any) => item.is_taken)
-          .map(async (item: any) => {
-            const quizResponse = await axios.get(
-              `${API_URL_QUIZZES}${item.id}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return quizResponse.data;
-          });
-
-        const myQuestionsPromises = myQuestionsResult.data.results
-          .filter((item: any) => item.is_my_forum_question)
-          .map(async (item: any) => {
-            const questionResponse = await axios.get(
-              `${API_URL_FORUM_QUESTIONS}${item.id}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return questionResponse.data;
-          });
-
-        const bookmarkedQuestionsPromises = bookmarksResult.data.results.map(
-          async (item: any) => {
-            const questionResponse = await axios.get(
-              `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return questionResponse.data;
-          }
-        );
-
-        const upvotedQuestionsPromises = upvotesResult.data.results.map(
-          async (item: any) => {
-            const questionResponse = await axios.get(
-              `${API_URL_FORUM_QUESTIONS}${item.forum_question}/`,
-              {
-                headers: {
-                  Authorization: `Bearer ${authState.token}`,
-                },
-              }
-            );
-            return questionResponse.data;
-          }
-        );
-
-        const myQuizzesData = await Promise.all(myQuizzesPromises);
-        const myTakenQuizzesData = await Promise.all(myTakenQuizzesPromises);
-        const myQuestionsData = await Promise.all(myQuestionsPromises);
-
-        const bookmarkedQuestionsData = await Promise.all(
-          bookmarkedQuestionsPromises
-        );
-        const upvotedQuestionsData = await Promise.all(
-          upvotedQuestionsPromises
-        );
-
-        setMyQuizzes(myQuizzesData);
-        setMyTakenQuizzes(myTakenQuizzesData);
-        setMyQuestions(myQuestionsData);
-        setBookmarkedQuestions(bookmarkedQuestionsData);
-        setUpvotedQuestions(upvotedQuestionsData);
-      } catch (error) {
-        setError("Error fetching questions");
-        console.error("Error fetching questions", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (isFocused) {
       fetchQuestions();
     }
   }, [isFocused, authState?.token]);
 
-  const handleBookmarkChange = (
+  const handleBookmarkChange = async (
     questionId: number,
     newBookmarkState: number | null
   ) => {
@@ -203,9 +196,11 @@ const Profile: React.FC = () => {
           )
         : prevBookmarkedQuestions
     );
+
+    await fetchQuestions();
   };
 
-  const handleVoteChange = (
+  const handleVoteChange = async (
     questionId: number,
     isUpvoteId: number | null,
     isDownvoteId: number | null
@@ -243,6 +238,8 @@ const Profile: React.FC = () => {
           )
         : prevUpvotedQuestions
     );
+
+    await fetchQuestions();
   };
 
   if (!authState?.authenticated || !authState?.user) {
