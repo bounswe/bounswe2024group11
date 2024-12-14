@@ -141,49 +141,45 @@ export const Hints = ({
                     </Ariakit.Disclosure>
                 </div>
                 <Ariakit.DisclosureContent className="flex max-h-80 max-w-full flex-1 flex-col gap-4 overflow-auto rounded-2 bg-white p-4">
-                    {Object.entries(hintsData)
-                        .filter(([_, value]) => value.length > 0)
-                        .map(([key, value]) => {
-                            if (value.length === 0) return null;
-                            const hintType = key as HintType;
+                    {Object.entries(hintsData).map(([key, value]) => {
+                        const hintType = key as HintType;
 
-                            return (
-                                <div className="flex flex-col gap-2" key={key}>
-                                    <h3 className="text-sm uppercase tracking-widest text-slate-600">
-                                        {hintKeyToTitle[hintType]}
-                                    </h3>
-                                    <ul className="flex max-w-full flex-col gap-1">
-                                        {value.map((item: string) => (
-                                            <li key={item}>
-                                                <HintItem
-                                                    type={hintType}
-                                                    text={item}
-                                                    isSelected={
-                                                        selectedHint?.type ===
-                                                            hintType &&
-                                                        selectedHint?.text ===
-                                                            item
-                                                    }
-                                                    onSelect={() => {
-                                                        setIsListOpen(false);
-                                                        handleHintSelect(
-                                                            hintType,
-                                                            item,
-                                                        );
-                                                    }}
-                                                />
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <CustomHintInput
-                                        hintType={hintType}
-                                        selectedHint={selectedHint}
-                                        onHintSelect={handleHintSelect}
-                                    />
-                                    <Ariakit.Separator className="my-2 border-slate-200" />
-                                </div>
-                            );
-                        })}
+                        return (
+                            <div className="flex flex-col gap-2" key={key}>
+                                <h3 className="text-sm uppercase tracking-widest text-slate-600">
+                                    {hintKeyToTitle[hintType]}
+                                </h3>
+                                <ul className="flex max-w-full flex-col gap-1">
+                                    {value.map((item: string) => (
+                                        <li key={item}>
+                                            <HintItem
+                                                type={hintType}
+                                                text={item}
+                                                isSelected={
+                                                    selectedHint?.type ===
+                                                        hintType &&
+                                                    selectedHint?.text === item
+                                                }
+                                                onSelect={() => {
+                                                    setIsListOpen(false);
+                                                    handleHintSelect(
+                                                        hintType,
+                                                        item,
+                                                    );
+                                                }}
+                                            />
+                                        </li>
+                                    ))}
+                                </ul>
+                                <CustomHintInput
+                                    hintType={hintType}
+                                    selectedHint={selectedHint}
+                                    onHintSelect={handleHintSelect}
+                                />
+                                <Ariakit.Separator className="my-2 border-slate-200" />
+                            </div>
+                        );
+                    })}
                 </Ariakit.DisclosureContent>
             </Ariakit.DisclosureProvider>
         </div>
