@@ -22,6 +22,7 @@ class CustomUser(AbstractUser):
     avatar = models.CharField(max_length=1000, blank=True, null=True)
     achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)
     interests = models.ManyToManyField('Tag', related_name='interested_users', blank=True)
+    score = models.IntegerField(default=0)
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
