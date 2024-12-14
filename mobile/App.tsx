@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import CreateQuestion from "./app/screens/CreateQuestion";
 import CreateQuiz from "./app/screens/CreateQuiz";
 import CreateQuizQuestion from "./app/screens/CreateQuizQuestion";
+import EditQuestion from "./app/screens/EditQuestion";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
@@ -28,7 +29,18 @@ export type RootStackParamList = {
   MainTabs: undefined; // Use this for the bottom tabs
   Register: undefined;
   Forum: undefined;
-  ForumQuestionDetail: { question: Question };
+  ForumQuestionDetail: {
+    question: Question;
+    onBookmarkChange: (
+      questionId: number,
+      newBookmarkState: number | null
+    ) => void;
+    onVoteChange: (
+      questionId: number,
+      isUpvoteId: number | null,
+      isDownvoteId: number | null
+    ) => void;
+  };
   QuizFeed: undefined;
   QuizDetail: { quiz: QuizOverview };
   ViewQuiz: {
@@ -46,6 +58,9 @@ export type RootStackParamList = {
     description: string;
     tags: Tag[];
     quiz_type: number;
+  };
+  EditQuestion: {
+    questionId: string;
   };
   ReviewCreateQuiz: {
     title: string;
@@ -146,6 +161,7 @@ export const Layout = () => {
             />
             <Stack.Screen name="Forum" component={Forum} />
             <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
+            <Stack.Screen name="EditQuestion" component={EditQuestion} />
             <Stack.Screen
               name="ForumQuestionDetail"
               component={ForumQuestionDetail}

@@ -6,12 +6,29 @@ import { Question } from "../types/forum";
 import AuthorView from "./AuthorView";
 import BookmarkButton from "./BookmarkButton";
 import VoteButtonsView from "./VoteButtonsView";
+import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
 
 interface ForumQuestionCardProps {
   item: Question;
+  onBookmarkChange: (
+    questionId: number,
+    newBookmarkState: number | null
+  ) => void;
+  onVoteChange: (
+    questionId: number,
+    isUpvoteId: number | null,
+    isDownvoteId: number | null
+  ) => void;
+  onDelete: (questionId: number) => void;
 }
 
-const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
+const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({
+  item,
+  onBookmarkChange,
+  onVoteChange,
+  onDelete,
+}) => {
   const [question, setQuestion] = useState(item);
 
   const handleVoteChange = (
@@ -37,6 +54,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
           ? prevQuestion.downvotes_count - 1
           : prevQuestion.downvotes_count,
     }));
+    onVoteChange(Number(question.id), isUpvoteId, isDownvoteId);
   };
 
   const handleBookmarkChange = (newBookmarkState: number | null) => {
@@ -44,6 +62,7 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
       ...prevQuestion,
       is_bookmarked: newBookmarkState,
     }));
+    onBookmarkChange(Number(question.id), newBookmarkState);
   };
 
   return (
@@ -51,16 +70,27 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({ item }) => {
       <Card style={styles.card}>
         <View style={styles.container}>
           <AuthorView author={item.author} />
-          <BookmarkButton
-            initialBookmarkState={question.is_bookmarked}
-            questionId={Number(question.id)}
-            onBookmarkChange={handleBookmarkChange}
-          />
+          <View style={styles.buttonsContainer}>
+            {question.is_my_forum_question && (
+              <EditButton questionId={question.id} />
+            )}
+            {question.is_my_forum_question && (
+              <DeleteButton
+                questionId={Number(question.id)}
+                onDelete={onDelete}
+              />
+            )}
+            <BookmarkButton
+              initialBookmarkState={question.is_bookmarked}
+              questionId={Number(question.id)}
+              onBookmarkChange={handleBookmarkChange}
+            />
+          </View>
         </View>
         <Text style={styles.title}>{question.title}</Text>
         <Text style={styles.body}>{question.question}</Text>
         <View style={styles.tagsContainer}>
-          {question.tags.map((tag, index) => (
+          {(question.tags || []).map((tag, index) => (
             <Text key={`${tag.id}-${index}`} style={styles.tag}>
               #{tag.name}
             </Text>
@@ -97,6 +127,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   title: {
     fontSize: 18,

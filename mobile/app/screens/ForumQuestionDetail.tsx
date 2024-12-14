@@ -14,6 +14,7 @@ import { RootStackParamList } from "../../App";
 import ForumAnswerCard from "../components/ForumAnswerCard";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Answer } from "../types/forum";
+import { useNavigation } from "@react-navigation/native";
 
 const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
 // const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
@@ -28,11 +29,12 @@ type Props = {
 };
 
 const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
-  const { question } = route.params;
+  const { question, onBookmarkChange, onVoteChange } = route.params;
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [newAnswer, setNewAnswer] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); // Loading state for answers
   const isFocused = useIsFocused(); // Hook to track focus status
+  const navigation = useNavigation<ForumQuestionDetailScreenRouteProp>();
 
   // Fetch answers when the screen is focused or question ID changes
   const fetchAnswers = async () => {
@@ -92,9 +94,24 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      //console.log(`Question with ID ${questionId} deleted successfully.`);
+      (navigation as any).goBack(); // Navigates back to the Forum screen after deletion
+    } catch (error) {
+      console.error("Error deleting question:", error);
+      Alert.alert("Error", "Failed to delete the question.");
+    }
+  };
+
   return (
     <View style={{ flex: 1, padding: 10 }}>
-      <ForumQuestionCard item={question} />
+      <ForumQuestionCard
+        item={question}
+        onBookmarkChange={onBookmarkChange}
+        onVoteChange={onVoteChange}
+        onDelete={handleDelete}
+      />
 
       {loading ? (
         // Displaying loading indicator while answers are being fetched
