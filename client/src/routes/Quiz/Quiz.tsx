@@ -18,6 +18,7 @@ import { Voiceover } from "../../components/voiceover";
 import { useSound } from "../../contexts/SoundContext";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
+import { HintType } from "./NewQuiz/NewQuizQuestionOptionsHint";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
 import { QuizDetails } from "./Quiz.schema";
 import { questionTypeToQuestion } from "./Quiz.utils";
@@ -243,7 +244,9 @@ export const TakeQuizPage = () => {
     const [hintText, setHintText] = useState("");
     const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
     const [showAnswer, setShowAnswer] = useState(false);
+    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
     const { playSound } = useSound();
+    const hintType = quiz.questions[currentQuestion]?.hints?.[0]?.type;
 
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -313,6 +316,7 @@ export const TakeQuizPage = () => {
     const [hintOpen, setHintOpen] = useState(false);
     const showHint = (questionIndex: number) => {
         const hint = quiz.questions[questionIndex].hints;
+
         const hinttext = hint?.[0]?.text || "";
         if (hinttext === "") {
             logger.log(`No hint for question ${questionIndex}`);
@@ -427,7 +431,11 @@ export const TakeQuizPage = () => {
                 {!showAnswer &&
                     quiz.questions[currentQuestion].hints?.length && (
                         <div>
-                            <Ariakit.PopoverProvider placement="bottom-end">
+                            <Ariakit.PopoverProvider
+                                open={isDisclaimerOpen}
+                                setOpen={setIsDisclaimerOpen}
+                                placement="bottom-end"
+                            >
                                 <Ariakit.PopoverDisclosure
                                     className={buttonClass({
                                         intent: "primary",
@@ -456,7 +464,9 @@ export const TakeQuizPage = () => {
                                     </div>
                                     <div className="flex gap-2">
                                         <Ariakit.Button
-                                            onClick={() => {}}
+                                            onClick={() =>
+                                                setIsDisclaimerOpen(false)
+                                            }
                                             className={buttonClass({
                                                 intent: "tertiary",
                                                 size: "medium",
@@ -633,18 +643,28 @@ export const TakeQuizPage = () => {
                     </button>
                 )}
             </div>
-            {hintOpen && <Hint message={hintText} />}
+            {hintOpen && <Hint type={hintType as HintType} text={hintText} />}
         </main>
     );
 };
 
-const Hint = ({ message }: { message: string }) => {
+const Hint = ({ text, type }: { type: HintType; text: string }) => {
     return (
         <div className="flex flex-col gap-2 rounded-2 bg-orange-200 p-4 text-orange-900 ring-1 ring-orange-500/50">
             <div className="flex items-center gap-2">
                 <RiLightbulbFlashLine size={24} />
             </div>
-            <p className="w-full">{message}</p>
+            <span className="flex flex-1 items-center gap-2">
+                {type === "images" ? (
+                    <img
+                        src={text}
+                        alt="Hint image"
+                        className="h-32 rounded-1 object-cover"
+                    />
+                ) : (
+                    <span>{text}</span>
+                )}
+            </span>
         </div>
     );
 };

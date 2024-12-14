@@ -22,8 +22,8 @@ const hintKeyToTitle = {
     images: "Images",
 };
 
-type Hints = InferInput<typeof hintsSchema>;
-type HintType = keyof typeof hintKeyToTitle;
+export type Hints = InferInput<typeof hintsSchema>;
+export type HintType = keyof typeof hintKeyToTitle;
 
 interface HintItemProps {
     type: HintType;
