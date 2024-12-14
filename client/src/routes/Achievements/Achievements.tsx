@@ -50,7 +50,7 @@ export const AchievementBadge = ({
                             className="h-14 w-14"
                         />
                     </span>
-                    <span className="select-none text-sm font-medium text-slate-700">
+                    <span className="select-none pr-2 text-sm font-medium text-slate-700">
                         {achievement.title}
                     </span>
                 </Ariakit.HovercardAnchor>
