@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer, QuizSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser, Quiz
+from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser, Block, Quiz
 from core import models
 from django.db.models import Sum
 from .forum_question_serializer import ForumQuestionSerializer
@@ -33,6 +33,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     followers = serializers.SerializerMethodField()
     blockings = serializers.SerializerMethodField()
     bookmarked_forums = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    is_blocked = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -49,9 +51,11 @@ class ProfileSerializer(serializers.ModelSerializer):
             'interests',
             'followings',
             'followers',
-            'blockings'
+            'blockings',
+            'is_following',
+            'is_blocked',
         ]
-        read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums"]
+        read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums", "is_following", "is_blocked"]
 
     def update(self, instance, validated_data):
         achievements_data = validated_data.pop('userachievement_set', None)
@@ -98,6 +102,22 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_context_data(self):
         return {'request': self.context.get('request')}
+    
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            if user.is_authenticated:
+                return Follow.objects.filter(follower=user, following=obj).exists()
+        return False
+    
+    def get_is_blocked(self, obj):
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            if user.is_authenticated:
+                return Block.objects.filter(blocker=user, blocking=obj).exists()
+        return False
     
     def get_bookmarked_forums(self, obj):
         if obj:
