@@ -443,7 +443,7 @@ export const TakeQuizPage = () => {
                                     />
                                     <RiLightbulbFlashLine size={18} />
                                 </Ariakit.PopoverDisclosure>
-                                <Ariakit.Popover className="my-2 flex w-80 flex-col gap-4 rounded-2 bg-white p-4 text-slate-700 shadow-md ring-1 ring-slate-100">
+                                <Ariakit.Popover className="z-50 my-2 flex w-80 flex-col gap-4 rounded-2 bg-white p-4 text-slate-700 shadow-md ring-1 ring-slate-100">
                                     <div className="flex flex-col gap-1">
                                         <Ariakit.PopoverHeading className="text-md font-medium">
                                             Using hint for the question{" "}
