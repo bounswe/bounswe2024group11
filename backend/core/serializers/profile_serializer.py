@@ -1,12 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .serializers import ForumBookmarkSerializer, TagSerializer, UserInfoSerializer, FollowSerializer
+from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow
+from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow
 from core import models
 from django.db.models import Sum
-
-
+from .forum_question_serializer import ForumQuestionSerializer
 
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,7 +25,6 @@ class UserAchievementSerializer(serializers.ModelSerializer):
 User = get_user_model()
 
 class ProfileSerializer(serializers.ModelSerializer):
-    bookmarked_forums = serializers.SerializerMethodField()
     quizzes_taken = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
     achievements = UserAchievementSerializer(many=True, source='userachievement_set', read_only=True)
@@ -34,6 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     followings = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
     blockings = serializers.SerializerMethodField()
+    bookmarked_forums = ForumQuestionSerializer(many=True, read_only=True, source='forumquestion_set')
 
 
     class Meta:
@@ -52,7 +51,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'followers',
             'blockings'
         ]
-        read_only_fields = ['id']
+        read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums"]
 
     def update(self, instance, validated_data):
         achievements_data = validated_data.pop('userachievement_set', None)
@@ -99,10 +98,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_context_data(self):
         return {'request': self.context.get('request')}
-
+    
     def get_bookmarked_forums(self, obj):
-        bookmarks = ForumBookmark.objects.filter(user=obj)
-        return ForumBookmarkSerializer(bookmarks, many=True).data
+        bookmarked_forums = ForumBookmark.objects.filter(user=obj).values_list('forum_question', flat=True)
+        forum_questions = ForumQuestion.objects.filter(id__in=bookmarked_forums)
+        return ForumQuestionSerializer(forum_questions, many=True, context=self.context).data
+
 
     def get_quizzes_taken(self, obj):
         quizzes = TakeQuiz.objects.filter(user=obj)
