@@ -23,6 +23,7 @@ from .views import block_views
 from django.contrib import admin
 from .views.achievement_views import AchievementListView
 from .views.interest_views import InterestView
+from .views import leaderboard_views
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -77,6 +78,7 @@ urlpatterns = [
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
     path('achievements/', AchievementListView.as_view(), name='achievement-list'),
     path('interests/', InterestView.as_view(), name='interests'),
+    path('leaderboard/', leaderboard_views.LeaderboardView.as_view(), name='leaderboard'),
 ]   
 
 urlpatterns += router.urls
