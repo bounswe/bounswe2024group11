@@ -9,6 +9,7 @@ import {
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
+import { useSound } from "../../contexts/SoundContext";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
@@ -235,6 +236,7 @@ export const TakeQuizPage = () => {
     const [hintText, setHintText] = useState("");
     const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
     const [showAnswer, setShowAnswer] = useState(false);
+    const { playSound } = useSound();
 
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -285,6 +287,16 @@ export const TakeQuizPage = () => {
         };
         setAnswers(updatedAnswers);
         setAnsweredQuestions([...answeredQuestions, currentQuestion]);
+
+        const correctOption = quiz.questions[currentQuestion].choices.find(
+            (o) => o.is_correct === true,
+        );
+        if (correctOption && String(correctOption.id) === selectedOption) {
+            playSound("true");
+        } else {
+            playSound("false");
+        }
+
         setShowAnswer(true);
     };
 
@@ -341,6 +353,10 @@ export const TakeQuizPage = () => {
                 correct++;
             }
         });
+        const successful = correct >= quiz.questions.length * 0.7;
+        if (successful) {
+            playSound("success");
+        }
         setCorrectAnswers(correct);
     };
 
