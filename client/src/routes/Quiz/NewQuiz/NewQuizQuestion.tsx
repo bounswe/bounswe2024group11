@@ -5,7 +5,7 @@ import {
     RiArrowLeftLine,
     RiArrowUpLine,
     RiCheckLine,
-    RiDeleteBin7Line,
+    RiDeleteBinLine,
 } from "@remixicon/react";
 import { useState } from "react";
 import { buttonClass, buttonInnerRing } from "../../../components/button";
@@ -22,14 +22,7 @@ type NewQuizQuestionsProps = {
 };
 
 export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
-    const {
-        quiz,
-        setQuizField,
-        addQuestion,
-        updateQuestion,
-        getValidationErrors,
-    } = useQuizStore();
-    const [open, setOpen] = useState(false);
+    const { quiz, addQuestion, getValidationErrors } = useQuizStore();
     return (
         <div className="flex flex-col gap-4">
             {Array.from({ length: quiz.questions.length }).map((_, index) => (
@@ -92,7 +85,10 @@ export const NewQuizQuestions = ({ onBack }: NewQuizQuestionsProps) => {
 
 export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
     const { quiz, deleteQuestion, reorderQuestions } = useQuizStore();
-    const [view, setView] = useState<"word" | "options">("word");
+    const alreadyFilled = quiz.questions[index].question_tag !== null;
+    const [view, setView] = useState<"word" | "options">(
+        alreadyFilled ? "options" : "word",
+    );
     const isFirstQuestion = index === 0;
     const isLastQuestion = index === quiz.questions.length - 1;
 
@@ -161,7 +157,12 @@ export const NewQuizQuestion = ({ index }: NewQuizQuestionProps) => {
                         })}
                         onClick={() => deleteQuestion(index)}
                     >
-                        <RiDeleteBin7Line size={16} />
+                        <span
+                            className={buttonInnerRing({
+                                intent: "destructive",
+                            })}
+                        />
+                        <RiDeleteBinLine size={16} />
                         <span>Delete</span>
                     </Button>
                 </div>

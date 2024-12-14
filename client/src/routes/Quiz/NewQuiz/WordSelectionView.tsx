@@ -20,7 +20,7 @@ export const WordSelectionView = ({
     onChange,
 }: WordSelectionViewProps) => {
     const [search, setSearch] = useState("");
-    const { quiz, updateQuestion } = useQuizStore();
+    const { quiz, updateQuestion, setSense } = useQuizStore();
     const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
         search,
         quiz,
@@ -50,10 +50,14 @@ export const WordSelectionView = ({
             description: word.description,
         })) || [];
     const sections = [
-        { title: "Nouns", options: nounOptions },
-        { title: "Adjectives", options: adjectiveOptions },
-        { title: "Adverbs", options: adverbOptions },
-        { title: "Verbs", options: verbOptions },
+        { title: "Nouns", options: nounOptions, sense: "NOUN" as const },
+        {
+            title: "Adjectives",
+            options: adjectiveOptions,
+            sense: "ADJ" as const,
+        },
+        { title: "Adverbs", options: adverbOptions, sense: "ADV" as const },
+        { title: "Verbs", options: verbOptions, sense: "VERB" as const },
     ];
 
     const noData = sections.every(({ options }) => options.length === 0);
@@ -86,7 +90,7 @@ export const WordSelectionView = ({
                 </div>
             )}
             <div className="flex flex-col gap-2">
-                {sections.map(({ title, options }, i) => {
+                {sections.map(({ title, options, sense }, i) => {
                     if (options.length === 0) return null;
                     return (
                         <div
@@ -110,6 +114,9 @@ export const WordSelectionView = ({
                                             updateQuestion(index, {
                                                 question_tag: tag,
                                             });
+                                            if (quiz.type === 3) {
+                                                setSense(index, sense);
+                                            }
                                         }}
                                     >
                                         <span className="text-base font-medium">

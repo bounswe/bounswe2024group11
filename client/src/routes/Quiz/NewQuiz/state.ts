@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { Tag } from "../../Forum/Forum.schema";
 import { Choice, QuizCreate, QuizQuestionCreate } from "../Quiz.schema";
 
+const SENSES = ["NOUN", "VERB", "ADJ", "ADV"] as const;
+
 interface QuizState {
     quiz: QuizCreate;
     setQuizField: (field: keyof QuizCreate, value: any) => void;
@@ -14,12 +16,17 @@ interface QuizState {
     addTag: (tag: Tag) => void;
     removeTag: (tagId: string) => void;
     setType: (type: number) => void;
+    setCorrectAnswer: (questionIndex: number, correctAnswer: string) => void;
     reorderQuestions: (startIndex: number, endIndex: number) => void;
     updateQuestionChoices: (questionIndex: number, choices: Choice[]) => void;
     removeQuestionTag: (questionIndex: number) => void;
     resetQuiz: () => void;
     getValidationErrors: () => string[];
     getQuizForSubmission: () => QuizCreate;
+    setSense: (
+        questionIndex: number,
+        correctSense: "NOUN" | "VERB" | "ADJ" | "ADV",
+    ) => void;
 }
 
 const generateId = (prefix: string) => `${prefix}-${Date.now()}`;
@@ -29,7 +36,7 @@ const createInitialChoices = (): Choice[] => {
     return Array.from({ length: 4 }).map(() => ({
         id: generateId("choice" + id),
         choice_text: "",
-        is_correct: id++ % 4 === 0,
+        is_correct: ++id === 1,
     }));
 };
 
@@ -62,6 +69,7 @@ const shuffleArray = <T>(array: T[]): T[] => {
 
 export const useQuizStore = create<QuizState>((set, get) => ({
     quiz: initialQuiz,
+    meta: {},
 
     setQuizField: (field, value) =>
         set((state) => ({
@@ -199,25 +207,46 @@ export const useQuizStore = create<QuizState>((set, get) => ({
         }));
     },
 
+    setCorrectAnswer: (questionIndex: number, correctAnswer: string) => {
+        set((state) => ({
+            quiz: {
+                ...state.quiz,
+                questions: state.quiz.questions.map((q, i) => {
+                    if (i !== questionIndex) return q;
+
+                    const choices = [...q.choices];
+
+                    const firstChoice = choices[0];
+                    if (!firstChoice) return q;
+
+                    firstChoice.choice_text = correctAnswer;
+                    firstChoice.is_correct = true; // Ensure it stays correct
+
+                    return {
+                        ...q,
+                        choices,
+                    };
+                }),
+            },
+        }));
+    },
+
     resetQuiz: () => set({ quiz: initialQuiz }),
 
     getValidationErrors: () => {
         const state = get();
         const errors: string[] = [];
 
-        if (!state.quiz.title) errors.push("Title is required");
-        if (!state.quiz.description) errors.push("Description is required");
+        if (!state.quiz.title) errors.push("Title");
+        if (!state.quiz.description) errors.push("Description");
 
         if (state.quiz.questions.length === 0) {
-            errors.push("At least one question is required");
+            errors.push("At least one question");
         }
 
         state.quiz.questions.forEach((question, index) => {
-            if (!question.question_tag) {
-                errors.push(`Question ${index + 1} tag is required`);
-            }
             if (!question.question_text.trim()) {
-                errors.push(`Question ${index + 1} text is required`);
+                errors.push(`Question ${index + 1}`);
             }
 
             const hasCorrectChoice = question.choices.some(
@@ -230,13 +259,12 @@ export const useQuizStore = create<QuizState>((set, get) => ({
             question.choices.forEach((choice, choiceIndex) => {
                 if (!choice.choice_text.trim()) {
                     if (choice.is_correct) {
+                        errors.push(`Correct Choice for Q${index + 1}`);
+                    } else {
                         errors.push(
-                            `Correct Choice for Question ${index + 1} is required`,
+                            `Choice ${choiceIndex + 1} for Q${index + 1}`,
                         );
                     }
-                    errors.push(
-                        `Incorrect Choice ${choiceIndex + 1} for Question ${index + 1} is required`,
-                    );
                 }
             });
         });
@@ -255,5 +283,33 @@ export const useQuizStore = create<QuizState>((set, get) => ({
                 choices: shuffleArray(question.choices),
             })),
         };
+    },
+    setSense: (
+        questionIndex: number,
+        correctSense: "NOUN" | "VERB" | "ADJ" | "ADV",
+    ) => {
+        const otherSenses = SENSES.filter((sense) => sense !== correctSense);
+
+        const choices: Choice[] = [
+            {
+                id: generateId("choice-0"),
+                choice_text: correctSense,
+                is_correct: true,
+            },
+            ...otherSenses.map((sense, index) => ({
+                id: generateId(`choice-${index + 1}`),
+                choice_text: sense,
+                is_correct: false,
+            })),
+        ];
+
+        set((state) => ({
+            quiz: {
+                ...state.quiz,
+                questions: state.quiz.questions.map((q, i) =>
+                    i === questionIndex ? { ...q, choices } : q,
+                ),
+            },
+        }));
     },
 }));

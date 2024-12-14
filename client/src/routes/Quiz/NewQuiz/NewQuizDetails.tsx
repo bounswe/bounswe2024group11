@@ -107,7 +107,7 @@ export const NewQuizDetails = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         required
-                        placeholder={quiz.type === 2 ? "fren" : "gearbox"}
+                        placeholder={quiz.type === 2 ? "otoyol" : "highway"}
                     />
                 </label>
                 <div
