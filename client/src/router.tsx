@@ -33,7 +33,14 @@ import { HomeMain } from "./routes/Home/Home.main";
 import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
 import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
 import { Profile } from "./routes/Profile/Profile";
-import { myProfileLoader, profileLoader } from "./routes/Profile/Profile.data";
+import {
+    BlockAction,
+    FollowAction,
+    myProfileLoader,
+    profileLoader,
+    UnBlockAction,
+    UnFollowAction,
+} from "./routes/Profile/Profile.data";
 import { NewQuiz } from "./routes/Quiz/NewQuiz/NewQuiz";
 import {
     newQuizAction,

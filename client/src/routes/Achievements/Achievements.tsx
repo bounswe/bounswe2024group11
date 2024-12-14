@@ -22,7 +22,7 @@ const badgeClass = cva(
     },
 );
 
-const AchievementBadge = ({
+export const AchievementBadge = ({
     achievement,
     is_earned,
     is_on_profile = true,

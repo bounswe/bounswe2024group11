@@ -14,6 +14,7 @@ import {
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
+import { Voiceover } from "../../components/voiceover";
 import { useSound } from "../../contexts/SoundContext";
 import { logger } from "../../utils";
 import { homeLoader } from "../Home/Home.data";
@@ -416,6 +417,13 @@ export const TakeQuizPage = () => {
                         quiz.questions[currentQuestion].question_text,
                     )}
                 </div>
+                <div>
+                    {(quiz.type === 1 || quiz.type === 3) && (
+                        <Voiceover
+                            text={quiz.questions[currentQuestion].question_text}
+                        />
+                    )}
+                </div>
                 {!showAnswer &&
                     quiz.questions[currentQuestion].hints?.length && (
                         <div>
@@ -517,6 +525,11 @@ export const TakeQuizPage = () => {
                                             <span className="flex-1">
                                                 {choice.choice_text}
                                             </span>
+                                            {quiz.type == 2 && (
+                                                <Voiceover
+                                                    text={choice.choice_text}
+                                                />
+                                            )}
 
                                             {showAnswer && isSelectedChoice && (
                                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
