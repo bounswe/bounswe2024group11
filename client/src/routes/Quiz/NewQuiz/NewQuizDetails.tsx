@@ -182,7 +182,12 @@ export const NewQuizDetails = () => {
                             { title: "Adverbs", options: adverbOptions },
                             { title: "Verbs", options: verbOptions },
                         ].map(({ title, options }) => {
-                            if (options.length === 0) return null;
+                            if (options.length === 0)
+                                return (
+                                    <span className="text-sm text-slate-600">
+                                        No {title.toLowerCase()} found.
+                                    </span>
+                                );
                             return (
                                 <div
                                     key={title}
@@ -225,11 +230,6 @@ export const NewQuizDetails = () => {
                                                 </span>
                                             </button>
                                         ))}
-                                        {options.length === 0 && (
-                                            <span className="text-xs text-slate-500">
-                                                No {title.toLowerCase()} found.
-                                            </span>
-                                        )}
                                     </div>
                                 </div>
                             );

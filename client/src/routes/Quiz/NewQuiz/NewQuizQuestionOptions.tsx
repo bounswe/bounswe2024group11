@@ -282,16 +282,14 @@ export const NewQuizQuestionOptions = ({
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col rounded-2 bg-orange-100 px-3 py-2">
                             <span className="text-sm font-medium text-orange-950">
-                                We don't have an automatic answer for this
-                                question.
+                                We don't have a canned answer for this one
                             </span>
                             <span className="text-sm text-orange-950/70">
-                                Don't sweat, you can still type in your own
-                                answer.
+                                Go ahead and type in your own answer.
                             </span>
                         </div>
                         <label className={labelClass()}>
-                            <span>Type your answer</span>
+                            <span>Type correct answer</span>
                             <input
                                 defaultValue={
                                     currentQuestion.choices[0].choice_text
@@ -343,7 +341,7 @@ export const NewQuizQuestionOptions = ({
                             <span>
                                 {choice.is_correct
                                     ? "Correct Option"
-                                    : "Option " + (i + 1)}
+                                    : "Incorrect Option"}
                             </span>
                             <input
                                 className={inputClass()}

@@ -117,28 +117,28 @@ export const Hints = ({
                         <span className="flex-1 text-start font-medium text-cyan-900">
                             Available Hints
                         </span>
-                        {selectedHint && (
-                            <button
-                                type="button"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    clearHint();
-                                }}
-                                className={buttonClass({
-                                    intent: "destructive",
-                                    size: "small",
-                                })}
-                            >
-                                <span
-                                    className={buttonInnerRing({
-                                        intent: "destructive",
-                                    })}
-                                    aria-hidden="true"
-                                />
-                                Clear Hint
-                            </button>
-                        )}
                     </Ariakit.Disclosure>
+                    {selectedHint && (
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                clearHint();
+                            }}
+                            className={buttonClass({
+                                intent: "destructive",
+                                size: "small",
+                            })}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "destructive",
+                                })}
+                                aria-hidden="true"
+                            />
+                            Clear Hint
+                        </button>
+                    )}
                 </div>
                 <Ariakit.DisclosureContent className="flex max-h-80 max-w-full flex-1 flex-col gap-4 overflow-auto rounded-2 bg-white p-4">
                     {Object.entries(hintsData).map(([key, value]) => {
