@@ -22,6 +22,7 @@ type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const Forum: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true); // Loading state
+  const [refreshing, setRefreshing] = useState(false); // Refreshing state
 
   const navigation = useNavigation<ForumScreenNavigationProp>();
   const isFocused = useIsFocused();
@@ -34,6 +35,7 @@ const Forum: React.FC = () => {
       console.error("Error fetching questions", error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
   useEffect(() => {
@@ -41,6 +43,11 @@ const Forum: React.FC = () => {
       fetchQuestions();
     }
   }, [isFocused]);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchQuestions();
+  };
 
   const handleBookmarkChange = (
     questionId: number,
@@ -126,6 +133,8 @@ const Forum: React.FC = () => {
               />
             </TouchableOpacity>
           )}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
       )}
       <TouchableOpacity
