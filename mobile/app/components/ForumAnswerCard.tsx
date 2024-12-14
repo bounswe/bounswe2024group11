@@ -5,12 +5,17 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Answer } from "../types/forum";
 import AuthorView from "./AuthorView";
 import VoteAnswerButtonsView from "./VoteAnswerButtonsView";
+import DeleteAnswerButton from "./DeleteAnswerButton";
 
 interface ForumAnswerCardProps {
   item: Answer;
+  onAnswerDelete: (questionId: number, answerId: number) => void;
 }
 
-const ForumAnswerCard: React.FC<ForumAnswerCardProps> = ({ item }) => {
+const ForumAnswerCard: React.FC<ForumAnswerCardProps> = ({
+  item,
+  onAnswerDelete,
+}) => {
   const [answer, setAnswer] = useState(item);
 
   const handleVoteChange = (
@@ -43,7 +48,16 @@ const ForumAnswerCard: React.FC<ForumAnswerCardProps> = ({ item }) => {
       <Card style={{ borderRadius: 10, marginBottom: 10, padding: 10 }}>
         <View style={styles.container}>
           <AuthorView author={item.author} />
-          <Text style={styles.posted_time}>Posted</Text>
+          <View style={styles.buttonsContainer}>
+            {answer.is_my_answer && (
+              <DeleteAnswerButton
+                questionId={Number(answer.forum_question)}
+                answerId={Number(answer.id)}
+                onDelete={onAnswerDelete}
+              />
+            )}
+            <Text style={styles.posted_time}>Posted</Text>
+          </View>
         </View>
         <Text>{answer.body}</Text>
         <VoteAnswerButtonsView
@@ -70,6 +84,10 @@ const styles = StyleSheet.create({
     color: "grey",
     marginLeft: 10,
     // justifyContent: 'flex-end',
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 
