@@ -21,6 +21,7 @@ from .views.jwt_views import DecoratedTokenObtainPairView, DecoratedTokenRefresh
 from .views import follow_views
 from .views import block_views
 from django.contrib import admin
+from .views.achievement_views import AchievementListView
 from .views.interest_views import InterestView
 
 from drf_yasg.views import get_schema_view
@@ -73,6 +74,7 @@ urlpatterns = [
     path("semantic-search-forum/", ForumSemanticSearchView.as_view(), name="forum-semantic-search"),
     path("semantic-search-quiz/", QuizSemanticSearchView.as_view(), name="quiz-semantic-search"),
     path("get-difficulty/", QuestionPointView.as_view(), name="get-difficulty"),
+    path('achievements/', AchievementListView.as_view(), name='achievement-list'),
     path('interests/', InterestView.as_view(), name='interests'),
 ]   
 
