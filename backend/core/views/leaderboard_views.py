@@ -21,14 +21,12 @@ class LeaderboardView(APIView):
             leaderboard_data = []
             for user in users:
                 # Serialize each user's information
-                print("allamyardımet")
                 user_info_serializer = UserInfoSerializer(user, context={'request': request})
-                print("noluo")
                 leaderboard_data.append({
                     'score': user.score,
                     'user_info': user_info_serializer.data,
                 })
-                print(leaderboard_data)
+                
             # Step 3: Serialize the final leaderboard data
             serializer = LeaderboardSerializer(leaderboard_data, many=True,context={'request': request})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
