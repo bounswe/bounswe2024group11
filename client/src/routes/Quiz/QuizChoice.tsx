@@ -65,6 +65,12 @@ const choiceClass = cva(
                 isSelected: false,
                 className: "bg-slate-100 text-slate-950 hover:bg-slate-200",
             },
+            {
+                showAnswer: true,
+                isSelected: false,
+                isCorrect: true,
+                className: "bg-green-700 text-white",
+            },
         ],
         defaultVariants: {
             showAnswer: false,
