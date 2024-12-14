@@ -20,12 +20,14 @@ interface ForumQuestionCardProps {
     isUpvoteId: number | null,
     isDownvoteId: number | null
   ) => void;
+  onDelete: (questionId: number) => void;
 }
 
 const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({
   item,
   onBookmarkChange,
   onVoteChange,
+  onDelete,
 }) => {
   const [question, setQuestion] = useState(item);
 
@@ -73,7 +75,10 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({
               <EditButton questionId={question.id} />
             )}
             {question.is_my_forum_question && (
-              <DeleteButton questionId={Number(question.id)} />
+              <DeleteButton
+                questionId={Number(question.id)}
+                onDelete={onDelete}
+              />
             )}
             <BookmarkButton
               initialBookmarkState={question.is_bookmarked}
