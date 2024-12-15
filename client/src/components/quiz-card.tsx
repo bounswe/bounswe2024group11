@@ -80,7 +80,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                         {quiz.description}
                     </p>
                 </div>
-                {quiz.rating.score && (
+                {quiz.rating.score !== null && (
                     <TooltipProvider>
                         <TooltipAnchor
                             render={
@@ -161,7 +161,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                             </Link>
                         )}
                         <Link
-                            to={String(quiz.id)}
+                            to={`/quizzes/${String(quiz.id)}`}
                             className={buttonClass({
                                 intent: quiz.is_taken ? "secondary" : "primary",
                                 size: "medium",

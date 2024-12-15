@@ -61,7 +61,7 @@ const defaultCommands: Command[] = [
         icon: <RiTrophyLine className="h-4 w-4" />,
         path: "/achievements",
         group: "navigation",
-        keywords: ["achievements", "trophies", "badges"],
+        keywords: ["achievements", "trophies", "badges", "points"],
     },
     {
         id: "leaderboard",
@@ -69,7 +69,7 @@ const defaultCommands: Command[] = [
         icon: <RiAwardLine className="h-4 w-4" />,
         path: "/leaderboard",
         group: "navigation",
-        keywords: ["leaderboard", "rankings", "scoreboard"],
+        keywords: ["leaderboard", "rankings", "scoreboard", "points"],
     },
     {
         id: "profile",
@@ -273,7 +273,7 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         <>
             <div
                 role="presentation"
-                className="fixed inset-0 z-50 bg-black/50"
+                className="fixed inset-0 z-50 bg-slate-950 opacity-70"
                 onClick={onClose}
             />
 
