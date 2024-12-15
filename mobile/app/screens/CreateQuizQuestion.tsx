@@ -12,6 +12,7 @@ import CreateQuizQuestionOptions from "../components/CreateQuizQuestionOptions";
 import { CreateQuizQuestionType, SuggestedHintsType } from "../types/quiz";
 import { Tag, TagSearchResult } from "../types/tag";
 import { combineHints } from "../utils/quiz";
+import API_URL_GLOBAL from "../../config";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -65,7 +66,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     input: string,
     callback: (tags: TagSearchResult[]) => void
   ) => {
-    const ENDPOINT = `${API_URL}/tagging/?word=${input}&lang=${source_lang}`;
+    const ENDPOINT = `${API_URL_GLOBAL}tagging/?word=${input}&lang=${source_lang}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const combinedTags: TagSearchResult[] = [];
@@ -97,7 +98,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchTranslations = async (linked_data_id: string) => {
-    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
+    const ENDPOINT = `${API_URL_GLOBAL}get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const updatedAllTranslations = [...allTranslations];
@@ -130,7 +131,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchDifficulty = async (keyword: string) => {
-    const ENDPOINT = `${API_URL}/get-difficulty/?keyword=${keyword}`;
+    const ENDPOINT = `${API_URL_GLOBAL}get-difficulty/?keyword=${keyword}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const point = result.data.question_point;
@@ -146,7 +147,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const fetchHints = async () => {
     const linked_data_id = questionTags[currentQuestionIndex].linked_data_id;
     const word = questionTags[currentQuestionIndex].name;
-    const ENDPOINT = `${API_URL}/hint/?synset_id=${linked_data_id.substring(3)}&target_lang=${source_lang}&word=${word}`;
+    const ENDPOINT = `${API_URL_GLOBAL}hint/?synset_id=${linked_data_id.substring(3)}&target_lang=${source_lang}&word=${word}`;
 
     try {
       const result = await axios.get(`${ENDPOINT}`);
