@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { RootStackParamList } from "../../App";
 import { Tag, TagSearchResult } from "../types/tag";
+import API_URL_GLOBAL from "../../config";
 
 const API_URL = "http://138.68.97.90/api/v1";
 // const API_URL = "http://10.0.2.2:8000/api/v1";
@@ -35,7 +36,7 @@ const CreateQuiz: React.FC = () => {
       return;
     }
 
-    const ENDPOINT = `${API_URL}/tagging/?word=${input}&lang=EN`;
+    const ENDPOINT = `${API_URL_GLOBAL}tagging/?word=${input}&lang=EN`;
 
     try {
       const result = await axios.get(`${ENDPOINT}`);
