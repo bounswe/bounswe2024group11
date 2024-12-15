@@ -16,10 +16,11 @@ import { Question } from "../types/forum";
 import UserCard from "../components/UserCard";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import ForumQuestionCard from "../components/ForumQuestionCard";
+import API_URL_GLOBAL from "../../config";
 
-const API_URL = "http://10.0.2.2:8000/api/v1/profile/";
+const API_URL = `${API_URL_GLOBAL}profile/`;
 //const API_URL = "http://138.68.97.90/api/v1/profile/";
-const API_URL_FORUM_QUESTIONS = "http://10.0.2.2:8000/api/v1/forum-questions/";
+const API_URL_FORUM_QUESTIONS = `${API_URL_GLOBAL}forum-questions/`;
 //const API_URL_FORUM_QUESTIONS = "http://138.68.97.90/api/v1/forum-questions/";
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, "ProfileScreen">;
