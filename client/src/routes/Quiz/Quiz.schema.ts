@@ -82,7 +82,7 @@ export const quizOverviewSchema = object({
     questions: questionsSchema,
     rating: ratingSchema,
     difficulty: number(),
-    my_last_answers: myAnswersEntitySchema,
+    my_last_answers: nullable(myAnswersEntitySchema),
 });
 
 export const quizAnswerSchema = object({

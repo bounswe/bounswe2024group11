@@ -80,6 +80,48 @@ const QuizCard = ({
 
 export const QuizReview = () => {
     const quiz = useLoaderData<typeof quizLoader>();
+    if (!quiz.my_last_answers)
+        return (
+            <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+                <div
+                    role="alert"
+                    aria-live="polite"
+                    className="flex flex-col items-center gap-4"
+                >
+                    <p className="text-center text-xl font-medium">
+                        You pricked your fingers! You haven't taken this quiz
+                        yet.
+                    </p>
+                    <div className="flex gap-4">
+                        <Link
+                            className={buttonClass({
+                                intent: "ghost",
+                                size: "medium",
+                            })}
+                            to={`/quizzes/`}
+                        >
+                            Back to Quizzes
+                        </Link>
+                        <Link
+                            className={buttonClass({
+                                intent: "primary",
+                                size: "medium",
+                            })}
+                            to={`/quizzes/${quiz.id}/`}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "primary",
+                                })}
+                                aria-hidden="true"
+                            />
+                            Take The Quiz
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <svg
@@ -115,7 +157,7 @@ export const QuizReview = () => {
                         quizType={quiz.type}
                         answer={{
                             question: question.id,
-                            answer: quiz.my_last_answers.answers[index].answer,
+                            answer: quiz.my_last_answers!.answers[index].answer,
                             is_hint_used: false,
                         }}
                     />
