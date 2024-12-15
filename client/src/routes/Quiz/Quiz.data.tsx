@@ -4,7 +4,6 @@ import {
     redirect,
     ShouldRevalidateFunction,
 } from "react-router";
-import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
@@ -43,8 +42,7 @@ export const quizLoader = (async ({ params }) => {
     try {
         const response = await apiClient.get(`/quizzes/${quizId}/`);
 
-        const data = response.data; // Extract data from axios response
-        logger.log(data);
+        const data = response.data;
 
         const { output, issues, success } = safeParse(quizDetailsSchema, data);
 
@@ -69,36 +67,37 @@ export const takeQuizAction = (async ({ request }) => {
         const answers = formData.get("answers") as string;
         const quizId = formData.get("quizId");
 
+        // Store answers in localStorage as backup
         localStorage.setItem("quiz_answer" + String(quizId), answers);
 
-        const quizSubmissionPromise = apiClient
-            .post(`/take-quiz/`, {
-                quiz: Number(quizId),
-                answers: JSON.parse(answers),
-            })
-            .then((response) => {
-                const { output, issues, success } = safeParse(
-                    completedQuizSchema,
-                    response.data,
-                );
-                if (!success) {
-                    logger.error("Failed to parse quiz response:", issues);
-                    throw new Error(`Failed to parse quiz response: ${issues}`);
-                }
-                return output;
-            });
-
-        return defer({
-            quizSubmissionData: quizSubmissionPromise,
+        // Submit quiz and wait for response
+        const response = await apiClient.post(`/take-quiz/`, {
+            quiz: Number(quizId),
+            answers: JSON.parse(answers),
         });
+
+        // Parse and validate the response
+        const { output, issues, success } = safeParse(
+            completedQuizSchema,
+            response.data,
+        );
+
+        if (!success) {
+            logger.error("Failed to parse quiz response:", issues);
+            throw new Error(`We couldn't submit your quiz.`);
+        }
+
+        // Return the parsed quiz submission data directly
+        return { success: true, data: output };
     } catch (error) {
-        logger.error(`Error submitting quiz:`, error);
+        // Log the error with more details
+        logger.error("Failed to submit quiz:", error);
+
         throw new Error(
-            `We couldn't submit your quiz. Let's hope this doesn't happen again.`,
+            "Failed to submit quiz. Let's hope this doesn't happen again.",
         );
     }
 }) satisfies ActionFunction;
-
 export const quizReviewLoader = (async ({ params }) => {
     const { quizId } = params;
 
