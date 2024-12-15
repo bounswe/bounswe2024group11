@@ -14,8 +14,8 @@ export const buttonInnerRing = cva(
         variants: {
             intent: {
                 primary: [
-                    "border-cyan-400",
-                    "group-hover:border-cyan-500",
+                    "border-cyan-500",
+                    "group-hover:border-cyan-700",
                     "group-active:border-cyan-600",
                 ],
                 secondary: ["border-cyan-100/30"],
@@ -75,8 +75,8 @@ export const buttonClass = cva(
         variants: {
             intent: {
                 primary: [
-                    "bg-cyan-500",
-                    "hover:bg-cyan-600",
+                    "bg-cyan-600",
+                    "hover:bg-cyan-800",
                     "bg-gradient-to-b",
                     "from-white/15",
                     "to-white/0",
@@ -85,7 +85,7 @@ export const buttonClass = cva(
                     "ring-cyan-50",
                     "active:bg-cyan-700",
                     "active:ring-3",
-                    "active:ring-cyan-100",
+                    "active:ring-slate-200",
                     "text-white",
                 ],
                 secondary: [

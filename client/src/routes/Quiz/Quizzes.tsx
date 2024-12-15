@@ -5,38 +5,36 @@ import {
     RiArrowRightLine,
     RiCloseFill,
 } from "@remixicon/react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
+import {
+    Await,
+    useLoaderData,
+    useRouteLoaderData,
+} from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
+import { QuizLoading } from "../_loading";
 import { homeLoader } from "../Home/Home.data";
 import { quizzesLoader } from "./Quizzes.data";
 
-const TagQuery = ({
-    onTagSelect,
-}: {
-    onTagSelect: (tag: string) => void;
-}) => {};
-
 export const Quizzes = () => {
-    const data = useLoaderData<typeof quizzesLoader>();
+    const { quizzesData } = useLoaderData<typeof quizzesLoader>();
     const [searchParams, setSearchParams] = useSearchParams();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [searchTerm, setSearchTerm] = useState(
         searchParams.get("search") || "",
     );
+    const sortBy = searchParams.get("sort") || "newest";
 
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
-    const totalPages = Math.ceil(data.count / perPage);
-    const sortBy = searchParams.get("sort") || "newest";
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -59,177 +57,235 @@ export const Quizzes = () => {
         newParams.set("per_page", perPage.toString());
         setSearchParams(newParams);
     };
-
-    const description = logged_in
-        ? `This is your time to shine, ${user.full_name}`
-        : "Test your knowledge of various topics. Log in to track your progress.";
-
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead title="Quizzes" description={description} />
-            <aside className="flex flex-col gap-6">
-                <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-4 sm:flex-row">
-                        <div className="flex flex-grow items-center gap-2">
-                            <input
-                                type="text"
-                                placeholder="Search by title, description, or tag"
-                                className={inputClass({
-                                    className: "w-full max-w-sm",
-                                })}
-                                ref={searchInputRef}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                value={searchTerm}
-                            />
-                            <Button
-                                className={buttonClass({
-                                    intent: "tertiary",
-                                    size: "icon",
-                                    icon: "only",
-                                })}
-                                onClick={() => {
-                                    searchInputRef.current?.focus();
-                                    setSearchParams((prev) => {
-                                        prev.delete("search");
-                                        setSearchTerm("");
-                                        return prev;
-                                    });
-                                }}
-                            >
-                                <RiCloseFill size={20} />
-                            </Button>
-                        </div>
-                        <div></div>
-                    </div>
-                </div>
-                <div className="flex gap-2">
-                    {["newest", "oldest", "popular", "most liked"].map(
-                        (option) => (
-                            <label
-                                key={option}
-                                className="flex cursor-pointer items-center gap-2"
-                            >
-                                <input
-                                    type="radio"
-                                    value={option}
-                                    checked={sortBy === option}
-                                    onChange={() => {
-                                        const newParams = new URLSearchParams(
-                                            searchParams,
-                                        );
-                                        newParams.set("sort", option);
-                                        setSearchParams(newParams);
-                                    }}
-                                    className="sr-only"
-                                />
-                                <span
-                                    className={radioOptionClass({
-                                        selected: sortBy === option,
-                                    })}
-                                >
-                                    {option === "newest" && "Newest"}
-                                    {option === "oldest" && "Oldest"}
-                                    {option === "popular" && "Most Popular"}
-                                    {option === "most liked" && "Most Liked"}
-                                </span>
-                            </label>
-                        ),
-                    )}
-                </div>
-            </aside>
-            <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {data.results
-                    .map((quiz) => {
-                        return {
-                            ...quiz,
-                            is_taken: !logged_in ? false : quiz.is_taken,
-                        };
-                    })
-                    .map((quiz) => (
-                        <QuizCard
-                            key={quiz.id}
-                            quiz_key={String(quiz.id)}
-                            quiz={quiz}
-                            onTagClick={(tag) => {
-                                const newParams = new URLSearchParams(
-                                    searchParams,
-                                );
-                                newParams.set("tag", tag);
-                                setSearchParams(newParams);
-                            }}
-                        />
-                    ))}
-            </main>
-            <hr />
-            <div className="flex flex-col gap-4">
-                <div className="flex items-end justify-center">
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={!data.previous}
-                            aria-label="Previous Page"
-                            aria-disabled={!data.previous}
-                            className={buttonClass({
-                                intent: "tertiary",
-                                icon: "left",
-                            })}
-                        >
-                            <div
-                                className={buttonInnerRing({
-                                    intent: "tertiary",
-                                })}
-                                aria-hidden="true"
-                            />
-                            <RiArrowLeftLine size={16} />
-                            <span>Previous</span>
-                        </button>
-                        <span className="flex w-20 items-center justify-center gap-1 rounded-1 bg-slate-100 px-4 text-center text-sm text-slate-400 ring ring-slate-200">
-                            <span className="px-1 py-0.5 text-lg font-medium text-slate-800">
-                                {currentPage}
-                            </span>
-                            <span className="text-xs">/</span>
-                            <span className="px-1 py-0.5 text-base font-regular">
-                                {totalPages}
-                            </span>
-                        </span>
-                        <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={!data.next}
-                            aria-disabled={!data.next}
-                            aria-label="Next"
-                            className={buttonClass({
-                                intent: "tertiary",
-                                icon: "right",
-                            })}
-                        >
-                            <div
-                                className={buttonInnerRing({
-                                    intent: "tertiary",
-                                })}
-                                aria-hidden="true"
-                            />
-                            <span>Next Page</span>
-                            <RiArrowRightLine size={16} />
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <hr />
+            <Suspense fallback={<QuizLoading />}>
+                <Await resolve={quizzesData}>
+                    {(data) => {
+                        const totalPages = Math.ceil(data.count / perPage);
+                        const description = logged_in
+                            ? `This is your time to shine, ${user.full_name}`
+                            : "Test your knowledge of various topics. Log in to track your progress.";
 
-            <Portal className="fixed bottom-10 right-10 z-10">
-                <Link
-                    to="/quizzes/new"
-                    className={buttonClass({
-                        intent: "primary",
-                        icon: "left",
-                        size: "large",
-                    })}
-                >
-                    <span className={buttonInnerRing({ intent: "primary" })} />
-                    <RiAddFill size={20} />
-                    <span>Create A Quiz</span>
-                </Link>
-            </Portal>
+                        return (
+                            <>
+                                <PageHead
+                                    title="Quizzes"
+                                    description={description}
+                                />
+                                <aside className="flex flex-col gap-6">
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-4 sm:flex-row">
+                                            <div className="flex flex-grow items-center gap-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search by title, description, or tag"
+                                                    className={inputClass({
+                                                        className:
+                                                            "w-full max-w-sm",
+                                                    })}
+                                                    ref={searchInputRef}
+                                                    onChange={(e) =>
+                                                        setSearchTerm(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    value={searchTerm}
+                                                />
+                                                <Button
+                                                    className={buttonClass({
+                                                        intent: "tertiary",
+                                                        size: "icon",
+                                                        icon: "only",
+                                                    })}
+                                                    onClick={() => {
+                                                        searchInputRef.current?.focus();
+                                                        setSearchParams(
+                                                            (prev) => {
+                                                                prev.delete(
+                                                                    "search",
+                                                                );
+                                                                setSearchTerm(
+                                                                    "",
+                                                                );
+                                                                return prev;
+                                                            },
+                                                        );
+                                                    }}
+                                                >
+                                                    <RiCloseFill size={20} />
+                                                </Button>
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        {[
+                                            "newest",
+                                            "oldest",
+                                            "popular",
+                                            "most liked",
+                                        ].map((option) => (
+                                            <label
+                                                key={option}
+                                                className="flex cursor-pointer items-center gap-2"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    value={option}
+                                                    checked={sortBy === option}
+                                                    onChange={() => {
+                                                        const newParams =
+                                                            new URLSearchParams(
+                                                                searchParams,
+                                                            );
+                                                        newParams.set(
+                                                            "sort",
+                                                            option,
+                                                        );
+                                                        setSearchParams(
+                                                            newParams,
+                                                        );
+                                                    }}
+                                                    className="sr-only"
+                                                />
+                                                <span
+                                                    className={radioOptionClass(
+                                                        {
+                                                            selected:
+                                                                sortBy ===
+                                                                option,
+                                                        },
+                                                    )}
+                                                >
+                                                    {option === "newest" &&
+                                                        "Newest"}
+                                                    {option === "oldest" &&
+                                                        "Oldest"}
+                                                    {option === "popular" &&
+                                                        "Most Popular"}
+                                                    {option === "most liked" &&
+                                                        "Most Liked"}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </aside>
+                                <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                    {data.results
+                                        .map((quiz) => {
+                                            return {
+                                                ...quiz,
+                                                is_taken: !logged_in
+                                                    ? false
+                                                    : quiz.is_taken,
+                                            };
+                                        })
+                                        .map((quiz) => (
+                                            <QuizCard
+                                                key={quiz.id}
+                                                quiz_key={String(quiz.id)}
+                                                quiz={quiz}
+                                                onTagClick={(tag) => {
+                                                    const newParams =
+                                                        new URLSearchParams(
+                                                            searchParams,
+                                                        );
+                                                    newParams.set("tag", tag);
+                                                    setSearchParams(newParams);
+                                                }}
+                                            />
+                                        ))}
+                                </main>
+                                <hr />
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-end justify-center">
+                                        <div className="flex gap-4">
+                                            <button
+                                                onClick={() =>
+                                                    handlePageChange(
+                                                        currentPage - 1,
+                                                    )
+                                                }
+                                                disabled={!data.previous}
+                                                aria-label="Previous Page"
+                                                aria-disabled={!data.previous}
+                                                className={buttonClass({
+                                                    intent: "tertiary",
+                                                    icon: "left",
+                                                })}
+                                            >
+                                                <div
+                                                    className={buttonInnerRing({
+                                                        intent: "tertiary",
+                                                    })}
+                                                    aria-hidden="true"
+                                                />
+                                                <RiArrowLeftLine size={16} />
+                                                <span>Previous</span>
+                                            </button>
+                                            <span className="flex w-20 items-center justify-center gap-1 rounded-1 bg-slate-100 px-4 text-center text-sm text-slate-400 ring ring-slate-200">
+                                                <span className="px-1 py-0.5 text-lg font-medium text-slate-800">
+                                                    {currentPage}
+                                                </span>
+                                                <span className="text-xs">
+                                                    /
+                                                </span>
+                                                <span className="px-1 py-0.5 text-base font-regular">
+                                                    {totalPages}
+                                                </span>
+                                            </span>
+                                            <button
+                                                onClick={() =>
+                                                    handlePageChange(
+                                                        currentPage + 1,
+                                                    )
+                                                }
+                                                disabled={!data.next}
+                                                aria-disabled={!data.next}
+                                                aria-label="Next"
+                                                className={buttonClass({
+                                                    intent: "tertiary",
+                                                    icon: "right",
+                                                })}
+                                            >
+                                                <div
+                                                    className={buttonInnerRing({
+                                                        intent: "tertiary",
+                                                    })}
+                                                    aria-hidden="true"
+                                                />
+                                                <span>Next Page</span>
+                                                <RiArrowRightLine size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+
+                                <Portal className="fixed bottom-10 right-10 z-10">
+                                    <Link
+                                        to="/quizzes/new"
+                                        className={buttonClass({
+                                            intent: "primary",
+                                            icon: "left",
+                                            size: "large",
+                                        })}
+                                    >
+                                        <span
+                                            className={buttonInnerRing({
+                                                intent: "primary",
+                                            })}
+                                        />
+                                        <RiAddFill size={20} />
+                                        <span>Create A Quiz</span>
+                                    </Link>
+                                </Portal>
+                            </>
+                        );
+                    }}
+                </Await>
+            </Suspense>
         </div>
     );
 };

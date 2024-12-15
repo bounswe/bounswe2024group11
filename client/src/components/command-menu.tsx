@@ -282,10 +282,10 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Command Menu"
-                className="fixed left-1/2 top-[10%] z-50 w-[640px] max-w-[90vw] -translate-x-1/2 overflow-hidden rounded-4 border border-slate-200 bg-white shadow-2xl"
+                className="fixed left-1/2 top-[10%] z-50 w-[640px] max-w-[90vw] -translate-x-1/2 overflow-hidden rounded-2 border border-slate-200 bg-white shadow-2xl"
                 onKeyDown={handleKeyDown}
             >
-                <div className="border-b bg-slate-200 p-3 ring ring-slate-200">
+                <div className="bg-slate-100 p-3 ring ring-slate-200">
                     <input
                         ref={inputRef}
                         type="text"

@@ -162,7 +162,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                     </p>
                 </Link>
                 {question.image_url && (
-                    <div className="relative h-48 w-full">
+                    <div className="relative mb-4 h-full max-h-64 min-h-40 w-full">
                         <Button
                             onClick={() => {
                                 setPhotoView(
@@ -221,19 +221,16 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
             <Separator className="w-full border-slate-200" />
             <div className="flex w-full flex-row justify-between bg-white px-6 py-3">
                 <div className="flex items-center gap-6">
-                    <Link
-                        className="flex flex-row items-center gap-1 underline-offset-2 hover:underline"
-                        to={`/forum/${question.id}`}
-                    >
+                    <div className="flex flex-row items-center gap-1 underline-offset-2">
                         <RiBookmark2Line className="size-5 text-slate-500" />
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-500 decoration-inherit group-hover:underline">
                             {pluralize(
                                 question.answers_count,
                                 "answer",
                                 "answers",
                             )}
                         </p>
-                    </Link>
+                    </div>
                     <span className="text-sm text-slate-500">
                         {getRelativeTime(new Date(question.created_at))}
                     </span>

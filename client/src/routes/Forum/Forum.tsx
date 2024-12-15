@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
     Await,
@@ -10,32 +10,47 @@ import { ForumQuestionCard } from "../../components/forum-card";
 import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 
-import { Portal } from "@ariakit/react";
+import { Button, Portal } from "@ariakit/react";
 import {
     RiAddFill,
     RiArrowLeftLine,
     RiArrowRightLine,
     RiCloseFill,
 } from "@remixicon/react";
+import { radioOptionClass } from "../../components/radio-option";
 import { ForumLoading } from "../_loading";
 import { homeLoader } from "../Home/Home.data";
 import { forumLoader } from "./Forum.data";
 
 export const Forum = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
     const { forumData } = useLoaderData<typeof forumLoader>();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const [searchTerm, setSearchTerm] = useState(
+        searchParams.get("search") || "",
+    );
+
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
-
-    const description = logged_in
-        ? `There you engage with community, ${user.full_name}`
-        : "Engage with the community, ask questions, and get help from other people.";
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
     const sortBy = searchParams.get("sort") || "newest";
-    const searchTerm = searchParams.get("search") || "";
-    const selectedTagId = searchParams.get("tag");
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setSearchParams((old) => {
+                if (searchTerm) {
+                    old.set("search", searchTerm);
+                } else {
+                    old.delete("search");
+                }
+                return old;
+            });
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+    }, [searchTerm, setSearchParams]);
 
     const handlePageChange = (page: number) => {
         const newParams = new URLSearchParams(searchParams);
@@ -44,265 +59,66 @@ export const Forum = () => {
         setSearchParams(newParams);
     };
 
-    const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set("per_page", e.target.value);
-        newParams.set("page", "1");
-        setSearchParams(newParams);
-    };
-
-    const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set("sort", e.target.value);
-        setSearchParams(newParams);
-    };
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set("search", e.target.value);
-        setSearchParams(newParams);
-    };
-
-    const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newParams = new URLSearchParams(searchParams);
-        if (e.target.value) {
-            newParams.set("tag", e.target.value);
-        } else {
-            newParams.delete("tag");
-        }
-        setSearchParams(newParams);
-    };
-
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead title="Forum" description={description} />
-
             <Suspense fallback={<ForumLoading />}>
                 <Await resolve={forumData}>
                     {(data) => {
-                        const allTagsInPage = data.results.flatMap(
-                            (question) => question.tags,
-                        );
-                        const allTags = Array.from(
-                            new Map(
-                                allTagsInPage.map((tag) => [
-                                    tag.linked_data_id,
-                                    tag,
-                                ]),
-                            ).values(),
-                        );
-
                         const totalPages = Math.ceil(data.count / perPage);
-
-                        const filteredQuestions = data.results
-                            .filter((question) => {
-                                const questionTags = question.tags.map((tag) =>
-                                    tag.name.toLowerCase(),
-                                );
-                                const searchTermLowerCase =
-                                    searchTerm.toLowerCase();
-                                return (
-                                    questionTags.some((tag) =>
-                                        tag.includes(searchTermLowerCase),
-                                    ) ||
-                                    question.title
-                                        .toLowerCase()
-                                        .includes(searchTermLowerCase) ||
-                                    question.question
-                                        .toLowerCase()
-                                        .includes(searchTermLowerCase)
-                                );
-                            })
-                            .sort((a, b) => {
-                                if (sortBy === "newest") {
-                                    return (
-                                        new Date(b.created_at).getTime() -
-                                        new Date(a.created_at).getTime()
-                                    );
-                                } else if (sortBy === "oldest") {
-                                    return (
-                                        new Date(a.created_at).getTime() -
-                                        new Date(b.created_at).getTime()
-                                    );
-                                } else if (sortBy === "popular") {
-                                    return b.answers_count - a.answers_count;
-                                } else if (sortBy === "most liked") {
-                                    return b.upvotes_count - a.upvotes_count;
-                                }
-                                return 0;
-                            });
+                        const description = logged_in
+                            ? `There you engage with community, ${user.full_name}`
+                            : "Engage with the community, ask questions, and get help from other people.";
 
                         return (
                             <>
-                                <aside className="flex flex-col items-stretch justify-stretch gap-6">
+                                <PageHead
+                                    title="Forum"
+                                    description={description}
+                                />
+                                <aside className="flex flex-col gap-6">
                                     <div className="flex flex-col gap-4">
-                                        <div className="flex flex-col gap-4">
-                                            <div className="flex items-start justify-between">
-                                                <fieldset className="flex flex-col gap-2">
-                                                    <label
-                                                        htmlFor="perPage"
-                                                        className="text-sm text-slate-500"
-                                                    >
-                                                        Show forum questions per
-                                                        page:
-                                                    </label>
-                                                    <select
-                                                        id="perPage"
-                                                        value={perPage}
-                                                        onChange={
-                                                            handlePerPageChange
-                                                        }
-                                                        className={`${inputClass()} w-24`}
-                                                    >
-                                                        <option value="5">
-                                                            5
-                                                        </option>
-                                                        <option value="10">
-                                                            10
-                                                        </option>
-                                                        <option value="20">
-                                                            20
-                                                        </option>
-                                                    </select>
-                                                </fieldset>
-                                                <div className="flex gap-4">
-                                                    <button
-                                                        onClick={() =>
-                                                            handlePageChange(
-                                                                currentPage - 1,
-                                                            )
-                                                        }
-                                                        disabled={
-                                                            !data.previous
-                                                        }
-                                                        aria-label="Previous Page"
-                                                        aria-disabled={
-                                                            !data.previous
-                                                        }
-                                                        className={buttonClass({
-                                                            intent: "secondary",
-                                                            className: "w-16",
-                                                        })}
-                                                    >
-                                                        <div
-                                                            className={buttonInnerRing(
-                                                                {
-                                                                    intent: "secondary",
-                                                                },
-                                                            )}
-                                                            aria-hidden="true"
-                                                        />
-                                                        <RiArrowLeftLine
-                                                            size={16}
-                                                        />
-                                                    </button>
-                                                    <span className="flex w-12 items-center justify-center gap-1 text-center text-sm text-slate-400">
-                                                        <span className="px-1 py-0.5 text-base text-slate-700">
-                                                            {currentPage}
-                                                        </span>
-                                                        <span className="text-xs">
-                                                            /
-                                                        </span>
-                                                        <span className="px-1 py-0.5 text-base font-regular">
-                                                            {totalPages}
-                                                        </span>
-                                                    </span>
-                                                    <button
-                                                        onClick={() =>
-                                                            handlePageChange(
-                                                                currentPage + 1,
-                                                            )
-                                                        }
-                                                        disabled={!data.next}
-                                                        aria-disabled={
-                                                            !data.next
-                                                        }
-                                                        aria-label="Next Page"
-                                                        className={buttonClass({
-                                                            intent: "secondary",
-                                                            className: "w-16",
-                                                        })}
-                                                    >
-                                                        <div
-                                                            className={buttonInnerRing(
-                                                                {
-                                                                    intent: "secondary",
-                                                                },
-                                                            )}
-                                                            aria-hidden="true"
-                                                        />
-                                                        <RiArrowRightLine
-                                                            size={16}
-                                                        />
-                                                    </button>
-                                                </div>
+                                        <div className="flex flex-col gap-4 sm:flex-row">
+                                            <div className="flex flex-grow items-center gap-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search by title, description, or tag"
+                                                    className={inputClass({
+                                                        className:
+                                                            "w-full max-w-sm",
+                                                    })}
+                                                    ref={searchInputRef}
+                                                    onChange={(e) =>
+                                                        setSearchTerm(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    value={searchTerm}
+                                                />
+                                                <Button
+                                                    className={buttonClass({
+                                                        intent: "tertiary",
+                                                        size: "icon",
+                                                        icon: "only",
+                                                    })}
+                                                    onClick={() => {
+                                                        searchInputRef.current?.focus();
+                                                        setSearchParams(
+                                                            (prev) => {
+                                                                prev.delete(
+                                                                    "search",
+                                                                );
+                                                                setSearchTerm(
+                                                                    "",
+                                                                );
+                                                                return prev;
+                                                            },
+                                                        );
+                                                    }}
+                                                >
+                                                    <RiCloseFill size={20} />
+                                                </Button>
                                             </div>
-                                            <div className="flex flex-1 flex-col gap-4 sm:flex-row">
-                                                <div>
-                                                    <select
-                                                        id="tagFilter"
-                                                        value={
-                                                            selectedTagId || ""
-                                                        }
-                                                        onChange={
-                                                            handleTagChange
-                                                        }
-                                                        className={inputClass({
-                                                            className:
-                                                                "w-48 cursor-pointer",
-                                                        })}
-                                                    >
-                                                        <option value="">
-                                                            All Tags
-                                                        </option>
-                                                        {allTags.map((tag) => (
-                                                            <option
-                                                                key={
-                                                                    tag.linked_data_id
-                                                                }
-                                                                value={
-                                                                    tag.linked_data_id
-                                                                }
-                                                            >
-                                                                {tag.name}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Search by title, question, or tag"
-                                                        className={inputClass({
-                                                            className:
-                                                                "w-full max-w-sm",
-                                                        })}
-                                                        value={searchTerm}
-                                                        onChange={
-                                                            handleSearchChange
-                                                        }
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <button
-                                                        className={buttonClass({
-                                                            intent: "tertiary",
-                                                            size: "medium",
-                                                            icon: "left",
-                                                        })}
-                                                        onClick={() => {
-                                                            setSearchParams(
-                                                                new URLSearchParams(),
-                                                            );
-                                                        }}
-                                                    >
-                                                        <RiCloseFill
-                                                            size={20}
-                                                        />
-                                                        Clear All Filters
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            <div></div>
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
@@ -320,15 +136,29 @@ export const Forum = () => {
                                                     type="radio"
                                                     value={option}
                                                     checked={sortBy === option}
+                                                    onChange={() => {
+                                                        const newParams =
+                                                            new URLSearchParams(
+                                                                searchParams,
+                                                            );
+                                                        newParams.set(
+                                                            "sort",
+                                                            option,
+                                                        );
+                                                        setSearchParams(
+                                                            newParams,
+                                                        );
+                                                    }}
                                                     className="sr-only"
-                                                    onChange={handleSortChange}
                                                 />
                                                 <span
-                                                    className={`rounded-full px-4 py-1.5 font-medium transition-all ${
-                                                        sortBy === option
-                                                            ? "bg-cyan-900 text-white"
-                                                            : "bg-slate-100 text-slate-900 hover:bg-slate-200"
-                                                    }`}
+                                                    className={radioOptionClass(
+                                                        {
+                                                            selected:
+                                                                sortBy ===
+                                                                option,
+                                                        },
+                                                    )}
                                                 >
                                                     {option === "newest" &&
                                                         "Newest"}
@@ -345,37 +175,80 @@ export const Forum = () => {
                                 </aside>
                                 <main>
                                     <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
-                                        {filteredQuestions
-                                            .filter(
-                                                (post) =>
-                                                    !selectedTagId ||
-                                                    post.tags.some(
-                                                        (tag) =>
-                                                            tag.linked_data_id ===
-                                                            selectedTagId,
-                                                    ),
-                                            )
-                                            .map((post) => (
-                                                <ForumQuestionCard
-                                                    onTagClick={(tag) => {
-                                                        const newParams =
-                                                            new URLSearchParams(
-                                                                searchParams,
-                                                            );
-                                                        newParams.set(
-                                                            "tag",
-                                                            tag,
-                                                        );
-                                                        setSearchParams(
-                                                            newParams,
-                                                        );
-                                                    }}
-                                                    key={post.id}
-                                                    question={post}
-                                                />
-                                            ))}
+                                        {data.results.map((post) => (
+                                            <ForumQuestionCard
+                                                onTagClick={() => {}}
+                                                key={post.id}
+                                                question={post}
+                                            />
+                                        ))}
                                     </div>
                                 </main>
+                                <hr />
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-end justify-center">
+                                        <div className="flex gap-4">
+                                            <button
+                                                onClick={() =>
+                                                    handlePageChange(
+                                                        currentPage - 1,
+                                                    )
+                                                }
+                                                disabled={!data.previous}
+                                                aria-label="Previous Page"
+                                                aria-disabled={!data.previous}
+                                                className={buttonClass({
+                                                    intent: "tertiary",
+                                                    icon: "left",
+                                                })}
+                                            >
+                                                <div
+                                                    className={buttonInnerRing({
+                                                        intent: "tertiary",
+                                                    })}
+                                                    aria-hidden="true"
+                                                />
+                                                <RiArrowLeftLine size={16} />
+                                                <span>Previous</span>
+                                            </button>
+                                            <span className="flex w-20 items-center justify-center gap-1 rounded-1 bg-slate-100 px-4 text-center text-sm text-slate-400 ring ring-slate-200">
+                                                <span className="px-1 py-0.5 text-lg font-medium text-slate-800">
+                                                    {currentPage}
+                                                </span>
+                                                <span className="text-xs">
+                                                    /
+                                                </span>
+                                                <span className="px-1 py-0.5 text-base font-regular">
+                                                    {totalPages}
+                                                </span>
+                                            </span>
+                                            <button
+                                                onClick={() =>
+                                                    handlePageChange(
+                                                        currentPage + 1,
+                                                    )
+                                                }
+                                                disabled={!data.next}
+                                                aria-disabled={!data.next}
+                                                aria-label="Next"
+                                                className={buttonClass({
+                                                    intent: "tertiary",
+                                                    icon: "right",
+                                                })}
+                                            >
+                                                <div
+                                                    className={buttonInnerRing({
+                                                        intent: "tertiary",
+                                                    })}
+                                                    aria-hidden="true"
+                                                />
+                                                <span>Next Page</span>
+                                                <RiArrowRightLine size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
                             </>
                         );
                     }}
