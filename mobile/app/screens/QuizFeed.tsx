@@ -13,9 +13,10 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
 import QuizCard from "../components/QuizCard";
 import { QuizOverview } from "../types/quiz";
+import API_URL_GLOBAL from "../../config";
 
-const API_URL = "http://138.68.97.90/api/v1/quizzes/";
-// const API_URL = "http://10.0.2.2:8000/api/v1/quizzes/";
+//const API_URL = "http://138.68.97.90/api/v1/quizzes/";
+const API_URL = `${API_URL_GLOBAL}quizzes/`;
 
 type QuizScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
