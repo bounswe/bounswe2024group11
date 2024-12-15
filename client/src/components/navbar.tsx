@@ -54,7 +54,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                             intent: "tertiary",
                             size: "medium",
                             className:
-                                "w-full justify-start md:w-auto md:justify-center",
+                                "w-full justify-start hover:bg-cyan-900/10 md:w-auto md:justify-center",
                         })}
                     >
                         {route.name}
@@ -134,6 +134,10 @@ export const Navbar = ({ user }: NavbarProps) => {
     return (
         <nav
             aria-label="Main navigation"
+            style={{
+                backgroundImage: "radial-gradient(white 20%, transparent 80%)",
+                backgroundSize: "4px 4px",
+            }}
             className="fixed top-0 z-50 w-full border-b border-slate-200 bg-[rgba(255,255,255,.8)] py-3 backdrop-blur-sm"
         >
             <div className="container">
