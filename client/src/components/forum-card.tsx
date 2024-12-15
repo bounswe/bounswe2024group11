@@ -86,7 +86,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                 >
                                     <RiDeleteBinLine size={16} />
                                 </Ariakit.PopoverDisclosure>
-                                <Ariakit.Popover className="overflow-hidden rounded-2 bg-slate-800 text-white shadow-lg ring ring-slate-900">
+                                <Ariakit.Popover className="z-50 overflow-hidden rounded-2 bg-slate-800 text-white shadow-lg ring ring-slate-900">
                                     <Ariakit.PopoverArrow className="arrow" />
                                     <div className="flex flex-col gap-1 px-4 py-4">
                                         <Ariakit.PopoverHeading className="text-base font-medium text-slate-100">
