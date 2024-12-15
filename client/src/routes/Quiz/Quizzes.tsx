@@ -83,10 +83,6 @@ export const Quizzes = () => {
         return 0;
     });
 
-    const allTags = Array.from(
-        new Set(data.results.flatMap((quiz) => quiz.tags)),
-    ).sort((a, b) => a.name.localeCompare(b.name));
-
     const description = logged_in
         ? `This is your time to shine, ${user.full_name}`
         : "Test your knowledge of various topics. Log in to track your progress.";
@@ -170,25 +166,6 @@ export const Quizzes = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 sm:flex-row">
-                        <div>
-                            <select
-                                className={inputClass({
-                                    className: "w-48 cursor-pointer",
-                                })}
-                                value={selectedTagId || ""}
-                                onChange={handleTagChange}
-                            >
-                                <option value="">All Tags</option>
-                                {allTags.map((tag) => (
-                                    <option
-                                        key={tag.linked_data_id}
-                                        value={tag.linked_data_id}
-                                    >
-                                        {tag.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
                         <div className="flex-grow">
                             <input
                                 type="text"
