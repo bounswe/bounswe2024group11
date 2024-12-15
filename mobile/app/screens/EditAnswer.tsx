@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, TextInput, Button, Alert, View } from "react-native";
 import axios from "axios";
+import API_URL_GLOBAL from "../../config";
 
 const EditAnswer: React.FC<{ route: any; navigation: any }> = ({
   route,
@@ -13,7 +14,7 @@ const EditAnswer: React.FC<{ route: any; navigation: any }> = ({
     const fetchAnswer = async () => {
       try {
         const response = await axios.get(
-          `http://138.68.97.90/api/v1/forum-questions/${questionId}/answers/${answerId}`
+          `${API_URL_GLOBAL}forum-questions/${questionId}/answers/${answerId}`
         );
         setAnswerText(response.data.answer);
       } catch (error) {
@@ -32,7 +33,7 @@ const EditAnswer: React.FC<{ route: any; navigation: any }> = ({
 
     try {
       await axios.put(
-        `http://138.68.97.90/api/v1/forum-questions/${questionId}/answers/${answerId}/`,
+        `${API_URL_GLOBAL}forum-questions/${questionId}/answers/${answerId}/`,
         {
           answer: answerText,
         }
