@@ -4,6 +4,7 @@ import apiClient from "../../api";
 import { USER } from "../../constants";
 import { userSchema } from "../../schemas";
 import { forumQuestionSchema, tagSchema } from "../Forum/Forum.schema";
+import { profileSchema } from "../Profile/Profile.schema";
 import { quizDetailsSchema } from "../Quiz/Quiz.schema";
 
 // •⁠  ⁠array of forum questions
@@ -564,6 +565,8 @@ export const userLoader = () => {
 };
 
 export const homeLoader = () => {
+    const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+
     const feedPromise = apiClient.get(`/feed/`).then((res) => {
         const { output, success, issues } = safeParse(feedSchema, res.data);
         if (!success) {
@@ -572,7 +575,23 @@ export const homeLoader = () => {
         return output;
     });
 
+    const profilePromise = user.username
+        ? apiClient.get(`/profile/${user.username}/`).then((res) => {
+              const { output, success, issues } = safeParse(
+                  profileSchema,
+                  res.data,
+              );
+              if (!success) {
+                  throw new Error(
+                      `Failed to parse profile response: ${issues}`,
+                  );
+              }
+              return output;
+          })
+        : null;
+
     return defer({
         feedData: feedPromise,
+        profileData: profilePromise,
     });
 };

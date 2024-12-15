@@ -13,7 +13,7 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
 import { userLoader } from "../Home/Home.data";
-import { BookmarkedForum } from "./bookmarked-forums";
+import { BookmarkedForum } from "./BookmarkedForumQuestions";
 import {
     BlockAction,
     FollowAction,
@@ -21,7 +21,7 @@ import {
     UnBlockAction,
     UnFollowAction,
 } from "./Profile.data";
-import { QuizzesTaken } from "./quizzes-taken";
+import { QuizzesTaken } from "./QuizzesTaken";
 
 export const Profile = () => {
     const { profileData } = useLoaderData<typeof profileLoader>();

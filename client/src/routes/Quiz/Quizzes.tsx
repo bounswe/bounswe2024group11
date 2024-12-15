@@ -160,28 +160,34 @@ export const Quizzes = () => {
                                                 onTagClick={() => {}}
                                             />
                                         ))}
-                                    <div className="flex w-full items-center gap-6 bg-slate-100 px-6 py-2">
-                                        {data.results.length === 0 && (
+                                    {data.results.length === 0 && (
+                                        <div className="flex w-full items-center gap-6 bg-slate-100 px-6 py-2">
                                             <div className="py-2 text-slate-500">
                                                 No quizzes found
                                             </div>
-                                        )}
-                                        {searchParams.get("linked_data_id") && (
-                                            <>
-                                                <Link
-                                                    to="/quizzes"
-                                                    className={buttonClass({
-                                                        intent: "ghost",
-                                                        size: "medium",
-                                                        icon: "right",
-                                                    })}
-                                                >
-                                                    <span>Clear search</span>
-                                                    <RiCloseFill size={16} />
-                                                </Link>
-                                            </>
-                                        )}
-                                    </div>
+                                            {searchParams.get(
+                                                "linked_data_id",
+                                            ) && (
+                                                <>
+                                                    <Link
+                                                        to="/quizzes"
+                                                        className={buttonClass({
+                                                            intent: "ghost",
+                                                            size: "medium",
+                                                            icon: "right",
+                                                        })}
+                                                    >
+                                                        <span>
+                                                            Clear search
+                                                        </span>
+                                                        <RiCloseFill
+                                                            size={16}
+                                                        />
+                                                    </Link>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
                                 </main>
                                 {totalPages > 1 && (
                                     <>
