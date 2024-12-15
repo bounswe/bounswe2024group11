@@ -7,7 +7,6 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
 import { Voiceover } from "../../components/voiceover";
 import { useSound } from "../../contexts/SoundContext";
-import { logger } from "../../utils";
 import { QuizLoading } from "../_loading";
 import { HintType } from "./NewQuiz/NewQuizQuestionOptionsHint";
 import { quizLoader, takeQuizAction } from "./Quiz.data";
@@ -90,10 +89,8 @@ export const TakeQuizPage = () => {
 
         const hinttext = hint?.[0]?.text || "";
         if (hinttext === "") {
-            logger.log(`No hint for question ${questionIndex}`);
         } else {
             const updatedHints = { ...hints, [questionIndex]: true };
-            logger.log(`Hint for question ${questionIndex}`, hinttext || "");
             setHintText(hinttext);
             setHints(updatedHints);
             setHintOpen(true);

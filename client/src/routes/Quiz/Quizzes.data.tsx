@@ -43,7 +43,6 @@ export const quizzesLoader = (async ({ request }) => {
                     });
                 });
             });
-            logger.log("question Store:", questionStore.getState().questions);
 
             return output;
         })
