@@ -1,4 +1,5 @@
 import { ActionFunction, LoaderFunction, redirect } from "react-router";
+import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api"; // Axios instance
 import { logger } from "../../utils";
@@ -16,23 +17,28 @@ export const myProfileLoader = (async () => {
 export const profileLoader = (async ({ params }) => {
     const userName = params.username ?? "";
 
-    try {
-        const response = await apiClient.get(`/profile/${userName}/`);
-        logger.log(response.data);
-        const { output, success, issues } = safeParse(
-            profileSchema,
-            response.data,
-        );
-        if (!success) {
-            logger.log(issues);
-            throw new Error("Failed to parse forum response");
-        }
+    const profilePromise = apiClient
+        .get(`/profile/${userName}/`)
+        .then((response) => {
+            logger.log(response.data);
+            const { output, success, issues } = safeParse(
+                profileSchema,
+                response.data,
+            );
+            if (!success) {
+                logger.log(issues);
+                throw new Error("Failed to parse forum response");
+            }
+            return output;
+        })
+        .catch((error) => {
+            logger.error(`Error fetching profile:`, error);
+            throw new Error(`Failed to load profile`);
+        });
 
-        return output;
-    } catch (error) {
-        logger.error(`Error fetching profile:`, error);
-        throw new Error(`Failed to load profile`);
-    }
+    return defer({
+        profileData: profilePromise,
+    });
 }) satisfies LoaderFunction;
 
 export const BlockAction = (async ({ request }: { request: Request }) => {
