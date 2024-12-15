@@ -71,8 +71,8 @@ const ForumQuestionCard: React.FC<ForumQuestionCardProps> = ({
       <Card style={styles.card}>
         <View style={styles.container}>
           <AuthorView author={item.author} />
-          <ProfileButton author={item.author} />
           <View style={styles.buttonsContainer}>
+            <ProfileButton author={item.author} />
             {question.is_my_forum_question && (
               <EditButton questionId={question.id} />
             )}
