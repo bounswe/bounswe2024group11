@@ -92,79 +92,6 @@ export const Quizzes = () => {
             <PageHead title="Quizzes" description={description} />
             <aside className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex items-start justify-between">
-                            <fieldset className="flex flex-col gap-2">
-                                <label
-                                    htmlFor="perPage"
-                                    className="text-sm text-slate-500"
-                                >
-                                    Show quizzes per page:
-                                </label>
-                                <select
-                                    id="perPage"
-                                    value={perPage}
-                                    onChange={handlePerPageChange}
-                                    className={`${inputClass()} w-24`}
-                                >
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                </select>
-                            </fieldset>
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() =>
-                                        handlePageChange(currentPage - 1)
-                                    }
-                                    disabled={!data.previous}
-                                    aria-label="Previous Page"
-                                    aria-disabled={!data.previous}
-                                    className={buttonClass({
-                                        intent: "secondary",
-                                        className: "w-16",
-                                    })}
-                                >
-                                    <div
-                                        className={buttonInnerRing({
-                                            intent: "secondary",
-                                        })}
-                                        aria-hidden="true"
-                                    />
-                                    <RiArrowLeftLine size={16} />
-                                </button>
-                                <span className="flex w-12 items-center justify-center gap-1 text-center text-sm text-slate-400">
-                                    <span className="px-1 py-0.5 text-base text-slate-700">
-                                        {currentPage}
-                                    </span>
-                                    <span className="text-xs">/</span>
-                                    <span className="px-1 py-0.5 text-base font-regular">
-                                        {totalPages}
-                                    </span>
-                                </span>
-                                <button
-                                    onClick={() =>
-                                        handlePageChange(currentPage + 1)
-                                    }
-                                    disabled={!data.next}
-                                    aria-disabled={!data.next}
-                                    aria-label="Next Page"
-                                    className={buttonClass({
-                                        intent: "secondary",
-                                        className: "w-16",
-                                    })}
-                                >
-                                    <div
-                                        className={buttonInnerRing({
-                                            intent: "secondary",
-                                        })}
-                                        aria-hidden="true"
-                                    />
-                                    <RiArrowRightLine size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                     <div className="flex flex-col gap-4 sm:flex-row">
                         <div className="flex-grow">
                             <input
@@ -248,7 +175,75 @@ export const Quizzes = () => {
                         />
                     ))}
             </main>
-
+            <div className="flex flex-col gap-4">
+                <div className="flex items-end justify-end">
+                    <fieldset className="flex flex-col gap-2">
+                        <label
+                            htmlFor="perPage"
+                            className="text-sm text-slate-500"
+                        >
+                            Show quizzes per page:
+                        </label>
+                        <select
+                            id="perPage"
+                            value={perPage}
+                            onChange={handlePerPageChange}
+                            className={`${inputClass()} w-24`}
+                        >
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                        </select>
+                    </fieldset>
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={!data.previous}
+                            aria-label="Previous Page"
+                            aria-disabled={!data.previous}
+                            className={buttonClass({
+                                intent: "secondary",
+                                className: "w-16",
+                            })}
+                        >
+                            <div
+                                className={buttonInnerRing({
+                                    intent: "secondary",
+                                })}
+                                aria-hidden="true"
+                            />
+                            <RiArrowLeftLine size={16} />
+                        </button>
+                        <span className="flex w-12 items-center justify-center gap-1 text-center text-sm text-slate-400">
+                            <span className="px-1 py-0.5 text-base text-slate-700">
+                                {currentPage}
+                            </span>
+                            <span className="text-xs">/</span>
+                            <span className="px-1 py-0.5 text-base font-regular">
+                                {totalPages}
+                            </span>
+                        </span>
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={!data.next}
+                            aria-disabled={!data.next}
+                            aria-label="Next Page"
+                            className={buttonClass({
+                                intent: "secondary",
+                                className: "w-16",
+                            })}
+                        >
+                            <div
+                                className={buttonInnerRing({
+                                    intent: "secondary",
+                                })}
+                                aria-hidden="true"
+                            />
+                            <RiArrowRightLine size={16} />
+                        </button>
+                    </div>
+                </div>
+            </div>
             <Portal className="fixed bottom-10 right-10 z-10">
                 <Link
                     to="/quizzes/new"
