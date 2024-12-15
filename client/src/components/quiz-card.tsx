@@ -81,7 +81,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     </p>
                 </div>
                 <TooltipProvider>
-                    {quiz.rating.score && (
+                    {quiz.rating.score !== null && (
                         <TooltipAnchor
                             render={
                                 <span
