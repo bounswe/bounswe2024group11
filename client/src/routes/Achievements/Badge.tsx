@@ -56,7 +56,7 @@ export const AchievementBadge = ({
                     className="relative z-50 rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
                     role="tooltip"
                 >
-                    <div className="absolute inset-1 rounded-1 ring ring-cyan-700"></div>
+                    <div className="absolute inset-1 rounded-1 ring ring-slate-700"></div>
                     <div className="flex w-80 flex-col items-center gap-2">
                         <span className="select-none text-2xl">
                             <img

@@ -61,7 +61,7 @@ const defaultCommands: Command[] = [
         icon: <RiTrophyLine className="h-4 w-4" />,
         path: "/achievements",
         group: "navigation",
-        keywords: ["achievements", "trophies", "badges"],
+        keywords: ["achievements", "trophies", "badges", "points"],
     },
     {
         id: "leaderboard",
@@ -69,7 +69,7 @@ const defaultCommands: Command[] = [
         icon: <RiAwardLine className="h-4 w-4" />,
         path: "/leaderboard",
         group: "navigation",
-        keywords: ["leaderboard", "rankings", "scoreboard"],
+        keywords: ["leaderboard", "rankings", "scoreboard", "points"],
     },
     {
         id: "profile",
@@ -172,6 +172,35 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
     }, [groupedCommands]);
 
     useEffect(() => {
+        if (activeGroups.length > 0) {
+            if (activeGroupIndex >= activeGroups.length) {
+                setActiveGroupIndex(0);
+                setActiveItemIndex(0);
+            } else {
+                const currentGroup = activeGroups[activeGroupIndex][1];
+                if (activeItemIndex >= currentGroup.length) {
+                    setActiveItemIndex(0);
+                }
+            }
+        } else {
+            setActiveGroupIndex(0);
+            setActiveItemIndex(0);
+        }
+    }, [activeGroups, activeGroupIndex]);
+
+    useEffect(() => {
+        if (isOpen) {
+            inputRef.current?.focus();
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+            setSearchValue("");
+            setActiveGroupIndex(0);
+            setActiveItemIndex(0);
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
         if (isOpen) {
             inputRef.current?.focus();
             document.body.style.overflow = "hidden";
@@ -184,6 +213,12 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
     }, [isOpen]);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Escape") {
+            e.preventDefault();
+            onClose();
+            return;
+        }
+
         if (!activeGroups.length) return;
 
         const currentGroup = activeGroups[activeGroupIndex][1];
@@ -212,16 +247,13 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
 
             case "Enter":
                 e.preventDefault();
-                const selectedGroup = activeGroups[activeGroupIndex][1];
-                const selectedItem = selectedGroup[activeItemIndex];
-                if (selectedItem) {
-                    handleSelect(selectedItem);
+                if (activeGroups.length > 0) {
+                    const selectedGroup = activeGroups[activeGroupIndex][1];
+                    const selectedItem = selectedGroup[activeItemIndex];
+                    if (selectedItem) {
+                        handleSelect(selectedItem);
+                    }
                 }
-                break;
-
-            case "Escape":
-                e.preventDefault();
-                onClose();
                 break;
         }
     };
@@ -241,7 +273,7 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         <>
             <div
                 role="presentation"
-                className="fixed inset-0 z-50 bg-black/50"
+                className="fixed inset-0 z-50 bg-slate-950 opacity-70"
                 onClick={onClose}
             />
 
@@ -250,10 +282,10 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Command Menu"
-                className="fixed left-1/2 top-[10%] z-50 w-[640px] max-w-[90vw] -translate-x-1/2 overflow-hidden rounded-4 border border-slate-200 bg-white shadow-2xl"
+                className="fixed left-1/2 top-[10%] z-50 w-[640px] max-w-[90vw] -translate-x-1/2 overflow-hidden rounded-2 border border-slate-200 bg-white shadow-2xl"
                 onKeyDown={handleKeyDown}
             >
-                <div className="border-b bg-slate-200 p-3 ring ring-slate-200">
+                <div className="bg-slate-100 p-3 ring ring-slate-200">
                     <input
                         ref={inputRef}
                         type="text"

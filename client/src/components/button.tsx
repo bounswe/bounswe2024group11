@@ -14,8 +14,8 @@ export const buttonInnerRing = cva(
         variants: {
             intent: {
                 primary: [
-                    "border-cyan-400",
-                    "group-hover:border-cyan-500",
+                    "border-cyan-500",
+                    "group-hover:border-cyan-700",
                     "group-active:border-cyan-600",
                 ],
                 secondary: ["border-cyan-100/30"],
@@ -59,7 +59,7 @@ export const buttonClass = cva(
         "justify-center",
         "group",
         "transition-all",
-        "duration-100",
+        "duration-200",
         "focus-visible:ring-slate-300",
         "focus-visible:ring-3",
         "focus-visible:outline-none",
@@ -75,8 +75,8 @@ export const buttonClass = cva(
         variants: {
             intent: {
                 primary: [
-                    "bg-cyan-500",
-                    "hover:bg-cyan-600",
+                    "bg-cyan-600",
+                    "hover:bg-cyan-800",
                     "bg-gradient-to-b",
                     "from-white/15",
                     "to-white/0",
@@ -85,7 +85,7 @@ export const buttonClass = cva(
                     "ring-cyan-50",
                     "active:bg-cyan-700",
                     "active:ring-3",
-                    "active:ring-cyan-100",
+                    "active:ring-slate-200",
                     "text-white",
                 ],
                 secondary: [
@@ -102,6 +102,7 @@ export const buttonClass = cva(
                     "active:ring-slate-300",
                     "text-white",
                 ],
+
                 destructive: [
                     "bg-red-600",
                     "hover:bg-red-700",
@@ -115,6 +116,14 @@ export const buttonClass = cva(
                     "active:ring-2",
                     "active:ring-red-200",
                     "text-white",
+                ],
+                ghost: [
+                    "bg-slate-50",
+                    "hover:bg-slate-200",
+                    "active:bg-slate-300",
+                    "text-slate-950",
+                    "ring-slate-200",
+                    "ring",
                 ],
                 tertiary: [
                     "bg-transparent",
@@ -132,7 +141,8 @@ export const buttonClass = cva(
             size: {
                 small: ["text-xs", "py-[6px]", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
-                large: ["text-base", "py-3", "px-6"],
+                large: ["text-base", "py-[10px]", "px-6"],
+                icon: ["p-3"],
             },
             rounded: {
                 default: ["rounded-2"],

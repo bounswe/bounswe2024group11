@@ -80,8 +80,8 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                         {quiz.description}
                     </p>
                 </div>
-                <TooltipProvider>
-                    {quiz.rating.score !== null && (
+                {quiz.rating.score !== null && (
+                    <TooltipProvider>
                         <TooltipAnchor
                             render={
                                 <span
@@ -93,21 +93,21 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                                         ),
                                     })}
                                 >
-                                    {quiz.rating.score || "N/A"}
+                                    {quiz.rating.score}
                                 </span>
                             }
                         ></TooltipAnchor>
-                    )}
-                    <Tooltip>
-                        <div className="rounded-md left-0 rounded-2 bg-slate-700 p-2 px-2 py-1 text-sm text-slate-300 shadow-sm ring-1 ring-slate-800">
-                            Rated by{" "}
-                            <span className="font-medium text-white">
-                                {quiz.rating.count}
-                            </span>{" "}
-                            people
-                        </div>
-                    </Tooltip>
-                </TooltipProvider>
+                        <Tooltip>
+                            <div className="rounded-md left-0 rounded-2 bg-slate-700 p-2 px-2 py-1 text-sm text-slate-300 shadow-sm ring-1 ring-slate-800">
+                                Rated by{" "}
+                                <span className="font-medium text-white">
+                                    {quiz.rating.count}
+                                </span>{" "}
+                                people
+                            </div>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
             </div>
             <div className="flex flex-wrap gap-2 tracking-wider">
                 {quiz.tags.map(({ name, linked_data_id }) => {
@@ -153,17 +153,10 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                             <Link
                                 to={`/quizzes/${quiz.id}/review`}
                                 className={buttonClass({
-                                    intent: "tertiary",
+                                    intent: "ghost",
                                     size: "medium",
-                                    icon: "right",
                                 })}
                             >
-                                <span
-                                    className={buttonInnerRing({
-                                        intent: "tertiary",
-                                    })}
-                                    aria-hidden="true"
-                                />
                                 <span>Review</span>
                             </Link>
                         )}
