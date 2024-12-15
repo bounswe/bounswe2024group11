@@ -20,6 +20,7 @@ export const Voiceover = ({
                 intent: "secondary",
                 size: "medium",
                 icon: "only",
+                className: "ring-offset-slate-600",
             })}
             aria-label={label}
         >

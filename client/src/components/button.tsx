@@ -14,8 +14,8 @@ export const buttonInnerRing = cva(
         variants: {
             intent: {
                 primary: [
-                    "border-cyan-400",
-                    "group-hover:border-cyan-500",
+                    "border-cyan-500",
+                    "group-hover:border-cyan-700",
                     "group-active:border-cyan-600",
                 ],
                 secondary: ["border-cyan-100/30"],
@@ -35,6 +35,21 @@ export const buttonInnerRing = cva(
     },
 );
 
+export const hamburgerButtonClass = cva(
+    "flex items-center justify-center rounded-2 p-2 text-center font-medium outline-none transition-all duration-100 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-slate-300 disabled:pointer-events-none disabled:cursor-default disabled:opacity-30 disabled:hover:bg-slate-800 disabled:active:ring-0",
+    {
+        variants: {
+            active: {
+                true: "bg-slate-600 text-white",
+                false: "bg-slate-100 text-slate-800",
+            },
+        },
+        defaultVariants: {
+            active: false,
+        },
+    },
+);
+
 export const buttonClass = cva(
     [
         "font-medium",
@@ -44,7 +59,7 @@ export const buttonClass = cva(
         "justify-center",
         "group",
         "transition-all",
-        "duration-100",
+        "duration-200",
         "focus-visible:ring-slate-300",
         "focus-visible:ring-3",
         "focus-visible:outline-none",
@@ -53,15 +68,15 @@ export const buttonClass = cva(
         "disabled:hover:bg-slate-800",
         "disabled:active:ring-0",
         "disabled:cursor-default",
-        "disabled:opacity-50",
+        "disabled:opacity-30",
         "disabled:pointer-events-none",
     ],
     {
         variants: {
             intent: {
                 primary: [
-                    "bg-cyan-500",
-                    "hover:bg-cyan-600",
+                    "bg-cyan-600",
+                    "hover:bg-cyan-800",
                     "bg-gradient-to-b",
                     "from-white/15",
                     "to-white/0",
@@ -70,7 +85,7 @@ export const buttonClass = cva(
                     "ring-cyan-50",
                     "active:bg-cyan-700",
                     "active:ring-3",
-                    "active:ring-cyan-100",
+                    "active:ring-slate-200",
                     "text-white",
                 ],
                 secondary: [
@@ -87,6 +102,7 @@ export const buttonClass = cva(
                     "active:ring-slate-300",
                     "text-white",
                 ],
+
                 destructive: [
                     "bg-red-600",
                     "hover:bg-red-700",
@@ -100,6 +116,14 @@ export const buttonClass = cva(
                     "active:ring-2",
                     "active:ring-red-200",
                     "text-white",
+                ],
+                ghost: [
+                    "bg-slate-50",
+                    "hover:bg-slate-200",
+                    "active:bg-slate-300",
+                    "text-slate-950",
+                    "ring-slate-200",
+                    "ring",
                 ],
                 tertiary: [
                     "bg-transparent",
@@ -115,9 +139,10 @@ export const buttonClass = cva(
                 none: [],
             },
             size: {
-                small: ["text-xs", "py-1", "px-2"],
+                small: ["text-xs", "py-[6px]", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
-                large: ["text-base", "py-3", "px-6"],
+                large: ["text-base", "py-[10px]", "px-6"],
+                icon: ["p-3"],
             },
             rounded: {
                 default: ["rounded-2"],

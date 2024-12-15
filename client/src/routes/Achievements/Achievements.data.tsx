@@ -1,4 +1,8 @@
 import { LoaderFunction } from "react-router";
+import { defer } from "react-router-typesafe";
+import { safeParse } from "valibot";
+import apiClient from "../../api";
+import { UserAchievement } from "./Achievement.schema";
 
 const achievements = [
     {
@@ -135,10 +139,41 @@ const achievements = [
 ];
 
 export const achievementsLoader = (async () => {
-    return achievements.map((achievement) => {
-        return {
-            item: achievement,
-            is_earned: Math.random() > 0.5,
-        };
+    const achievementsPromise = apiClient
+        .get(`/achievements/`)
+        .then((response) => {
+            const { output, success, issues } = safeParse(
+                UserAchievement,
+                response.data,
+            );
+            if (!success) {
+                throw new Error("Failed to parse achievement response");
+            }
+            return output.map((achievement) => {
+                const item = achievements.find(
+                    (userAchievement) =>
+                        achievement.achievement.slug === userAchievement.slug,
+                ) || {
+                    title: "Diverse Learner",
+                    slug: "diverse-learner",
+                    description: "Select 10 different interests",
+                    category: "interests",
+                };
+                return {
+                    item: {
+                        ...item,
+                        created_at: "",
+                        id: 1,
+                    },
+                    is_earned: achievement.earned_at !== null,
+                };
+            });
+        })
+        .catch((error) => {
+            throw new Error(`Failed to load achievements: ${error}`);
+        });
+
+    return defer({
+        achievementsData: achievementsPromise,
     });
 }) satisfies LoaderFunction;

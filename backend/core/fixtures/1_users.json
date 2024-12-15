@@ -31,7 +31,8 @@
             "password": "pbkdf2_sha256$870000$ON7hnXFDI8Ql6PuhUsxcX0$kWPKvfRvrjayRhdlTHbOSB3VuCjTX3JQfq7hp6HxkjQ=",
             "avatar": "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=Jason%20Lee",
             "is_active": true,
-            "date_joined": "2024-11-01T00:00:00Z"
+            "date_joined": "2024-11-01T00:00:00Z",
+            "score": 10
         }
     },
     {

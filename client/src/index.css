@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Innovator Grotesque VF';
-    src: url(/innovator.woff2) format('woff');
+    font-family: "Innovator Grotesque VF";
+    src: url(/innovator.woff2) format("woff");
 }
 
 @layer base {
@@ -83,9 +83,30 @@
         animation-fill-mode: forwards;
     }
 
+    @keyframes skeleton-loading {
+        0% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0 50%;
+        }
+    }
+
+    .skeleton-loading {
+        background: linear-gradient(80deg,
+                #eef2f7 25%,
+                #d8dfe8 50%,
+                #eef2f7 75%);
+        background-size: 400% 100%;
+        animation: skeleton-loading 2s infinite ease-in-out;
+    }
+
     .touch-hitbox {
         position: relative;
     }
+
+
 
     .touch-hitbox::before {
         content: "";

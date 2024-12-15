@@ -19,6 +19,9 @@ export const Avatar = ({ author, size = 40 }: AvatarProps) => {
                     aspectRatio: "1 / 1",
                 }}
                 className="h-full w-full rounded-full object-cover"
+                onError={(e) => {
+                    e.currentTarget.src = "/turquiz_logomark.svg";
+                }}
             />
         </div>
     );

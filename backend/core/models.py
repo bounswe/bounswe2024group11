@@ -17,11 +17,18 @@ class Achievement(models.Model):
 
 
 class CustomUser(AbstractUser):
+    PROFICIENCY_LEVELS = [
+        (1, "Beginner"),
+        (2, "Intermediate"),
+        (3, "Advanced")
+    ]
     email = models.EmailField()
     full_name = models.CharField(max_length=100)
     avatar = models.CharField(max_length=1000, blank=True, null=True)
     achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)
     interests = models.ManyToManyField('Tag', related_name='interested_users', blank=True)
+    score = models.IntegerField(default=0)
+    proficiency = models.IntegerField(choices=PROFICIENCY_LEVELS, default=1)
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -60,7 +67,7 @@ class Quiz(models.Model):
     QUIZ_TYPE_CHOICES = [
         (1, "English to Turkish"),
         (2, "Turkish to English"),
-        (3, "English word to Sense"),
+        (3, "English word to sense"),
     ]
 
     DIFFICULTY_CHOICES = [
@@ -74,7 +81,6 @@ class Quiz(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES)
-    quiz_point = models.IntegerField(default=0)
     tags = models.ManyToManyField('Tag')
     type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)    
     
@@ -123,6 +129,11 @@ class UserAnswer(models.Model):
             raise ValidationError("The question must belong to the same quiz.")
         if self.answer and self.answer.question.id != self.question.id:  # Add null check
             raise ValidationError("The answer must belong to the same question.")
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()  # This will call the clean() method
+        super(UserAnswer, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.answer.choice_text
@@ -133,6 +144,7 @@ class RateQuiz(models.Model):
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
+    comment = models.CharField(max_length=1000, blank=True, null=True)
     # unique together
     class Meta:
         unique_together = ['quiz', 'user']

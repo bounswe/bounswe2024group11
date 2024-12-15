@@ -1,180 +1,310 @@
 import * as Ariakit from "@ariakit/react";
 import { Button } from "@ariakit/react";
-import { useLoaderData, useRouteLoaderData } from "react-router-typesafe";
+import { RiArrowRightLine } from "@remixicon/react";
+import { Suspense, useState } from "react";
+import { Link, useFetcher, useParams } from "react-router-dom";
+import {
+    Await,
+    useLoaderData,
+    useRouteLoaderData,
+} from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
+import { BookmarkedForum } from "../../components/bookmarked-forums";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { ForumQuestionCard } from "../../components/forum-card";
+import { QuizzesTaken } from "../../components/quizzes-taken";
+import { ProfileLoading } from "../_loading";
+import { AchievementBadge } from "../Achievements/Badge";
 import { homeLoader } from "../Home/Home.data";
-import { profileLoader } from "./Profile.data";
-
-const Badge = ({
-    icon,
-    title,
-    description,
-}: {
-    icon: string;
-    title: string;
-    description: string;
-}) => {
-    return (
-        <Ariakit.HovercardProvider placement="bottom-start">
-            <Ariakit.HovercardAnchor className="flex flex-row items-center gap-3 rounded-2 bg-slate-50 px-5 py-3 transition-all hover:bg-slate-200">
-                <span aria-hidden="true" className="select-none text-2xl">
-                    {icon}
-                </span>
-            </Ariakit.HovercardAnchor>
-            <Ariakit.Hovercard
-                gutter={16}
-                className="rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
-            >
-                <div className="flex items-center gap-2">
-                    <span
-                        aria-hidden="true"
-                        className="flex aspect-1 items-center justify-center rounded-full bg-slate-800 px-4 py-1 text-center text-xl"
-                    >
-                        {icon}
-                    </span>
-                    <div>
-                        <Ariakit.HovercardHeading className="text-md font-medium">
-                            {title}
-                        </Ariakit.HovercardHeading>
-                        <p className="text-sm text-slate-400">{description}</p>
-                    </div>
-                </div>
-            </Ariakit.Hovercard>
-        </Ariakit.HovercardProvider>
-    );
-};
+import {
+    BlockAction,
+    FollowAction,
+    profileLoader,
+    UnBlockAction,
+    UnFollowAction,
+} from "./Profile.data";
 
 export const Profile = () => {
-    const { my, bookMarked, upvoted } = useLoaderData<typeof profileLoader>();
-
+    const { profileData } = useLoaderData<typeof profileLoader>();
+    const blockFetcher = useFetcher<typeof BlockAction>();
+    const unblockFetcher = useFetcher<typeof UnBlockAction>();
+    const followFetcher = useFetcher<typeof FollowAction>();
+    const unfollowFetcher = useFetcher<typeof UnFollowAction>();
+    const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
-    const author = {
-        avatar: "https://api.dicebear.com/9.x/avataaars/webp?accessories=eyepatch,kurt,prescription01&seed=David%20Bush",
-        full_name: user?.full_name || "",
-        username: user?.username || "",
-    };
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     return (
-        <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <header className="flex flex-row items-center gap-4">
-                <Avatar author={author} size={96} />
-                <div className="flex-1">
-                    <h1 className="pt-2 text-2xl font-semibold">
-                        {user?.full_name}
-                    </h1>
-                    <p className="text-lg text-slate-500" aria-label="Username">
-                        @{user?.username}
-                    </p>
-                </div>
-                <Button
-                    className={buttonClass({
-                        intent: "secondary",
-                        size: "medium",
-                    })}
-                >
-                    <span
-                        className={buttonInnerRing({ intent: "secondary" })}
-                    />
-                    <span>Follow</span>
-                </Button>
-            </header>
-            <section className="z-20 flex w-full flex-row items-center justify-between">
-                <div className="flex flex-col gap-2">
-                    <h2 className="font-medium">Achievements</h2>
-                    <ul
-                        className="flex flex-row gap-4"
-                        role="list"
-                        aria-label="User achievements"
-                    >
-                        <li>
-                            <Badge
-                                icon="🏆"
-                                title="Accuracy Monster"
-                                description="Solve 10 quizzes with 100% accuracy."
-                            />
-                        </li>
-                        <li>
-                            <Badge
-                                icon="🏅"
-                                title="Linker"
-                                description="Refer to a quiz question in a forum post."
-                            />
-                        </li>
-                        <li>
-                            <Badge
-                                icon="🎖️"
-                                title="The Popular Guy"
-                                description="Get 100 upvotes on a forum post."
-                            />
-                        </li>
-                    </ul>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <span
-                        className="rounded-2 bg-cyan-100 px-4 py-1 text-center text-lg font-medium text-cyan-900"
-                        role="status"
-                        aria-label="User score"
-                    >
-                        700
-                    </span>
-                </div>
-            </section>
-            <hr className="my-4" aria-hidden="true" />
-            <section aria-label="User posts" className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>My Forum Questions</span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {my.length}
-                    </span>
-                </h2>
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {my.map((post) => (
-                        <ForumQuestionCard
-                            onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
-                        />
-                    ))}
-                </div>
-            </section>{" "}
-            <hr className="my-4" aria-hidden="true" />
-            <section aria-label="User posts" className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>Bookmarked Forum Questions</span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {bookMarked.length}
-                    </span>
-                </h2>
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {bookMarked.map((post) => (
-                        <ForumQuestionCard
-                            onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
-                        />
-                    ))}
-                </div>
-            </section>{" "}
-            <hr className="my-4" aria-hidden="true" />
-            <section aria-label="User posts" className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>Upvoted Forum Questions</span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {upvoted.length}
-                    </span>
-                </h2>
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                    {upvoted.map((post) => (
-                        <ForumQuestionCard
-                            onTagClick={() => {}}
-                            key={post.id}
-                            question={post}
-                        />
-                    ))}
-                </div>
-            </section>
-        </main>
+        <Suspense fallback={<ProfileLoading />}>
+            <Await resolve={profileData}>
+                {({
+                    bookmarked_forums,
+                    full_name,
+                    avatar,
+                    achievements,
+                    score,
+                    quizzes_taken,
+                    is_blocked,
+                    is_following,
+                    id,
+                }) => {
+                    const author = {
+                        avatar: avatar,
+                        full_name: full_name || "",
+                        username: username || "",
+                    };
+                    const earnedAchievements = achievements.filter(
+                        (a) => a.earned_at !== null,
+                    );
+                    const displayedAchievements = earnedAchievements
+                        .reverse()
+                        .slice(0, 5);
+                    const remainingCount = Math.max(
+                        0,
+                        earnedAchievements.length - 5,
+                    );
+
+                    return (
+                        <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+                            <header className="flex flex-row items-center gap-4">
+                                <Avatar author={author} size={96} />
+                                <div className="flex-1">
+                                    <h1 className="pt-2 text-2xl font-semibold">
+                                        {full_name}
+                                    </h1>
+                                    <p
+                                        className="text-lg text-slate-500"
+                                        aria-label="Username"
+                                    >
+                                        @{username}
+                                    </p>
+                                </div>
+                                {user?.username !== username && logged_in && (
+                                    <>
+                                        {!is_blocked ? (
+                                            <blockFetcher.Form
+                                                method="POST"
+                                                action={`block/`}
+                                            >
+                                                <Button
+                                                    className={buttonClass({
+                                                        intent: "destructive",
+                                                        size: "medium",
+                                                    })}
+                                                    type="submit"
+                                                >
+                                                    <span
+                                                        className={buttonInnerRing(
+                                                            {
+                                                                intent: "destructive",
+                                                            },
+                                                        )}
+                                                    />
+                                                    <span>Block</span>
+                                                </Button>
+                                                <input
+                                                    type="hidden"
+                                                    name="blocking"
+                                                    value={id}
+                                                ></input>
+                                            </blockFetcher.Form>
+                                        ) : (
+                                            <unblockFetcher.Form
+                                                method="POST"
+                                                action={`unblock/`}
+                                            >
+                                                <Button
+                                                    className={buttonClass({
+                                                        intent: "tertiary",
+                                                        size: "medium",
+                                                    })}
+                                                    type="submit"
+                                                >
+                                                    <span
+                                                        className={buttonInnerRing(
+                                                            {
+                                                                intent: "tertiary",
+                                                            },
+                                                        )}
+                                                    />
+                                                    <span>Unblock</span>
+                                                </Button>
+                                                <input
+                                                    type="hidden"
+                                                    name="blocking"
+                                                    value={is_blocked}
+                                                ></input>
+                                            </unblockFetcher.Form>
+                                        )}
+                                        {is_following ? (
+                                            <unfollowFetcher.Form
+                                                method="POST"
+                                                action={`unfollow/`}
+                                            >
+                                                <Button
+                                                    className={buttonClass({
+                                                        intent: "destructive",
+                                                        size: "medium",
+                                                    })}
+                                                    type="submit"
+                                                >
+                                                    <span
+                                                        className={buttonInnerRing(
+                                                            {
+                                                                intent: "destructive",
+                                                            },
+                                                        )}
+                                                    />
+                                                    <span>Unfollow</span>
+                                                </Button>
+                                                <input
+                                                    type="hidden"
+                                                    name="following"
+                                                    value={is_following}
+                                                ></input>
+                                            </unfollowFetcher.Form>
+                                        ) : (
+                                            <followFetcher.Form
+                                                method="POST"
+                                                action={`follow/`}
+                                            >
+                                                <Button
+                                                    className={buttonClass({
+                                                        intent: "secondary",
+                                                        size: "medium",
+                                                    })}
+                                                    type="submit"
+                                                >
+                                                    <span
+                                                        className={buttonInnerRing(
+                                                            {
+                                                                intent: "secondary",
+                                                            },
+                                                        )}
+                                                    />
+                                                    <span>Follow</span>
+                                                </Button>
+                                                <input
+                                                    type="hidden"
+                                                    name="following"
+                                                    value={id}
+                                                ></input>
+                                            </followFetcher.Form>
+                                        )}
+                                    </>
+                                )}
+                            </header>
+                            <section className="z-20 flex w-full flex-row items-center justify-between">
+                                <div className="flex flex-col gap-2">
+                                    <h2 className="font-medium">
+                                        Achievements{" "}
+                                        <span className="text-sm text-slate-500">
+                                            ({earnedAchievements.length})
+                                        </span>
+                                    </h2>
+
+                                    <div className="flex items-center gap-4">
+                                        <ul
+                                            className="flex flex-row gap-4"
+                                            role="list"
+                                            aria-label="User achievements"
+                                        >
+                                            {displayedAchievements.map((a) => (
+                                                <li key={a.achievement.slug}>
+                                                    <AchievementBadge
+                                                        achievement={
+                                                            a.achievement
+                                                        }
+                                                        is_earned={true}
+                                                    />
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        {remainingCount > 0 && (
+                                            <Link
+                                                to="/achievements"
+                                                className={buttonClass({
+                                                    intent: "ghost",
+                                                    icon: "right",
+                                                })}
+                                            >
+                                                See All
+                                                <RiArrowRightLine size={16} />
+                                            </Link>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Ariakit.PopoverProvider
+                                        open={dialogOpen}
+                                        setOpen={setDialogOpen}
+                                        placement="bottom-end"
+                                    >
+                                        <Ariakit.PopoverDisclosure
+                                            aria-label="Open the dialog for score information"
+                                            className={buttonClass({
+                                                intent: "secondary",
+                                                size: "medium",
+                                            })}
+                                        >
+                                            <span
+                                                aria-label={
+                                                    "Your score:" + score
+                                                }
+                                                role="status"
+                                            >
+                                                {score} TP
+                                            </span>
+                                        </Ariakit.PopoverDisclosure>
+                                        <Ariakit.Popover className="top-2 flex max-w-lg flex-col gap-2 overflow-hidden rounded-2 bg-slate-800 text-white shadow-lg ring-1 ring-slate-900">
+                                            <Ariakit.PopoverHeading className="bg-slate-900 p-5 text-2xl font-medium">
+                                                {score} Turquiz Points
+                                            </Ariakit.PopoverHeading>
+                                            <div className="flex flex-col gap-4 px-6 pb-6 pt-3">
+                                                <Ariakit.PopoverDescription className="text-balance text-slate-300">
+                                                    You can earn Turquiz points
+                                                    by completing quizzes.{" "}
+                                                    <br />
+                                                    You will get a point for
+                                                    each correct answer in a
+                                                    quiz from 10 points to 30
+                                                    points depending on the
+                                                    difficulty of the quiz.
+                                                </Ariakit.PopoverDescription>
+                                                <hr className="border-slate-700" />
+                                                <Ariakit.PopoverDescription className="text-balance text-slate-300">
+                                                    Using a hint in a question
+                                                    will decrease the points
+                                                    earned by 50%. There's no
+                                                    penalty for incorrect
+                                                    answers.
+                                                </Ariakit.PopoverDescription>
+
+                                                <Ariakit.Button
+                                                    className={buttonClass({
+                                                        intent: "ghost",
+                                                        className: "mt-3",
+                                                    })}
+                                                    onClick={() => {
+                                                        setDialogOpen(false);
+                                                    }}
+                                                >
+                                                    OK
+                                                </Ariakit.Button>
+                                            </div>
+                                        </Ariakit.Popover>
+                                    </Ariakit.PopoverProvider>
+                                </div>
+                            </section>
+                            <BookmarkedForum forums={bookmarked_forums} />
+                            <Ariakit.Separator className="my-4" />
+                            <QuizzesTaken
+                                quizzes={quizzes_taken}
+                            ></QuizzesTaken>
+                        </main>
+                    );
+                }}
+            </Await>
+        </Suspense>
     );
 };

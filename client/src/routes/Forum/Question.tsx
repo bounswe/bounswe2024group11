@@ -63,7 +63,7 @@ export const ForumQuestion = () => {
                                         answer.downvotes_count}
                                 </div>
                                 <div className="flex flex-1 flex-col">
-                                    <h2 className="overflow-hidden text-base font-semibold text-slate-900 underline-offset-2 group-hover:underline">
+                                    <h2 className="overflow-hidden text-base font-semibold text-slate-900 decoration-inherit underline-offset-2 group-hover:underline">
                                         {answer.title}
                                     </h2>
                                     <p className="line-clamp-2 overflow-hidden text-sm text-slate-700">

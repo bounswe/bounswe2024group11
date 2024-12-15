@@ -1,8 +1,4 @@
 import {
-    Hovercard,
-    HovercardAnchor,
-    HovercardHeading,
-    HovercardProvider,
     Separator,
     Tooltip,
     TooltipAnchor,
@@ -15,7 +11,6 @@ import {
 } from "@remixicon/react";
 import { cva } from "cva";
 import { Link } from "react-router-dom";
-import { Avatar } from "../components/avatar";
 import { buttonClass, buttonInnerRing } from "../components/button";
 import { Quiz } from "../routes/Quiz/Quiz.schema";
 import { getRelativeTime } from "../utils";
@@ -85,86 +80,59 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                         {quiz.description}
                     </p>
                 </div>
-                <TooltipProvider>
-                    <TooltipAnchor
-                        render={
-                            <span
-                                tabIndex={0}
-                                aria-label={`Rated by ${quiz.rating.count}`}
-                                className={scoreClass({
-                                    score: scoreToInteger(
-                                        quiz.rating.score || 0,
-                                    ),
-                                })}
-                            >
-                                {quiz.rating.score}
-                            </span>
-                        }
-                    ></TooltipAnchor>
-                    <Tooltip>
-                        <div className="rounded-md left-0 rounded-2 bg-slate-700 p-2 px-2 py-1 text-sm text-slate-300 shadow-sm ring-1 ring-slate-800">
-                            Rated by{" "}
-                            <span className="font-medium text-white">
-                                {quiz.rating.count}
-                            </span>{" "}
-                            people
-                        </div>
-                    </Tooltip>
-                </TooltipProvider>
+                {quiz.rating.score !== null && (
+                    <TooltipProvider>
+                        <TooltipAnchor
+                            render={
+                                <span
+                                    tabIndex={0}
+                                    aria-label={`Rated by ${quiz.rating.count}`}
+                                    className={scoreClass({
+                                        score: scoreToInteger(
+                                            quiz.rating.score || 0,
+                                        ),
+                                    })}
+                                >
+                                    {quiz.rating.score}
+                                </span>
+                            }
+                        ></TooltipAnchor>
+                        <Tooltip>
+                            <div className="rounded-md left-0 rounded-2 bg-slate-700 p-2 px-2 py-1 text-sm text-slate-300 shadow-sm ring-1 ring-slate-800">
+                                Rated by{" "}
+                                <span className="font-medium text-white">
+                                    {quiz.rating.count}
+                                </span>{" "}
+                                people
+                            </div>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
             </div>
             <div className="flex flex-wrap gap-2 tracking-wider">
                 {quiz.tags.map(({ name, linked_data_id }) => {
                     return (
-                        <Link
+                        <span
                             key={linked_data_id}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                onTagClick(linked_data_id);
-                            }}
-                            to="#"
+                            data-linked-id={linked_data_id}
                             className="touch-hitbox relative flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-[500] text-slate-950 transition-all hover:bg-slate-200"
                         >
                             {name.toLocaleUpperCase()}
-                        </Link>
+                        </span>
                     );
                 })}
             </div>
             <Separator className="border-slate-200" />
             <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-1">
-                    <HovercardProvider placement="top-start">
-                        <HovercardAnchor
-                            href="#"
-                            className="underline-offset-2 hover:text-slate-700"
-                        >
-                            <div className="flex items-center gap-2 self-start text-sm text-slate-600">
-                                <p>@{quiz.author.username}</p>
-                            </div>
-                        </HovercardAnchor>
-                        <Hovercard className="relative bottom-2 z-50 flex w-full max-w-sm items-start justify-between gap-4 rounded-2 bg-slate-50 px-3 py-3 shadow-lg ring ring-slate-200">
-                            <div className="flex flex-col items-start">
-                                <Avatar author={quiz.author} size={40} />
-                                <HovercardHeading className="text-md pt-2 font-medium">
-                                    {quiz.author.full_name}
-                                </HovercardHeading>
-                                <p className="text-sm text-slate-500">
-                                    {quiz.author.username}
-                                </p>
-                            </div>
-                            <Link
-                                to={`/profile/${quiz.author.username}/`}
-                                className={buttonClass({ intent: "secondary" })}
-                            >
-                                <span
-                                    className={buttonInnerRing({
-                                        intent: "secondary",
-                                    })}
-                                    aria-hidden="true"
-                                />
-                                Follow
-                            </Link>
-                        </Hovercard>
-                    </HovercardProvider>
+                    <Link
+                        to={`/profile/${quiz.author.username}/`}
+                        className="text-slate-500 underline-offset-2 transition-all hover:text-slate-900"
+                    >
+                        <div className="flex items-center gap-2 self-start text-sm">
+                            <p>@{quiz.author.username}</p>
+                        </div>
+                    </Link>
                     <p className="text-xs text-slate-500">
                         {getRelativeTime(new Date(quiz.created_at))}
                     </p>
@@ -179,24 +147,17 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     <div className="flex flex-1 items-center justify-end gap-2">
                         {quiz.is_taken && (
                             <Link
-                                to={`${quiz.id}/review`}
+                                to={`/quizzes/${quiz.id}/review`}
                                 className={buttonClass({
-                                    intent: "tertiary",
+                                    intent: "ghost",
                                     size: "medium",
-                                    icon: "right",
                                 })}
                             >
-                                <span
-                                    className={buttonInnerRing({
-                                        intent: "tertiary",
-                                    })}
-                                    aria-hidden="true"
-                                />
                                 <span>Review</span>
                             </Link>
                         )}
                         <Link
-                            to={String(quiz.id)}
+                            to={`/quizzes/${String(quiz.id)}`}
                             className={buttonClass({
                                 intent: quiz.is_taken ? "secondary" : "primary",
                                 size: "medium",

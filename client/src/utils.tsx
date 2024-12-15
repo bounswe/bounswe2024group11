@@ -100,3 +100,7 @@ export function debounce<T extends (...args: any[]) => any>(
 
     return debounced;
 }
+
+export const snakeToTitle = (snake: string) => {
+    return snake.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+};

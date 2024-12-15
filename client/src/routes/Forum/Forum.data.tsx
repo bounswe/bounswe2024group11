@@ -4,9 +4,10 @@ import {
     redirect,
     ShouldRevalidateFunction,
 } from "react-router";
+import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
-import { useQuestionsStore } from "../../store";
+import { useQuestionsStore, useToastStore } from "../../store";
 import { logger } from "../../utils";
 import {
     dictionarySchema,
@@ -34,26 +35,28 @@ export const forumLoader = (async ({ request }) => {
     const page = Number(url.searchParams.get("page")) || 1;
     const per_page = Number(url.searchParams.get("per_page")) || 10;
 
-    try {
-        const response = await apiClient.get("/forum-questions/", {
+    const forumDataPromise = apiClient
+        .get("/forum-questions/", {
             params: { page, per_page },
+        })
+        .then((response) => {
+            const { output, success, issues } = safeParse(
+                forumSchema,
+                response.data,
+            );
+            if (!success) {
+                throw new Error("Failed to parse forum response");
+            }
+            return output;
+        })
+        .catch((error) => {
+            logger.error("Error fetching forum data", error);
+            throw new Error("Failed to load forum questions");
         });
 
-        const { output, success, issues } = safeParse(
-            forumSchema,
-            response.data,
-        );
-        logger.log(issues);
-        logger.log(output);
-        if (!success) {
-            throw new Error("Failed to parse forum response");
-        }
-
-        return output;
-    } catch (error) {
-        logger.error("Error fetching forum data", error);
-        throw new Error("Failed to load forum questions");
-    }
+    return defer({
+        forumData: forumDataPromise,
+    });
 }) satisfies LoaderFunction;
 
 export const forumCreateLoader = (async ({ request }) => {
@@ -120,7 +123,23 @@ export const forumCreateAction = (async ({ request }) => {
 
     if (!success) {
         console.error(issues);
-        throw new Error("Failed to parse forum question response.");
+        useToastStore.getState().add({
+            id: `forum-question-create-failure`,
+            type: "error",
+            data: {
+                message: "Failure",
+                description: "Failed to post the question.",
+            },
+        });
+    } else {
+        useToastStore.getState().add({
+            id: `forum-question-create-success`,
+            type: "success",
+            data: {
+                message: "Success",
+                description: "Question posted successfully.",
+            },
+        });
     }
 
     return redirect("/forum");

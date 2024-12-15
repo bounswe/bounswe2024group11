@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-
+from turkish_string import lower_tr
 
 # Helper function to fetch translations from BabelNet API
 def get_translation(word_id, target_lang):
@@ -22,12 +22,15 @@ def get_translation(word_id, target_lang):
     data = response.json()
     # Extract translations from data
     translations = []
+    
     for sense in data.get('senses', []):
         language = sense.get('properties',[]).get('language')
         if language == target_lang:
             lemma = sense.get('properties', {}).get('fullLemma')
             if lemma:
-                if lemma.replace("_", " ").lower().strip() not in translations:
+                lemma = lemma.replace("_", " ").strip()
+                lemma = lower_tr(lemma)
+                if lemma not in translations:
                     lemma = lemma.replace("_", " ").lower().strip()
                     translations.append(lemma)
                     # print(lemma)

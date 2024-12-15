@@ -218,6 +218,8 @@ class QuizSerializer(serializers.ModelSerializer):
     is_taken = serializers.SerializerMethodField()
     num_taken = serializers.SerializerMethodField()
     is_my_quiz = serializers.SerializerMethodField()
+    my_last_answers = serializers.SerializerMethodField()
+    quiz_point = serializers.SerializerMethodField()
     
 
     class Meta:
@@ -225,16 +227,29 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'title', 'description', 'difficulty', "author", 
             'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating",
-            'is_my_quiz', 'quiz_point'
+            'is_my_quiz', 'quiz_point', 'my_last_answers'
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
-                           'is_my_quiz', 'quiz_point')
+                           'is_my_quiz', 'quiz_point', 'my_last_answers')
+        
+    def get_quiz_point(self, obj):
+        return sum([question.question_point for question in obj.questions.all()])
+
 
     def get_is_taken(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
             return False
         return TakeQuiz.objects.filter(quiz=obj, user=user).exists()
+    
+    def get_my_last_answers(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return None
+        take_quiz = TakeQuiz.objects.filter(quiz=obj, user=user).last()
+        if not take_quiz:
+            return None
+        return TakeQuizSerializer(take_quiz, context=self.context).data
 
     def get_num_taken(self, obj):
         return obj.takes.count()
@@ -276,7 +291,9 @@ class QuizSerializer(serializers.ModelSerializer):
             quiz.tags.add(tag)
 
         # Create and associate each QuizQuestion with the Quiz
+        quiz_point = 0
         for question_data in questions_data:
+            quiz_point += question_data['question_point']
             choices_data = question_data.pop('choices', [])
             hints_data = question_data.pop('hints', [])
             question = QuizQuestion.objects.create(quiz=quiz, **question_data)
@@ -286,9 +303,8 @@ class QuizSerializer(serializers.ModelSerializer):
             for choice_data in choices_data:
                 QuizQuestionChoice.objects.create(question=question, **choice_data)
         # Calculate the total point of the quiz        
-        quiz.quiz_point = sum([question.question_point for question in quiz.questions.all()])
         # Calculate the difficulty level of the quiz
-        effective_question_point = quiz.quiz_point / len(quiz.questions.all())
+        effective_question_point = quiz_point / len(quiz.questions.all())
         if (effective_question_point <= 16.66):
             quiz.difficulty = 1
         elif(effective_question_point > 23.33):
@@ -330,7 +346,7 @@ class RateQuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RateQuiz
-        fields = ('id', 'quiz', "rating", "user")
+        fields = ('id', 'quiz', "rating", "user", "comment")
         read_only_fields = ('id', "user")
 
     def create(self, validated_data):
