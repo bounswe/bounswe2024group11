@@ -344,7 +344,7 @@ export const Forum = () => {
                                     </div>
                                 </aside>
                                 <main>
-                                    <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+                                    <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
                                         {filteredQuestions
                                             .filter(
                                                 (post) =>
