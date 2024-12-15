@@ -11,6 +11,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from ..utils import get_ids
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.db.models import Count
 
 class ForumQuestionPagination(PageNumberPagination):
     page_size = 10
@@ -26,10 +27,24 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        sort_by = self.request.query_params.get('sort_by', 'oldest')
+
         if user.is_authenticated:
             blocked_users = Block.objects.filter(blocker=user).values_list('blocking', flat=True)
-            return ForumQuestion.objects.exclude(author__in=blocked_users).order_by('-created_at')
-        return ForumQuestion.objects.all().order_by('-created_at')
+            queryset = ForumQuestion.objects.exclude(author__in=blocked_users)
+        else:
+            queryset = ForumQuestion.objects.all()
+
+        if sort_by == 'newest':
+            return queryset.order_by('-created_at')
+        elif sort_by == 'oldest':
+            return queryset.order_by('created_at')
+        elif sort_by == 'most_popular':
+            return queryset.annotate(answers_count=Count('answers')).order_by('-answers_count', '-created_at')
+        elif sort_by == 'most_liked':
+            return queryset.order_by('upvotes', '-created_at')
+        
+        # return queryset.order_by('-created_at')
     
     def get_parsers(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -49,6 +64,13 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
                 type=openapi.TYPE_STRING,
                 description="ID for linked data semantic search"
             ),
+            openapi.Parameter(
+                'sort_by',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                enum=['newest', 'oldest', 'most_popular', 'most_liked'],
+                description="Sorting criteria for forum questions",
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
@@ -58,9 +80,9 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         linked_data_id = self.request.query_params.get('linked_data_id')
         if linked_data_id:
             linked_data_ids = get_ids(linked_data_id)
-            queryset = self.filter_queryset(self.get_queryset()).filter(tags__linked_data_id__in=linked_data_ids).order_by('-created_at')
+            queryset = self.filter_queryset(self.get_queryset()).filter(tags__linked_data_id__in=linked_data_ids)
         else:
-            queryset = self.filter_queryset(self.get_queryset()).order_by('-created_at')
+            queryset = self.filter_queryset(self.get_queryset())
 
         # Apply pagination
         page = self.paginate_queryset(queryset)
