@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LoggedinUser } from "../types/user";
 import UserView from "./UserView";
 import FollowButton from "./FollowButton";
@@ -12,18 +11,13 @@ interface UserCardProps {
   user: LoggedinUser;
 }
 
-interface Follow {
-  created_at: string; // ISO date string
-  follower: number; // or a more specific type if needed
-  following: number; // corresponds to the user ID being followed
-  id: number;
-}
-
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingsCount, setFollowingsCount] = useState(0);
   const { authState } = useAuth();
 
-  // Fetch follow status when the component mounts or when authState.token or user.id changes
+  // Fetch follow status and follower/following count
   useEffect(() => {
     const fetchFollowStatus = async () => {
       if (!authState?.token) {
@@ -31,7 +25,22 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         return;
       }
       try {
-        const response = await axios.get(
+        // Fetch user profile data
+        const profileResponse = await axios.get(
+          `http://10.0.2.2:8000/api/v1/profile/${user.username}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authState.token}`,
+            },
+          }
+        );
+
+        // Set followers and followings count from the response
+        setFollowersCount(profileResponse.data.followers.length);
+        setFollowingsCount(profileResponse.data.followings.length);
+
+        // Check if the logged-in user is following the current user
+        const followResponse = await axios.get(
           "http://10.0.2.2:8000/api/v1/follow/",
           {
             headers: {
@@ -40,17 +49,17 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
           }
         );
 
-        const followInstance = response.data.results.find(
-          (follow: Follow) => follow.following === user.id
+        const followInstance = followResponse.data.results.find(
+          (follow: any) => follow.following === user.id
         );
         setIsFollowing(!!followInstance);
       } catch (error) {
-        console.error("Error during follow status fetch:", error);
+        console.error("Error during fetch operation:", error);
       }
     };
 
     fetchFollowStatus();
-  }, [authState?.token, user.id]); // Only run when the token or user.id changes
+  }, [authState?.token, user.id, user.username]);
 
   const handleFollowToggle = async () => {
     if (!authState?.token) {
@@ -71,7 +80,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         );
 
         const instanceToDelete = followInstance.data.results.find(
-          (follow: Follow) => follow.following === user.id
+          (follow: any) => follow.following === user.id
         );
 
         if (instanceToDelete) {
@@ -84,6 +93,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
             }
           );
           setIsFollowing(false);
+          setFollowersCount((prevCount) => prevCount - 1); // Decrement followers count
           console.log("Unfollowed successfully");
         } else {
           console.log("Follow instance not found for deletion");
@@ -100,6 +110,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
           }
         );
         setIsFollowing(true);
+        setFollowersCount((prevCount) => prevCount + 1); // Increment followers count
         console.log("Followed successfully");
       }
     } catch (error) {
@@ -112,7 +123,19 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return (
     <Card style={styles.card}>
       <View style={styles.container}>
-        <UserView user={user} />
+        {/* Left Side: UserView and Follower Counts */}
+        <View style={styles.leftContainer}>
+          <UserView user={user} />
+          <View style={styles.followCounts}>
+            <Text style={styles.countText}>
+              Followers: <Text style={styles.bold}>{followersCount}</Text>
+            </Text>
+            <Text style={styles.countText}>
+              Following: <Text style={styles.bold}>{followingsCount}</Text>
+            </Text>
+          </View>
+        </View>
+        {/* Right Side: Follow Button */}
         {!isLoggedInUser && (
           <View style={styles.followButton}>
             <FollowButton
@@ -128,32 +151,31 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
 const styles = StyleSheet.create({
   card: {
-    margin: 24,
-    padding: 24,
+    margin: 16,
+    padding: 16,
   },
   container: {
     flexDirection: "row",
-    alignItems: "flex-start",
     justifyContent: "space-between",
+  },
+  leftContainer: {
+    flexDirection: "row",
+    //alignItems: "center",
+  },
+  followCounts: {
+    marginLeft: 16,
+  },
+  countText: {
+    fontSize: 14,
+    color: "#555",
+  },
+  bold: {
+    fontWeight: "bold",
   },
   followButton: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#5BADCE",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 0.3,
-  },
-  buttonText: {
-    color: "#ffffff",
-    marginRight: 8,
-    fontWeight: "bold",
+    //alignItems: "center",
+    //justifyContent: "center",
   },
 });
 
