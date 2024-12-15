@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Sprite } from "./components/sprite";
 import { ToastWrapper } from "./components/toast";
 import { SoundProvider } from "./contexts/SoundContext";
-import { SpeechProvider } from "./contexts/SpeechContext";
+import { SpeechProvider } from "./contexts/SpeechContext_temp";
 import "./index.css";
 import "./localstorage";
 import { routes } from "./router";
