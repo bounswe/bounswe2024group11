@@ -4,6 +4,7 @@ import {
     redirect,
     ShouldRevalidateFunction,
 } from "react-router";
+import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
@@ -65,31 +66,36 @@ export const takeQuizAction = (async ({ request }) => {
         }
 
         const formData = await request.formData();
-
         const answers = formData.get("answers") as string;
         const quizId = formData.get("quizId");
 
         localStorage.setItem("quiz_answer" + String(quizId), answers);
 
-        const response = await apiClient.post(`/take-quiz/`, {
-            quiz: Number(quizId),
-            answers: JSON.parse(answers),
-        });
-        const data = response.data; // Extract data from axios response
-        logger.log(data);
-        const { output, issues, success } = safeParse(
-            completedQuizSchema,
-            data,
-        );
-        if (!success) {
-            logger.error("Failed to parse quiz response:", issues);
-            throw new Error(`Failed to parse quiz response: ${issues}`);
-        }
+        const quizSubmissionPromise = apiClient
+            .post(`/take-quiz/`, {
+                quiz: Number(quizId),
+                answers: JSON.parse(answers),
+            })
+            .then((response) => {
+                const { output, issues, success } = safeParse(
+                    completedQuizSchema,
+                    response.data,
+                );
+                if (!success) {
+                    logger.error("Failed to parse quiz response:", issues);
+                    throw new Error(`Failed to parse quiz response: ${issues}`);
+                }
+                return output;
+            });
 
-        return output;
+        return defer({
+            quizSubmissionData: quizSubmissionPromise,
+        });
     } catch (error) {
         logger.error(`Error submitting quiz:`, error);
-        throw new Error(`Failed to take quiz with ID: `);
+        throw new Error(
+            `We couldn't submit your quiz. Let's hope this doesn't happen again.`,
+        );
     }
 }) satisfies ActionFunction;
 

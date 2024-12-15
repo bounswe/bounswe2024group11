@@ -1,5 +1,6 @@
 import { RouteObject } from "react-router";
 import { ErrorPage } from "./routes/_error";
+import { AchievementLoading } from "./routes/_loading";
 import { Root } from "./routes/_root";
 import { Achievements } from "./routes/Achievements/Achievements";
 import { achievementsLoader } from "./routes/Achievements/Achievements.data";
@@ -74,6 +75,10 @@ export const routes: RouteObject[] = [
                         element: <Home />,
                         loader: homeLoader,
                         id: "home",
+                    },
+                    {
+                        path: "loading",
+                        element: <AchievementLoading />,
                     },
                     {
                         path: "achievements",
