@@ -58,7 +58,7 @@ const defaultCommands: Command[] = [
     {
         id: "achievements",
         title: "Achievements",
-        icon: <RiTrophyLine className="h-4 w-4" />,
+        icon: <RiAwardLine className="h-4 w-4" />,
         path: "/achievements",
         group: "navigation",
         keywords: ["achievements", "trophies", "badges", "points"],
@@ -66,7 +66,8 @@ const defaultCommands: Command[] = [
     {
         id: "leaderboard",
         title: "Leaderboard",
-        icon: <RiAwardLine className="h-4 w-4" />,
+        icon: <RiTrophyLine className="h-4 w-4" />,
+
         path: "/leaderboard",
         group: "navigation",
         keywords: ["leaderboard", "rankings", "scoreboard", "points"],
@@ -112,7 +113,7 @@ const defaultCommands: Command[] = [
         icon: <RiLogoutBoxLine className="h-4 w-4" />,
         path: "/logout",
         group: "application",
-        keywords: ["logout", "sign out", "exit"],
+        keywords: ["logout", "sign out", "exit", "log out", "quit"],
     },
     {
         id: "refresh",

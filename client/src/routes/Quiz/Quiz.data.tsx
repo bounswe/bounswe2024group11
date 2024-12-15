@@ -20,7 +20,9 @@ export const quizShouldRevalidate: ShouldRevalidateFunction = ({
     return (
         !!formData ||
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
+        currentUrlParams.get("linked_data_id") !==
+            nextUrlParams.get("linked_data_id")
     );
 };
 
