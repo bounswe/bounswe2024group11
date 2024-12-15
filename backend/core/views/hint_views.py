@@ -53,10 +53,10 @@ def get_hint(id, targetLang="EN", word = ""):
 
 
         return {
-            "synonyms": synonym_array,
-            "definitions": definitions,
-            "examples": examples,
-            "images": image_array,
+            "synonyms": list(set(synonym_array)),
+            "definitions": list(set(definitions)),
+            "examples": list(set(examples)),
+            "images": list(set(image_array)),
         }
     except Exception as e:
         return {"error": str(e)}
