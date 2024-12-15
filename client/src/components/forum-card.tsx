@@ -182,7 +182,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                                 aria-hidden="true"
                                 onError={(e) => {
                                     e.currentTarget.src =
-                                        "https://rollerdesignstudio.com/images/f1337d2f-fd51-4031-873a-074920bfb12e444%20resim%20.jpg";
+                                        "/forum-fallback-image.png";
                                 }}
                             />
                         </Button>
