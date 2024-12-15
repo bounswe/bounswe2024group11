@@ -245,10 +245,10 @@ class QuizSerializer(serializers.ModelSerializer):
     def get_my_last_answers(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return []
+            return None
         take_quiz = TakeQuiz.objects.filter(quiz=obj, user=user).last()
         if not take_quiz:
-            return []
+            return None
         return TakeQuizSerializer(take_quiz, context=self.context).data
 
     def get_num_taken(self, obj):
@@ -291,7 +291,9 @@ class QuizSerializer(serializers.ModelSerializer):
             quiz.tags.add(tag)
 
         # Create and associate each QuizQuestion with the Quiz
+        quiz_point = 0
         for question_data in questions_data:
+            quiz_point += question_data['question_point']
             choices_data = question_data.pop('choices', [])
             hints_data = question_data.pop('hints', [])
             question = QuizQuestion.objects.create(quiz=quiz, **question_data)
@@ -302,7 +304,7 @@ class QuizSerializer(serializers.ModelSerializer):
                 QuizQuestionChoice.objects.create(question=question, **choice_data)
         # Calculate the total point of the quiz        
         # Calculate the difficulty level of the quiz
-        effective_question_point = quiz.quiz_point / len(quiz.questions.all())
+        effective_question_point = quiz_point / len(quiz.questions.all())
         if (effective_question_point <= 16.66):
             quiz.difficulty = 1
         elif(effective_question_point > 23.33):

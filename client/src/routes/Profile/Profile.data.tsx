@@ -20,13 +20,11 @@ export const profileLoader = (async ({ params }) => {
     const profilePromise = apiClient
         .get(`/profile/${userName}/`)
         .then((response) => {
-            logger.log(response.data);
             const { output, success, issues } = safeParse(
                 profileSchema,
                 response.data,
             );
             if (!success) {
-                logger.log(issues);
                 throw new Error("Failed to parse forum response");
             }
             return output;
@@ -56,7 +54,6 @@ export const BlockAction = (async ({ request }: { request: Request }) => {
             response.data,
         );
         if (!success) {
-            logger.log(issues);
             throw new Error("Failed to parse block response");
         }
         return output;
@@ -97,7 +94,6 @@ export const FollowAction = (async ({ request }: { request: Request }) => {
             response.data,
         );
         if (!success) {
-            logger.log(issues);
             throw new Error("Failed to parse follow response");
         }
         return output;

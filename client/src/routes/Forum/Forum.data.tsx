@@ -44,8 +44,6 @@ export const forumLoader = (async ({ request }) => {
                 forumSchema,
                 response.data,
             );
-            logger.log(issues);
-            logger.log(output);
             if (!success) {
                 throw new Error("Failed to parse forum response");
             }

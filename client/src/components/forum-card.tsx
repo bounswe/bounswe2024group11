@@ -152,7 +152,7 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                 <Link
                     to={`/forum/${question.id}`}
                     aria-label={`${question.title} by ${question.author.full_name}`}
-                    className="group flex flex-col gap-2 py-4"
+                    className="group flex flex-col gap-2 py-6"
                 >
                     <h2 className="text-xl font-semibold text-slate-900 decoration-inherit decoration-1 underline-offset-4 transition-all">
                         {question.title}
