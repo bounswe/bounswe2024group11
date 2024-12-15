@@ -151,17 +151,10 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                             <Link
                                 to={`/quizzes/${quiz.id}/review`}
                                 className={buttonClass({
-                                    intent: "tertiary",
+                                    intent: "ghost",
                                     size: "medium",
-                                    icon: "right",
                                 })}
                             >
-                                <span
-                                    className={buttonInnerRing({
-                                        intent: "tertiary",
-                                    })}
-                                    aria-hidden="true"
-                                />
                                 <span>Review</span>
                             </Link>
                         )}

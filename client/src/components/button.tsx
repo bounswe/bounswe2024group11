@@ -102,6 +102,7 @@ export const buttonClass = cva(
                     "active:ring-slate-300",
                     "text-white",
                 ],
+
                 destructive: [
                     "bg-red-600",
                     "hover:bg-red-700",
@@ -115,6 +116,14 @@ export const buttonClass = cva(
                     "active:ring-2",
                     "active:ring-red-200",
                     "text-white",
+                ],
+                ghost: [
+                    "bg-slate-50",
+                    "hover:bg-slate-200",
+                    "active:bg-slate-300",
+                    "text-slate-950",
+                    "ring-slate-200",
+                    "ring",
                 ],
                 tertiary: [
                     "bg-transparent",
@@ -132,7 +141,8 @@ export const buttonClass = cva(
             size: {
                 small: ["text-xs", "py-[6px]", "px-2"],
                 medium: ["text-sm", "py-2", "px-4"],
-                large: ["text-base", "py-3", "px-6"],
+                large: ["text-base", "py-[10px]", "px-6"],
+                icon: ["p-3"],
             },
             rounded: {
                 default: ["rounded-2"],
