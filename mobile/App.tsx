@@ -15,6 +15,7 @@ import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
 import Login from "./app/screens/Login";
 import Profile from "./app/screens/Profile";
+import ProfileScreen from "./app/screens/ProfileScreen";
 import QuizDetail from "./app/screens/QuizDetail";
 import QuizFeed from "./app/screens/QuizFeed";
 import QuizResult from "./app/screens/QuizResult";
@@ -74,6 +75,9 @@ export type RootStackParamList = {
     quiz_type: number;
     questions: CreateQuizQuestionType[];
     questionsCount: number;
+  };
+  ProfileScreen: {
+    username: string;
   };
 };
 
@@ -193,6 +197,15 @@ export const Layout = () => {
             <Stack.Screen
               name="ReviewCreateQuiz"
               component={ReviewCreateQuiz}
+            />
+            <Stack.Screen
+              name="ProfileScreen"
+              component={ProfileScreen}
+              options={({ route }) => ({
+                title: route.params?.username
+                  ? route.params.username
+                  : "Profile",
+              })}
             />
             {/*
             {authState?.authenticated
