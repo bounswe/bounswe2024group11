@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import useSWR from "swr";
 import { useDebounce } from "use-debounce";
-import apiClient from "../api";
+import apiClient, { SWR_SETTINGS } from "../api";
 import { QuizCreate } from "../routes/Quiz/Quiz.schema";
 
 export type Dict = {
@@ -50,13 +50,7 @@ export const useTaggingSearch = (search: string, quiz: QuizCreate) => {
         [debouncedSearch, quiz.type],
     );
 
-    const { data, error, isLoading } = useSWR(cacheKey, fetcher, {
-        revalidateOnFocus: false,
-        dedupingInterval: 2000,
-        compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
-        shouldRetryOnError: false, // Add this to prevent unnecessary retries
-        keepPreviousData: false, // Add this to ensure data is cleared when key changes
-    });
+    const { data, error, isLoading } = useSWR(cacheKey, fetcher, SWR_SETTINGS);
 
     return {
         data,

@@ -7,11 +7,7 @@ import {
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
-import {
-    completedQuizSchema,
-    quizAnswersSchema,
-    quizDetailsSchema,
-} from "./Quiz.schema";
+import { completedQuizSchema, quizDetailsSchema } from "./Quiz.schema";
 
 export const quizShouldRevalidate: ShouldRevalidateFunction = ({
     currentUrl,
@@ -24,7 +20,9 @@ export const quizShouldRevalidate: ShouldRevalidateFunction = ({
     return (
         !!formData ||
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
+        currentUrlParams.get("linked_data_id") !==
+            nextUrlParams.get("linked_data_id")
     );
 };
 
@@ -98,48 +96,3 @@ export const takeQuizAction = (async ({ request }) => {
         );
     }
 }) satisfies ActionFunction;
-export const quizReviewLoader = (async ({ params }) => {
-    const { quizId } = params;
-
-    if (!quizId || !Number(quizId)) {
-        throw new Error("Quiz ID is required.");
-    }
-
-    if (!getUserOrRedirect()) {
-        return redirect("/login");
-    }
-    const savedAnswers = localStorage.getObject("quiz_answer" + String(quizId));
-    const {
-        output: outputS,
-        issues: issuesS,
-        success: successS,
-    } = safeParse(quizAnswersSchema, savedAnswers);
-
-    if (!successS) {
-        logger.error(
-            "Failed to parse quiz answers from local storage",
-            issuesS,
-        );
-        throw new Error(`Failed to load quiz answers: ${issuesS}`);
-    }
-    try {
-        const response = await apiClient.get(`/quizzes/${quizId}/`);
-
-        const data = response.data; // Extract data from axios response
-        const { output, issues, success } = safeParse(quizDetailsSchema, data);
-
-        if (!success) {
-            logger.error("Failed to parse quiz response:", issues);
-            throw new Error(`Failed to parse quiz response: ${issues}`);
-        }
-
-        if (!output.is_taken) {
-            return redirect(`/quizzes/${quizId}/`);
-        }
-        console.log(output);
-        return { quiz: output, savedAnswers: outputS };
-    } catch (error) {
-        logger.error(`Error fetching quiz with ID: ${quizId}`, error);
-        throw new Error(`Failed to load quiz with ID: ${quizId}`);
-    }
-}) satisfies LoaderFunction;

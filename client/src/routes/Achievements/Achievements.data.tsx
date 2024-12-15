@@ -2,7 +2,6 @@ import { LoaderFunction } from "react-router";
 import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient from "../../api";
-import { logger } from "../../utils";
 import { UserAchievement } from "./Achievement.schema";
 
 const achievements = [
@@ -143,7 +142,6 @@ export const achievementsLoader = (async () => {
     const achievementsPromise = apiClient
         .get(`/achievements/`)
         .then((response) => {
-            logger.log(response.data);
             const { output, success, issues } = safeParse(
                 UserAchievement,
                 response.data,
@@ -151,7 +149,6 @@ export const achievementsLoader = (async () => {
             if (!success) {
                 throw new Error("Failed to parse achievement response");
             }
-            logger.log(output);
             return output.map((achievement) => {
                 const item = achievements.find(
                     (userAchievement) =>
