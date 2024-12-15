@@ -36,7 +36,10 @@ const QuizCard = ({
                         intent: "secondary",
                         icon: "left",
                     })}
-                    to={`/forum/new?qid=${question.id}&title=Quiz+Question:+"${question.question_text}"&question=Can+you+help+me+with+${question.question_text}?`}
+                    to={`/forum/new?qid=${question.id}&title=Help+needed:+"${questionTypeToQuestion(
+                        quizType,
+                        question.question_text,
+                    )}"&question=I'm+stuck+on+this+quiz+question+about+"${question.question_text}". Can someone help me understand the correct answer?`}
                 >
                     <span
                         className={buttonInnerRing({ intent: "secondary" })}
@@ -61,7 +64,10 @@ const QuizCard = ({
                         <Link
                             aria-label="Ask Community"
                             className="rounded-full bg-transparent p-2.5 text-current transition-all hover:bg-white hover:text-orange-900"
-                            to={`/forum/new?title=${choice.choice_text}&question=Quiz+option:+${choice.choice_text}?&quiz_question=${question.id}`}
+                            to={`/forum/new?title=Help+needed:+"${questionTypeToQuestion(
+                                quizType,
+                                question.question_text,
+                            )}"&question=I+could+not+understand+"${choice.choice_text}"+option+for+this+question.+Can+somebody+explain+this?&quiz_question=${question.id}`}
                         >
                             <RiQuestionnaireFill size={20} />
                         </Link>
