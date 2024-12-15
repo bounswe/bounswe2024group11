@@ -7,7 +7,7 @@ import {
 import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
-import { useQuestionsStore, useToastStore } from "../../store";
+import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
 import {
     dictionarySchema,
@@ -125,23 +125,7 @@ export const forumCreateAction = (async ({ request }) => {
 
     if (!success) {
         console.error(issues);
-        useToastStore.getState().add({
-            id: `forum-question-create-failure`,
-            type: "error",
-            data: {
-                message: "Failure",
-                description: "Failed to post the question.",
-            },
-        });
         throw new Error("Failed to parse forum question response.");
     }
-    useToastStore.getState().add({
-        id: `forum-question-create-success`,
-        type: "success",
-        data: {
-            message: "Success",
-            description: "Question posted successfully.",
-        },
-    });
     return redirect("/forum");
 }) satisfies ActionFunction;
