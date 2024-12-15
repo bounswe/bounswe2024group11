@@ -22,6 +22,7 @@ setuptools==75.1.0
 six==1.16.0
 soupsieve==2.6
 sqlparse==0.5.1
+turkish-string==1.0.0
 typing_extensions==4.12.2
 tzdata==2024.2
 uritemplate==4.1.1
