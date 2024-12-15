@@ -55,10 +55,9 @@ export const Profile = () => {
                     const earnedAchievements = achievements.filter(
                         (a) => a.earned_at !== null,
                     );
-                    const displayedAchievements = earnedAchievements.slice(
-                        0,
-                        5,
-                    );
+                    const displayedAchievements = earnedAchievements
+                        .reverse()
+                        .slice(0, 5);
                     const remainingCount = Math.max(
                         0,
                         earnedAchievements.length - 5,
