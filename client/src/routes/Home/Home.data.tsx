@@ -2,7 +2,7 @@ import { safeParse } from "valibot";
 import { USER } from "../../constants";
 import { userSchema } from "../../schemas";
 
-export const homeLoader = () => {
+export const userLoader = () => {
     const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
     const { output, success } = safeParse(userSchema, user);
     if (!success) {

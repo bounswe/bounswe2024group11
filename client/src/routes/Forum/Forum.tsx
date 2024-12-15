@@ -19,7 +19,7 @@ import {
 } from "@remixicon/react";
 import { radioOptionClass } from "../../components/radio-option";
 import { ForumLoading } from "../_loading";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { forumLoader } from "./Forum.data";
 
 export const Forum = () => {
@@ -31,7 +31,7 @@ export const Forum = () => {
     );
 
     const { user, logged_in } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");

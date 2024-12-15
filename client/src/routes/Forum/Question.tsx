@@ -4,12 +4,12 @@ import { buttonClass } from "../../components/button";
 import { ForumAnswerCard } from "../../components/forum-answer-card";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { inputClass } from "../../components/input";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { answerForumAction, forumQuestionLoader } from "./Question.data";
 
 export const ForumQuestion = () => {
     const data = useLoaderData<typeof forumQuestionLoader>();
-    const { logged_in } = useRouteLoaderData<typeof homeLoader>("home-main");
+    const { logged_in } = useRouteLoaderData<typeof userLoader>("home-main");
 
     const answerFetcher = useFetcher<typeof answerForumAction>();
 

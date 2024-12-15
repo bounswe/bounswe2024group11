@@ -18,7 +18,7 @@ import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
 import { TagSearch } from "../../components/tag-search";
 import { QuizLoading } from "../_loading";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
@@ -29,7 +29,7 @@ export const Quizzes = () => {
     const sortBy = searchParams.get("sort") || "newest";
 
     const { user, logged_in } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");

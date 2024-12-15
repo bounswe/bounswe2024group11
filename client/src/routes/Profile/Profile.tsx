@@ -14,7 +14,7 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 import { QuizzesTaken } from "../../components/quizzes-taken";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import {
     BlockAction,
     FollowAction,
@@ -31,7 +31,7 @@ export const Profile = () => {
     const unfollowFetcher = useFetcher<typeof UnFollowAction>();
     const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
     const [dialogOpen, setDialogOpen] = useState(false);
 
     return (
