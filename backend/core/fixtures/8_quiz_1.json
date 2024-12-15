@@ -19,7 +19,8 @@
         "pk": 1,
         "fields": {
             "question_text": "Algorithm",
-            "quiz": 1
+            "quiz": 1,
+            "question_point": 10
         }
     },
     {
@@ -72,7 +73,8 @@
         "pk": 2,
         "fields": {
             "question_text": "Cloud Computing",
-            "quiz": 1
+            "quiz": 1,
+            "question_point": 10
         }
     },
     {
@@ -116,7 +118,8 @@
         "pk": 3,
         "fields": {
             "question_text": "Artificial Intelligence",
-            "quiz": 1
+            "quiz": 1,
+            "question_point": 10
         }
     },
     {
@@ -160,7 +163,8 @@
         "pk": 4,
         "fields": {
             "question_text": "Cybersecurity",
-            "quiz": 1
+            "quiz": 1,
+            "question_point": 10
         }
     },
     {
@@ -204,7 +208,8 @@
         "pk": 5,
         "fields": {
             "question_text": "Virtual Reality",
-            "quiz": 1
+            "quiz": 1,
+            "question_point": 10
         }
     },
     {

@@ -17,7 +17,8 @@
         "pk": 6,
         "fields": {
             "question_text": "Kaput",
-            "quiz": 2
+            "quiz": 2,
+            "question_point": 10
         }
     },
     {
@@ -61,7 +62,8 @@
         "pk": 7,
         "fields": {
             "question_text": "Vites",
-            "quiz": 2
+            "quiz": 2,
+            "question_point": 10
         }
     },
     {
@@ -105,7 +107,8 @@
         "pk": 8,
         "fields": {
             "question_text": "Debriyaj",
-            "quiz": 2
+            "quiz": 2,
+            "question_point": 10
         }
     },
     {

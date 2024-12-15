@@ -219,6 +219,7 @@ class QuizSerializer(serializers.ModelSerializer):
     num_taken = serializers.SerializerMethodField()
     is_my_quiz = serializers.SerializerMethodField()
     my_last_answers = serializers.SerializerMethodField()
+    quiz_point = serializers.SerializerMethodField()
     
 
     class Meta:
@@ -230,6 +231,10 @@ class QuizSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
                            'is_my_quiz', 'quiz_point', 'my_last_answers')
+        
+    def get_quiz_point(self, obj):
+        return sum([question.question_point for question in obj.questions.all()])
+
 
     def get_is_taken(self, obj):
         user = self.context['request'].user
@@ -296,7 +301,6 @@ class QuizSerializer(serializers.ModelSerializer):
             for choice_data in choices_data:
                 QuizQuestionChoice.objects.create(question=question, **choice_data)
         # Calculate the total point of the quiz        
-        quiz.quiz_point = sum([question.question_point for question in quiz.questions.all()])
         # Calculate the difficulty level of the quiz
         effective_question_point = quiz.quiz_point / len(quiz.questions.all())
         if (effective_question_point <= 16.66):
