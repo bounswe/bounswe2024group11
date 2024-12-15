@@ -225,7 +225,7 @@ export const NewQuizDetails = () => {
                                                 <span className="text-base font-medium">
                                                     {tag.name}
                                                 </span>
-                                                <span className="text-xs opacity-80">
+                                                <span className="text-start text-xs opacity-80">
                                                     {tag.description}
                                                 </span>
                                             </button>
