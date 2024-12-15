@@ -17,12 +17,18 @@ class Achievement(models.Model):
 
 
 class CustomUser(AbstractUser):
+    PROFICIENCY_LEVELS = [
+        (1, "Beginner"),
+        (2, "Intermediate"),
+        (3, "Advanced")
+    ]
     email = models.EmailField()
     full_name = models.CharField(max_length=100)
     avatar = models.CharField(max_length=1000, blank=True, null=True)
     achievements = models.ManyToManyField('Achievement', through='UserAchievement', blank=True)
     interests = models.ManyToManyField('Tag', related_name='interested_users', blank=True)
     score = models.IntegerField(default=0)
+    proficiency = models.IntegerField(choices=PROFICIENCY_LEVELS, default=1)
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -61,7 +67,7 @@ class Quiz(models.Model):
     QUIZ_TYPE_CHOICES = [
         (1, "English to Turkish"),
         (2, "Turkish to English"),
-        (3, "English word to Sense"),
+        (3, "English word to sense"),
     ]
 
     DIFFICULTY_CHOICES = [

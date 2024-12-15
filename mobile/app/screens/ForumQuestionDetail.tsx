@@ -104,6 +104,15 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
     }
   };
 
+  const handleAnswerDelete = (questionId: number, answerId: number) => {
+    console.log(
+      `Deleting answer with ID: ${answerId} for question ID: ${questionId}`
+    );
+    setAnswers((prevAnswers) =>
+      prevAnswers.filter((answer) => Number(answer.id) !== answerId)
+    );
+  };
+
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <ForumQuestionCard
@@ -120,7 +129,9 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
         <FlatList
           data={answers}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <ForumAnswerCard item={item} />}
+          renderItem={({ item }) => (
+            <ForumAnswerCard item={item} onAnswerDelete={handleAnswerDelete} />
+          )}
         />
       )}
 

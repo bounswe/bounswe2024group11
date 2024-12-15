@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-interface PaginationConfig {
+type PaginationConfig = {
     totalItems: number;
     defaultPage?: number;
     defaultPerPage?: number;
     perPageOptions?: number[];
-}
+};
 
-interface PaginationState {
+type PaginationState = {
     currentPage: number;
     perPage: number;
     totalPages: number;
@@ -16,16 +16,16 @@ interface PaginationState {
     endIndex: number;
     hasPrevious: boolean;
     hasNext: boolean;
-}
+};
 
-interface PaginationActions {
+type PaginationActions = {
     setPage: (page: number) => void;
     setPerPage: (perPage: number) => void;
     nextPage: () => void;
     previousPage: () => void;
     goToFirstPage: () => void;
     goToLastPage: () => void;
-}
+};
 
 export const usePagination = ({
     totalItems,

@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Innovator Grotesque VF';
-    src: url(/innovator.woff2) format('woff');
+    font-family: "Innovator Grotesque VF";
+    src: url(/innovator.woff2) format("woff");
 }
 
 @layer base {
@@ -81,6 +81,25 @@
     .animate-in {
         animation: animateIn 1s cubic-bezier(0.19, 1, 0.22, 1);
         animation-fill-mode: forwards;
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0 50%;
+        }
+    }
+
+    .skeleton-loading {
+        background: linear-gradient(80deg,
+                #f8fafc 25%,
+                #e2e8f0 50%,
+                #f8fafc 75%);
+        background-size: 400% 100%;
+        animation: skeleton-loading 2s infinite ease-in-out;
     }
 
     .touch-hitbox {

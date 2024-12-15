@@ -8,7 +8,9 @@ from ..permissions import IsAuthorOrReadOnly
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser
-
+from ..utils import get_ids
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class ForumQuestionPagination(PageNumberPagination):
     page_size = 10
@@ -34,11 +36,26 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'linked_data_id',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description="ID for linked data semantic search"
+            ),
+        ]
+    )
     def list(self, request, *args, **kwargs):
         """
         Handle pagination explicitly.
         """
-        queryset = self.filter_queryset(self.get_queryset()).order_by('-created_at')
+        linked_data_id = self.request.query_params.get('linked_data_id')
+        if linked_data_id:
+            linked_data_ids = get_ids(linked_data_id)
+            queryset = self.filter_queryset(self.get_queryset()).filter(tags__linked_data_id__in=linked_data_ids).order_by('-created_at')
+        else:
+            queryset = self.filter_queryset(self.get_queryset()).order_by('-created_at')
 
         # Apply pagination
         page = self.paginate_queryset(queryset)

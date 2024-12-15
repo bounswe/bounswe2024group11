@@ -1,5 +1,4 @@
 import { RiQuestionAnswerLine, RiQuestionnaireFill } from "@remixicon/react";
-import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
@@ -7,106 +6,7 @@ import { PageHead } from "../../components/page-head";
 import { quizReviewLoader } from "./Quiz.data";
 import { QuizAnswer, QuizQuestion } from "./Quiz.schema";
 import { questionTypeToQuestion } from "./Quiz.utils";
-
-// const quizSchema = object({
-//     id: number(),
-//     title: string(),
-//     description: string(),
-//     author: object({
-//         full_name: string(),
-//         username: string(),
-//         avatar: string(),
-//         id: number(),
-//         email: string(),
-//     }),
-//     created_at: string(),
-//     tags: array(
-//         object({
-//             name: string(),
-//             linked_data_id: string(),
-//             description: string(),
-//         }),
-//     ),
-//     type: number(),
-//     num_taken: number(),
-//     is_my_quiz: boolean(),
-//     is_taken: boolean(),
-//     questions: array(
-//         object({
-//             id: number(),
-//             question_text: string(),
-//             choices: array(
-//                 object({
-//                     id: number(),
-//                     is_correct: boolean(),
-//                     choice_text: string(),
-//                 }),
-//             ),
-//             hints: optional(
-//                 array(
-//                     object({
-//                         id: number(),
-//                         type: string(),
-//                         text: string(),
-//                     }),
-//                 ),
-//             ),
-//         }),
-//     ),
-//     //question_count: nullable(number()),
-//     difficulty: number(),
-//     rating: object({
-//         score: nullable(number()),
-//         count: number(),
-//     }),
-// });
-
-const optionClass = cva(
-    [
-        "flex",
-        "items-center",
-        "gap-2",
-        "rounded-2",
-        "p-2",
-        "text-center",
-        "font-medium",
-    ],
-    {
-        variants: {
-            correct: {
-                true: "",
-                false: "",
-            },
-            selected: {
-                true: "",
-                false: "",
-            },
-        },
-
-        compoundVariants: [
-            {
-                correct: false,
-                selected: false,
-                class: ["bg-slate-100 text-slate-900"],
-            },
-            {
-                correct: true,
-                selected: true,
-                class: ["bg-green-700 text-white"],
-            },
-            {
-                correct: true,
-                selected: false,
-                class: ["bg-green-100 text-green-900"],
-            },
-            {
-                correct: false,
-                selected: true,
-                class: ["bg-red-700 text-white"],
-            },
-        ],
-    },
-);
+import { choiceButton } from "./QuizChoice";
 
 const QuizCard = ({
     quizType,
@@ -136,7 +36,10 @@ const QuizCard = ({
                         intent: "secondary",
                         icon: "left",
                     })}
-                    to={`/forum/new?qid=${question.id}&title=Quiz+Question:+"${question.question_text}"&question=Can+you+help+me+with+${question.question_text}?`}
+                    to={`/forum/new?qid=${question.id}&title=Help+needed:+"${questionTypeToQuestion(
+                        quizType,
+                        question.question_text,
+                    )}&quiz_question=${question.id}"`}
                 >
                     <span
                         className={buttonInnerRing({ intent: "secondary" })}
@@ -148,9 +51,10 @@ const QuizCard = ({
             <div className="grid flex-1 grid-cols-2 justify-start gap-2">
                 {question.choices.map((choice) => (
                     <div
-                        className={optionClass({
-                            correct: choice.is_correct,
-                            selected: answer?.answer === choice.id,
+                        className={choiceButton({
+                            isCorrect: choice.is_correct,
+                            isSelected: answer?.answer === choice.id,
+                            showAnswer: true,
                         })}
                         key={choice.id}
                     >
@@ -160,7 +64,10 @@ const QuizCard = ({
                         <Link
                             aria-label="Ask Community"
                             className="rounded-full bg-transparent p-2.5 text-current transition-all hover:bg-white hover:text-orange-900"
-                            to={`/forum/new?title=${choice.choice_text}&question=Quiz+option:+${choice.choice_text}?&quiz_question=${question.id}`}
+                            to={`/forum/new?title=Help+needed:+"${questionTypeToQuestion(
+                                quizType,
+                                question.question_text,
+                            )}"&question=I+could+not+understand+"${choice.choice_text}"+option+for+this+question.+Can+somebody+explain+this?&quiz_question=${question.id}`}
                         >
                             <RiQuestionnaireFill size={20} />
                         </Link>
@@ -181,8 +88,8 @@ export const QuizReview = () => {
                 viewBox="0 0 91 76"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                stroke-width="1px"
-                stroke-linecap="round"
+                strokeWidth="1px"
+                strokeLinecap="round"
             >
                 <g stroke="currentColor" className="text-cyan-600">
                     <path d="M88.0799 21.0799V41.0799H88.0499V34.3999L88.0399 34.3899L76.2799 34.3699C75.4999 35.7299 74.4899 36.9899 73.2599 38.1599C72.1599 39.1999 70.88 40.1599 69.42 41.0499L56.6799 41.0299V21.0299L88.0799 21.0799Z" />

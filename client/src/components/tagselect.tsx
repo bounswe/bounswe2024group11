@@ -1,9 +1,9 @@
-export interface AutocompleteTagProps {
+export type AutocompleteTagProps = {
     initialTags?: Tag[];
     availableTags: Tag[];
     onTagsChange?: (tags: Tag[]) => void;
     placeholder?: string;
-}
+};
 
 // AutocompleteTag.tsx
 import { Button } from "@ariakit/react";

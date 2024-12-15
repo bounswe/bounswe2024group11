@@ -39,22 +39,24 @@ api_key = os.getenv('BABELNET_API_KEY')
 
 
 def get_ids(word_id):
-    return_array = [word_id]
+    try:
+        return_array = [word_id]
 
-    url = 'https://babelnet.io/v9/getOutgoingEdges'
-    params = {
-        'id': word_id,
-        'key': api_key,
-    }
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-        raise Exception(f"Error fetching from BabelNet API. Status code: {response.status_code}")
-    
-    data = response.json()
-    for value in data:
-        if value.get("language") == "EN" or value.get("language") == "TR":
-            # if value.get("pointer").get("shortName") != "related":
-            #     return_array.append(value.get("target"))
-            return_array.append(value.get("target"))    
-    
-    return return_array
+        url = 'https://babelnet.io/v9/getOutgoingEdges'
+        params = {
+            'id': word_id,
+            'key': api_key,
+        }
+        response = requests.get(url, params=params)
+        if response.status_code != 200:
+            raise Exception(f"Error fetching from BabelNet API. Status code: {response.status_code}")
+        
+        data = response.json()
+        for value in data:
+            # if value.get("language") == "EN" or value.get("language") == "TR":
+                # if value.get("pointer").get("shortName") != "related":
+            return_array.append(value.get("target"))    # Indent this to the right when activating the language if statement
+        # print(len(return_array))      # Debugging
+        return return_array
+    except:
+        return []

@@ -218,6 +218,7 @@ class QuizSerializer(serializers.ModelSerializer):
     is_taken = serializers.SerializerMethodField()
     num_taken = serializers.SerializerMethodField()
     is_my_quiz = serializers.SerializerMethodField()
+    my_last_answers = serializers.SerializerMethodField()
     
 
     class Meta:
@@ -225,16 +226,25 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'title', 'description', 'difficulty', "author", 
             'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating",
-            'is_my_quiz', 'quiz_point'
+            'is_my_quiz', 'quiz_point', 'my_last_answers'
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
-                           'is_my_quiz', 'quiz_point')
+                           'is_my_quiz', 'quiz_point', 'my_last_answers')
 
     def get_is_taken(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
             return False
         return TakeQuiz.objects.filter(quiz=obj, user=user).exists()
+    
+    def get_my_last_answers(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return []
+        take_quiz = TakeQuiz.objects.filter(quiz=obj, user=user).last()
+        if not take_quiz:
+            return []
+        return TakeQuizSerializer(take_quiz, context=self.context).data
 
     def get_num_taken(self, obj):
         return obj.takes.count()

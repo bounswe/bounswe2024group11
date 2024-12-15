@@ -21,8 +21,7 @@ export const quizzesLoader = (async ({ request }) => {
         const response = await apiClient.get("/quizzes/", {
             params: { page, per_page },
         });
-        //logger.log(response.data);
-        const data = response.data; // Extract data from the axios response
+        const data = response.data;
         const { output, issues, success } = safeParse(
             quizzesResponseSchema,
             data,

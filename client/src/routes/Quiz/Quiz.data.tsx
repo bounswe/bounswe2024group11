@@ -42,8 +42,7 @@ export const quizLoader = (async ({ params }) => {
     try {
         const response = await apiClient.get(`/quizzes/${quizId}/`);
 
-        const data = response.data; // Extract data from axios response
-        logger.log(data);
+        const data = response.data;
 
         const { output, issues, success } = safeParse(quizDetailsSchema, data);
 
@@ -65,34 +64,40 @@ export const takeQuizAction = (async ({ request }) => {
         }
 
         const formData = await request.formData();
-
         const answers = formData.get("answers") as string;
         const quizId = formData.get("quizId");
 
+        // Store answers in localStorage as backup
         localStorage.setItem("quiz_answer" + String(quizId), answers);
 
+        // Submit quiz and wait for response
         const response = await apiClient.post(`/take-quiz/`, {
             quiz: Number(quizId),
             answers: JSON.parse(answers),
         });
-        const data = response.data; // Extract data from axios response
-        logger.log(data);
+
+        // Parse and validate the response
         const { output, issues, success } = safeParse(
             completedQuizSchema,
-            data,
+            response.data,
         );
+
         if (!success) {
             logger.error("Failed to parse quiz response:", issues);
-            throw new Error(`Failed to parse quiz response: ${issues}`);
+            throw new Error(`We couldn't submit your quiz.`);
         }
 
-        return output;
+        // Return the parsed quiz submission data directly
+        return { success: true, data: output };
     } catch (error) {
-        logger.error(`Error submitting quiz:`, error);
-        throw new Error(`Failed to take quiz with ID: `);
+        // Log the error with more details
+        logger.error("Failed to submit quiz:", error);
+
+        throw new Error(
+            "Failed to submit quiz. Let's hope this doesn't happen again.",
+        );
     }
 }) satisfies ActionFunction;
-
 export const quizReviewLoader = (async ({ params }) => {
     const { quizId } = params;
 
