@@ -9,12 +9,11 @@ import {
     useRouteLoaderData,
 } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
-import { BookmarkedForum } from "../../components/bookmarked-forums";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { QuizzesTaken } from "../../components/quizzes-taken";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
 import { userLoader } from "../Home/Home.data";
+import { BookmarkedForum } from "./bookmarked-forums";
 import {
     BlockAction,
     FollowAction,
@@ -22,6 +21,7 @@ import {
     UnBlockAction,
     UnFollowAction,
 } from "./Profile.data";
+import { QuizzesTaken } from "./quizzes-taken";
 
 export const Profile = () => {
     const { profileData } = useLoaderData<typeof profileLoader>();

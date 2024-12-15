@@ -1,8 +1,8 @@
-import { Quiz } from "./Quiz.schema";
+import { QuizDetails } from "./Quiz.schema";
 
 export const questionTypeToQuestion = (
-    questionType: Quiz["type"] | null,
-    question: Quiz["questions"][number]["question_text"],
+    questionType: QuizDetails["type"] | null,
+    question: QuizDetails["questions"][number]["question_text"],
 ) => {
     switch (questionType) {
         case 1:

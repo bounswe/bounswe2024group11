@@ -1,13 +1,13 @@
 import { Button } from "@ariakit/react";
 import { useState } from "react";
-import { Quiz } from "../routes/Quiz/Quiz.schema";
-import { buttonClass, buttonInnerRing } from "./button";
-import { QuizCard } from "./quiz-card";
+import { buttonClass, buttonInnerRing } from "../../components/button";
+import { QuizCard } from "../../components/quiz-card";
+import { QuizDetails } from "../Quiz/Quiz.schema";
 
 const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_COUNT = 6;
 
-export const QuizzesTaken = ({ quizzes }: { quizzes: Quiz[] }) => {
+export const QuizzesTaken = ({ quizzes }: { quizzes: QuizDetails[] }) => {
     const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
 
     const displayedQuizzes = quizzes.slice(0, displayCount);

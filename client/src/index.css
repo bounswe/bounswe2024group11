@@ -106,8 +106,6 @@
         position: relative;
     }
 
-
-
     .touch-hitbox::before {
         content: "";
         position: absolute;

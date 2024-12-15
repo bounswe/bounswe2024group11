@@ -4,13 +4,13 @@ import { array, nullable, number, object, safeParse, string } from "valibot";
 import apiClient from "../../api"; // Axios instance
 import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
-import { quizSchema } from "./Quiz.schema";
+import { quizDetailsSchema } from "./Quiz.schema";
 
 const quizzesResponseSchema = object({
     count: number(),
     next: nullable(string()),
     previous: nullable(string()),
-    results: array(quizSchema),
+    results: array(quizDetailsSchema),
 });
 export const quizzesLoader = (async ({ request }) => {
     const url = new URL(request.url);

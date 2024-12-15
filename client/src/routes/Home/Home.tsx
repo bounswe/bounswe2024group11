@@ -1,37 +1,9 @@
 import { Separator } from "@ariakit/react";
-import {
-    RiArrowDownSLine,
-    RiArrowUpSLine,
-    RiBookReadLine,
-    RiCodeLine,
-    RiTranslate2,
-} from "@remixicon/react";
-import { ReactNode, useState } from "react";
+import { RiBookReadLine, RiCodeLine, RiTranslate2 } from "@remixicon/react";
 import { useRouteLoaderData } from "react-router-typesafe";
+import { Collapsible } from "../../components/collapsible";
 import { PageHead } from "../../components/page-head";
 import { userLoader } from "./Home.data";
-
-const ExpandableItem = ({
-    title,
-    children,
-}: {
-    title: string;
-    children: ReactNode;
-}) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    return (
-        <div className="py-1">
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="flex w-full items-center justify-between rounded-1 bg-white px-3 py-3 text-left font-medium transition-colors hover:bg-slate-100"
-            >
-                {title}
-                {isExpanded ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
-            </button>
-            {isExpanded && <div className="py-2 pl-4">{children}</div>}
-        </div>
-    );
-};
 
 const confusedWordsData = [
     {
@@ -367,7 +339,7 @@ export const Home = () => {
                     </h2>
                     <Separator className="pb-4" />
                     {confusedWordsData.map((item, index) => (
-                        <ExpandableItem key={index} title={item.title}>
+                        <Collapsible key={index} title={item.title}>
                             {item.content.map((contentItem, contentIndex) => (
                                 <p
                                     key={contentIndex}
@@ -386,7 +358,7 @@ export const Home = () => {
                                     )}
                                 </p>
                             ))}
-                        </ExpandableItem>
+                        </Collapsible>
                     ))}
                 </section>
                 <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
@@ -396,7 +368,7 @@ export const Home = () => {
                     </h2>
                     <Separator className="pb-4" />
                     {dailyWordSuggestionsData.map((item, index) => (
-                        <ExpandableItem key={index} title={item.title}>
+                        <Collapsible key={index} title={item.title}>
                             <p>
                                 <strong>Definition:</strong> {item.definition}
                             </p>
@@ -406,7 +378,7 @@ export const Home = () => {
                             <p className="mt-3 text-slate-600">
                                 {item.example}
                             </p>
-                        </ExpandableItem>
+                        </Collapsible>
                     ))}
                 </section>
                 <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
@@ -416,7 +388,7 @@ export const Home = () => {
                     </h2>
                     <Separator className="pb-4" />
                     {technicalDefinitionsData.map((item, index) => (
-                        <ExpandableItem key={index} title={item.title}>
+                        <Collapsible key={index} title={item.title}>
                             <p>
                                 <strong>Full form:</strong> {item.fullForm}
                             </p>
@@ -426,7 +398,7 @@ export const Home = () => {
                             <p className="mt-3 text-slate-600">
                                 {item.example}
                             </p>
-                        </ExpandableItem>
+                        </Collapsible>
                     ))}
                 </section>
             </main>

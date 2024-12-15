@@ -1,7 +1,7 @@
 import { array, nullable, number, object, string } from "valibot";
 import { UserAchievement } from "../Achievements/Achievement.schema";
 import { forumQuestionSchema } from "../Forum/Forum.schema";
-import { quizSchema } from "../Quiz/Quiz.schema";
+import { quizDetailsSchema } from "../Quiz/Quiz.schema";
 
 const InterestTag = object({
     id: number(),
@@ -13,7 +13,7 @@ export const profileSchema = object({
     id: number(),
     full_name: string(),
     avatar: string(),
-    quizzes_taken: array(quizSchema),
+    quizzes_taken: array(quizDetailsSchema),
     bookmarked_forums: array(forumQuestionSchema),
     score: number(),
     achievements: UserAchievement,

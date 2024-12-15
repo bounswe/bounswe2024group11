@@ -29,7 +29,7 @@ import {
     upvoteForumAnswerAction,
 } from "./routes/Forum/Question.data";
 import { Home } from "./routes/Home/Home";
-import { userLoader } from "./routes/Home/Home.data";
+import { homeLoader, userLoader } from "./routes/Home/Home.data";
 import { HomeMain } from "./routes/Home/Home.main";
 import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
 import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
@@ -72,7 +72,7 @@ export const routes: RouteObject[] = [
                     {
                         path: "/",
                         element: <Home />,
-                        // loader: userLoader,
+                        loader: homeLoader,
                         id: "home",
                     },
                     {
