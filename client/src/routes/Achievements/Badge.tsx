@@ -29,9 +29,8 @@ export const AchievementBadge = ({
 }) => {
     return (
         <div className="flex flex-col" role="definition">
-            <Ariakit.HovercardProvider placement="bottom">
-                <Ariakit.HovercardAnchor
-                    href="#"
+            <Ariakit.PopoverProvider placement="bottom">
+                <Ariakit.PopoverDisclosure
                     className={badgeClass({ earned: is_earned })}
                     aria-label={`${achievement.title} achievement ${is_earned ? "earned" : "not earned yet"}`}
                 >
@@ -50,10 +49,10 @@ export const AchievementBadge = ({
                             {achievement.title}
                         </span>
                     )}
-                </Ariakit.HovercardAnchor>
-                <Ariakit.Hovercard
-                    gutter={16}
-                    className="relative z-50 rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
+                </Ariakit.PopoverDisclosure>
+                <Ariakit.Popover
+                    gutter={8}
+                    className="relative z-50 origin-top rounded-2 bg-slate-900 p-4 pr-6 text-white shadow-md"
                     role="tooltip"
                 >
                     <div className="absolute inset-1 rounded-1 ring ring-slate-700"></div>
@@ -87,8 +86,8 @@ export const AchievementBadge = ({
                             )}
                         </div>
                     </div>
-                </Ariakit.Hovercard>
-            </Ariakit.HovercardProvider>
+                </Ariakit.Popover>
+            </Ariakit.PopoverProvider>
         </div>
     );
 };

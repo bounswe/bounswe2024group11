@@ -154,10 +154,10 @@ export const ForumQuestionCard = ({ question, onTagClick }: ForumCardProps) => {
                     aria-label={`${question.title} by ${question.author.full_name}`}
                     className="group flex flex-col gap-2 py-4"
                 >
-                    <h2 className="text-xl font-semibold text-slate-900 decoration-inherit decoration-1 underline-offset-4 transition-all group-hover:underline">
+                    <h2 className="text-xl font-semibold text-slate-900 decoration-inherit decoration-1 underline-offset-4 transition-all">
                         {question.title}
                     </h2>
-                    <p className="text-slate-700 decoration-inherit decoration-1 underline-offset-2 group-hover:underline">
+                    <p className="text-slate-700 decoration-inherit decoration-1 underline-offset-2">
                         {question.question}
                     </p>
                 </Link>
