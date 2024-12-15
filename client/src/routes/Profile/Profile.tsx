@@ -6,7 +6,7 @@ import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { QuizCard } from "../../components/quiz-card";
-import { AchievementBadge } from "../Achievements/Achievements";
+import { AchievementBadge } from "../Achievements/Badge";
 import { homeLoader } from "../Home/Home.data";
 import {
     BlockAction,

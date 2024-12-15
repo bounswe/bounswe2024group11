@@ -75,6 +75,7 @@ export const routes: RouteObject[] = [
                         loader: homeLoader,
                         id: "home",
                     },
+
                     {
                         path: "achievements",
                         element: <Achievements />,
