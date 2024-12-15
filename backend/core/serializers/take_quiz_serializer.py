@@ -59,9 +59,10 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         return obj.answers.filter(answer=None).count()
 
     def create(self, validated_data):
+        user = self.context['request'].user
         # Extract the answers from the validated data
         answers = validated_data.pop('answers')
-        user = validated_data['user']
+        quiz_author = validated_data['user'] # user in takequiz object. not to be confsed with the reuqest user
         quiz = validated_data['quiz']
 
         # Create the TakeQuiz instance
@@ -91,6 +92,8 @@ class TakeQuizSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(e)
         take_quiz.score = self.calculate_score(take_quiz)
         take_quiz.save()
+        user.score += take_quiz.score
+        user.save()
         return take_quiz
 
     def update(self, instance, validated_data):

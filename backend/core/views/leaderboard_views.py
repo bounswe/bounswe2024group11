@@ -15,7 +15,7 @@ class LeaderboardView(APIView):
     def get(self, request):
         try:
             # Step 1: Fetch all users sorted by score
-            users = CustomUser.objects.all().order_by('-score')
+            users = CustomUser.objects.filter(is_superuser=False).order_by('-score')
 
             # Step 2: Create leaderboard data
             leaderboard_data = []
@@ -27,9 +27,7 @@ class LeaderboardView(APIView):
                     'user_info': user_info_serializer.data,
                 })
                 
-            # Step 3: Serialize the final leaderboard data
-            serializer = LeaderboardSerializer(leaderboard_data, many=True,context={'request': request})
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=leaderboard_data, status=status.HTTP_200_OK)
 
         except Exception as e:
             # Handle errors gracefully
