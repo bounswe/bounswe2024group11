@@ -112,18 +112,13 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
             <div className="flex flex-wrap gap-2 tracking-wider">
                 {quiz.tags.map(({ name, linked_data_id }) => {
                     return (
-                        <Link
+                        <span
                             key={linked_data_id}
                             data-linked-id={linked_data_id}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                onTagClick(linked_data_id);
-                            }}
-                            to="#"
                             className="touch-hitbox relative flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-[500] text-slate-950 transition-all hover:bg-slate-200"
                         >
                             {name.toLocaleUpperCase()}
-                        </Link>
+                        </span>
                     );
                 })}
             </div>
