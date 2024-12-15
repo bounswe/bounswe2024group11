@@ -261,23 +261,16 @@ export const Profile = () => {
                                                 {score} Turquiz Points
                                             </Ariakit.PopoverHeading>
                                             <div className="flex flex-col gap-4 px-6 pb-6 pt-3">
-                                                <Ariakit.PopoverDescription className="text-balance text-slate-300">
-                                                    You can earn Turquiz points
-                                                    by completing quizzes.{" "}
-                                                    <br />
-                                                    You will get a point for
-                                                    each correct answer in a
-                                                    quiz from 10 points to 30
-                                                    points depending on the
-                                                    difficulty of the quiz.
-                                                </Ariakit.PopoverDescription>
-                                                <hr className="border-slate-700" />
-                                                <Ariakit.PopoverDescription className="text-balance text-slate-300">
-                                                    Using a hint in a question
-                                                    will decrease the points
-                                                    earned by 50%. There's no
-                                                    penalty for incorrect
-                                                    answers.
+                                                <Ariakit.PopoverDescription className="flex flex-col gap-2 text-balance text-slate-300">
+                                                    <span className="text-slate-100">
+                                                        Here's how points work:
+                                                    </span>
+                                                    Get them right, earn TP
+                                                    points! Easy quizzes get you
+                                                    10, tough ones get you 30.
+                                                    Using hints costs half your
+                                                    points, but wrong answers?
+                                                    No sweat!
                                                 </Ariakit.PopoverDescription>
 
                                                 <Ariakit.Button

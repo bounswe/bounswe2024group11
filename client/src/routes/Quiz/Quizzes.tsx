@@ -48,7 +48,7 @@ export const Quizzes = () => {
                     {(data) => {
                         const totalPages = Math.ceil(data.count / perPage);
                         const description = logged_in
-                            ? `This is your time to shine, ${user.full_name}`
+                            ? `Your turn to shine, ${user.full_name}`
                             : "Test your knowledge of various topics. Log in to track your progress.";
 
                         return (

@@ -26,7 +26,7 @@ export const EndQuiz = ({
                 <h2 className="max-w-lg text-balance text-center font-display text-3xl font-medium text-slate-900">
                     {successful
                         ? `Great job ${logged_in ? user.full_name : "buddy"}!`
-                        : `Quiz Completed!`}
+                        : `Well, that could've gone better! Ready for another shot?`}
                 </h2>
                 <p className="text-lg text-slate-600">
                     {successful

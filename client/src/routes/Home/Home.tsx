@@ -53,7 +53,7 @@ export const Home = () => {
         ? "Welcome " + user.full_name
         : "Welcome to Turquiz";
     const description = logged_in
-        ? `While you were away, we have gathered some content for you.`
+        ? `Look what we found for you! Fresh content, just for you`
         : "Turquiz is a platform that helps you to get prolific in English. You can take quizzes and use forums to improve your English.";
 
     return (

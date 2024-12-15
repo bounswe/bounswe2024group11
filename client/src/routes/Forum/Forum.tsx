@@ -66,7 +66,7 @@ export const Forum = () => {
                     {(data) => {
                         const totalPages = Math.ceil(data.count / perPage);
                         const description = logged_in
-                            ? `There you engage with community, ${user.full_name}`
+                            ? `Where the magic happens - jump into the conversation ${user.full_name}!`
                             : "Engage with the community, ask questions, and get help from other people.";
 
                         return (

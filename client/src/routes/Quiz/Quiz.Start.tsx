@@ -57,12 +57,10 @@ export const StartQuiz = ({
             </figure>
             <div className="flex flex-col items-center gap-2">
                 <h1 className="text-center text-2xl font-semibold">
-                    Ready to start the quiz?
+                    Ready when you are!
                 </h1>
                 <p className="text-balance text-center text-slate-500">
-                    The quiz consists of {quiz.questions.length} questions. You
-                    can move the next or previous question using the buttons
-                    below. will be provided 10 minutes to complete the quiz.
+                    Got {quiz.questions.length} questions coming your way
                 </p>
             </div>
             <button
