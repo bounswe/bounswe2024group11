@@ -340,7 +340,7 @@ class RateQuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RateQuiz
-        fields = ('id', 'quiz', "rating", "user")
+        fields = ('id', 'quiz', "rating", "user", "comment")
         read_only_fields = ('id', "user")
 
     def create(self, validated_data):

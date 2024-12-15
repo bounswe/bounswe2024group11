@@ -140,6 +140,7 @@ class RateQuiz(models.Model):
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
+    comment = models.CharField(max_length=1000, blank=True, null=True)
     # unique together
     class Meta:
         unique_together = ['quiz', 'user']

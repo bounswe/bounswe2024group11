@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer, QuizSerializer
+from .serializers import TagSerializer, UserInfoSerializer, FollowSerializer, QuizSerializer, RateQuizSerializer
 from .take_quiz_serializer import TakeQuizSerializer
-from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser, Block, Quiz
+from ..models import ForumQuestion, ForumBookmark, TakeQuiz, UserAchievement, Achievement, Tag, Follow, CustomUser, Block, Quiz, RateQuiz
 from core import models
 from django.db.models import Sum
 from .forum_question_serializer import ForumQuestionSerializer
@@ -64,9 +64,20 @@ class ProfileSerializer(serializers.ModelSerializer):
             'proficiency',
             'my_quizzes',
             'my_forum_questions',
-            'my_forum_answers'
+            'my_forum_answers',
         ]
-        read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums", "is_following", "is_blocked", "my_quizzes", "my_forum_questions", "my_forum_answers"]
+        read_only_fields = [
+            'id', 
+            "score", 
+            "quizzes_taken",
+            "achievements", 
+            "bookmarked_forums", 
+            "is_following", 
+            "is_blocked", 
+            "my_quizzes", 
+            "my_forum_questions", 
+            "my_forum_answers", 
+        ]
 
     def update(self, instance, validated_data):
         print(validated_data)
@@ -129,7 +140,22 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     def get_my_quizzes(self, obj):
         my_quizzes = Quiz.objects.filter(author=obj)
-        return QuizSerializer(my_quizzes, many=True, context=self.context).data
+        my_quizzes_serialized = []
+        for quiz in my_quizzes:
+
+            quiz_serialized = QuizSerializer(quiz, context=self.get_context_data()).data
+            rate_quizzes = RateQuiz.objects.filter(quiz=quiz)
+            quiz_serialized['rate_quizzes'] = []
+            request = self.context.get('request')
+            if request and request.user == obj:
+                for rate_quiz in rate_quizzes:
+                    rate_quiz_serialized = RateQuizSerializer(rate_quiz, context=self.get_context_data()).data
+                    rate_quiz_author_serialized = UserInfoSerializer(rate_quiz.user, context=self.get_context_data()).data
+                    rate_quiz_serialized['user'] = rate_quiz_author_serialized
+                    quiz_serialized['rate_quizzes'].append(rate_quiz_serialized)
+            my_quizzes_serialized.append(quiz_serialized)
+
+        return my_quizzes_serialized
     
     def get_my_forum_questions(self, obj):
         my_forum_questions = ForumQuestion.objects.filter(author=obj)
