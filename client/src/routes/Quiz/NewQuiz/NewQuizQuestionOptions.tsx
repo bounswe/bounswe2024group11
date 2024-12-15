@@ -14,10 +14,10 @@ import { questionTypeToQuestion } from "../Quiz.utils";
 import { Hints, hintsSchema } from "./NewQuizQuestionOptionsHint";
 import { useQuizStore } from "./state";
 
-interface OptionsViewProps {
+type OptionsViewProps = {
     index: number;
     onQuestionReset: (id: number) => void;
-}
+};
 
 const difficultyBarClass = cva("h-full", {
     variants: {

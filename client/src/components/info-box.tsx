@@ -1,11 +1,11 @@
 import { Button } from "@ariakit/react";
 import { RiInformation2Fill } from "@remixicon/react";
 
-interface InfoBoxProps {
+type InfoBoxProps = {
     show: boolean;
     onClose?: () => void;
     message: string;
-}
+};
 
 export const InfoBox = ({ show, onClose, message }: InfoBoxProps) => {
     if (!show) return null;
