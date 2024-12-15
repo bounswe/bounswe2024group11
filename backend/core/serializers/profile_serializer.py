@@ -39,6 +39,9 @@ class ProfileSerializer(serializers.ModelSerializer):
         choices=CustomUser.PROFICIENCY_LEVELS, 
         required=False  # Allow partial updates
     )
+    my_quizzes = serializers.SerializerMethodField()
+    my_forum_questions = serializers.SerializerMethodField()
+    my_forum_answers = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -59,8 +62,11 @@ class ProfileSerializer(serializers.ModelSerializer):
             'is_following',
             'is_blocked',
             'proficiency',
+            'my_quizzes',
+            'my_forum_questions',
+            'my_forum_answers'
         ]
-        read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums", "is_following", "is_blocked"]
+        read_only_fields = ['id', "score", "quizzes_taken", "achievements", "bookmarked_forums", "is_following", "is_blocked", "my_quizzes", "my_forum_questions", "my_forum_answers"]
 
     def update(self, instance, validated_data):
         print(validated_data)
@@ -120,6 +126,18 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_context_data(self):
         return {'request': self.context.get('request')}
+    
+    def get_my_quizzes(self, obj):
+        my_quizzes = Quiz.objects.filter(author=obj)
+        return QuizSerializer(my_quizzes, many=True, context=self.context).data
+    
+    def get_my_forum_questions(self, obj):
+        my_forum_questions = ForumQuestion.objects.filter(author=obj)
+        return ForumQuestionSerializer(my_forum_questions, many=True, context=self.context).data
+    
+    def get_my_forum_answers(self, obj):
+        my_forum_answers = ForumQuestion.objects.filter(answers__author=obj)
+        return ForumQuestionSerializer(my_forum_answers, many=True, context=self.context).data
     
     def get_is_following(self, obj):
         request = self.context.get('request')
