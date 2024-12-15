@@ -56,7 +56,10 @@ export const Leaderboard = () => {
                                                     {rank + 1}
                                                 </td>
                                                 <td className="border px-6 py-4">
-                                                    <div className="flex flex-row items-center gap-4">
+                                                    <Link
+                                                        to={`/profile/${player.user_info.username}`}
+                                                        className="flex flex-row items-center gap-4"
+                                                    >
                                                         <Avatar
                                                             author={
                                                                 player.user_info
@@ -95,7 +98,7 @@ export const Leaderboard = () => {
                                                                 🥉{" "}
                                                             </span>
                                                         )}
-                                                    </div>
+                                                    </Link>
                                                 </td>
                                                 <td className="w-40 border p-2 text-end">
                                                     {player.score}
