@@ -81,7 +81,6 @@ class Quiz(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES)
-    quiz_point = models.IntegerField(default=0)
     tags = models.ManyToManyField('Tag')
     type = models.IntegerField(choices=QUIZ_TYPE_CHOICES)    
     
@@ -130,6 +129,11 @@ class UserAnswer(models.Model):
             raise ValidationError("The question must belong to the same quiz.")
         if self.answer and self.answer.question.id != self.question.id:  # Add null check
             raise ValidationError("The answer must belong to the same question.")
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()  # This will call the clean() method
+        super(UserAnswer, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.answer.choice_text
