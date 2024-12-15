@@ -552,6 +552,7 @@ const feedSchema = object({
     forum_questions_by_interests: array(forumQuestionSchema),
     quizzes_by_interests: array(quizDetailsSchema),
     related_tags_for_forum_questions: array(tagSchema),
+    related_tags_for_quizzes: array(tagSchema),
 });
 
 export const userLoader = () => {
@@ -588,10 +589,15 @@ export const homeLoader = () => {
               }
               return output;
           })
-        : null;
+        : Promise.resolve(null);
 
+    // Defer the Promise.all instead of individual promises
     return defer({
-        feedData: feedPromise,
-        profileData: profilePromise,
+        data: Promise.all([feedPromise, profilePromise]).then(
+            ([feed, profile]) => ({
+                feedData: feed,
+                profileData: profile,
+            }),
+        ),
     });
 };

@@ -5,147 +5,19 @@ import {
     useLoaderData,
     useRouteLoaderData,
 } from "react-router-typesafe";
-import { buttonClass } from "../../components/button";
-import { ForumQuestionCard } from "../../components/forum-card";
-import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
-import { ForumQuestion, Tag } from "../Forum/Forum.schema";
-import { QuizDetails } from "../Quiz/Quiz.schema";
+import { QuizLoading } from "../_loading";
 import { homeLoader, userLoader } from "./Home.data";
+import { HomeForumFeed } from "./HomeForum";
+import { HomeQuizFeed } from "./HomeQuiz";
 import { HomeStaticContent } from "./HomeStatic";
+import { RelatedTags } from "./HomeTags";
 
-const INITIAL_DISPLAY_COUNT = 6;
-const LOAD_MORE_COUNT = 6;
+export const INITIAL_DISPLAY_COUNT = 6;
+export const LOAD_MORE_COUNT = 6;
 
-const HomeForumFeed = ({
-    forumQuestions,
-    title,
-}: {
-    forumQuestions: ForumQuestion[];
-    title: string;
-}) => {
-    const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
-    const displayedForums = forumQuestions.slice(0, displayCount);
-
-    const hasMore = displayCount < forumQuestions.length;
-
-    return (
-        <section className="flex flex-col gap-4">
-            <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                <span>{title}</span>
-                <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                    {displayedForums.length}
-                </span>
-            </h2>
-            <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
-                {displayedForums.map((post) => (
-                    <ForumQuestionCard
-                        key={post.id}
-                        question={post}
-                    ></ForumQuestionCard>
-                ))}
-            </div>
-            {hasMore && (
-                <div className="mt-4 flex justify-center">
-                    <Button
-                        onClick={() =>
-                            setDisplayCount((prev) => prev + LOAD_MORE_COUNT)
-                        }
-                        className={buttonClass({
-                            intent: "primary",
-                            size: "medium",
-                        })}
-                    >
-                        Load More
-                    </Button>
-                </div>
-            )}
-        </section>
-    );
-};
-
-const HomeQuizFeed = ({
-    quizzes,
-    title,
-}: {
-    quizzes: QuizDetails[];
-    title: string;
-}) => {
-    const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
-    const displayedQuizzes = quizzes.slice(0, displayCount);
-    const hasMore = displayCount < quizzes.length;
-
-    return (
-        <section className="flex flex-col gap-4">
-            <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                <span>{title}</span>
-                <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                    {displayedQuizzes.length}
-                </span>
-            </h2>
-            <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
-                {displayedQuizzes.map((quiz) => (
-                    <QuizCard
-                        key={quiz.id}
-                        quiz_key={String(quiz.id)}
-                        quiz={quiz}
-                        onTagClick={() => {}}
-                    />
-                ))}
-            </div>
-            {hasMore && (
-                <div className="mt-4 flex justify-center">
-                    <Button
-                        onClick={() =>
-                            setDisplayCount((prev) => prev + LOAD_MORE_COUNT)
-                        }
-                        className={buttonClass({
-                            intent: "primary",
-                            size: "medium",
-                        })}
-                    >
-                        Load More
-                    </Button>
-                </div>
-            )}
-        </section>
-    );
-};
-
-const RelatedTags = ({ tags }: { tags: Tag[] }) => {
-    return (
-        <>
-            <section className="flex flex-col gap-4">
-                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                    <span>
-                        Your Interests
-                        <span className="font-regular text-slate-500">
-                            {" (^_^) "}
-                        </span>
-                    </span>
-                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                        {tags.length}
-                    </span>
-                </h2>
-                <div className="flex flex-col gap-2">
-                    {tags.map((tag) => (
-                        <Button
-                            key={tag.linked_data_id}
-                            className={buttonClass({
-                                intent: "secondary",
-                                size: "medium",
-                            })}
-                        >
-                            <span>{tag.name}</span>
-                        </Button>
-                    ))}
-                </div>
-            </section>
-        </>
-    );
-};
-
-const availableFeedTypes = ["personal", "your network", "forum", "quiz"];
+type FeedType = "personal" | "network" | "forum" | "quiz";
+const availableFeedTypes: FeedType[] = ["personal", "network", "forum", "quiz"];
 
 const fakeInterests = [
     {
@@ -174,32 +46,23 @@ const fakeInterests = [
 export const Home = () => {
     const { logged_in, user } =
         useRouteLoaderData<typeof userLoader>("home-main");
-
-    const { feedData, profileData } = useLoaderData<typeof homeLoader>();
+    const { data } = useLoaderData<typeof homeLoader>();
+    const [feedType, setFeedType] = useState<FeedType>("personal");
 
     const title = logged_in
         ? "Welcome " + user.full_name
         : "Welcome to Turquiz";
-
     const description = logged_in
         ? `While you were away, we have gathered some content for you.`
         : "Turquiz is a platform that helps you to get prolific in English. You can take quizzes and use forums to improve your English.";
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <Suspense fallback={<> </>}>
+            <Suspense fallback={<QuizLoading />}>
                 <Await
-                    resolve={Promise.all([feedData, profileData])}
-                    children={([feedData, profileData]) => {
-                        const interests =
-                            feedData?.forum_questions_by_interests;
-                        const profileComplete =
-                            interests && interests.length >= 3;
+                    resolve={data}
+                    children={({ feedData, profileData }) => {
                         const score = profileData?.score;
-
-                        const [feedType, setFeedType] =
-                            useState<(typeof availableFeedTypes)[number]>(
-                                "interest",
-                            );
 
                         return (
                             <>
@@ -214,7 +77,7 @@ export const Home = () => {
                                         />
                                         <span className="absolute bottom-0 left-0 right-0 -mb-4 flex justify-center">
                                             <span className="flex h-8 min-w-8 items-center justify-center rounded-full border-2 border-cyan-800 bg-cyan-900 px-2 text-center text-sm font-medium text-white ring-4 ring-cyan-900/20">
-                                                300 TP
+                                                {score} TP
                                             </span>
                                         </span>
                                     </figure>
@@ -237,8 +100,8 @@ export const Home = () => {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="mx-auto flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
-                                    {" "}
                                     {availableFeedTypes.map((option) => (
                                         <label
                                             key={option}
@@ -249,7 +112,10 @@ export const Home = () => {
                                                 value={option}
                                                 checked={feedType === option}
                                                 onChange={(e) =>
-                                                    setFeedType(e.target.value)
+                                                    setFeedType(
+                                                        e.target
+                                                            .value as FeedType,
+                                                    )
                                                 }
                                                 className="sr-only"
                                             />
@@ -265,37 +131,72 @@ export const Home = () => {
                                         </label>
                                     ))}
                                 </div>
-                                <Separator className="border-slate-200" />
-                                <RelatedTags
-                                    tags={
-                                        feedData.related_tags_for_forum_questions
-                                    }
-                                />
-                                <HomeForumFeed
-                                    forumQuestions={
-                                        feedData.forum_questions_by_followed_users
-                                    }
-                                    title="Forum Questions by Followed Users"
-                                />
-                                <Separator className="border-slate-200" />
-                                <HomeQuizFeed
-                                    quizzes={feedData.quizzes_by_followed_users}
-                                    title="Quizzes by Followed Users"
-                                />
-                                <Separator className="border-slate-200" />
-                                <HomeForumFeed
-                                    forumQuestions={
-                                        feedData.forum_questions_by_interests
-                                    }
-                                    title="Forum Questions by Interests"
-                                />
-                                <Separator className="border-slate-200" />
-                                <HomeQuizFeed
-                                    quizzes={feedData.quizzes_by_interests}
-                                    title="Quizzes by Interests"
-                                />
+
                                 <Separator className="border-slate-200" />
 
+                                {feedType === "personal" && (
+                                    <>
+                                        <RelatedTags
+                                            tags={
+                                                feedData.related_tags_for_forum_questions
+                                            }
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomeForumFeed
+                                            forumQuestions={
+                                                feedData.forum_questions_by_interests
+                                            }
+                                            title="Forums Based on Your Interests"
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomeQuizFeed
+                                            quizzes={
+                                                feedData.quizzes_by_interests
+                                            }
+                                            title="Quizzes Based on Your Interests"
+                                        />
+                                    </>
+                                )}
+
+                                {feedType === "network" && (
+                                    <>
+                                        <HomeForumFeed
+                                            forumQuestions={
+                                                feedData.forum_questions_by_followed_users
+                                            }
+                                            title="Forums from People You Follow"
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomeQuizFeed
+                                            quizzes={
+                                                feedData.quizzes_by_followed_users
+                                            }
+                                            title="Quizzes from People You Follow"
+                                        />
+                                    </>
+                                )}
+
+                                {feedType === "forum" && (
+                                    <HomeForumFeed
+                                        forumQuestions={[
+                                            ...feedData.forum_questions_by_interests,
+                                            ...feedData.forum_questions_by_followed_users,
+                                        ]}
+                                        title="All Forums"
+                                    />
+                                )}
+
+                                {feedType === "quiz" && (
+                                    <HomeQuizFeed
+                                        quizzes={[
+                                            ...feedData.quizzes_by_interests,
+                                            ...feedData.quizzes_by_followed_users,
+                                        ]}
+                                        title="All Quizzes"
+                                    />
+                                )}
+
+                                <Separator className="border-slate-200" />
                                 <HomeStaticContent />
                                 <Separator className="border-slate-200" />
                             </>
