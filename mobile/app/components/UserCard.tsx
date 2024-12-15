@@ -6,6 +6,7 @@ import UserView from "./UserView";
 import FollowButton from "./FollowButton";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import API_URL_GLOBAL from "../../config";
 
 interface UserCardProps {
   user: LoggedinUser;
@@ -27,7 +28,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
       try {
         // Fetch user profile data
         const profileResponse = await axios.get(
-          `http://10.0.2.2:8000/api/v1/profile/${user.username}`,
+          `${API_URL_GLOBAL}profile/${user.username}`,
           {
             headers: {
               Authorization: `Bearer ${authState.token}`,
@@ -40,14 +41,11 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         setFollowingsCount(profileResponse.data.followings.length);
 
         // Check if the logged-in user is following the current user
-        const followResponse = await axios.get(
-          "http://10.0.2.2:8000/api/v1/follow/",
-          {
-            headers: {
-              Authorization: `Bearer ${authState.token}`,
-            },
-          }
-        );
+        const followResponse = await axios.get(`${API_URL_GLOBAL}follow/`, {
+          headers: {
+            Authorization: `Bearer ${authState.token}`,
+          },
+        });
 
         const followInstance = followResponse.data.results.find(
           (follow: any) => follow.following === user.id
@@ -70,14 +68,11 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
     try {
       if (isFollowing) {
         // Unfollow
-        const followInstance = await axios.get(
-          `http://10.0.2.2:8000/api/v1/follow/`,
-          {
-            headers: {
-              Authorization: `Bearer ${authState.token}`,
-            },
-          }
-        );
+        const followInstance = await axios.get(`${API_URL_GLOBAL}follow/`, {
+          headers: {
+            Authorization: `Bearer ${authState.token}`,
+          },
+        });
 
         const instanceToDelete = followInstance.data.results.find(
           (follow: any) => follow.following === user.id
@@ -85,7 +80,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
         if (instanceToDelete) {
           await axios.delete(
-            `http://10.0.2.2:8000/api/v1/follow/${instanceToDelete.id}/`,
+            `${API_URL_GLOBAL}follow/${instanceToDelete.id}/`,
             {
               headers: {
                 Authorization: `Bearer ${authState.token}`,
@@ -101,7 +96,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
       } else {
         // Follow
         await axios.post(
-          "http://10.0.2.2:8000/api/v1/follow/",
+          `${API_URL_GLOBAL}follow/`,
           { following: user.id },
           {
             headers: {
