@@ -65,6 +65,11 @@ class TakeQuizSerializer(serializers.ModelSerializer):
         quiz_author = validated_data['user'] # user in takequiz object. not to be confsed with the reuqest user
         quiz = validated_data['quiz']
 
+        # Check if the quiz is frozen
+        # is_frozen = quiz.is_frozen
+        # if is_frozen:
+        #     raise serializers.ValidationError("Quiz is frozen. You cannot take a frozen quiz.")
+
         # Create the TakeQuiz instance
         take_quiz = TakeQuiz.objects.create(**validated_data)
 

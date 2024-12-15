@@ -227,7 +227,7 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'title', 'description', 'difficulty', "author", 
             'tags', 'type', 'created_at', 'questions', 'num_taken', "is_taken", "rating",
-            'is_my_quiz', 'quiz_point', 'my_last_answers'
+            'is_my_quiz', 'quiz_point', 'my_last_answers', "is_frozen"
         )
         read_only_fields = ("difficulty", 'created_at', 'num_taken', 'is_taken', 'rating', "author",
                            'is_my_quiz', 'quiz_point', 'my_last_answers')
@@ -322,6 +322,7 @@ class QuizSerializer(serializers.ModelSerializer):
         # Update quiz fields
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
+        instance.is_frozen = validated_data.get('is_frozen', instance.is_frozen)
         instance.save()
 
         # Update tags

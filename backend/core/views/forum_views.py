@@ -1,4 +1,4 @@
-from ..models import ForumQuestion, ForumAnswer
+from ..models import ForumQuestion, ForumAnswer, Block
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -19,13 +19,18 @@ class ForumQuestionPagination(PageNumberPagination):
 
 
 class ForumQuestionViewSet(viewsets.ModelViewSet):
-    queryset = ForumQuestion.objects.all().order_by('-created_at')
     serializer_class = ForumQuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     pagination_class = ForumQuestionPagination
     # parser_classes = (MultiPartParser, FormParser)  # Add this
 
-
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            blocked_users = Block.objects.filter(blocker=user).values_list('blocking', flat=True)
+            return ForumQuestion.objects.exclude(author__in=blocked_users).order_by('-created_at')
+        return ForumQuestion.objects.all().order_by('-created_at')
+    
     def get_parsers(self):
         if getattr(self, 'swagger_fake_view', False):
             return []
@@ -79,12 +84,15 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
     
     
 class ForumAnswerViewSet(viewsets.ModelViewSet):
-    queryset = ForumAnswer.objects.all().order_by('created_at')
     serializer_class = ForumAnswerSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def get_queryset(self):
-        # Filter answers by the question ID
+        user = self.request.user
+        if user.is_authenticated:
+            blocked_users = Block.objects.filter(blocker=user).values_list('blocking', flat=True)
+            # Filter answers by the question ID and blocked users
+            return ForumAnswer.objects.filter(forum_question_id=self.kwargs['forum_question_pk']).exclude(author__in=blocked_users).order_by('created_at')
         return ForumAnswer.objects.filter(forum_question_id=self.kwargs['forum_question_pk']).order_by('created_at')
     
     def perform_create(self, serializer):

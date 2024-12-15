@@ -3,7 +3,7 @@ from rest_framework import serializers
 from ..views.difficulty_views import get_difficulty
 from django.contrib.auth import get_user_model
 from ..models import (CustomUser, ForumQuestion, Quiz, QuizQuestion, QuizQuestionChoice, RateQuiz,
-                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint)
+                     Tag, ForumBookmark, ForumAnswer, ForumUpvote, ForumDownvote, TakeQuiz, ForumAnswerDownvote, ForumAnswerUpvote, QuizQuestionHint, Block)
 from .forum_vote_serializer import ForumUpvoteSerializer, ForumDownvoteSerializer
 from .take_quiz_serializer import TakeQuizSerializer
 from .serializers import QuizQuestionSerializer, QuizQuestionChoiceSerializer, UserInfoSerializer, TagSerializer, ForumAnswerSerializer
@@ -19,7 +19,7 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)  # For nested representation of tags
     tags_string = serializers.CharField(max_length=None, required=False, allow_null=True, write_only=True)
     author = UserInfoSerializer(read_only=True)
-    answers = ForumAnswerSerializer(many=True, read_only=True, required=False)
+    answers = serializers.SerializerMethodField()
     answers_count = serializers.SerializerMethodField()
     is_bookmarked = serializers.SerializerMethodField()
     is_upvoted = serializers.SerializerMethodField()
@@ -56,6 +56,16 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
             except json.JSONDecodeError:
                 raise serializers.ValidationError({"tags": "Invalid JSON format for tags"})
         return super().to_internal_value(data)
+    
+    def get_answers(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            blocked_users = Block.objects.filter(blocker=request.user).values_list('blocking', flat=True)
+            answers = ForumAnswer.objects.filter(forum_question=obj).exclude(author__in=blocked_users)
+        else:
+            answers = ForumAnswer.objects.filter(forum_question=obj)
+        return ForumAnswerSerializer(answers, many=True, context=self.context).data
+
 
     def set_image_url(self, forum_question, image_file):
         if image_file:

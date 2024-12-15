@@ -45,7 +45,7 @@ class QuizViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_authenticated:
             blocked_users = Block.objects.filter(blocker=user).values_list('blocking__id', flat=True)  # Fetch ing blocked users
-            queryset = queryset.exclude(author__id__in=blocked_users)  # ! Excluding quizzes by blocked users
+            queryset = queryset.exclude(author__in=blocked_users)  # ! Excluding quizzes by blocked users
 
         linked_data_id = self.request.query_params.get('linked_data_id')
         if linked_data_id:
