@@ -22,6 +22,22 @@ const ratingSchema = object({
     count: number(),
 });
 
+const myAnswersSchema = object({
+    id: number(),
+    question: number(),
+    take_quiz: number(),
+    answer: number(),
+    is_hint_used: boolean(),
+});
+
+const myAnswersEntitySchema = object({
+    id: number(),
+    quiz: number(),
+    user: number(),
+    date: string(),
+    answers: array(myAnswersSchema),
+});
+
 export const quizQuestionSchema = object({
     id: number(),
     question_text: string(),
@@ -64,9 +80,9 @@ export const quizOverviewSchema = object({
     is_my_quiz: boolean(),
     is_taken: boolean(),
     questions: questionsSchema,
-    //question_count: nullable(number()),
     rating: ratingSchema,
     difficulty: number(),
+    my_last_answers: myAnswersEntitySchema,
 });
 
 export const quizAnswerSchema = object({
@@ -114,6 +130,7 @@ export const quizSchema = object({
     num_taken: number(),
     is_my_quiz: boolean(),
     is_taken: boolean(),
+    quiz_point: number(),
     questions: array(
         object({
             id: number(),

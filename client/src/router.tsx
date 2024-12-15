@@ -50,7 +50,6 @@ import {
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
 import {
     quizLoader,
-    quizReviewLoader,
     quizShouldRevalidate,
     takeQuizAction,
 } from "./routes/Quiz/Quiz.data";
@@ -159,7 +158,7 @@ export const routes: RouteObject[] = [
                     {
                         path: "quizzes/:quizId/review",
                         element: <QuizReview />,
-                        loader: quizReviewLoader,
+                        loader: quizLoader,
                     },
                     {
                         path: "profile/",

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
-import { quizReviewLoader } from "./Quiz.data";
+import { quizLoader } from "./Quiz.data";
 import { QuizAnswer, QuizQuestion } from "./Quiz.schema";
 import { questionTypeToQuestion } from "./Quiz.utils";
 import { choiceButton } from "./QuizChoice";
@@ -79,7 +79,7 @@ const QuizCard = ({
 };
 
 export const QuizReview = () => {
-    const { quiz, savedAnswers } = useLoaderData<typeof quizReviewLoader>();
+    const quiz = useLoaderData<typeof quizLoader>();
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <svg
@@ -108,14 +108,16 @@ export const QuizReview = () => {
                 description="Review quiz, learn from your mistakes, and ask community for help."
             />
             <main className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-8">
-                {quiz.questions.map((question) => (
+                {quiz.questions.map((question, index) => (
                     <QuizCard
                         key={question.id}
                         question={question}
                         quizType={quiz.type}
-                        answer={savedAnswers.find(
-                            (answer) => answer.question === question.id,
-                        )}
+                        answer={{
+                            question: question.id,
+                            answer: quiz.my_last_answers.answers[index].answer,
+                            is_hint_used: false,
+                        }}
                     />
                 ))}
             </main>
