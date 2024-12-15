@@ -46,11 +46,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route }) => {
       setUser(response.data);
       //console.log(response.data);
       const bookmarked_forums = response.data.bookmarked_forums;
-      console.log(bookmarked_forums);
+      //console.log(bookmarked_forums);
       const forumBookmarkedQuestions = bookmarked_forums.map(
         (item: { forum_question: number }) => item.forum_question
       );
-      console.log(forumBookmarkedQuestions);
+      //console.log(forumBookmarkedQuestions);
       const questionsPromises = forumBookmarkedQuestions.map(
         async (questionId: number) => {
           const questionResponse = await axios.get(
@@ -190,6 +190,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route }) => {
   );
 
   const userForUserCard = {
+    id: user?.id || -1,
     full_name: user?.full_name || "",
     username: username || "",
     email: user?.email || "",
