@@ -51,6 +51,7 @@ def get_hint(id, targetLang="EN", word = ""):
             elif image.get("url") not in image_array:
                 image_array.append(image["url"])
 
+        synonym_array = [synonym.replace('_', ' ') for synonym in synonym_array]
 
         return {
             "synonyms": list(set(synonym_array)),
