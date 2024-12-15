@@ -40,7 +40,7 @@ export const RelevantQuiz = ({
     onQuizRemoval?: () => void;
 }) => {
     return (
-        <div className="flex flex-col gap-4 rounded-4 bg-slate-50 p-3 text-sm ring-1 ring-slate-100">
+        <div className="flex flex-col gap-4 rounded-4 bg-slate-100 p-3 text-sm ring-1 ring-slate-200">
             <div className="flex items-center justify-between gap-2">
                 <div className="flex items-start gap-2">
                     <RiQuestionLine

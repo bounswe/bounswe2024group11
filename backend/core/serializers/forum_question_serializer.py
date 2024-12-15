@@ -113,17 +113,31 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
 
     def get_related_forum_questions(self, obj):
         if self.context.get('include_related_questions', False):
-            related_questions = helper(obj)
-            return ForumQuestionSerializer(
-                related_questions, many=True, context={'request': self.context['request'], 'include_related_questions': False}
-            ).data
-        return None
+            try:
+                related_questions = helper(obj)
+                return ForumQuestionSerializer(
+                    related_questions, many=True, context={'request': self.context['request'], 'include_related_questions': False}
+                ).data
+            except:
+                return []
+        return []
     
 
     def create(self, validated_data):
         # Extract tags from validated_data
-        print(validated_data)
-        tags_data = json.loads(validated_data.pop('tags_string', None))
+        tags_string = validated_data.pop('tags_string', None)
+        tags = validated_data.pop('tags', None)
+        if tags and tags_string:
+            raise serializers.ValidationError({"tags": "You cannot provide both tags and tags_string"})
+        
+        # Check if tags_string is a string or JSON
+        if isinstance(tags_string, str):
+            try:
+                tags_data = json.loads(tags_string)
+            except json.JSONDecodeError:
+                tags_data = []
+        else:
+            tags_data = tags_string if tags_string else tags
         image_file = validated_data.pop('image_file', None)
         forum_question = ForumQuestion.objects.create(**validated_data)
         # Add tags to the ForumQuestion instance

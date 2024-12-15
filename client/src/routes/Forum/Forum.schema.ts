@@ -14,7 +14,6 @@ import { quizQuestionSchema } from "../Quiz/Quiz.schema";
 export type Answer = InferInput<typeof answerSchema>;
 
 const tagSchema = object({
-    id: number(),
     name: string(),
     linked_data_id: string(),
     description: string(),

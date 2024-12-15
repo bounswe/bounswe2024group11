@@ -4,6 +4,7 @@ import { useLoaderData } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
+import { radioOptionClass } from "../../components/radio-option";
 import { homeLoader } from "../Home/Home.data";
 
 export const Leaderboard = () => {
@@ -222,11 +223,10 @@ export const Leaderboard = () => {
                             className="sr-only"
                         />
                         <span
-                            className={`min-w-32 rounded-full px-4 py-1.5 text-center font-medium transition-all ${
-                                leaderboardType === option
-                                    ? "bg-cyan-900 text-white"
-                                    : "bg-slate-50 text-slate-900 hover:bg-slate-200"
-                            }`}
+                            className={radioOptionClass({
+                                selected: leaderboardType === option,
+                                className: "min-w-32",
+                            })}
                         >
                             {option === "forum" && "Forum"}
                             {option === "quiz" && "Quiz"}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, ForumQuestion, Tag, Quiz, QuizQuestion, RateQuiz, QuizQuestionChoice, TakeQuiz, UserAnswer, QuizQuestionHint, Achievement, UserAchievement
+from .models import CustomUser, ForumQuestion, Tag, Quiz, QuizQuestion, RateQuiz, QuizQuestionChoice, TakeQuiz, UserAnswer, QuizQuestionHint, Achievement, UserAchievement, ForumAnswer, ForumBookmark, ForumUpvote, ForumDownvote, ForumAnswerUpvote, ForumAnswerDownvote, Follow, Block
 # Register your models here.
 admin.site.register(CustomUser)
 admin.site.register(ForumQuestion)
@@ -13,3 +13,11 @@ admin.site.register(UserAnswer)
 admin.site.register(QuizQuestionHint)
 admin.site.register(Achievement)
 admin.site.register(UserAchievement)
+admin.site.register(ForumAnswer)
+admin.site.register(ForumBookmark)
+admin.site.register(ForumUpvote)
+admin.site.register(ForumDownvote)
+admin.site.register(ForumAnswerUpvote)
+admin.site.register(ForumAnswerDownvote)
+admin.site.register(Follow)
+admin.site.register(Block)
