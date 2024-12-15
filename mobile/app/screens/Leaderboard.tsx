@@ -201,7 +201,7 @@ const ForumLeaderboard = () => (
       <View style={styles.headerRow}>
         <Text style={styles.headerRank}>Rank</Text>
         <Text style={styles.headerUser}>User</Text>
-        <Text style={styles.headerPoints}>Turq Points</Text>
+        <Text style={styles.headerPoints}>Turquiz Points</Text>
       </View>
     }
   />
@@ -216,7 +216,7 @@ const QuizLeaderboard = () => (
       <View style={styles.headerRow}>
         <Text style={styles.headerRank}>Rank</Text>
         <Text style={styles.headerUser}>User</Text>
-        <Text style={styles.headerPoints}>Turq Points</Text>
+        <Text style={styles.headerPoints}>Turquiz Points</Text>
       </View>
     }
   />
