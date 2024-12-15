@@ -127,5 +127,6 @@ export const forumCreateAction = (async ({ request }) => {
         console.error(issues);
         throw new Error("Failed to parse forum question response.");
     }
+
     return redirect("/forum");
 }) satisfies ActionFunction;
