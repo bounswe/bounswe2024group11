@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Tag } from "../../Forum/Forum.schema";
 import { Choice, QuizCreate, QuizQuestionCreate } from "../Quiz.schema";
 
-interface QuizState {
+type QuizState = {
     quiz: QuizCreate;
     setQuizField: (field: keyof QuizCreate, value: any) => void;
     addQuestion: (question: QuizQuestionCreate) => void;
@@ -22,7 +22,7 @@ interface QuizState {
     getValidationErrors: () => string[];
     getQuizForSubmission: () => QuizCreate;
     setQuestionPoints: (index: number, difficulty: number) => void;
-}
+};
 
 const generateId = (prefix: string) => `${prefix}-${Date.now()}`;
 

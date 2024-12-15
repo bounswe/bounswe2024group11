@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { inputClass, labelClass } from "../../../components/input";
 
-interface CustomHintInputProps {
+type CustomHintInputProps = {
     hintType: "examples" | "synonyms" | "definitions" | "images";
     selectedHint?: { type: string; text: string };
     onHintSelect: (
         type: "examples" | "synonyms" | "definitions" | "images",
         text: string,
     ) => void;
-}
+};
 
 const hintValidators = {
     images: (value: string) => {

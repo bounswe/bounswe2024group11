@@ -1,16 +1,16 @@
 import React, { createContext, ReactNode, useContext, useRef } from "react";
 
-interface SoundContextType {
+type SoundContextType = {
     playSound: (soundName: string) => void;
     addSound: (soundName: string, filePath: string) => void;
     toggleSound: (soundName: string, isEnabled: boolean) => void;
-}
+};
 
 const SoundContext = createContext<SoundContextType | null>(null);
 
-interface SoundProviderProps {
+type SoundProviderProps = {
     children: ReactNode;
-}
+};
 
 export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
     const sounds = useRef<Record<string, HTMLAudioElement>>({

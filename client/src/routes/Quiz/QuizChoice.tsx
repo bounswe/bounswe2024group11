@@ -82,12 +82,13 @@ const choiceClass = cva(
 
 type ChoiceButtonVariants = VariantProps<typeof choiceClass>;
 
-interface ChoiceLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+type ChoiceLabelProps = {
     showAnswer: boolean;
     isCorrect: boolean;
     isSelected: boolean;
     quizType: number;
-}
+    children: React.ReactNode;
+} & React.LabelHTMLAttributes<HTMLLabelElement>;
 
 const ChoiceLabel = ({
     showAnswer,
