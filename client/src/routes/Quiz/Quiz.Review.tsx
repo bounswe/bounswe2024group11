@@ -39,7 +39,7 @@ const QuizCard = ({
                     to={`/forum/new?qid=${question.id}&title=Help+needed:+"${questionTypeToQuestion(
                         quizType,
                         question.question_text,
-                    )}"&question=I'm+stuck+on+this+quiz+question+about+"${question.question_text}". Can someone help me understand the correct answer?`}
+                    )}"`}
                 >
                     <span
                         className={buttonInnerRing({ intent: "secondary" })}

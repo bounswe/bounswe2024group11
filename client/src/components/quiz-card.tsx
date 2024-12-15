@@ -168,7 +168,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                             </Link>
                         )}
                         <Link
-                            to={String(quiz.id)}
+                            to={`/quizzes/${String(quiz.id)}`}
                             className={buttonClass({
                                 intent: quiz.is_taken ? "secondary" : "primary",
                                 size: "medium",

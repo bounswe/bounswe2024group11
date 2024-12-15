@@ -8,9 +8,9 @@ import {
     useRouteLoaderData,
 } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
+import { BookmarkedForum } from "../../components/bookmarked-forums";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { ForumQuestionCard } from "../../components/forum-card";
-import { QuizCard } from "../../components/quiz-card";
+import { QuizzesTaken } from "../../components/quizzes-taken";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
 import { homeLoader } from "../Home/Home.data";
@@ -216,48 +216,11 @@ export const Profile = () => {
                                     </span>
                                 </div>
                             </section>
+                            <BookmarkedForum forums={bookmarked_forums} />
                             <Ariakit.Separator className="my-4" />
-                            <section
-                                aria-label="User posts"
-                                className="flex flex-col gap-4"
-                            >
-                                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                                    <span>Bookmarked Forum Questions</span>
-                                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                                        {bookmarked_forums.length}
-                                    </span>
-                                </h2>
-                                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                                    {bookmarked_forums.map((post) => (
-                                        <ForumQuestionCard
-                                            onTagClick={() => {}}
-                                            key={post.id}
-                                            question={post}
-                                        />
-                                    ))}
-                                </div>
-                            </section>
-                            <Ariakit.Separator className="my-4" />
-                            <section
-                                aria-label="User posts"
-                                className="flex flex-col gap-4"
-                            >
-                                <h2 className="flex items-center gap-2 text-lg font-medium text-slate-900">
-                                    <span>Quizzes Taken</span>
-                                    <span className="rounded-2 bg-slate-100 px-2 py-1 text-base font-regular text-slate-700">
-                                        {quizzes_taken.length}
-                                    </span>
-                                </h2>
-                                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
-                                    {quizzes_taken.map((quiz) => (
-                                        <QuizCard
-                                            quiz_key={String(quiz.id)}
-                                            quiz={quiz}
-                                            onTagClick={() => {}}
-                                        />
-                                    ))}
-                                </div>
-                            </section>
+                            <QuizzesTaken
+                                quizzes={quizzes_taken}
+                            ></QuizzesTaken>
                         </main>
                     );
                 }}
