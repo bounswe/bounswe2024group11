@@ -172,6 +172,35 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
     }, [groupedCommands]);
 
     useEffect(() => {
+        if (activeGroups.length > 0) {
+            if (activeGroupIndex >= activeGroups.length) {
+                setActiveGroupIndex(0);
+                setActiveItemIndex(0);
+            } else {
+                const currentGroup = activeGroups[activeGroupIndex][1];
+                if (activeItemIndex >= currentGroup.length) {
+                    setActiveItemIndex(0);
+                }
+            }
+        } else {
+            setActiveGroupIndex(0);
+            setActiveItemIndex(0);
+        }
+    }, [activeGroups, activeGroupIndex]);
+
+    useEffect(() => {
+        if (isOpen) {
+            inputRef.current?.focus();
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+            setSearchValue("");
+            setActiveGroupIndex(0);
+            setActiveItemIndex(0);
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
         if (isOpen) {
             inputRef.current?.focus();
             document.body.style.overflow = "hidden";
@@ -184,6 +213,12 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
     }, [isOpen]);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Escape") {
+            e.preventDefault();
+            onClose();
+            return;
+        }
+
         if (!activeGroups.length) return;
 
         const currentGroup = activeGroups[activeGroupIndex][1];
@@ -212,16 +247,13 @@ export function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
 
             case "Enter":
                 e.preventDefault();
-                const selectedGroup = activeGroups[activeGroupIndex][1];
-                const selectedItem = selectedGroup[activeItemIndex];
-                if (selectedItem) {
-                    handleSelect(selectedItem);
+                if (activeGroups.length > 0) {
+                    const selectedGroup = activeGroups[activeGroupIndex][1];
+                    const selectedItem = selectedGroup[activeItemIndex];
+                    if (selectedItem) {
+                        handleSelect(selectedItem);
+                    }
                 }
-                break;
-
-            case "Escape":
-                e.preventDefault();
-                onClose();
                 break;
         }
     };

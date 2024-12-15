@@ -54,12 +54,12 @@ const HintItem = ({ type, text, isSelected, onSelect }: HintItemProps) => {
                 onSelect();
             }}
         >
-            <span className="flex flex-1 items-center gap-2">
+            <span className="line-clamp-4 flex flex-1 items-center gap-2 text-sm text-slate-800">
                 {type === "images" ? (
                     <img
                         src={text}
                         alt="Hint image"
-                        className="h-32 rounded-1 object-cover"
+                        className="my-1 h-32 rounded-1 object-cover"
                     />
                 ) : (
                     <span>{text}</span>
