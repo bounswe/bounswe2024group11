@@ -209,9 +209,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_score(self, obj):
         # Change from Python sum to database aggregation
-        return TakeQuiz.objects.filter(user=obj).aggregate(
-            total_score=Sum('score')  # Use the correct Sum function
-        )['total_score'] or 0
+        return CustomUser.objects.filter(id=obj.id).first().score or 0
+        # return TakeQuiz.objects.filter(user=obj).aggregate(
+        #     total_score=Sum('score')  # Use the correct Sum function
+        # )['total_score'] or 0
 
 
     def get_achievements(self, obj):
