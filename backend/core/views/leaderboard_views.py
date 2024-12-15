@@ -15,7 +15,7 @@ class LeaderboardView(APIView):
     def get(self, request):
         try:
             # Step 1: Fetch all users sorted by score
-            users = CustomUser.objects.all().order_by('-score')
+            users = CustomUser.objects.filter(is_superuser=False).order_by('-score')
 
             # Step 2: Create leaderboard data
             leaderboard_data = []
