@@ -15,9 +15,10 @@ import ForumAnswerCard from "../components/ForumAnswerCard";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Answer } from "../types/forum";
 import { useNavigation } from "@react-navigation/native";
+import API_URL_GLOBAL from "../../config";
 
-const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
-// const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
+//const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
+const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
 
 type ForumQuestionDetailScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -40,7 +41,9 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
   const fetchAnswers = async () => {
     setLoading(true); // Set loading to true when fetching
     try {
-      const response = await axios.get(`${API_URL}${question.id}/answers/`);
+      const response = await axios.get(
+        `${API_URL_GLOBAL}forum-questions/${question.id}/answers/`
+      );
       // Map the 'answer' field to 'body' field
       const mappedAnswers = response.data.results.map((item: any) => ({
         ...item,
@@ -68,9 +71,12 @@ const ForumQuestionDetail: React.FC<Props> = ({ route }) => {
 
     try {
       console.log("Submitting answer payload:", { answer: newAnswer });
-      const response = await axios.post(`${API_URL}${question.id}/answers/`, {
-        answer: newAnswer,
-      });
+      const response = await axios.post(
+        `${API_URL_GLOBAL}forum-questions/${question.id}/answers/`,
+        {
+          answer: newAnswer,
+        }
+      );
       setAnswers((prevAnswers) => [
         ...prevAnswers,
         { ...response.data, body: response.data.answer }, // Add new answer with correct structure
