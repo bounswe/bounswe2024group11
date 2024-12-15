@@ -70,10 +70,7 @@ export const Quizzes = () => {
                                                         if (tag) {
                                                             newParams.set(
                                                                 "linked_data_id",
-                                                                tag.id.replace(
-                                                                    "bn:",
-                                                                    "",
-                                                                ),
+                                                                tag.id,
                                                             );
                                                         } else {
                                                             newParams.delete(
