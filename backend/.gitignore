@@ -8,7 +8,6 @@ __pycache__/
 # migartions cache
 ./core/migrations/__pycache__/*
 
-core/migrations/*
 
 # C extensions
 *.so
