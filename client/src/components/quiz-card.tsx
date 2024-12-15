@@ -81,21 +81,23 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     </p>
                 </div>
                 <TooltipProvider>
-                    <TooltipAnchor
-                        render={
-                            <span
-                                tabIndex={0}
-                                aria-label={`Rated by ${quiz.rating.count}`}
-                                className={scoreClass({
-                                    score: scoreToInteger(
-                                        quiz.rating.score || 0,
-                                    ),
-                                })}
-                            >
-                                {quiz.rating.score || "N/A"}
-                            </span>
-                        }
-                    ></TooltipAnchor>
+                    {quiz.rating.score && (
+                        <TooltipAnchor
+                            render={
+                                <span
+                                    tabIndex={0}
+                                    aria-label={`Rated by ${quiz.rating.count}`}
+                                    className={scoreClass({
+                                        score: scoreToInteger(
+                                            quiz.rating.score || 0,
+                                        ),
+                                    })}
+                                >
+                                    {quiz.rating.score || "N/A"}
+                                </span>
+                            }
+                        ></TooltipAnchor>
+                    )}
                     <Tooltip>
                         <div className="rounded-md left-0 rounded-2 bg-slate-700 p-2 px-2 py-1 text-sm text-slate-300 shadow-sm ring-1 ring-slate-800">
                             Rated by{" "}
