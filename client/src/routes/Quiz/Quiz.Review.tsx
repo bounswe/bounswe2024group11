@@ -82,8 +82,8 @@ export const QuizReview = () => {
                 viewBox="0 0 91 76"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                stroke-width="1px"
-                stroke-linecap="round"
+                strokeWidth="1px"
+                strokeLinecap="round"
             >
                 <g stroke="currentColor" className="text-cyan-600">
                     <path d="M88.0799 21.0799V41.0799H88.0499V34.3999L88.0399 34.3899L76.2799 34.3699C75.4999 35.7299 74.4899 36.9899 73.2599 38.1599C72.1599 39.1999 70.88 40.1599 69.42 41.0499L56.6799 41.0299V21.0299L88.0799 21.0799Z" />

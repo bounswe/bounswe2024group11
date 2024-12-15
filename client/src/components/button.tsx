@@ -35,6 +35,21 @@ export const buttonInnerRing = cva(
     },
 );
 
+export const hamburgerButtonClass = cva(
+    "flex items-center justify-center rounded-2 p-2 text-center font-medium outline-none transition-all duration-100 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-slate-300 disabled:pointer-events-none disabled:cursor-default disabled:opacity-30 disabled:hover:bg-slate-800 disabled:active:ring-0",
+    {
+        variants: {
+            active: {
+                true: "bg-slate-600 text-white",
+                false: "bg-slate-100 text-slate-800",
+            },
+        },
+        defaultVariants: {
+            active: false,
+        },
+    },
+);
+
 export const buttonClass = cva(
     [
         "font-medium",
