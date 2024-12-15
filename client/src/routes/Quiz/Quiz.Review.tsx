@@ -39,7 +39,7 @@ const QuizCard = ({
                     to={`/forum/new?qid=${question.id}&title=Help+needed:+"${questionTypeToQuestion(
                         quizType,
                         question.question_text,
-                    )}"`}
+                    )}&quiz_question=${question.id}"`}
                 >
                     <span
                         className={buttonInnerRing({ intent: "secondary" })}
