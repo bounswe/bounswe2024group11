@@ -59,7 +59,7 @@ export const buttonClass = cva(
         "justify-center",
         "group",
         "transition-all",
-        "duration-100",
+        "duration-200",
         "focus-visible:ring-slate-300",
         "focus-visible:ring-3",
         "focus-visible:outline-none",

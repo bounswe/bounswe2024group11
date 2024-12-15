@@ -1,7 +1,7 @@
 import * as Ariakit from "@ariakit/react";
 import { Button } from "@ariakit/react";
 import { RiArrowRightLine } from "@remixicon/react";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Link, useFetcher, useParams } from "react-router-dom";
 import {
     Await,
@@ -32,6 +32,7 @@ export const Profile = () => {
     const { username } = useParams<{ username: string }>();
     const { user, logged_in } =
         useRouteLoaderData<typeof homeLoader>("home-main");
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     return (
         <Suspense fallback={<ProfileLoading />}>
@@ -234,13 +235,65 @@ export const Profile = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <span
-                                        className="rounded-2 bg-teal-100 px-4 py-1 text-center text-lg font-medium text-teal-900"
-                                        role="status"
-                                        aria-label="User score"
+                                    <Ariakit.PopoverProvider
+                                        open={dialogOpen}
+                                        setOpen={setDialogOpen}
+                                        placement="bottom-end"
                                     >
-                                        {score}
-                                    </span>
+                                        <Ariakit.PopoverDisclosure
+                                            aria-label="Open the dialog for score information"
+                                            className={buttonClass({
+                                                intent: "secondary",
+                                                size: "medium",
+                                            })}
+                                        >
+                                            <span
+                                                aria-label={
+                                                    "Your score:" + score
+                                                }
+                                                role="status"
+                                            >
+                                                {score} TP
+                                            </span>
+                                        </Ariakit.PopoverDisclosure>
+                                        <Ariakit.Popover className="top-2 flex max-w-lg flex-col gap-2 overflow-hidden rounded-2 bg-slate-800 text-white shadow-lg ring-1 ring-slate-900">
+                                            <Ariakit.PopoverHeading className="bg-slate-900 p-5 text-2xl font-medium">
+                                                {score} Turquiz Points
+                                            </Ariakit.PopoverHeading>
+                                            <div className="flex flex-col gap-4 px-6 pb-6 pt-3">
+                                                <Ariakit.PopoverDescription className="text-balance text-slate-300">
+                                                    You can earn Turquiz points
+                                                    by completing quizzes.{" "}
+                                                    <br />
+                                                    You will get a point for
+                                                    each correct answer in a
+                                                    quiz from 10 points to 30
+                                                    points depending on the
+                                                    difficulty of the quiz.
+                                                </Ariakit.PopoverDescription>
+                                                <hr className="border-slate-700" />
+                                                <Ariakit.PopoverDescription className="text-balance text-slate-300">
+                                                    Using a hint in a question
+                                                    will decrease the points
+                                                    earned by 50%. There's no
+                                                    penalty for incorrect
+                                                    answers.
+                                                </Ariakit.PopoverDescription>
+
+                                                <Ariakit.Button
+                                                    className={buttonClass({
+                                                        intent: "ghost",
+                                                        className: "mt-3",
+                                                    })}
+                                                    onClick={() => {
+                                                        setDialogOpen(false);
+                                                    }}
+                                                >
+                                                    OK
+                                                </Ariakit.Button>
+                                            </div>
+                                        </Ariakit.Popover>
+                                    </Ariakit.PopoverProvider>
                                 </div>
                             </section>
                             <Ariakit.Separator className="my-4" />
