@@ -8,6 +8,8 @@ from ..models import Block
 from ..utils import get_ids
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.db.models import Count
+
 
 class QuizPagination(PageNumberPagination):
     page_size = 10
@@ -36,6 +38,13 @@ class QuizViewSet(viewsets.ModelViewSet):
                 type=openapi.TYPE_STRING,
                 description="ID for linked data semantic search"
             ),
+            openapi.Parameter(
+                'sort_by',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                enum=['newest', 'oldest', 'most_popular', 'highest_rated'],
+                description="Sorting criteria for quizzes",
+            ),
         ]
     )
     def list(self, request, *args, **kwargs):
@@ -43,6 +52,8 @@ class QuizViewSet(viewsets.ModelViewSet):
     def get_queryset(self):  #  Overrided to make it customized :p,  need more testing.
         queryset = super().get_queryset()
         user = self.request.user
+        sort_by = self.request.query_params.get('sort_by', 'newest') 
+
         if user.is_authenticated:
             blocked_users = Block.objects.filter(blocker=user).values_list('blocking__id', flat=True)  # Fetch ing blocked users
             queryset = queryset.exclude(author__in=blocked_users)  # ! Excluding quizzes by blocked users
@@ -50,7 +61,17 @@ class QuizViewSet(viewsets.ModelViewSet):
         linked_data_id = self.request.query_params.get('linked_data_id')
         if linked_data_id:
             linked_data_ids = get_ids(linked_data_id)
-            queryset = queryset.filter(tags__linked_data_id__in=linked_data_ids).order_by('-created_at')
+            queryset = queryset.filter(tags__linked_data_id__in=linked_data_ids)
+
+        if sort_by == 'newest':  
+            queryset = queryset.order_by('-created_at')
+        elif sort_by == 'oldest':  
+            queryset = queryset.order_by('created_at')
+        elif sort_by == 'most_popular':  
+            # queryset = queryset.order_by('takes', '-created_at')
+            queryset = queryset.annotate(takes_count=Count('takes')).order_by('-takes_count', '-created_at')
+        elif sort_by == 'highest_rated': 
+            queryset = queryset.annotate(average_rating=Count('ratequiz__rating')).order_by('-average_rating', '-created_at')
 
         return queryset
    
