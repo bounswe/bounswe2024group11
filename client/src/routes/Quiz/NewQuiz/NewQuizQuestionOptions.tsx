@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import useSWR from "swr";
 import { safeParse } from "valibot";
-import apiClient from "../../../api";
+import apiClient, { SWR_SETTINGS } from "../../../api";
 import { buttonClass } from "../../../components/button";
 import { InfoBox } from "../../../components/info-box";
 import { inputClass, labelClass } from "../../../components/input";
@@ -124,6 +124,7 @@ export const NewQuizQuestionOptions = ({
                 })
                 .then((res) => res.data);
         },
+        SWR_SETTINGS,
     );
 
     const difficultyResponse = useSWR(
@@ -137,6 +138,7 @@ export const NewQuizQuestionOptions = ({
                 })
                 .then((res) => res.data);
         },
+        SWR_SETTINGS,
     );
 
     const hints = useSWR(
@@ -163,6 +165,7 @@ export const NewQuizQuestionOptions = ({
                     return hints;
                 });
         },
+        SWR_SETTINGS,
     );
 
     const difficultyNumber = difficultyResponse.data?.question_point || 10;

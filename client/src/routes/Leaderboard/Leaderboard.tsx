@@ -42,7 +42,7 @@ export const Leaderboard = () => {
                                                 User
                                             </th>
                                             <th className="min-w-32 border px-4 py-3 text-end">
-                                                Turq Points
+                                                Turquiz Points
                                             </th>
                                         </tr>
                                     </thead>

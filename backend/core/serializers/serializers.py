@@ -245,10 +245,10 @@ class QuizSerializer(serializers.ModelSerializer):
     def get_my_last_answers(self, obj):
         user = self.context['request'].user
         if not user.is_authenticated:
-            return []
+            return None
         take_quiz = TakeQuiz.objects.filter(quiz=obj, user=user).last()
         if not take_quiz:
-            return []
+            return None
         return TakeQuizSerializer(take_quiz, context=self.context).data
 
     def get_num_taken(self, obj):

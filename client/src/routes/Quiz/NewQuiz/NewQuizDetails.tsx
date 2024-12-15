@@ -135,6 +135,7 @@ export const NewQuizDetails = () => {
                         {quiz.tags.map((tag) => (
                             <div
                                 key={tag.linked_data_id}
+                                data-linked-id={tag.linked_data_id}
                                 className="flex items-center gap-1 rounded-2 bg-cyan-700 py-0.5 pl-3 pr-1 text-sm font-medium text-white"
                             >
                                 <span>{tag.name}</span>
@@ -203,6 +204,9 @@ export const NewQuizDetails = () => {
                                     >
                                         {options.map((tag) => (
                                             <button
+                                                data-linked-id={
+                                                    tag.linked_data_id
+                                                }
                                                 key={tag.linked_data_id}
                                                 onClick={() => {
                                                     handleTagSelect(tag);
