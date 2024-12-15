@@ -1,3 +1,5 @@
+import { PageHead } from "../components/page-head";
+
 export const QuizLoading = () => {
     return (
         <div className="relative flex max-w-screen-xl flex-col items-stretch gap-16 py-12 pl-0 pr-0">
@@ -106,5 +108,83 @@ export const ProfileLoading = () => {
                 </div>
             </div>
         </div>
+    );
+};
+export const LeaderboardLoading = () => {
+    return (
+        <>
+            <PageHead
+                title="Leaderboard"
+                description={
+                    "Hey mate, let's see where you stand. Why are you lazy? Go and do some exercise."
+                }
+            />
+
+            <table className="w-full border-collapse">
+                <thead>
+                    <tr className="bg-slate-100">
+                        <th className="min-w-32 border px-4 py-3 text-center">
+                            Rank
+                        </th>
+                        <th className="min-w-32 border px-4 py-3 text-start">
+                            User
+                        </th>
+                        <th className="min-w-32 border px-4 py-3 text-end">
+                            Turq Points
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {Array.from({ length: 5 }).map((_, rank) => (
+                        <tr
+                            key={rank}
+                            className="text-lg font-medium text-slate-700 transition-all hover:bg-slate-100"
+                        >
+                            <td className="w-12 border p-2 text-center">
+                                {rank + 1}
+                            </td>
+                            <td className="border px-6 py-4">
+                                <div className="flex flex-row items-center gap-4">
+                                    <div
+                                        className="rounded-full bg-slate-50 ring-1 ring-slate-100"
+                                        style={{
+                                            width: 48,
+                                            height: 48,
+                                            aspectRatio: "1 / 1",
+                                        }}
+                                    >
+                                        <div className="skeleton-loading h-full w-full rounded-full bg-slate-200"></div>
+                                    </div>
+                                    <div className="flex w-full max-w-48 flex-col items-start">
+                                        <div className="skeleton-loading h-4 w-24 bg-slate-200"></div>
+                                        <div className="skeleton-loading mt-2 h-4 w-16 bg-slate-200"></div>
+                                    </div>
+                                    {rank === 0 && (
+                                        <span className="text-4xl font-medium text-cyan-900">
+                                            🥇{" "}
+                                        </span>
+                                    )}
+                                    {rank === 1 && (
+                                        <span className="text-4xl font-medium text-slate-900">
+                                            🥈{" "}
+                                        </span>
+                                    )}
+                                    {rank === 2 && (
+                                        <span className="text-saddlebrown text-4xl font-medium">
+                                            🥉{" "}
+                                        </span>
+                                    )}
+                                </div>
+                            </td>
+                            <td className="w-40 border p-2">
+                                <div className="flex justify-end">
+                                    <div className="skeleton-loading rounded h-6 w-12 bg-slate-200"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </>
     );
 };
