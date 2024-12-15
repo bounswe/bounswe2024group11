@@ -114,6 +114,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
                     return (
                         <Link
                             key={linked_data_id}
+                            data-linked-id={linked_data_id}
                             onClick={(e) => {
                                 e.preventDefault();
                                 onTagClick(linked_data_id);

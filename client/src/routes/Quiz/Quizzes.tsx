@@ -1,11 +1,6 @@
-import { Button, Portal } from "@ariakit/react";
-import {
-    RiAddFill,
-    RiArrowLeftLine,
-    RiArrowRightLine,
-    RiCloseFill,
-} from "@remixicon/react";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Portal } from "@ariakit/react";
+import { RiAddFill, RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
+import { Suspense, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
     Await,
@@ -13,10 +8,10 @@ import {
     useRouteLoaderData,
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
+import { TagSearch } from "../../components/tag-search";
 import { QuizLoading } from "../_loading";
 import { homeLoader } from "../Home/Home.data";
 import { quizzesLoader } from "./Quizzes.data";
@@ -25,9 +20,7 @@ export const Quizzes = () => {
     const { quizzesData } = useLoaderData<typeof quizzesLoader>();
     const [searchParams, setSearchParams] = useSearchParams();
     const searchInputRef = useRef<HTMLInputElement>(null);
-    const [searchTerm, setSearchTerm] = useState(
-        searchParams.get("search") || "",
-    );
+
     const sortBy = searchParams.get("sort") || "newest";
 
     const { user, logged_in } =
@@ -36,27 +29,13 @@ export const Quizzes = () => {
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
 
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setSearchParams((old) => {
-                if (searchTerm) {
-                    old.set("search", searchTerm);
-                } else {
-                    old.delete("search");
-                }
-                return old;
-            });
-        }, 500);
-
-        return () => clearTimeout(timeoutId);
-    }, [searchTerm, setSearchParams]);
-
     const handlePageChange = (page: number) => {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("page", page.toString());
         newParams.set("per_page", perPage.toString());
         setSearchParams(newParams);
     };
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
             <Suspense fallback={<QuizLoading />}>
@@ -76,45 +55,32 @@ export const Quizzes = () => {
                                 <aside className="flex flex-col gap-6">
                                     <div className="flex flex-col gap-4">
                                         <div className="flex flex-col gap-4 sm:flex-row">
-                                            <div className="flex flex-grow items-center gap-2">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Search by title, description, or tag"
-                                                    className={inputClass({
-                                                        className:
-                                                            "w-full max-w-sm",
-                                                    })}
-                                                    ref={searchInputRef}
-                                                    onChange={(e) =>
-                                                        setSearchTerm(
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    value={searchTerm}
-                                                />
-                                                <Button
-                                                    className={buttonClass({
-                                                        intent: "tertiary",
-                                                        size: "icon",
-                                                        icon: "only",
-                                                    })}
-                                                    onClick={() => {
-                                                        searchInputRef.current?.focus();
-                                                        setSearchParams(
-                                                            (prev) => {
-                                                                prev.delete(
-                                                                    "search",
-                                                                );
-                                                                setSearchTerm(
+                                            <div className="flex flex-grow items-end gap-2">
+                                                <TagSearch
+                                                    onTagSelect={(tag) => {
+                                                        const newParams =
+                                                            new URLSearchParams(
+                                                                searchParams,
+                                                            );
+                                                        if (tag) {
+                                                            newParams.set(
+                                                                "linked_data_id",
+                                                                tag.id.replace(
+                                                                    "bn:",
                                                                     "",
-                                                                );
-                                                                return prev;
-                                                            },
+                                                                ),
+                                                            );
+                                                        } else {
+                                                            newParams.delete(
+                                                                "linked_data_id",
+                                                            );
+                                                        }
+                                                        setSearchParams(
+                                                            newParams,
                                                         );
                                                     }}
-                                                >
-                                                    <RiCloseFill size={20} />
-                                                </Button>
+                                                    inputRef={searchInputRef}
+                                                />
                                             </div>
                                             <div></div>
                                         </div>
@@ -197,71 +163,89 @@ export const Quizzes = () => {
                                             />
                                         ))}
                                 </main>
-                                <hr />
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex items-end justify-center">
-                                        <div className="flex gap-4">
-                                            <button
-                                                onClick={() =>
-                                                    handlePageChange(
-                                                        currentPage - 1,
-                                                    )
-                                                }
-                                                disabled={!data.previous}
-                                                aria-label="Previous Page"
-                                                aria-disabled={!data.previous}
-                                                className={buttonClass({
-                                                    intent: "tertiary",
-                                                    icon: "left",
-                                                })}
-                                            >
-                                                <div
-                                                    className={buttonInnerRing({
-                                                        intent: "tertiary",
-                                                    })}
-                                                    aria-hidden="true"
-                                                />
-                                                <RiArrowLeftLine size={16} />
-                                                <span>Previous</span>
-                                            </button>
-                                            <span className="flex w-20 items-center justify-center gap-1 rounded-1 bg-slate-100 px-4 text-center text-sm text-slate-400 ring ring-slate-200">
-                                                <span className="px-1 py-0.5 text-lg font-medium text-slate-800">
-                                                    {currentPage}
-                                                </span>
-                                                <span className="text-xs">
-                                                    /
-                                                </span>
-                                                <span className="px-1 py-0.5 text-base font-regular">
-                                                    {totalPages}
-                                                </span>
-                                            </span>
-                                            <button
-                                                onClick={() =>
-                                                    handlePageChange(
-                                                        currentPage + 1,
-                                                    )
-                                                }
-                                                disabled={!data.next}
-                                                aria-disabled={!data.next}
-                                                aria-label="Next"
-                                                className={buttonClass({
-                                                    intent: "tertiary",
-                                                    icon: "right",
-                                                })}
-                                            >
-                                                <div
-                                                    className={buttonInnerRing({
-                                                        intent: "tertiary",
-                                                    })}
-                                                    aria-hidden="true"
-                                                />
-                                                <span>Next Page</span>
-                                                <RiArrowRightLine size={16} />
-                                            </button>
+                                {totalPages > 1 && (
+                                    <>
+                                        <hr />
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex items-end justify-center">
+                                                <div className="flex gap-4">
+                                                    <button
+                                                        onClick={() =>
+                                                            handlePageChange(
+                                                                currentPage - 1,
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            !data.previous
+                                                        }
+                                                        aria-label="Previous Page"
+                                                        aria-disabled={
+                                                            !data.previous
+                                                        }
+                                                        className={buttonClass({
+                                                            intent: "tertiary",
+                                                            icon: "left",
+                                                        })}
+                                                    >
+                                                        <div
+                                                            className={buttonInnerRing(
+                                                                {
+                                                                    intent: "tertiary",
+                                                                },
+                                                            )}
+                                                            aria-hidden="true"
+                                                        />
+                                                        <RiArrowLeftLine
+                                                            size={16}
+                                                        />
+                                                        <span>Previous</span>
+                                                    </button>
+                                                    <span className="flex w-20 items-center justify-center gap-1 rounded-1 bg-slate-100 px-4 text-center text-sm text-slate-400 ring ring-slate-200">
+                                                        <span className="px-1 py-0.5 text-lg font-medium text-slate-800">
+                                                            {currentPage}
+                                                        </span>
+                                                        <span className="text-xs">
+                                                            /
+                                                        </span>
+                                                        <span className="px-1 py-0.5 text-base font-regular">
+                                                            {totalPages}
+                                                        </span>
+                                                    </span>
+                                                    <button
+                                                        onClick={() =>
+                                                            handlePageChange(
+                                                                currentPage + 1,
+                                                            )
+                                                        }
+                                                        disabled={!data.next}
+                                                        aria-disabled={
+                                                            !data.next
+                                                        }
+                                                        aria-label="Next"
+                                                        className={buttonClass({
+                                                            intent: "tertiary",
+                                                            icon: "right",
+                                                        })}
+                                                    >
+                                                        <div
+                                                            className={buttonInnerRing(
+                                                                {
+                                                                    intent: "tertiary",
+                                                                },
+                                                            )}
+                                                            aria-hidden="true"
+                                                        />
+                                                        <span>Next Page</span>
+                                                        <RiArrowRightLine
+                                                            size={16}
+                                                        />
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <hr />
+                                        <hr />
+                                    </>
+                                )}
 
                                 <Portal className="fixed bottom-10 right-10 z-10">
                                     <Link
