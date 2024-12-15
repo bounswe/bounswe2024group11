@@ -1,26 +1,43 @@
 import { LoaderFunction } from "react-router";
+import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
-import apiClient from "../../api";
-import { logger } from "../../utils";
+import { useToastStore } from "../../store";
+import { BASE_URL, logger } from "../../utils";
 import { leaderboardSchema } from "./Leaderboard.schema";
 
 export const leaderboardLoader = (async ({ request }) => {
-    try {
-        const response = await apiClient.get("leaderboard/");
-        // const response = await fetch(`${BASE_URL}/leaderboard/`);
-        // const data = await response.json();
-        const { output, issues, success } = safeParse(
-            leaderboardSchema,
-            response.data,
-        );
+    const url = new URL(request.url);
 
-        if (!success) {
-            throw new Error(`Failed to parse post response: ${issues}`);
-        }
+    const leaderboardPromise = fetch(`${BASE_URL}/leaderboard/`)
+        .then(async (response) => {
+            const data = await response.json(); // Await the JSON parsing
+            const { output, success, issues } = safeParse(
+                leaderboardSchema,
+                data,
+            );
 
-        return output;
-    } catch (error) {
-        logger.error(`Error fetching leaderboard`, error);
-        throw new Error(`Failed to load leaderboard`);
-    }
+            if (!success) {
+                logger.error("Failed to parse leaderboard response:", issues);
+                throw new Error("Failed to parse leaderboard response");
+            }
+
+            return output;
+        })
+        .catch((error) => {
+            logger.error("Error fetching leaderboard:", error);
+            useToastStore.getState().add({
+                id: "leaderboard-error",
+                type: "error",
+                data: {
+                    message: "Failed to load leaderboard",
+                    description:
+                        "Failed to load leaderboard. Please try again.",
+                },
+            });
+            throw new Error("Failed to load leaderboard");
+        });
+
+    return defer({
+        leaderboardData: leaderboardPromise,
+    });
 }) satisfies LoaderFunction;
