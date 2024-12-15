@@ -1,7 +1,8 @@
 export type LoggedinUser = {
-  id?: string;
+  id?: number;
   username: string;
   email: string;
   full_name: string;
   avatar: string;
+  is_following?: boolean;
 };
