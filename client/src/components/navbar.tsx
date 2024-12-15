@@ -1,7 +1,9 @@
-import { RiLogoutBoxRLine } from "@remixicon/react";
-import { Link } from "react-router-dom";
+import * as Ariakit from "@ariakit/react";
+import { RiCloseLine, RiLogoutBoxRLine, RiMenuLine } from "@remixicon/react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import type { User } from "../schemas";
-import { buttonClass, buttonInnerRing } from "./button";
+import { buttonClass, buttonInnerRing, hamburgerButtonClass } from "./button";
 
 const routes = [
     {
@@ -35,14 +37,108 @@ type NavbarProps = {
 };
 
 export const Navbar = ({ user }: NavbarProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        setIsOpen(false);
+    }, [location]);
+
+    const NavLinks = () => (
+        <ul className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-1">
+            {routes.map((route, i) => (
+                <li key={i} className="w-full md:w-auto">
+                    <Link
+                        to={route.href}
+                        className={buttonClass({
+                            intent: "tertiary",
+                            size: "medium",
+                            className:
+                                "w-full justify-start md:w-auto md:justify-center",
+                        })}
+                    >
+                        {route.name}
+                    </Link>
+                </li>
+            ))}
+        </ul>
+    );
+
+    const AuthButtons = () => (
+        <div className="w-full md:w-auto">
+            {user ? (
+                <Link
+                    to="/logout"
+                    className={buttonClass({
+                        intent: "destructive",
+                        size: "medium",
+                        icon: "right",
+                        className:
+                            "w-full justify-start md:w-auto md:justify-center",
+                    })}
+                >
+                    <span
+                        className={buttonInnerRing({
+                            intent: "destructive",
+                        })}
+                        aria-hidden="true"
+                    />
+                    <span>Logout</span>
+                    <RiLogoutBoxRLine className="h-4" />
+                </Link>
+            ) : (
+                <ul className="flex w-full flex-col gap-2 md:w-auto md:flex-row">
+                    <li className="w-full md:w-auto">
+                        <Link
+                            to="/register"
+                            className={buttonClass({
+                                intent: "tertiary",
+                                size: "medium",
+                                className:
+                                    "w-full justify-start md:w-auto md:justify-center",
+                            })}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "secondary",
+                                })}
+                                aria-hidden="true"
+                            />
+                            Register
+                        </Link>
+                    </li>
+                    <li className="w-full md:w-auto">
+                        <Link
+                            to="/login"
+                            className={buttonClass({
+                                intent: "secondary",
+                                size: "medium",
+                                className:
+                                    "w-full min-w-20 justify-start md:w-auto md:justify-center",
+                            })}
+                        >
+                            <span
+                                className={buttonInnerRing({
+                                    intent: "secondary",
+                                })}
+                                aria-hidden="true"
+                            />
+                            Login
+                        </Link>
+                    </li>
+                </ul>
+            )}
+        </div>
+    );
+
     return (
         <nav
             aria-label="Main navigation"
-            className="fixed top-0 z-50 w-full border-b border-slate-200 bg-[rgba(255,255,255,.8)] px-6 py-3 backdrop-blur-sm"
+            className="fixed top-0 z-50 w-full border-b border-slate-200 bg-[rgba(255,255,255,.8)] py-3 backdrop-blur-sm"
         >
-            <div className="container max-w-screen-xl">
-                <div className="flex items-center gap-2">
-                    <div className="md:w-24">
+            <div className="container">
+                <div className="flex flex-1 items-center justify-between gap-2 md:justify-start">
+                    <div className="w-28 md:w-24">
                         <Link
                             to="/"
                             className="text-2xl font-bold text-slate-900"
@@ -54,80 +150,121 @@ export const Navbar = ({ user }: NavbarProps) => {
                             />
                         </Link>
                     </div>
-                    <ul className="flex flex-1 items-center justify-center gap-1">
-                        {routes.map((route, i) => (
-                            <li key={i} className="inline-block">
-                                <Link
-                                    to={route.href}
-                                    className={buttonClass({
-                                        intent: "tertiary",
-                                        size: "medium",
-                                    })}
-                                >
-                                    {route.name}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                    <div>
-                        {user ? (
-                            <Link
-                                to="/logout"
-                                className={buttonClass({
-                                    intent: "destructive",
-                                    size: "medium",
-                                    icon: "right",
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden flex-1 items-center justify-between md:flex">
+                        <div className="flex flex-1 justify-center">
+                            <NavLinks />
+                        </div>
+                        <AuthButtons />
+                    </div>
+
+                    {/* Mobile Menu */}
+                    <Ariakit.MenuProvider>
+                        <div className="md:hidden">
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className={hamburgerButtonClass({
+                                    active: isOpen,
                                 })}
                             >
-                                <span
-                                    className={buttonInnerRing({
-                                        intent: "destructive",
-                                    })}
-                                    aria-hidden="true"
-                                />
-                                <span>Logout</span>
-                                <RiLogoutBoxRLine className="h-4" />
-                            </Link>
-                        ) : (
-                            <ul className="flex gap-2">
-                                <li>
-                                    <Link
-                                        to="/register"
-                                        className={buttonClass({
-                                            intent: "tertiary",
-                                            size: "medium",
-                                        })}
-                                    >
-                                        <span
-                                            className={buttonInnerRing({
-                                                intent: "secondary",
-                                            })}
-                                            aria-hidden="true"
+                                {isOpen ? (
+                                    <RiCloseLine className="h-6 w-6" />
+                                ) : (
+                                    <RiMenuLine className="h-6 w-6" />
+                                )}
+                            </button>
+
+                            <Ariakit.Menu
+                                open={isOpen}
+                                onClose={() => setIsOpen(false)}
+                                className="fixed inset-x-0 top-16 z-50 mt-2 max-h-[calc(100vh-80px)] w-screen overflow-auto bg-white px-6 py-4 shadow-lg"
+                                modal
+                            >
+                                <div className="flex flex-col gap-4">
+                                    {routes.map((route) => (
+                                        <Ariakit.MenuItem
+                                            key={route.href}
+                                            className="w-full"
+                                            onClick={() => setIsOpen(false)}
+                                            render={
+                                                <Link
+                                                    to={route.href}
+                                                    className={buttonClass({
+                                                        intent: "tertiary",
+                                                        size: "medium",
+                                                        className:
+                                                            "w-full justify-start",
+                                                    })}
+                                                >
+                                                    {route.name}
+                                                </Link>
+                                            }
                                         />
-                                        Register
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        to="/login"
-                                        className={buttonClass({
-                                            intent: "secondary",
-                                            size: "medium",
-                                            className: "min-w-20",
-                                        })}
-                                    >
-                                        <span
-                                            className={buttonInnerRing({
-                                                intent: "secondary",
-                                            })}
-                                            aria-hidden="true"
+                                    ))}
+                                    <Ariakit.MenuSeparator className="my-2 border-t border-slate-200" />
+                                    {user ? (
+                                        <Ariakit.MenuItem
+                                            className="w-full"
+                                            onClick={() => setIsOpen(false)}
+                                            render={
+                                                <Link
+                                                    to="/logout"
+                                                    className={buttonClass({
+                                                        intent: "destructive",
+                                                        size: "medium",
+                                                        icon: "right",
+                                                        className:
+                                                            "w-full justify-start",
+                                                    })}
+                                                >
+                                                    <span>Logout</span>
+                                                    <RiLogoutBoxRLine className="h-4" />
+                                                </Link>
+                                            }
                                         />
-                                        Login
-                                    </Link>
-                                </li>
-                            </ul>
-                        )}
-                    </div>
+                                    ) : (
+                                        <>
+                                            <Ariakit.MenuItem
+                                                className="w-full"
+                                                onClick={() => setIsOpen(false)}
+                                                render={
+                                                    <Link
+                                                        to="/register"
+                                                        className={buttonClass({
+                                                            intent: "tertiary",
+                                                            size: "medium",
+                                                            className:
+                                                                "w-full justify-start",
+                                                        })}
+                                                    >
+                                                        Register
+                                                    </Link>
+                                                }
+                                            />
+                                            <Ariakit.MenuItem
+                                                className="w-full"
+                                                onClick={() => setIsOpen(false)}
+                                                render={
+                                                    <Link
+                                                        to="/login"
+                                                        className={buttonClass({
+                                                            intent: "secondary",
+                                                            size: "medium",
+                                                            className:
+                                                                "w-full justify-start",
+                                                        })}
+                                                    >
+                                                        Login
+                                                    </Link>
+                                                }
+                                            />
+                                        </>
+                                    )}
+                                </div>
+                            </Ariakit.Menu>
+                        </div>
+                    </Ariakit.MenuProvider>
                 </div>
             </div>
         </nav>

@@ -6,11 +6,11 @@ export const SuccessIllustration = ({ size = 128 }) => {
             viewBox="0 0 97 120"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            stroke-width="1px"
-            stroke-linecap="round"
+            strokeWidth="1px"
+            strokeLinecap="round"
         >
             <title>Success Illustration</title>
-            <g className="text-cyan-600" stroke="currentColor" stroke-width="1">
+            <g className="text-cyan-600" stroke="currentColor" strokeWidth="1">
                 <path d="M38.48 34.99V44.11L18.48 34.11V24.99L38.48 34.99Z" />
                 <path d="M38.48 44.11L22.5898 53.28L18.48 51.23L11.0598 47.51L2.58984 43.28L18.48 34.11L38.48 44.11Z" />
                 <path d="M28.6099 79.78L9.11987 70.05L8.91992 69.95C8.46992 69.72 8.03986 69.46 7.60986 69.16C4.25986 66.8 2.58984 62.73 2.58984 56.96V43.28L11.0598 47.51L18.48 51.23L22.5898 53.28V66.96C22.5898 69.67 22.96 72.01 23.7 73.97C24.53 76.18 25.8399 77.91 27.6099 79.16C27.9399 79.39 28.2699 79.6 28.6099 79.78Z" />
@@ -37,11 +37,11 @@ export const FailIllustration = ({ size = 128 }) => {
             viewBox="0 0 99 108"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            stroke-width="1px"
-            stroke-linecap="round"
+            strokeWidth="1px"
+            strokeLinecap="round"
         >
             <title>Fail Illustration</title>
-            <g className="text-red-600" stroke="currentColor" stroke-width="1">
+            <g className="text-red-600" stroke="currentColor" strokeWidth="1">
                 <path d="M57.6897 20.6388L37.6897 30.6388C35.6397 27.2288 33.2997 24.1888 30.6797 21.4988C28.0697 18.8088 25.3597 16.6488 22.5497 15.0288C22.3897 14.9388 22.2297 14.8488 22.0697 14.7488C17.0097 11.9588 12.6397 11.3588 8.96973 12.9888L27.9797 3.47875C31.9597 1.20875 36.8197 1.72877 42.5497 5.02877C45.3597 6.64877 48.0697 8.80877 50.6797 11.4988C53.2997 14.1888 55.6397 17.2288 57.6897 20.6388Z" />
                 <path d="M57.6898 20.6388L55.9398 26.6088V26.6188L46.0099 31.5788L40.9698 45.9088V45.9188L33.2998 49.7488L31.8999 50.4488L32.5299 48.2988L37.6898 30.6388L57.6898 20.6388Z" />
                 <path d="M47.0898 54.9288L43.1099 56.9188L34.4799 51.9388L31.8999 50.4488L33.2998 49.7488L40.9698 45.9188L39.3699 50.4788L47.0898 54.9288Z" />
