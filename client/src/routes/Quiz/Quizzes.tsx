@@ -16,9 +16,10 @@ import { PageHead } from "../../components/page-head";
 import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
 import { TagSearch } from "../../components/tag-search";
+import { snakeToTitle } from "../../utils";
 import { QuizLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
-import { quizzesLoader } from "./Quizzes.data";
+import { quizSortOptions, quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
     const { quizzesData } = useLoaderData<typeof quizzesLoader>();
@@ -94,62 +95,50 @@ export const Quizzes = () => {
                                             </div>
 
                                             <div className="flex gap-2">
-                                                {[
-                                                    "newest",
-                                                    "oldest",
-                                                    "popular",
-                                                    "most liked",
-                                                ].map((option) => (
-                                                    <label
-                                                        key={option}
-                                                        className="flex cursor-pointer items-center gap-2"
-                                                    >
-                                                        <input
-                                                            type="radio"
-                                                            value={option}
-                                                            checked={
-                                                                sortBy ===
-                                                                option
-                                                            }
-                                                            onChange={() => {
-                                                                const newParams =
-                                                                    new URLSearchParams(
-                                                                        searchParams,
-                                                                    );
-                                                                newParams.set(
-                                                                    "sort",
-                                                                    option,
-                                                                );
-                                                                setSearchParams(
-                                                                    newParams,
-                                                                );
-                                                            }}
-                                                            className="sr-only"
-                                                        />
-                                                        <span
-                                                            className={radioOptionClass(
-                                                                {
-                                                                    selected:
-                                                                        sortBy ===
-                                                                        option,
-                                                                },
-                                                            )}
+                                                {quizSortOptions.map(
+                                                    (option) => (
+                                                        <label
+                                                            key={option}
+                                                            className="flex cursor-pointer items-center gap-2"
                                                         >
-                                                            {option ===
-                                                                "newest" &&
-                                                                "Newest"}
-                                                            {option ===
-                                                                "oldest" &&
-                                                                "Oldest"}
-                                                            {option ===
-                                                                "popular" &&
-                                                                "Most Popular"}
-                                                            {option ===
-                                                                "most liked" &&
-                                                                "Most Liked"}
-                                                        </span>
-                                                    </label>
-                                                ))}
+                                                            <input
+                                                                type="radio"
+                                                                value={option}
+                                                                checked={
+                                                                    sortBy ===
+                                                                    option
+                                                                }
+                                                                onChange={() => {
+                                                                    const newParams =
+                                                                        new URLSearchParams(
+                                                                            searchParams,
+                                                                        );
+                                                                    newParams.set(
+                                                                        "sort",
+                                                                        option,
+                                                                    );
+                                                                    setSearchParams(
+                                                                        newParams,
+                                                                    );
+                                                                }}
+                                                                className="sr-only"
+                                                            />
+                                                            <span
+                                                                className={radioOptionClass(
+                                                                    {
+                                                                        selected:
+                                                                            sortBy ===
+                                                                            option,
+                                                                    },
+                                                                )}
+                                                            >
+                                                                {snakeToTitle(
+                                                                    option,
+                                                                )}
+                                                            </span>
+                                                        </label>
+                                                    ),
+                                                )}
                                             </div>
                                         </aside>
                                     </div>

@@ -14,7 +14,6 @@ import {
     forumCreateAction,
     forumCreateLoader,
     forumLoader,
-    forumShouldRevalidate,
 } from "./routes/Forum/Forum.data";
 import { NewForum } from "./routes/Forum/NewForum";
 import { ForumQuestion } from "./routes/Forum/Question";
@@ -51,11 +50,7 @@ import {
     newQuizLoader,
 } from "./routes/Quiz/NewQuiz/NewQuiz.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
-import {
-    quizLoader,
-    quizShouldRevalidate,
-    takeQuizAction,
-} from "./routes/Quiz/Quiz.data";
+import { quizLoader, takeQuizAction } from "./routes/Quiz/Quiz.data";
 import { QuizReview } from "./routes/Quiz/Quiz.Review";
 import { Quizzes } from "./routes/Quiz/Quizzes";
 import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
@@ -96,7 +91,6 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
-                        shouldRevalidate: forumShouldRevalidate,
                     },
                     {
                         path: "forum/new",
@@ -143,14 +137,12 @@ export const routes: RouteObject[] = [
                         path: "quizzes",
                         element: <Quizzes />,
                         loader: quizzesLoader,
-                        shouldRevalidate: quizShouldRevalidate,
                     },
                     {
                         path: "quizzes/new",
                         element: <NewQuiz />,
                         loader: newQuizLoader,
                         action: newQuizAction,
-                        shouldRevalidate: quizShouldRevalidate,
                     },
                     {
                         path: "quizzes/:quizId/",
