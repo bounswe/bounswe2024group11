@@ -16,10 +16,14 @@ SELF_ACHIEVEMENT_CONDITIONS = {
     "save-expert": lambda user: ForumBookmark.objects.filter(user=user).count() >= 10,
     "getting-started": lambda user: user.interests.count() >= 3,
     "diverse-learner": lambda user: user.interests.count() >= 10,
+    "community-builder": lambda user: Follow.objects.filter(follower=user).count() >= 10,
+    
 }
 
 NON_SELF_ACHIEVEMENT_CONDITIONS = {
     "popular-teacher": lambda user: TakeQuiz.objects.filter(quiz__author=user).count() >= 10,
     "helpful-member": lambda user: ForumAnswerUpvote.objects.filter(forum_answer__author=user).count() >= 10,
     "answer-guru": lambda user: ForumAnswerUpvote.objects.filter(forum_answer__author=user).count() >= 100,
+    "new-friend": lambda user: Follow.objects.filter(following=user).count() >= 10,
+    "rising-star": lambda user: Follow.objects.filter(following=user).count() >= 50,
 }
