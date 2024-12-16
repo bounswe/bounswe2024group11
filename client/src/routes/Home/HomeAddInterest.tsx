@@ -66,7 +66,7 @@ export const AddInterestBlock = () => {
                         <input
                             type="text"
                             className={inputClass()}
-                            placeholder="automobile, fashion, tech, sports"
+                            placeholder="automobile, sports, food, geography..."
                             required
                             aria-label="Search for tags"
                             value={search}

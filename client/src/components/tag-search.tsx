@@ -133,7 +133,7 @@ export const TagSearch = ({
                                     className={inputClass({
                                         className: "w-full",
                                     })}
-                                    placeholder="automobile, sports, food"
+                                    placeholder="automobile, sports, food, geography..."
                                 />
                             </div>
                         </>
