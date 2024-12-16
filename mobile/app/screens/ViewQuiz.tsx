@@ -102,8 +102,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       quiz: id,
       answers,
     });
-    console.log(result.data);
-    navigation.navigate("QuizResult");
+    navigation.navigate("QuizResult", { quizResult: result.data });
   };
 
   return (
