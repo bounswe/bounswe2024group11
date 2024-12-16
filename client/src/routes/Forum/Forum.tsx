@@ -56,125 +56,99 @@ export const Forum = () => {
 
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+            <div className="flex justify-between">
+                <div>
+                    <PageHead
+                        title="Forum"
+                        description="Where the magic happens - jump into the conversation"
+                    />
+
+                    <aside className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 sm:flex-row">
+                                <div className="flex flex-grow items-center gap-2">
+                                    <TagSearch
+                                        onTagSelect={(tag) => {
+                                            const newParams =
+                                                new URLSearchParams(
+                                                    searchParams,
+                                                );
+                                            if (tag) {
+                                                newParams.set(
+                                                    "linked_data_id",
+                                                    tag.id,
+                                                );
+                                            } else {
+                                                newParams.delete(
+                                                    "linked_data_id",
+                                                );
+                                            }
+                                            setSearchParams(newParams);
+                                        }}
+                                        inputRef={searchInputRef}
+                                    />
+                                </div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            {forumSortOptions.map((option) => (
+                                <label
+                                    key={option}
+                                    className="flex cursor-pointer items-center gap-2"
+                                >
+                                    <input
+                                        type="radio"
+                                        value={option}
+                                        checked={sortBy === option}
+                                        onChange={() => {
+                                            const newParams =
+                                                new URLSearchParams(
+                                                    searchParams,
+                                                );
+                                            newParams.set("sort", option);
+                                            setSearchParams(newParams);
+                                        }}
+                                        className="sr-only"
+                                    />
+                                    <span
+                                        className={radioOptionClass({
+                                            selected: sortBy === option,
+                                        })}
+                                    >
+                                        {snakeToTitle(option)}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </aside>
+                </div>
+                <div className="flex flex-col justify-end">
+                    <Link
+                        to="/forum/new"
+                        className={buttonClass({
+                            intent: "primary",
+                            icon: "left",
+                            size: "large",
+                        })}
+                    >
+                        <span
+                            className={buttonInnerRing({
+                                intent: "primary",
+                            })}
+                        />
+                        <RiAddFill size={20} />
+                        <span>New Forum Question</span>
+                    </Link>
+                </div>
+            </div>
+
             <Suspense fallback={<ForumLoading />}>
                 <Await resolve={forumData}>
                     {(data) => {
                         const totalPages = Math.ceil(data.count / perPage);
-                        const description = logged_in
-                            ? `Where the magic happens - jump into the conversation ${user.full_name}!`
-                            : "Engage with the community, ask questions, and get help from other people.";
-
                         return (
                             <>
-                                <div className="flex justify-between">
-                                    <div>
-                                        <PageHead
-                                            title="Forum"
-                                            description={description}
-                                        />
-
-                                        <aside className="flex flex-col gap-6">
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex flex-col gap-4 sm:flex-row">
-                                                    <div className="flex flex-grow items-center gap-2">
-                                                        <TagSearch
-                                                            onTagSelect={(
-                                                                tag,
-                                                            ) => {
-                                                                const newParams =
-                                                                    new URLSearchParams(
-                                                                        searchParams,
-                                                                    );
-                                                                if (tag) {
-                                                                    newParams.set(
-                                                                        "linked_data_id",
-                                                                        tag.id,
-                                                                    );
-                                                                } else {
-                                                                    newParams.delete(
-                                                                        "linked_data_id",
-                                                                    );
-                                                                }
-                                                                setSearchParams(
-                                                                    newParams,
-                                                                );
-                                                            }}
-                                                            inputRef={
-                                                                searchInputRef
-                                                            }
-                                                        />
-                                                    </div>
-                                                    <div></div>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-2">
-                                                {forumSortOptions.map(
-                                                    (option) => (
-                                                        <label
-                                                            key={option}
-                                                            className="flex cursor-pointer items-center gap-2"
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                value={option}
-                                                                checked={
-                                                                    sortBy ===
-                                                                    option
-                                                                }
-                                                                onChange={() => {
-                                                                    const newParams =
-                                                                        new URLSearchParams(
-                                                                            searchParams,
-                                                                        );
-                                                                    newParams.set(
-                                                                        "sort",
-                                                                        option,
-                                                                    );
-                                                                    setSearchParams(
-                                                                        newParams,
-                                                                    );
-                                                                }}
-                                                                className="sr-only"
-                                                            />
-                                                            <span
-                                                                className={radioOptionClass(
-                                                                    {
-                                                                        selected:
-                                                                            sortBy ===
-                                                                            option,
-                                                                    },
-                                                                )}
-                                                            >
-                                                                {snakeToTitle(
-                                                                    option,
-                                                                )}
-                                                            </span>
-                                                        </label>
-                                                    ),
-                                                )}
-                                            </div>
-                                        </aside>
-                                    </div>
-                                    <div className="flex flex-col justify-end">
-                                        <Link
-                                            to="/forum/new"
-                                            className={buttonClass({
-                                                intent: "primary",
-                                                icon: "left",
-                                                size: "large",
-                                            })}
-                                        >
-                                            <span
-                                                className={buttonInnerRing({
-                                                    intent: "primary",
-                                                })}
-                                            />
-                                            <RiAddFill size={20} />
-                                            <span>New Forum Question</span>
-                                        </Link>
-                                    </div>
-                                </div>
-
                                 <main>
                                     <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
                                         {data.results.map((post) => (

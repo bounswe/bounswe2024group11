@@ -7,7 +7,7 @@ import {
 } from "react-router-typesafe";
 import { InterestTag } from "../../components/interest-tag";
 import { radioOptionClass } from "../../components/radio-option";
-import { QuizLoading } from "../_loading";
+import { HomeLoading } from "../_loading";
 import { homeLoader, userLoader } from "./Home.data";
 import { HomeEmptyInterest } from "./Home.EmptyInterest";
 import { HomeEmptyNetwork } from "./Home.EmptyNetwork";
@@ -120,7 +120,7 @@ export const Home = () => {
 
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <Suspense fallback={<QuizLoading />}>
+            <Suspense fallback={<HomeLoading />}>
                 <Await
                     resolve={data}
                     children={({ feedData, profileData }) => {
