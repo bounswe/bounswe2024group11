@@ -58,10 +58,10 @@ class InterestView(APIView):
         operation_summary="Remove an interest",
         manual_parameters=[
             openapi.Parameter(
-                "id",
+                "linked_data_id",
                 openapi.IN_QUERY,
-                description="ID of the interest to be removed",
-                type=openapi.TYPE_INTEGER,
+                description="linked_data_id of the interest to be removed",
+                type=openapi.TYPE_STRING,
                 required=True,
             )
         ],
@@ -81,29 +81,27 @@ class InterestView(APIView):
     )
     def delete(self, request):
         """Remove an interest from the authenticated user."""
-        interest_id = request.query_params.get('id')
+        linked_data_id = request.query_params.get('linked_data_id')
         # print(request)
-        if not interest_id:
+        if not linked_data_id:
             return Response(
-                {"error": "Parameter 'id' is required."},
+                {"error": "Parameter 'linked_data_id' is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
             # Ensure the interest belongs to the user
-            interest = Tag.objects.get(id=interest_id)
-            print(request.user.interests.all())
-            print(interest)
-
-            if interest not in request.user.interests.all():
+            tag_with_linked_data_id = Tag.objects.get(linked_data_id=linked_data_id)
+            if tag_with_linked_data_id not in request.user.interests.all():
                 return Response(
                     {"error": "You do not have permission to delete this interest."},
                     status=status.HTTP_403_FORBIDDEN,
                 )
+            
             # Remove the interest
-            request.user.interests.remove(interest)
+            request.user.interests.remove(tag_with_linked_data_id)
             return Response(
-                {"message": f"Interest '{interest.name}' removed successfully."},
+                {"message": f"Interest '{tag_with_linked_data_id.name}' removed successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Tag.DoesNotExist:
