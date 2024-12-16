@@ -51,6 +51,12 @@ class QuizViewSet(viewsets.ModelViewSet):
                 type=openapi.TYPE_BOOLEAN,
                 description="Filter quizzes not solved by the current user",
             ),
+            openapi.Parameter(
+                'filter_proficiency',
+                openapi.IN_QUERY,
+                type=openapi.TYPE_BOOLEAN,
+                description="Filter quizzes not solved by the current user",
+            ),
 
         ]
     )
@@ -63,12 +69,12 @@ class QuizViewSet(viewsets.ModelViewSet):
 
         if user.is_authenticated:
             blocked_users = Block.objects.filter(blocker=user).values_list('blocking__id', flat=True)  # Fetch ing blocked users
-            not_solved = self.request.query_params.get('not_solved', None)
-            # if not_solved and not_solved.lower() == "true":
             taken_quizzes = user.taken_quizzes.values_list('quiz__id', flat=True)  # Fetching quizzes taken by the user
             queryset = queryset.exclude(id__in=taken_quizzes)  # ! Excluding quizzes taken by the user
             queryset = queryset.exclude(author__in=blocked_users) # ! Excluding quizzes by blocked users
-
+            proficiency = self.request.query_params.get('filter_proficiency', None)
+            # if proficiency and proficiency.lower() == "true":
+            queryset = queryset.filter(difficulty=user.proficiency)
         linked_data_id = self.request.query_params.get('linked_data_id')
         if linked_data_id:
             linked_data_ids = get_ids(linked_data_id)
