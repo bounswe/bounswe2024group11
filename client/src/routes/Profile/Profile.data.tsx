@@ -219,10 +219,20 @@ export const addInterestAction = (async ({ request }: { request: Request }) => {
         const formData = await request.formData();
         await apiClient.post("/interests/", formData);
     } catch (error) {
-        logger.error("Error in addInterestAction", error);
+        logger.error("Error in add interest action", error);
         throw new Error("Failed to process add interest action");
     }
-    return null;
+    useToastStore.getState().add({
+        id: `add-interest-success-${Date.now()}`,
+        type: "success",
+        data: {
+            message: "Interest added successfully",
+            description: "You've added this interest to your interests.",
+        },
+    });
+    return {
+        success: true,
+    };
 }) satisfies ActionFunction;
 
 export const proficiencyChangeAction = async ({
@@ -258,5 +268,5 @@ export const proficiencyChangeAction = async ({
             description: "You've changed your proficiency level.",
         },
     });
-    return null;
+    return { success: true };
 };
