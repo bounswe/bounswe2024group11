@@ -6,6 +6,13 @@ import { useQuestionsStore } from "../../store";
 import { logger } from "../../utils";
 import { quizDetailsSchema } from "./Quiz.schema";
 
+export const quizSortOptions = [
+    "newest",
+    "oldest",
+    "most_popular",
+    "highest_rated",
+];
+
 const quizzesResponseSchema = object({
     count: number(),
     next: nullable(string()),
@@ -17,10 +24,18 @@ export const quizzesLoader = (async ({ request }) => {
     const page = Number(url.searchParams.get("page")) || 1;
     const per_page = Number(url.searchParams.get("per_page")) || 10;
     const linked_data_id = url.searchParams.get("linked_data_id") || null;
+    const sort = url.searchParams.get("sort") || "newest";
 
     const quizzesPromise = apiClient
         .get("/quizzes/", {
-            params: { page, per_page, linked_data_id },
+            params: {
+                page,
+                per_page,
+                linked_data_id,
+                sort_by: quizSortOptions.includes(sort)
+                    ? sort
+                    : quizSortOptions[0],
+            },
         })
         .then((response) => {
             const { output, issues, success } = safeParse(

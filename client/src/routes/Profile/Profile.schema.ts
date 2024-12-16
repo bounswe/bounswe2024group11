@@ -1,4 +1,13 @@
-import { array, InferInput, nullable, number, object, string } from "valibot";
+import {
+    array,
+    InferInput,
+    literal,
+    nullable,
+    number,
+    object,
+    string,
+    union,
+} from "valibot";
 import { authorSchema } from "../../schemas";
 import { UserAchievement } from "../Achievements/Achievement.schema";
 import { forumQuestionSchema } from "../Forum/Forum.schema";
@@ -34,6 +43,7 @@ export const profileSchema = object({
     followings: array(authorSchema),
     followers: array(authorSchema),
     blockings: array(blockingsSchema),
+    proficiency: union([literal(1), literal(2), literal(3)]),
 });
 
 export const blockSchema = object({

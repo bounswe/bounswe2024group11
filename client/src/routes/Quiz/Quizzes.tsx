@@ -16,9 +16,10 @@ import { PageHead } from "../../components/page-head";
 import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
 import { TagSearch } from "../../components/tag-search";
+import { snakeToTitle } from "../../utils";
 import { QuizLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
-import { quizzesLoader } from "./Quizzes.data";
+import { quizSortOptions, quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
     const { quizzesData } = useLoaderData<typeof quizzesLoader>();
@@ -42,136 +43,98 @@ export const Quizzes = () => {
 
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+            <div className="flex flex-row justify-between">
+                <div className="flex flex-col">
+                    <PageHead
+                        title="Quizzes"
+                        description="Test your knowledge of various topics."
+                    />
+                    <aside className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 sm:flex-row">
+                                <div className="flex flex-grow items-end gap-2">
+                                    <TagSearch
+                                        onTagSelect={(tag) => {
+                                            const newParams =
+                                                new URLSearchParams(
+                                                    searchParams,
+                                                );
+                                            if (tag) {
+                                                newParams.set(
+                                                    "linked_data_id",
+                                                    tag.id,
+                                                );
+                                            } else {
+                                                newParams.delete(
+                                                    "linked_data_id",
+                                                );
+                                            }
+                                            setSearchParams(newParams);
+                                        }}
+                                        inputRef={searchInputRef}
+                                    />
+                                </div>
+                                <div></div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                            {quizSortOptions.map((option) => (
+                                <label
+                                    key={option}
+                                    className="flex cursor-pointer items-center gap-2"
+                                >
+                                    <input
+                                        type="radio"
+                                        value={option}
+                                        checked={sortBy === option}
+                                        onChange={() => {
+                                            const newParams =
+                                                new URLSearchParams(
+                                                    searchParams,
+                                                );
+                                            newParams.set("sort", option);
+                                            setSearchParams(newParams);
+                                        }}
+                                        className="sr-only"
+                                    />
+                                    <span
+                                        className={radioOptionClass({
+                                            selected: sortBy === option,
+                                        })}
+                                    >
+                                        {snakeToTitle(option)}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </aside>
+                </div>
+                <div className="flex flex-col justify-end">
+                    <Link
+                        to="/quizzes/new"
+                        className={buttonClass({
+                            intent: "primary",
+                            icon: "left",
+                            size: "large",
+                        })}
+                    >
+                        <span
+                            className={buttonInnerRing({
+                                intent: "primary",
+                            })}
+                        />
+                        <RiAddFill size={20} />
+                        <span>Create A Quiz</span>
+                    </Link>
+                </div>
+            </div>
             <Suspense fallback={<QuizLoading />}>
                 <Await resolve={quizzesData}>
                     {(data) => {
                         const totalPages = Math.ceil(data.count / perPage);
-                        const description = logged_in
-                            ? `Your turn to shine, ${user.full_name}`
-                            : "Test your knowledge of various topics. Log in to track your progress.";
-
                         return (
                             <>
-                                <div className="flex flex-row justify-between">
-                                    <div className="flex flex-col">
-                                        <PageHead
-                                            title="Quizzes"
-                                            description={description}
-                                        />
-                                        <aside className="flex flex-col gap-6">
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex flex-col gap-4 sm:flex-row">
-                                                    <div className="flex flex-grow items-end gap-2">
-                                                        <TagSearch
-                                                            onTagSelect={(
-                                                                tag,
-                                                            ) => {
-                                                                const newParams =
-                                                                    new URLSearchParams(
-                                                                        searchParams,
-                                                                    );
-                                                                if (tag) {
-                                                                    newParams.set(
-                                                                        "linked_data_id",
-                                                                        tag.id,
-                                                                    );
-                                                                } else {
-                                                                    newParams.delete(
-                                                                        "linked_data_id",
-                                                                    );
-                                                                }
-                                                                setSearchParams(
-                                                                    newParams,
-                                                                );
-                                                            }}
-                                                            inputRef={
-                                                                searchInputRef
-                                                            }
-                                                        />
-                                                    </div>
-                                                    <div></div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-2">
-                                                {[
-                                                    "newest",
-                                                    "oldest",
-                                                    "popular",
-                                                    "most liked",
-                                                ].map((option) => (
-                                                    <label
-                                                        key={option}
-                                                        className="flex cursor-pointer items-center gap-2"
-                                                    >
-                                                        <input
-                                                            type="radio"
-                                                            value={option}
-                                                            checked={
-                                                                sortBy ===
-                                                                option
-                                                            }
-                                                            onChange={() => {
-                                                                const newParams =
-                                                                    new URLSearchParams(
-                                                                        searchParams,
-                                                                    );
-                                                                newParams.set(
-                                                                    "sort",
-                                                                    option,
-                                                                );
-                                                                setSearchParams(
-                                                                    newParams,
-                                                                );
-                                                            }}
-                                                            className="sr-only"
-                                                        />
-                                                        <span
-                                                            className={radioOptionClass(
-                                                                {
-                                                                    selected:
-                                                                        sortBy ===
-                                                                        option,
-                                                                },
-                                                            )}
-                                                        >
-                                                            {option ===
-                                                                "newest" &&
-                                                                "Newest"}
-                                                            {option ===
-                                                                "oldest" &&
-                                                                "Oldest"}
-                                                            {option ===
-                                                                "popular" &&
-                                                                "Most Popular"}
-                                                            {option ===
-                                                                "most liked" &&
-                                                                "Most Liked"}
-                                                        </span>
-                                                    </label>
-                                                ))}
-                                            </div>
-                                        </aside>
-                                    </div>
-                                    <div className="flex flex-col justify-end">
-                                        <Link
-                                            to="/quizzes/new"
-                                            className={buttonClass({
-                                                intent: "primary",
-                                                icon: "left",
-                                                size: "large",
-                                            })}
-                                        >
-                                            <span
-                                                className={buttonInnerRing({
-                                                    intent: "primary",
-                                                })}
-                                            />
-                                            <RiAddFill size={20} />
-                                            <span>Create A Quiz</span>
-                                        </Link>
-                                    </div>
-                                </div>
                                 <main className="grid grid-cols-1 items-stretch justify-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                     {data.results
                                         .map((quiz) => {

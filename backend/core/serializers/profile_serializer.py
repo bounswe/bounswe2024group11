@@ -35,10 +35,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     bookmarked_forums = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
-    proficiency = serializers.ChoiceField(
-        choices=CustomUser.PROFICIENCY_LEVELS, 
-        required=False  # Allow partial updates
-    )
     my_quizzes = serializers.SerializerMethodField()
     my_forum_questions = serializers.SerializerMethodField()
     my_forum_answers = serializers.SerializerMethodField()
@@ -80,7 +76,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        print(validated_data)
         achievements_data = validated_data.pop('userachievement_set', None)
         if achievements_data is not None:
             if not achievements_data:
@@ -232,13 +227,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         blockings = User.objects.filter(blockers__blocker=obj)
         return UserInfoSerializer(blockings, many=True, context=self.context).data
     
-    def get_proficiency(self, obj):
-        return obj.get_proficiency_display()
-    def to_representation(self, instance):
-        """Customize the representation of proficiency to show the display value."""
-        representation = super().to_representation(instance)
-        representation['proficiency'] = instance.get_proficiency_display()  # Return display name
-        return representation
 
     
     

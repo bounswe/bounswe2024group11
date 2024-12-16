@@ -6,18 +6,22 @@ import { QuizCreate } from "../routes/Quiz/Quiz.schema";
 
 export type Dict = {
     NOUN: {
+        word: string;
         id: string;
         description: string;
     }[];
     VERB: {
+        word: string;
         id: string;
         description: string;
     }[];
     ADJ: {
+        word: string;
         id: string;
         description: string;
     }[];
     ADV: {
+        word: string;
         id: string;
         description: string;
     }[];

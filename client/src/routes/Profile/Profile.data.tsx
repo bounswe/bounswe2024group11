@@ -206,9 +206,67 @@ export const deleteInterestAction = (async ({
                 linked_data_id,
             },
         });
-        return redirect("/profile");
     } catch (error) {
         logger.error("Error in deleteInterestAction", error);
         throw new Error("Failed to process delete interest action");
     }
+    return null;
 }) satisfies ActionFunction;
+
+export const addInterestAction = (async ({ request }: { request: Request }) => {
+    if (!getUserOrRedirect()) return null;
+    try {
+        const formData = await request.formData();
+        await apiClient.post("/interests/", formData);
+    } catch (error) {
+        logger.error("Error in add interest action", error);
+        throw new Error("Failed to process add interest action");
+    }
+    useToastStore.getState().add({
+        id: `add-interest-success-${Date.now()}`,
+        type: "success",
+        data: {
+            message: "Interest added successfully",
+            description: "You've added this interest to your interests.",
+        },
+    });
+    return {
+        success: true,
+    };
+}) satisfies ActionFunction;
+
+export const proficiencyChangeAction = async ({
+    request,
+}: {
+    request: Request;
+}) => {
+    if (!getUserOrRedirect()) return null;
+    const formData = await request.formData();
+    const proficiency = formData.get("proficiency");
+    const username = formData.get("username");
+    if (!proficiency) {
+        throw new Error("Proficiency is required.");
+    }
+    if (proficiency !== "1" && proficiency !== "2" && proficiency !== "3") {
+        throw new Error("Invalid proficiency.");
+    }
+    logger.log("proficiency", proficiency);
+
+    try {
+        await apiClient.patch(`/profile/${formData.get("username")}/`, {
+            proficiency,
+        });
+    } catch (error) {
+        logger.error("Error in proficiencyChangeAction", error);
+        throw new Error("Failed to process proficiency change action");
+    }
+    useToastStore.getState().add({
+        id: `proficiency-change-success`,
+        type: "success",
+        data: {
+            message: "Proficiency changed successfully",
+            description: "You've changed your proficiency level.",
+        },
+    });
+    return { success: true };
+};

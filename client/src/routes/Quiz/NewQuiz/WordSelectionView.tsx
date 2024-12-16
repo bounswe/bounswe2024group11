@@ -27,25 +27,25 @@ export const WordSelectionView = ({
     );
     const nounOptions: Tag[] =
         data?.NOUN?.map((word) => ({
-            name: debouncedSearch,
+            name: word.word,
             linked_data_id: word.id,
             description: word.description,
         })) || [];
     const verbOptions: Tag[] =
         data?.VERB?.map((word) => ({
-            name: debouncedSearch,
+            name: word.word,
             linked_data_id: word.id,
             description: word.description,
         })) || [];
     const adjectiveOptions: Tag[] =
         data?.ADJ?.map((word) => ({
-            name: debouncedSearch,
+            name: word.word,
             linked_data_id: word.id,
             description: word.description,
         })) || [];
     const adverbOptions: Tag[] =
         data?.ADV?.map((word) => ({
-            name: debouncedSearch,
+            name: word.word,
             linked_data_id: word.id,
             description: word.description,
         })) || [];

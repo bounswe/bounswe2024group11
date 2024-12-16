@@ -17,7 +17,7 @@ export type ToastProps = {
 const toastBadgeClass = cva("absolute left-0 h-8 w-1 rounded-r-full", {
     variants: {
         type: {
-            success: "bg-cyan-500",
+            success: "bg-teal-500",
             error: "bg-red-500",
             warning: "bg-amber-500",
             info: "bg-cyan-500",

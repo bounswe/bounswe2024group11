@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'full_name', 'avatar', 'avatar_file')
+        fields = ('username', 'password', 'email', 'full_name', 'avatar', 'avatar_file', "proficiency")
 
     def set_avatar(self, user, validated_data):
         if validated_data.get('avatar_file', None):
@@ -62,12 +62,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         # Remove avatar_file from validated_data before creating user
         avatar_file = validated_data.pop('avatar_file', None)
         validated_data.pop('avatar', None)  # Remove avatar field if present
-        
+        proficiency = validated_data.get('proficiency')
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             email=validated_data['email'],
             full_name=validated_data['full_name'],
+            proficiency=proficiency
         )
         
         # Handle avatar separately

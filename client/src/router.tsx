@@ -1,6 +1,5 @@
 import { RouteObject } from "react-router";
 import { ErrorPage } from "./routes/_error";
-import { AchievementLoading } from "./routes/_loading";
 import { Root } from "./routes/_root";
 import { Achievements } from "./routes/Achievements/Achievements";
 import { achievementsLoader } from "./routes/Achievements/Achievements.data";
@@ -14,7 +13,6 @@ import {
     forumCreateAction,
     forumCreateLoader,
     forumLoader,
-    forumShouldRevalidate,
 } from "./routes/Forum/Forum.data";
 import { NewForum } from "./routes/Forum/NewForum";
 import { ForumQuestion } from "./routes/Forum/Question";
@@ -35,10 +33,12 @@ import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
 import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
 import { Profile } from "./routes/Profile/Profile";
 import {
+    addInterestAction,
     BlockAction,
     deleteInterestAction,
     FollowAction,
     myProfileLoader,
+    proficiencyChangeAction,
     profileLoader,
     UnBlockAction,
     UnFollowAction,
@@ -49,11 +49,7 @@ import {
     newQuizLoader,
 } from "./routes/Quiz/NewQuiz/NewQuiz.data";
 import { TakeQuizPage } from "./routes/Quiz/Quiz";
-import {
-    quizLoader,
-    quizShouldRevalidate,
-    takeQuizAction,
-} from "./routes/Quiz/Quiz.data";
+import { quizLoader, takeQuizAction } from "./routes/Quiz/Quiz.data";
 import { QuizReview } from "./routes/Quiz/Quiz.Review";
 import { Quizzes } from "./routes/Quiz/Quizzes";
 import { quizzesLoader } from "./routes/Quiz/Quizzes.data";
@@ -76,10 +72,7 @@ export const routes: RouteObject[] = [
                         loader: homeLoader,
                         id: "home",
                     },
-                    {
-                        path: "loading",
-                        element: <AchievementLoading />,
-                    },
+
                     {
                         path: "achievements",
                         element: <Achievements />,
@@ -94,7 +87,6 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
-                        shouldRevalidate: forumShouldRevalidate,
                     },
                     {
                         path: "forum/new",
@@ -141,14 +133,12 @@ export const routes: RouteObject[] = [
                         path: "quizzes",
                         element: <Quizzes />,
                         loader: quizzesLoader,
-                        shouldRevalidate: quizShouldRevalidate,
                     },
                     {
                         path: "quizzes/new",
                         element: <NewQuiz />,
                         loader: newQuizLoader,
                         action: newQuizAction,
-                        shouldRevalidate: quizShouldRevalidate,
                     },
                     {
                         path: "quizzes/:quizId/",
@@ -164,6 +154,10 @@ export const routes: RouteObject[] = [
                     {
                         path: "interest/delete/:linked_data_id/",
                         action: deleteInterestAction,
+                    },
+                    {
+                        path: "interest/add/:linked_data_id/",
+                        action: addInterestAction,
                     },
                     {
                         path: "profile/",
@@ -190,6 +184,10 @@ export const routes: RouteObject[] = [
                             {
                                 path: "unfollow",
                                 action: UnFollowAction,
+                            },
+                            {
+                                path: "proficiency",
+                                action: proficiencyChangeAction,
                             },
                         ],
                     },

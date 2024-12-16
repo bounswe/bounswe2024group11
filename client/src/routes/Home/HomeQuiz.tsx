@@ -4,6 +4,7 @@ import { buttonClass } from "../../components/button";
 import { QuizCard } from "../../components/quiz-card";
 import { QuizDetails } from "../Quiz/Quiz.schema";
 import { INITIAL_DISPLAY_COUNT, LOAD_MORE_COUNT } from "./Home";
+import { HomeEmptySection } from "./HomeEmptySection";
 
 export const HomeQuizFeed = ({
     quizzes,
@@ -15,6 +16,14 @@ export const HomeQuizFeed = ({
     const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
     const displayedQuizzes = quizzes.slice(0, displayCount);
     const hasMore = displayCount < quizzes.length;
+
+    if (quizzes.length === 0)
+        return (
+            <HomeEmptySection
+                title={title}
+                description="Although we have tried hard enough, we couldn't find any quizzes in this category."
+            />
+        );
 
     return (
         <section className="flex flex-col gap-4">

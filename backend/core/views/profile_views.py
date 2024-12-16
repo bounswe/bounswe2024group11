@@ -68,7 +68,7 @@ class ProfileView(APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
             
-        serializer = ProfileSerializer(request.user, data=request.data, partial=True)
+        serializer = ProfileSerializer(request.user, data=request.data, partial=True, context={'request':request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
