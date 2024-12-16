@@ -250,7 +250,6 @@ export const proficiencyChangeAction = async ({
     if (proficiency !== "1" && proficiency !== "2" && proficiency !== "3") {
         throw new Error("Invalid proficiency.");
     }
-    logger.log("proficiency", proficiency);
 
     try {
         await apiClient.patch(`/profile/${formData.get("username")}/`, {
