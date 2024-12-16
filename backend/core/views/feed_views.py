@@ -56,7 +56,7 @@ class FeedViewSet(ViewSet):
 
         quizzes_by_followed_users = Quiz.objects.filter(                        # Quizzes by followed users
             author__id__in=followed_users
-        ).exclude(author__id__in=blocked_users).order_by('-created_at')[:4] # !!!!!! Changed filtering for quizzes
+        ).exclude(author__id__in=blocked_users).order_by('-created_at').filter(difficulty=user.proficiency)[:4] # !!!!!! Changed filtering for quizzes
 
         interest_tags = user.interests.all()
 
@@ -66,7 +66,7 @@ class FeedViewSet(ViewSet):
 
         quizzes_by_interests = Quiz.objects.filter(                         # Quizzes related to user's interests
             tags__in=interest_tags
-        ).exclude(author__id__in=blocked_users).distinct().order_by('-created_at')[:4]  # !!!!!! Added .exclude(author__id__in=blocked_users)
+        ).exclude(author__id__in=blocked_users).distinct().order_by('-created_at').filter(difficulty=user.proficiency)[:4]  # !!!!!! Added .exclude(author__id__in=blocked_users)
 
         interest_tag_ids = [tag.linked_data_id for tag in interest_tags]
         all_related_ids = set()

@@ -17,6 +17,7 @@ import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
 import { userLoader } from "../Home/Home.data";
 import { BookmarkedForum } from "./BookmarkedForumQuestions";
+import { ProficiencyChange } from "./ProficiencyChange";
 import {
     BlockAction,
     FollowAction,
@@ -84,6 +85,7 @@ export const Profile = () => {
                     interests,
                     followers,
                     followings,
+                    proficiency,
                 }) => {
                     const author = {
                         avatar: avatar,
@@ -268,21 +270,27 @@ export const Profile = () => {
                                         </>
                                     ) : null}
                                 </div>
-                                <div className="flex items-start gap-2">
-                                    <span className="rounded-1 bg-slate-800 px-2 py-1 text-sm font-medium text-slate-100">
+                                <div className="flex items-start gap-2 text-sm">
+                                    <span className="rounded-1 bg-slate-800 px-2 py-1 font-medium text-slate-100 ring ring-slate-600">
                                         {pluralize(
                                             followers.length,
                                             "follower",
                                             "followers",
                                         )}
                                     </span>{" "}
-                                    <span className="rounded-1 bg-slate-800 px-2 py-1 text-sm font-medium text-slate-100">
+                                    <span className="rounded-1 bg-slate-100 px-2 py-1 font-medium text-slate-900 ring ring-slate-200">
                                         {pluralize(
                                             followings.length,
                                             "following",
                                             "followings",
                                         )}
                                     </span>
+                                </div>
+                                <div>
+                                    <ProficiencyChange
+                                        proficiency={proficiency}
+                                        username={username}
+                                    />
                                 </div>
                             </header>
                             <Ariakit.Separator className="ring-slate-200" />
