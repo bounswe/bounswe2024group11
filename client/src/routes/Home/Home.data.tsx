@@ -1,5 +1,5 @@
 import { defer } from "react-router-typesafe";
-import { array, number, object, safeParse, string } from "valibot";
+import { array, number, object, optional, safeParse, string } from "valibot";
 import apiClient from "../../api";
 import { USER } from "../../constants";
 import { userSchema } from "../../schemas";
@@ -553,6 +553,7 @@ const feedSchema = object({
     quizzes_by_interests: array(quizDetailsSchema),
     related_tags_for_forum_questions: array(tagSchema),
     related_tags_for_quizzes: array(tagSchema),
+    users_to_follow: optional(array(userSchema)),
 });
 
 export const userLoader = () => {

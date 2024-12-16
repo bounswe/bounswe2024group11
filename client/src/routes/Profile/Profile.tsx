@@ -11,7 +11,7 @@ import {
 import { Avatar } from "../../components/avatar";
 import { BlockingModal } from "../../components/blockings-modal";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { InterestTag } from "../../components/interest-tag";
+import { InterestTag, StaticTag } from "../../components/interest-tag";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
 import { userLoader } from "../Home/Home.data";
@@ -40,6 +40,7 @@ export const Profile = () => {
     const [isUnblockDisabled, setIsUnblockDisabled] = useState(false);
     const [isFollowDisabled, setIsFollowDisabled] = useState(false);
     const [isUnfollowDisabled, setIsUnfollowDisabled] = useState(false);
+    const isMe = user?.username === username;
 
     useEffect(() => {
         if (blockFetcher.state === "idle") {
@@ -253,9 +254,22 @@ export const Profile = () => {
                             </header>
                             <section>
                                 <div className="mt-3 flex flex-wrap gap-3">
-                                    {interests.map((tag) => (
-                                        <InterestTag tag={tag} />
-                                    ))}
+                                    {interests.map((tag) => {
+                                        if (!tag) return null;
+                                        if (isMe)
+                                            return (
+                                                <InterestTag
+                                                    key={tag.linked_data_id}
+                                                    tag={tag}
+                                                />
+                                            );
+                                        return (
+                                            <StaticTag
+                                                key={tag.linked_data_id}
+                                                tag={tag}
+                                            />
+                                        );
+                                    })}
                                 </div>
                             </section>
                             <section className="z-20 flex w-full flex-row items-center justify-between">

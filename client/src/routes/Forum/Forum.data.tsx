@@ -22,7 +22,6 @@ export const forumShouldRevalidate: ShouldRevalidateFunction = ({
 }) => {
     const currentUrlParams = new URLSearchParams(currentUrl.search);
     const nextUrlParams = new URLSearchParams(nextUrl.search);
-    console.log(formData);
     return (
         !!formData ||
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
@@ -99,8 +98,6 @@ export const forumCreateLoader = (async ({ request }) => {
         throw new Error("Failed to parse dictionary response.");
     }
 
-    console.log("qid", qid);
-
     return {
         queryWord: word,
         relevantQuiz,
@@ -109,7 +106,6 @@ export const forumCreateLoader = (async ({ request }) => {
 }) satisfies LoaderFunction;
 
 export const forumCreateAction = (async ({ request }) => {
-    console.log("forum action");
     const formData = await request.formData();
     formData.set("tags_string", formData.get("tags") || "");
 

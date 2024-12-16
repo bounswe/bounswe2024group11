@@ -52,6 +52,64 @@ export const Home = () => {
         useRouteLoaderData<typeof userLoader>("home-main");
     const rawData = useLoaderData<typeof homeLoader>();
 
+    // export const authorSchema = object({
+    //     id: number(),
+    //     full_name: string(),
+    //     username: string(),
+    //     avatar: nullable(string()),
+    //     email: string(),
+    //     is_followed: nullable(number()),
+    //     is_blocked: nullable(number()),
+    // });
+
+    fakeUsers: [
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+    ];
+
     const [feedType, setFeedType] = useState<FeedType>("personal");
 
     if (rawData === null)

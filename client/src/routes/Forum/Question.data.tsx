@@ -281,7 +281,6 @@ export const answerForumAction = (async ({ request, params }) => {
 }) satisfies ActionFunction;
 
 export const upvoteForumAnswerAction = (async ({ request }) => {
-    console.log("Processing upvote/downvote action...");
     if (!getUserOrRedirect()) return null;
 
     const formData = await request.formData();

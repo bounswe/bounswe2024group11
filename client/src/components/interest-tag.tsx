@@ -98,3 +98,16 @@ export const NewInterestTag = ({ tag }: { tag: Tag }) => {
         </interestAddFetcher.Form>
     );
 };
+
+export const StaticTag = ({ tag }: { tag: Tag }) => {
+    return (
+        <span
+            key={tag.linked_data_id}
+            className="transition-color flex items-center gap-2 rounded-1 bg-white text-slate-800 ring ring-slate-200"
+        >
+            <span className="px-4 py-2 text-xs font-medium uppercase tracking-wide">
+                {tag.name}
+            </span>
+        </span>
+    );
+};

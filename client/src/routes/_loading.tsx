@@ -103,7 +103,10 @@ export const ProfileLoading = () => {
 
                 <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
                     {Array.from({ length: 6 }).map((_, i) => (
-                        <div className="skeleton-loading h-64 w-full rounded-2 bg-slate-200" />
+                        <div
+                            key={i}
+                            className="skeleton-loading h-64 w-full rounded-2 bg-slate-200"
+                        />
                     ))}
                 </div>
             </div>
