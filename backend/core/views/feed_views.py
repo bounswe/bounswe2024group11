@@ -1,11 +1,36 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from ..models import Block, ForumQuestion, Quiz, Follow, Tag
+from ..models import Block, ForumQuestion, Quiz, Follow, Tag, Follow, Block, CustomUser
 from ..serializers.forum_question_serializer import ForumQuestionSerializer
-from ..serializers.serializers import QuizSerializer
+from ..serializers.serializers import QuizSerializer, UserInfoSerializer
 from ..utils import get_ids
+from django.db.models import Count
 
+
+
+def get_users_to_follow(request):
+    user = request.user
+    if user.is_authenticated:
+        # Get the users that the current user follows
+        following = Follow.objects.filter(follower=user).values_list('following', flat=True)
+        # Get the users that those users follow
+        followed_by_following = Follow.objects.filter(follower__in=following).values_list('following', flat=True)
+        # Exclude the current user, blocked users, and users the current user already follows
+        blocked_users = Block.objects.filter(blocker=user).values_list('blocking', flat=True)
+        users = CustomUser.objects.filter(id__in=followed_by_following).exclude(id__in=blocked_users).exclude(id__in=following).exclude(id=user.id)
+    else:
+        users = CustomUser.objects.all()
+
+    users = users.annotate(
+        forum_question_count=Count('forumquestion'),
+        forum_answer_count=Count('forumanswer'),
+        quiz_count=Count('quiz'),
+        total_count=Count('forumquestion') + Count('forumanswer') + Count('quiz')
+    ).order_by('-total_count')[:5]
+
+    serializer = UserInfoSerializer(users, many=True, context={'request': request})
+    return Response(serializer.data)
 
 class FeedViewSet(ViewSet):
     permission_classes = [IsAuthenticated]  # Only authenticated users can access the feed
@@ -102,6 +127,8 @@ class FeedViewSet(ViewSet):
             for tag in unique_tags_quiz
         ]
 
+        users_to_follow = get_users_to_follow(request)
+
         # Combine and return the results
         feed_data = {
             "forum_questions_by_followed_users": forum_questions_serialized,
@@ -110,6 +137,7 @@ class FeedViewSet(ViewSet):
             "quizzes_by_interests": quizzes_by_interests_serialized,
             "related_tags_for_forum_questions": related_tags_for_forum_questions_serialized,
             "related_tags_for_quizzes": related_tags_for_quizzes_serialized,
+            "users_to_follow": users_to_follow.data,
         }
         return Response(feed_data)
     
