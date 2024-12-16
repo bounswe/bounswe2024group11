@@ -1,8 +1,10 @@
+import { Separator } from "@ariakit/react";
 import {
     RiAddFill,
     RiArrowLeftLine,
     RiArrowRightLine,
     RiCloseFill,
+    RiSearchLine,
 } from "@remixicon/react";
 import { Suspense, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -50,33 +52,23 @@ export const Quizzes = () => {
                         description="Test your knowledge of various topics."
                     />
                     <aside className="flex flex-col gap-6">
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4 sm:flex-row">
-                                <div className="flex flex-grow items-end gap-2">
-                                    <TagSearch
-                                        onTagSelect={(tag) => {
-                                            const newParams =
-                                                new URLSearchParams(
-                                                    searchParams,
-                                                );
-                                            if (tag) {
-                                                newParams.set(
-                                                    "linked_data_id",
-                                                    tag.id,
-                                                );
-                                            } else {
-                                                newParams.delete(
-                                                    "linked_data_id",
-                                                );
-                                            }
-                                            setSearchParams(newParams);
-                                        }}
-                                        inputRef={searchInputRef}
-                                    />
-                                </div>
-                                <div></div>
-                            </div>
+                        <div className="flex flex-col gap-4 pt-6">
+                            <TagSearch
+                                onTagSelect={(tag) => {
+                                    const newParams = new URLSearchParams(
+                                        searchParams,
+                                    );
+                                    if (tag) {
+                                        newParams.set("linked_data_id", tag.id);
+                                    } else {
+                                        newParams.delete("linked_data_id");
+                                    }
+                                    setSearchParams(newParams);
+                                }}
+                                inputRef={searchInputRef}
+                            />
                         </div>
+                        <Separator className="border-slate-200" />
 
                         <div className="flex gap-2">
                             {quizSortOptions.map((option) => (
@@ -129,6 +121,7 @@ export const Quizzes = () => {
                     </Link>
                 </div>
             </div>
+            <Separator className="border-slate-200" />
             <Suspense fallback={<QuizLoading />}>
                 <Await resolve={quizzesData}>
                     {(data) => {
@@ -154,31 +147,40 @@ export const Quizzes = () => {
                                             />
                                         ))}
                                     {data.results.length === 0 && (
-                                        <div className="flex w-full items-center gap-6 bg-slate-100 px-6 py-2">
-                                            <div className="py-2 text-slate-500">
-                                                No quizzes found
+                                        <div className="col-span-3 flex w-full flex-col items-center gap-6 px-6 py-2">
+                                            <div className="flex flex-col items-center gap-4 py-20">
+                                                <div className="rounded-full bg-slate-50 p-5 text-slate-400">
+                                                    <RiSearchLine size={24} />
+                                                </div>
+                                                <span className="max-w-lg text-balance text-center text-sm text-slate-500">
+                                                    We did our best, but we
+                                                    couldn't find any quizzes
+                                                    for your search.
+                                                </span>
+                                                {searchParams.get(
+                                                    "linked_data_id",
+                                                ) && (
+                                                    <>
+                                                        <Link
+                                                            to="/quizzes"
+                                                            className={buttonClass(
+                                                                {
+                                                                    intent: "ghost",
+                                                                    size: "medium",
+                                                                    icon: "right",
+                                                                },
+                                                            )}
+                                                        >
+                                                            <span>
+                                                                Clear search
+                                                            </span>
+                                                            <RiCloseFill
+                                                                size={16}
+                                                            />
+                                                        </Link>
+                                                    </>
+                                                )}
                                             </div>
-                                            {searchParams.get(
-                                                "linked_data_id",
-                                            ) && (
-                                                <>
-                                                    <Link
-                                                        to="/quizzes"
-                                                        className={buttonClass({
-                                                            intent: "ghost",
-                                                            size: "medium",
-                                                            icon: "right",
-                                                        })}
-                                                    >
-                                                        <span>
-                                                            Clear search
-                                                        </span>
-                                                        <RiCloseFill
-                                                            size={16}
-                                                        />
-                                                    </Link>
-                                                </>
-                                            )}
                                         </div>
                                     )}
                                 </main>

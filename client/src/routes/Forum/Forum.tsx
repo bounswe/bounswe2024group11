@@ -9,6 +9,7 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { PageHead } from "../../components/page-head";
 
+import { Separator } from "@ariakit/react";
 import { RiAddFill, RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 import { radioOptionClass } from "../../components/radio-option";
 import TagSearch from "../../components/tag-search";
@@ -64,33 +65,23 @@ export const Forum = () => {
                     />
 
                     <aside className="flex flex-col gap-6">
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4 sm:flex-row">
-                                <div className="flex flex-grow items-center gap-2">
-                                    <TagSearch
-                                        onTagSelect={(tag) => {
-                                            const newParams =
-                                                new URLSearchParams(
-                                                    searchParams,
-                                                );
-                                            if (tag) {
-                                                newParams.set(
-                                                    "linked_data_id",
-                                                    tag.id,
-                                                );
-                                            } else {
-                                                newParams.delete(
-                                                    "linked_data_id",
-                                                );
-                                            }
-                                            setSearchParams(newParams);
-                                        }}
-                                        inputRef={searchInputRef}
-                                    />
-                                </div>
-                                <div></div>
-                            </div>
+                        <div className="flex flex-grow items-center gap-2 pt-6">
+                            <TagSearch
+                                onTagSelect={(tag) => {
+                                    const newParams = new URLSearchParams(
+                                        searchParams,
+                                    );
+                                    if (tag) {
+                                        newParams.set("linked_data_id", tag.id);
+                                    } else {
+                                        newParams.delete("linked_data_id");
+                                    }
+                                    setSearchParams(newParams);
+                                }}
+                                inputRef={searchInputRef}
+                            />
                         </div>
+                        <Separator className="border-slate-200" />
                         <div className="flex gap-2">
                             {forumSortOptions.map((option) => (
                                 <label
@@ -142,6 +133,7 @@ export const Forum = () => {
                     </Link>
                 </div>
             </div>
+            <Separator className="border-slate-200" />
 
             <Suspense fallback={<ForumLoading />}>
                 <Await resolve={forumData}>
