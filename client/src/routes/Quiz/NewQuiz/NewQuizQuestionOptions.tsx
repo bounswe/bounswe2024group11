@@ -19,6 +19,19 @@ type OptionsViewProps = {
     onQuestionReset: (id: number) => void;
 };
 
+const getQuizOptionPlaceholder = (type: number) => {
+    switch (type) {
+        case 1:
+            return "otomobil";
+        case 2:
+            return "automobile";
+        case 3:
+            return "A self-propelled vehicle designed primarily for passenger transportation on roads.";
+        default:
+            return "Option";
+    }
+};
+
 const difficultyBarClass = cva("h-full", {
     variants: {
         difficulty: {
@@ -347,6 +360,11 @@ export const NewQuizQuestionOptions = ({
                                 disabled={
                                     choice.is_correct ||
                                     (i === 0 && possibleAnswers.length !== 0)
+                                }
+                                placeholder={
+                                    !choice.is_correct
+                                        ? getQuizOptionPlaceholder(quiz.type)
+                                        : undefined
                                 }
                                 onChange={(e) => {
                                     if (i === 0) return;
