@@ -210,14 +210,14 @@ export const Register = () => {
                         </label>
                         <Link
                             role="link"
-                            aria-label="Test Your English"
+                            aria-label="Evaluate Your English Proficiency"
                             rel="noreferrer"
                             target="_blank"
                             to="https://www.cambridgeenglish.org/test-your-english/general-english/"
                             className="flex items-center gap-2 text-cyan-800 underline-offset-2 hover:text-cyan-950 hover:underline"
                         >
                             <span className="text-sm font-medium">
-                                Test Your English
+                                Evaluate Your English Proficiency
                             </span>
                             <RiExternalLinkLine className="h-4 w-4" />
                         </Link>
