@@ -26,7 +26,9 @@ export const forumShouldRevalidate: ShouldRevalidateFunction = ({
     return (
         !!formData ||
         currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page")
+        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
+        currentUrlParams.get("linked_data_id") !==
+            nextUrlParams.get("linked_data_id")
     );
 };
 
@@ -34,10 +36,10 @@ export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 1;
     const per_page = Number(url.searchParams.get("per_page")) || 10;
-
+    const linked_data_id = url.searchParams.get("linked_data_id") || null;
     const forumDataPromise = apiClient
         .get("/forum-questions/", {
-            params: { page, per_page },
+            params: { page, per_page, linked_data_id },
         })
         .then((response) => {
             const { output, success, issues } = safeParse(
