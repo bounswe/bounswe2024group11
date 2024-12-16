@@ -4,6 +4,7 @@ from rest_framework import status, permissions
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from ..permissions import IsAuthorOrReadOnly
 from ..models import Achievement, UserAchievement
 from ..serializers.profile_serializer import AchievementSerializer
 
@@ -11,7 +12,7 @@ class AchievementListView(APIView):
     """
     API endpoint to fetch all achievements with user-specific acquisition status and earned time.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     @swagger_auto_schema(
         operation_summary="Get all achievements with acquisition status and earned time",
@@ -30,17 +31,6 @@ class AchievementListView(APIView):
                                 "created_at": "2024-12-01T12:00:00Z"
                             },
                             "earned_at": "2024-12-15T10:30:00Z"
-                        },
-                        {
-                            "achievement_details": {
-                                "id": 2,
-                                "slug": "first-forum-post",
-                                "title": "First Forum Post Created",
-                                "description": "Awarded for creating your first forum post.",
-                                "category": "Forum",
-                                "created_at": "2024-12-02T12:00:00Z"
-                            },
-                            "earned_at": None
                         }
                     ]
                 },
@@ -52,16 +42,18 @@ class AchievementListView(APIView):
         """
         Return all achievements with acquisition status and earned time for the authenticated user.
         """
-        user = request.user  # Get the authenticated user
-
         # Fetch all achievements
         achievements = Achievement.objects.all()
-
-        # Fetch user achievements with earned_at
-        user_achievements = UserAchievement.objects.filter(user=user)
-        user_achievement_map = {
-            ua.achievement_id: ua.earned_at for ua in user_achievements
-        }
+        
+        # Initialize user_achievement_map
+        user_achievement_map = {}
+        
+        # Only fetch user achievements if user is authenticated
+        if request.user.is_authenticated:
+            user_achievements = UserAchievement.objects.filter(user=request.user)
+            user_achievement_map = {
+                ua.achievement_id: ua.earned_at for ua in user_achievements
+            }
 
         # Serialize achievements and nest fields under `achievement_details`
         data = []
