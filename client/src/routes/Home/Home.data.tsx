@@ -607,8 +607,9 @@ export const interestSchema = object({
     interest: string(),
 });
 
-export const interestAction = (async ({ request }) => {
+export const interestAction = (async ({ request, params, context }) => {
     const formData = await request.formData();
+    console.log(params, context);
 
     try {
         const response = await apiClient.post(`/interests/`, formData, {

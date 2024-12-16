@@ -3,7 +3,7 @@ import { RiCloseFill, RiErrorWarningLine } from "@remixicon/react";
 import { useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import { inputClass, labelClass } from "../../../components/input";
-import { useTaggingSearch } from "../../../hooks/tagging";
+import { useQuizTaggingSearch } from "../../../hooks/tagging";
 import { Tag } from "../../Forum/Forum.schema";
 import { tagOptionClass } from "../../Forum/NewForum";
 import { getQuestionType } from "./NewQuiz";
@@ -34,7 +34,7 @@ export const NewQuizDetails = () => {
     };
 
     const { quiz, setQuizField, removeTag, setType, addTag } = useQuizStore();
-    const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
+    const { data, error, isLoading, debouncedSearch } = useQuizTaggingSearch(
         search,
         quiz,
     );

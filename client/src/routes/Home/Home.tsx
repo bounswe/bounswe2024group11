@@ -1,10 +1,11 @@
-import { Button, Separator } from "@ariakit/react";
+import { Separator } from "@ariakit/react";
 import { Suspense, useState } from "react";
 import {
     Await,
     useLoaderData,
     useRouteLoaderData,
 } from "react-router-typesafe";
+import { InterestTag } from "../../components/interest-tag";
 import { radioOptionClass } from "../../components/radio-option";
 import { QuizLoading } from "../_loading";
 import { homeLoader, userLoader } from "./Home.data";
@@ -21,7 +22,7 @@ export const LOAD_MORE_COUNT = 6;
 type FeedType = "personal" | "network" | "forum" | "quiz";
 const availableFeedTypes: FeedType[] = ["personal", "network"];
 
-const fakeInterests = [
+export const fakeInterests = [
     {
         id: 1,
         name: "Technology",
@@ -100,7 +101,7 @@ export const Home = () => {
                                         <h1 className="font-display text-4xl font-medium">
                                             {title}
                                         </h1>
-                                        <p className="max-w-2xl text-balance text-center text-lg text-slate-500">
+                                        <p className="max-w-2xl text-balance text-center text-base text-slate-500">
                                             {hasNotInterests
                                                 ? "Hey, looks like you are new around here. Let's explore Turquiz together."
                                                 : description}
@@ -108,12 +109,7 @@ export const Home = () => {
                                         <div className="mt-3 flex flex-wrap gap-3">
                                             {profileData.interests.map(
                                                 (tag) => (
-                                                    <Button
-                                                        key={tag.linked_data_id}
-                                                        className="rounded-1 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-800 ring ring-slate-200 transition-colors hover:bg-slate-200"
-                                                    >
-                                                        <span>{tag.name}</span>
-                                                    </Button>
+                                                    <InterestTag tag={tag} />
                                                 ),
                                             )}
                                         </div>
@@ -150,6 +146,11 @@ export const Home = () => {
                                         </label>
                                     ))}
                                 </div>
+                                <span className="text-sm uppercase tracking-widest text-slate-600">
+                                    {feedType === "personal"
+                                        ? "Based on your interests"
+                                        : "From the people you follow"}
+                                </span>
 
                                 <Separator className="border-slate-200" />
 

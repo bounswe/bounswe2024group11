@@ -4,7 +4,7 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 
 export const HomeEmptyNetwork = () => {
     return (
-        <div className="max-auto flex max-w-2xl flex-col items-center gap-4 self-center py-4 text-center">
+        <div className="max-auto flex max-w-2xl flex-col items-center gap-4 self-center py-6 text-center">
             <div className="rounded-full bg-slate-100 p-5">
                 <RiUser5Line className="h-7 text-slate-400" size={32} />
             </div>

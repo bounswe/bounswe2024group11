@@ -11,8 +11,10 @@ import {
 import { Avatar } from "../../components/avatar";
 import { BlockingModal } from "../../components/blockings-modal";
 import { buttonClass, buttonInnerRing } from "../../components/button";
+import { InterestTag } from "../../components/interest-tag";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
+import { fakeInterests } from "../Home/Home";
 import { userLoader } from "../Home/Home.data";
 import { BookmarkedForum } from "./BookmarkedForumQuestions";
 import {
@@ -78,6 +80,7 @@ export const Profile = () => {
                     is_following,
                     blockings,
                     id,
+                    interests,
                 }) => {
                     const author = {
                         avatar: avatar,
@@ -249,6 +252,13 @@ export const Profile = () => {
                                     <BlockingModal blockings={blockings} />
                                 )}
                             </header>
+                            <section>
+                                <div className="mt-3 flex flex-wrap gap-3">
+                                    {fakeInterests.map((tag) => (
+                                        <InterestTag tag={tag} />
+                                    ))}
+                                </div>
+                            </section>
                             <section className="z-20 flex w-full flex-row items-center justify-between">
                                 <div className="flex flex-col gap-2">
                                     <h2 className="font-medium">

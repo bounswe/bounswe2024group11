@@ -36,7 +36,11 @@ def helper(word, lang):
             # Get the ID of the box
             # print(box.find('div', class_='definition').text.strip())
             if box.find('div', class_='definition') is not None:
-                descriptions.append({'id': box.get('data-id'), 'description': box.find('div', class_='definition').text.strip()})
+                 descriptions.append({
+                    'word': word,
+                    'id': box.get('data-id'),
+                    'description': box.find('div', class_='definition').text.strip()
+                })
 
         entity_dict[pos] = descriptions
     return entity_dict
