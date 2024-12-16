@@ -21,7 +21,7 @@ export const BookmarkedForum = ({ forums }: { forums: ForumQuestion[] }) => {
                     {forums.length}
                 </span>
             </h2>
-            <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+            <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
                 {displayedForums.map((post) => (
                     <ForumQuestionCard
                         onTagClick={() => {}}

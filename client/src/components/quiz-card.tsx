@@ -60,7 +60,7 @@ export const QuizCard = ({ quiz, onTagClick, quiz_key }: QuizCardProps) => {
         <div
             key={quiz_key}
             aria-label={quiz.title}
-            className="relative flex max-w-xl flex-col gap-4 rounded-2 bg-white px-6 py-6 shadow-none ring ring-slate-200 transition-all duration-200"
+            className="relative flex max-w-2xl flex-col gap-4 rounded-2 bg-white px-6 py-6 shadow-none ring ring-slate-200 transition-all duration-200"
         >
             <div className="flex flex-1 items-start gap-4">
                 <div className="flex flex-1 flex-col self-stretch">

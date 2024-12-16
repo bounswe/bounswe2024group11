@@ -84,7 +84,7 @@ export const ProfileLoading = () => {
             <div className="mt-16 flex flex-col gap-8">
                 <div className="skeleton-loading h-6 w-48 bg-slate-200 text-2xl font-semibold"></div>
 
-                <div className="grid w-full grid-cols-1 flex-col items-center gap-8 md:grid-cols-2">
+                <div className="grid w-full grid-cols-1 flex-col items-center gap-10 md:grid-cols-2">
                     {Array.from({ length: 6 }).map((_, i) => (
                         <div
                             key={i}
