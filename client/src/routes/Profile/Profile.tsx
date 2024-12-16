@@ -12,6 +12,7 @@ import { Avatar } from "../../components/avatar";
 import { BlockingModal } from "../../components/blockings-modal";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { InterestTag, StaticTag } from "../../components/interest-tag";
+import { pluralize } from "../../utils";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
 import { userLoader } from "../Home/Home.data";
@@ -81,6 +82,8 @@ export const Profile = () => {
                     blockings,
                     id,
                     interests,
+                    followers,
+                    followings,
                 }) => {
                     const author = {
                         avatar: avatar,
@@ -100,160 +103,192 @@ export const Profile = () => {
 
                     return (
                         <main className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-                            <header className="flex flex-row items-center gap-4">
-                                <Avatar author={author} size={96} />
-                                <div className="flex-1">
-                                    <h1 className="pt-2 text-2xl font-semibold">
-                                        {full_name}
-                                    </h1>
-                                    <p
-                                        className="text-lg text-slate-500"
-                                        aria-label="Username"
-                                    >
-                                        @{username}
-                                    </p>
-                                </div>
-                                {user?.username !== username && logged_in ? (
-                                    <>
-                                        {!is_blocked ? (
-                                            <blockFetcher.Form
-                                                method="POST"
-                                                action={`block/`}
-                                                onSubmit={() =>
-                                                    setIsBlockDisabled(true)
-                                                }
+                            <header className="flex flex-col items-stretch gap-6">
+                                <div className="flex flex-row items-center gap-4">
+                                    <Avatar author={author} size={96} />
+                                    <div className="flex-1">
+                                        <div>
+                                            <h1 className="pt-2 text-2xl font-semibold">
+                                                {full_name}
+                                            </h1>
+                                            <p
+                                                className="text-lg text-slate-500"
+                                                aria-label="Username"
                                             >
-                                                <Button
-                                                    className={buttonClass({
-                                                        intent: "destructive",
-                                                        size: "medium",
-                                                        className: "w-20",
-                                                    })}
-                                                    type="submit"
-                                                    disabled={isBlockDisabled}
-                                                >
-                                                    <span
-                                                        className={buttonInnerRing(
-                                                            {
-                                                                intent: "destructive",
-                                                            },
-                                                        )}
-                                                    />
-                                                    <span>Block</span>
-                                                </Button>
-                                                <input
-                                                    type="hidden"
-                                                    name="blocking"
-                                                    value={id}
-                                                ></input>
-                                            </blockFetcher.Form>
-                                        ) : (
-                                            <unblockFetcher.Form
-                                                method="POST"
-                                                action={`unblock/`}
-                                                onSubmit={() =>
-                                                    setIsUnblockDisabled(true)
-                                                }
-                                            >
-                                                <Button
-                                                    className={buttonClass({
-                                                        intent: "tertiary",
-                                                        size: "medium",
-                                                        className: "w-20",
-                                                    })}
-                                                    type="submit"
-                                                    disabled={isUnblockDisabled}
-                                                >
-                                                    <span
-                                                        className={buttonInnerRing(
-                                                            {
-                                                                intent: "tertiary",
-                                                            },
-                                                        )}
-                                                    />
-                                                    <span>Unblock</span>
-                                                </Button>
-                                                <input
-                                                    type="hidden"
-                                                    name="blocking"
-                                                    value={is_blocked}
-                                                ></input>
-                                            </unblockFetcher.Form>
-                                        )}
-                                        {is_following ? (
-                                            <unfollowFetcher.Form
-                                                method="POST"
-                                                action={`unfollow/`}
-                                                onSubmit={() =>
-                                                    setIsUnfollowDisabled(true)
-                                                }
-                                            >
-                                                <Button
-                                                    className={buttonClass({
-                                                        intent: "destructive",
-                                                        size: "medium",
-                                                        className: "w-20",
-                                                    })}
-                                                    type="submit"
-                                                    disabled={
-                                                        isUnfollowDisabled
+                                                @{username}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {!isMe ? (
+                                        <>
+                                            {!is_blocked ? (
+                                                <blockFetcher.Form
+                                                    method="POST"
+                                                    action={`block/`}
+                                                    onSubmit={() =>
+                                                        setIsBlockDisabled(true)
                                                     }
                                                 >
-                                                    <span
-                                                        className={buttonInnerRing(
-                                                            {
-                                                                intent: "destructive",
-                                                            },
-                                                        )}
-                                                    />
-                                                    <span>Unfollow</span>
-                                                </Button>
-                                                <input
-                                                    type="hidden"
-                                                    name="following"
-                                                    value={is_following}
-                                                ></input>
-                                            </unfollowFetcher.Form>
-                                        ) : (
-                                            <followFetcher.Form
-                                                method="POST"
-                                                action={`follow/`}
-                                                onSubmit={() =>
-                                                    setIsFollowDisabled(true)
-                                                }
-                                            >
-                                                <Button
-                                                    className={buttonClass({
-                                                        intent: "secondary",
-                                                        size: "medium",
-                                                        className: "w-20",
-                                                    })}
-                                                    type="submit"
-                                                    disabled={isFollowDisabled}
+                                                    <Button
+                                                        className={buttonClass({
+                                                            intent: "destructive",
+                                                            size: "medium",
+                                                            className: "w-20",
+                                                        })}
+                                                        type="submit"
+                                                        disabled={
+                                                            isBlockDisabled
+                                                        }
+                                                    >
+                                                        <span
+                                                            className={buttonInnerRing(
+                                                                {
+                                                                    intent: "destructive",
+                                                                },
+                                                            )}
+                                                        />
+                                                        <span>Block</span>
+                                                    </Button>
+                                                    <input
+                                                        type="hidden"
+                                                        name="blocking"
+                                                        value={id}
+                                                    ></input>
+                                                </blockFetcher.Form>
+                                            ) : (
+                                                <unblockFetcher.Form
+                                                    method="POST"
+                                                    action={`unblock/`}
+                                                    onSubmit={() =>
+                                                        setIsUnblockDisabled(
+                                                            true,
+                                                        )
+                                                    }
                                                 >
-                                                    <span
-                                                        className={buttonInnerRing(
-                                                            {
-                                                                intent: "secondary",
-                                                            },
-                                                        )}
-                                                    />
-                                                    <span>Follow</span>
-                                                </Button>
-                                                <input
-                                                    type="hidden"
-                                                    name="following"
-                                                    value={id}
-                                                ></input>
-                                            </followFetcher.Form>
+                                                    <Button
+                                                        className={buttonClass({
+                                                            intent: "tertiary",
+                                                            size: "medium",
+                                                            className: "w-20",
+                                                        })}
+                                                        type="submit"
+                                                        disabled={
+                                                            isUnblockDisabled
+                                                        }
+                                                    >
+                                                        <span
+                                                            className={buttonInnerRing(
+                                                                {
+                                                                    intent: "tertiary",
+                                                                },
+                                                            )}
+                                                        />
+                                                        <span>Unblock</span>
+                                                    </Button>
+                                                    <input
+                                                        type="hidden"
+                                                        name="blocking"
+                                                        value={is_blocked}
+                                                    ></input>
+                                                </unblockFetcher.Form>
+                                            )}
+                                            {is_following ? (
+                                                <unfollowFetcher.Form
+                                                    method="POST"
+                                                    action={`unfollow/`}
+                                                    onSubmit={() =>
+                                                        setIsUnfollowDisabled(
+                                                            true,
+                                                        )
+                                                    }
+                                                >
+                                                    <Button
+                                                        className={buttonClass({
+                                                            intent: "destructive",
+                                                            size: "medium",
+                                                            className: "w-20",
+                                                        })}
+                                                        type="submit"
+                                                        disabled={
+                                                            isUnfollowDisabled
+                                                        }
+                                                    >
+                                                        <span
+                                                            className={buttonInnerRing(
+                                                                {
+                                                                    intent: "destructive",
+                                                                },
+                                                            )}
+                                                        />
+                                                        <span>Unfollow</span>
+                                                    </Button>
+                                                    <input
+                                                        type="hidden"
+                                                        name="following"
+                                                        value={is_following}
+                                                    ></input>
+                                                </unfollowFetcher.Form>
+                                            ) : (
+                                                <followFetcher.Form
+                                                    method="POST"
+                                                    action={`follow/`}
+                                                    onSubmit={() =>
+                                                        setIsFollowDisabled(
+                                                            true,
+                                                        )
+                                                    }
+                                                >
+                                                    <Button
+                                                        className={buttonClass({
+                                                            intent: "secondary",
+                                                            size: "medium",
+                                                            className: "w-20",
+                                                        })}
+                                                        type="submit"
+                                                        disabled={
+                                                            isFollowDisabled
+                                                        }
+                                                    >
+                                                        <span
+                                                            className={buttonInnerRing(
+                                                                {
+                                                                    intent: "secondary",
+                                                                },
+                                                            )}
+                                                        />
+                                                        <span>Follow</span>
+                                                    </Button>
+                                                    <input
+                                                        type="hidden"
+                                                        name="following"
+                                                        value={id}
+                                                    ></input>
+                                                </followFetcher.Form>
+                                            )}
+                                        </>
+                                    ) : null}
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="rounded-1 bg-slate-800 px-2 py-1 text-sm font-medium text-slate-100">
+                                        {pluralize(
+                                            followers.length,
+                                            "follower",
+                                            "followers",
                                         )}
-                                    </>
-                                ) : (
-                                    <BlockingModal blockings={blockings} />
-                                )}
+                                    </span>{" "}
+                                    <span className="rounded-1 bg-slate-800 px-2 py-1 text-sm font-medium text-slate-100">
+                                        {pluralize(
+                                            followings.length,
+                                            "following",
+                                            "followings",
+                                        )}
+                                    </span>
+                                </div>
                             </header>
+                            <Ariakit.Separator className="ring-slate-200" />
+
                             <section>
-                                <div className="mt-3 flex flex-wrap gap-3">
+                                <div className="flex flex-wrap gap-3">
                                     {interests.map((tag) => {
                                         if (!tag) return null;
                                         if (isMe)
@@ -272,6 +307,7 @@ export const Profile = () => {
                                     })}
                                 </div>
                             </section>
+                            <Ariakit.Separator className="ring-slate-200" />
                             <section className="z-20 flex w-full flex-row items-center justify-between">
                                 <div className="flex flex-col gap-2">
                                     <h2 className="font-medium">
@@ -281,7 +317,7 @@ export const Profile = () => {
                                         </span>
                                     </h2>
 
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex flex-col items-start gap-4">
                                         <ul
                                             className="flex flex-row gap-4"
                                             role="list"
@@ -306,7 +342,7 @@ export const Profile = () => {
                                                     icon: "right",
                                                 })}
                                             >
-                                                See All
+                                                All Turquiz Badges
                                                 <RiArrowRightLine size={16} />
                                             </Link>
                                         )}
@@ -343,12 +379,12 @@ export const Profile = () => {
                                                     <span className="text-slate-100">
                                                         Here's how points work:
                                                     </span>
-                                                    Get them right, earn TP
-                                                    points! Easy quizzes get you
-                                                    10, tough ones get you 30.
-                                                    Using hints costs half your
-                                                    points, but wrong answers?
-                                                    No sweat!
+                                                    Get quiz questions right,
+                                                    earn TP points! Easy quizzes
+                                                    get you 10, tough ones get
+                                                    you 30. Using hints costs
+                                                    half your points, but wrong
+                                                    answers? No sweat!
                                                 </Ariakit.PopoverDescription>
 
                                                 <Ariakit.Button
@@ -367,11 +403,16 @@ export const Profile = () => {
                                     </Ariakit.PopoverProvider>
                                 </div>
                             </section>
+                            <Ariakit.Separator className="ring-slate-200" />
+
                             <BookmarkedForum forums={bookmarked_forums} />
+
                             <Ariakit.Separator className="my-4" />
                             <QuizzesTaken
                                 quizzes={quizzes_taken}
                             ></QuizzesTaken>
+                            <Ariakit.Separator className="my-4" />
+                            {isMe && <BlockingModal blockings={blockings} />}
                         </main>
                     );
                 }}

@@ -73,3 +73,22 @@ export const UserCard = ({ user }: { user: Author }) => {
         </Link>
     );
 };
+
+export const UserCardWithoutAction = ({ user }: { user: Author }) => {
+    return (
+        <Link
+            to={`/profile/${user.username}`}
+            className="flex items-center gap-4 rounded-1 bg-white p-4 ring ring-slate-200 transition-colors hover:bg-slate-100"
+        >
+            <div className="flex flex-1 flex-row items-center gap-4">
+                <Avatar author={user} size={48} />
+                <div className="flex w-full max-w-48 flex-col items-start">
+                    <span className="font-medium text-slate-900">
+                        {user.full_name}
+                    </span>
+                    <p className="text-sm text-slate-500">@{user.username}</p>
+                </div>
+            </div>
+        </Link>
+    );
+};
