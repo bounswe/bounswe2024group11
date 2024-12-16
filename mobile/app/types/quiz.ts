@@ -6,6 +6,11 @@ export type rating = {
   count: number;
 };
 
+export type rateQuizType = {
+  stars: number;
+  comment: string;
+};
+
 export type QuizQuestionOptionType = {
   id: number;
   choice_text: string;
@@ -92,6 +97,7 @@ export type QuizResultType = {
   wrong_answer_count: number;
   empty_answer_count: number;
   score: number;
+  max_score: number;
   achievement: number | null;
   date: string;
   user: number;
