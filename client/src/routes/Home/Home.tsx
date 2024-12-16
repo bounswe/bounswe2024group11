@@ -52,16 +52,6 @@ export const Home = () => {
         useRouteLoaderData<typeof userLoader>("home-main");
     const rawData = useLoaderData<typeof homeLoader>();
 
-    // export const authorSchema = object({
-    //     id: number(),
-    //     full_name: string(),
-    //     username: string(),
-    //     avatar: nullable(string()),
-    //     email: string(),
-    //     is_followed: nullable(number()),
-    //     is_blocked: nullable(number()),
-    // });
-
     fakeUsers: [
         {
             id: 1,
@@ -178,6 +168,11 @@ export const Home = () => {
                                         </div>
                                     </div>
                                 ) : null}
+                                <span className="text-center text-xs uppercase tracking-widest text-slate-500">
+                                    {feedType === "personal"
+                                        ? "Based on your interests"
+                                        : "From the people you follow"}
+                                </span>
                                 <div className="mx-auto flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
                                     {availableFeedTypes.map((option) => (
                                         <label
@@ -208,13 +203,6 @@ export const Home = () => {
                                         </label>
                                     ))}
                                 </div>
-                                <span className="text-sm uppercase tracking-widest text-slate-600">
-                                    {feedType === "personal"
-                                        ? "Based on your interests"
-                                        : "From the people you follow"}
-                                </span>
-
-                                <Separator className="border-slate-200" />
 
                                 {feedType === "personal" && hasNotInterests && (
                                     <>
@@ -226,10 +214,11 @@ export const Home = () => {
                                 {feedType === "personal" &&
                                     !hasNotInterests && (
                                         <>
-                                            <RelatedTags
-                                                tags={
-                                                    feedData.related_tags_for_forum_questions
+                                            <HomeQuizFeed
+                                                quizzes={
+                                                    feedData.quizzes_by_interests
                                                 }
+                                                title="Quizzes For You"
                                             />
                                             <Separator className="border-slate-200" />
                                             <HomeForumFeed
@@ -239,12 +228,13 @@ export const Home = () => {
                                                 title="Forum Questions For You"
                                             />
                                             <Separator className="border-slate-200" />
-                                            <HomeQuizFeed
-                                                quizzes={
-                                                    feedData.quizzes_by_interests
-                                                }
-                                                title="Quizzes For You"
+                                            <RelatedTags
+                                                tags={[
+                                                    ...feedData.related_tags_for_quizzes,
+                                                    ...feedData.related_tags_for_forum_questions,
+                                                ]}
                                             />
+                                            <AddInterestBlock />
                                         </>
                                     )}
 
@@ -270,28 +260,7 @@ export const Home = () => {
                                     </>
                                 )}
 
-                                {feedType === "forum" && (
-                                    <HomeForumFeed
-                                        forumQuestions={[
-                                            ...feedData.forum_questions_by_interests,
-                                            ...feedData.forum_questions_by_followed_users,
-                                        ]}
-                                        title="All Forums"
-                                    />
-                                )}
-
-                                {feedType === "quiz" && (
-                                    <HomeQuizFeed
-                                        quizzes={[
-                                            ...feedData.quizzes_by_interests,
-                                            ...feedData.quizzes_by_followed_users,
-                                        ]}
-                                        title="All Quizzes"
-                                    />
-                                )}
-
-                                <Separator className="border-slate-200" />
-                                <HomeStaticContent />
+                                {/* <HomeStaticContent /> */}
                                 <Separator className="border-slate-200" />
                             </>
                         );

@@ -4,6 +4,7 @@ import { buttonClass } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
 import { ForumQuestion } from "../Forum/Forum.schema";
 import { INITIAL_DISPLAY_COUNT, LOAD_MORE_COUNT } from "./Home";
+import { HomeEmptySection } from "./HomeEmptySection";
 
 export const HomeForumFeed = ({
     forumQuestions,
@@ -16,6 +17,14 @@ export const HomeForumFeed = ({
     const displayedForums = forumQuestions.slice(0, displayCount);
 
     const hasMore = displayCount < forumQuestions.length;
+
+    if (forumQuestions.length === 0)
+        return (
+            <HomeEmptySection
+                title={title}
+                description="Although we have tried hard enough, we couldn't find any forum questions this time"
+            />
+        );
 
     return (
         <section className="flex flex-col gap-4">

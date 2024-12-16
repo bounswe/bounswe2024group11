@@ -17,3 +17,4 @@ export const authorSchema = object({
 });
 
 export type User = InferInput<typeof userSchema>;
+export type Author = InferInput<typeof authorSchema>;

@@ -1,5 +1,9 @@
 import { Button } from "@ariakit/react";
-import { RiAddLine, RiErrorWarningLine, RiSearch2Line } from "@remixicon/react";
+import {
+    RiAddLine,
+    RiEmotionHappyLine,
+    RiErrorWarningLine,
+} from "@remixicon/react";
 import { useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import { useFetcher } from "react-router-dom";
@@ -50,8 +54,8 @@ export const AddInterestBlock = () => {
     const idle =
         nounOptions.length + verbOptions.length + adverbOptions.length === 0;
     return (
-        <div className="flex w-full max-w-xl flex-col items-center gap-4 self-center py-6 text-center">
-            <div className="mt-2 self-stretch">
+        <div className="flex w-full flex-col items-start gap-1 self-center pb-6 pt-2 text-center">
+            <div className="mt-2 max-w-lg self-stretch">
                 <fieldset className="flex w-full flex-col items-stretch gap-2 text-start">
                     <label
                         className={labelClass({
@@ -74,8 +78,9 @@ export const AddInterestBlock = () => {
                     {!isLoading && idle && (
                         <div className="flex h-full flex-col items-center justify-center gap-2">
                             <span className="flex flex-col items-center gap-2 text-sm text-slate-500">
-                                <RiSearch2Line />
-                                We will show the results once you start typing
+                                <RiEmotionHappyLine />
+                                We will show some cool tags once you start
+                                typing
                             </span>
                         </div>
                     )}
