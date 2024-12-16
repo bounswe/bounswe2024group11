@@ -1,4 +1,8 @@
-import { RouteProp, useIsFocused } from "@react-navigation/native";
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -11,14 +15,10 @@ import {
   View,
 } from "react-native";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import ForumAnswerCard from "../components/ForumAnswerCard";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Answer } from "../types/forum";
-import { useNavigation } from "@react-navigation/native";
-import API_URL_GLOBAL from "../../config";
-
-//const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
-const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
 
 type ForumQuestionDetailScreenRouteProp = RouteProp<
   RootStackParamList,

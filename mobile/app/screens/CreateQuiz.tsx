@@ -12,11 +12,8 @@ import {
   View,
 } from "react-native";
 import { RootStackParamList } from "../../App";
-import { Tag, TagSearchResult } from "../types/tag";
 import API_URL_GLOBAL from "../../config";
-
-const API_URL = "http://138.68.97.90/api/v1";
-// const API_URL = "http://10.0.2.2:8000/api/v1";
+import { Tag, TagSearchResult } from "../types/tag";
 
 type CreateQuizScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;

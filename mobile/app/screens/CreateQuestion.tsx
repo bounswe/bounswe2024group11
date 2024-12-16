@@ -11,11 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Tag, TagSearchResult } from "../types/tag";
 import API_URL_GLOBAL from "../../config";
-
-//const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
-//const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
+import { Tag, TagSearchResult } from "../types/tag";
 
 const CreateQuestion: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -39,7 +36,6 @@ const CreateQuestion: React.FC = () => {
   }, [tagInput]);
 
   const fetchTagSuggestions = async (input: string) => {
-    //const API_URL = `http://138.68.97.90/api/v1/tagging/?word=${input}&lang=EN`;
     const API_URL = `${API_URL_GLOBAL}tagging/?word=${input}&lang=EN`;
     try {
       const result = await axios.get(`${API_URL}`);

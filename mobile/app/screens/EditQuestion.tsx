@@ -1,4 +1,4 @@
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -11,11 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Tag, TagSearchResult } from "../types/tag";
 import { RootStackParamList } from "../../App";
 import API_URL_GLOBAL from "../../config";
-
-const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
+import { Tag, TagSearchResult } from "../types/tag";
 
 const EditQuestion: React.FC = () => {
   const [title, setTitle] = useState("");

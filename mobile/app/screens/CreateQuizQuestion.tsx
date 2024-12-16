@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import CreateQuizQuestionCore from "../components/CreateQuizQuestionCore";
 import CreateQuizQuestionFooter from "../components/CreateQuizQuestionFooter";
 import CreateQuizQuestionHeader from "../components/CreateQuizQuestionHeader";
@@ -12,7 +13,6 @@ import CreateQuizQuestionOptions from "../components/CreateQuizQuestionOptions";
 import { CreateQuizQuestionType, SuggestedHintsType } from "../types/quiz";
 import { Tag, TagSearchResult } from "../types/tag";
 import { combineHints } from "../utils/quiz";
-import API_URL_GLOBAL from "../../config";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -57,8 +57,6 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const [allTranslations, setAllTranslations] = useState<string[][]>([[]]);
   const [allHints, setAllHints] = useState<SuggestedHintsType[]>([]);
 
-  const API_URL = "http://138.68.97.90/api/v1";
-  // const API_URL = "http://10.0.2.2:8000/api/v1";
   const source_lang = quiz_type === 2 ? "TR" : "EN";
   const navigation = useNavigation<NavigationProp>();
 
