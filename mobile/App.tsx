@@ -8,8 +8,8 @@ import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import CreateQuestion from "./app/screens/CreateQuestion";
 import CreateQuiz from "./app/screens/CreateQuiz";
 import CreateQuizQuestion from "./app/screens/CreateQuizQuestion";
-import EditQuestion from "./app/screens/EditQuestion";
 import EditAnswer from "./app/screens/EditAnswer";
+import EditQuestion from "./app/screens/EditQuestion";
 import Forum from "./app/screens/Forum";
 import ForumQuestionDetail from "./app/screens/ForumQuestionDetail";
 import Leaderboard from "./app/screens/Leaderboard";
@@ -23,7 +23,11 @@ import Register from "./app/screens/Register"; // import the new Register screen
 import ReviewCreateQuiz from "./app/screens/ReviewCreateQuiz";
 import ViewQuiz from "./app/screens/ViewQuiz";
 import { Question } from "./app/types/forum";
-import { CreateQuizQuestionType, QuizOverview } from "./app/types/quiz";
+import {
+  CreateQuizQuestionType,
+  QuizOverview,
+  QuizResultType,
+} from "./app/types/quiz";
 import { Tag } from "./app/types/tag";
 
 export type RootStackParamList = {
@@ -52,7 +56,7 @@ export type RootStackParamList = {
     description: string;
     is_review: boolean;
   };
-  QuizResult: undefined;
+  QuizResult: { quizResult: QuizResultType };
   CreateQuestion: undefined;
   CreateQuiz: undefined;
   CreateQuizQuestion: {
