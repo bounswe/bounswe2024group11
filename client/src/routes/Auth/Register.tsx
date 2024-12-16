@@ -1,4 +1,4 @@
-import { RiCamera2Fill } from "@remixicon/react";
+import { RiExternalLinkLine, RiImage2Line } from "@remixicon/react";
 import { cva } from "cva";
 import { useEffect, useRef, useState } from "react";
 import { Form, Link } from "react-router-dom";
@@ -95,19 +95,19 @@ export const Register = () => {
                                         className="h-full w-full object-cover"
                                     />
                                 ) : (
-                                    <RiCamera2Fill className="h-8 w-8 text-slate-400" />
+                                    <RiImage2Line className="h-8 w-8 text-slate-400" />
                                 )}
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                                <div className="rounded bg-black bg-opacity-50 p-1 text-xs text-white">
-                                    Change Photo
+                                <div className="rounded rounded-1 bg-slate-950/50 p-1 py-1 text-xs font-medium text-white">
+                                    Select A Photo
                                 </div>
                             </div>
                         </div>
                         <input
                             ref={fileInputRef}
                             type="file"
-                            accept="image/*"
+                            accept="image/png, image/jpeg"
                             name="avatar_file"
                             onChange={handleAvatarChange}
                             className="hidden"
@@ -192,6 +192,35 @@ export const Register = () => {
                                 required
                             />
                         </label>
+
+                        <label className={labelClass()}>
+                            <span>
+                                English Proficiency{" "}
+                                <span className="text-cyan-600">*</span>
+                            </span>
+                            <select
+                                name="proficiency"
+                                className={inputClass()}
+                                required
+                            >
+                                <option value={1}>Beginner (1-8)</option>
+                                <option value={2}>Intermediate (9-16)</option>
+                                <option value={3}>Advanced (16-25)</option>
+                            </select>
+                        </label>
+                        <Link
+                            role="link"
+                            aria-label="Test Your English"
+                            rel="noreferrer"
+                            target="_blank"
+                            to="https://www.cambridgeenglish.org/test-your-english/general-english/"
+                            className="flex items-center gap-2 text-cyan-800 underline-offset-2 hover:text-cyan-950 hover:underline"
+                        >
+                            <span className="text-sm font-medium">
+                                Test Your English
+                            </span>
+                            <RiExternalLinkLine className="h-4 w-4" />
+                        </Link>
                     </fieldset>
 
                     <div className="flex flex-col gap-2">

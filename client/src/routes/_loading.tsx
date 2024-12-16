@@ -130,7 +130,7 @@ export const LeaderboardLoading = () => {
                             User
                         </th>
                         <th className="min-w-32 border px-4 py-3 text-end">
-                            Turq Points
+                            Turquiz Points
                         </th>
                     </tr>
                 </thead>
@@ -159,21 +159,6 @@ export const LeaderboardLoading = () => {
                                         <div className="skeleton-loading h-4 w-24 bg-slate-200"></div>
                                         <div className="skeleton-loading mt-2 h-4 w-16 bg-slate-200"></div>
                                     </div>
-                                    {rank === 0 && (
-                                        <span className="text-4xl font-medium text-cyan-900">
-                                            🥇{" "}
-                                        </span>
-                                    )}
-                                    {rank === 1 && (
-                                        <span className="text-4xl font-medium text-slate-900">
-                                            🥈{" "}
-                                        </span>
-                                    )}
-                                    {rank === 2 && (
-                                        <span className="text-saddlebrown text-4xl font-medium">
-                                            🥉{" "}
-                                        </span>
-                                    )}
                                 </div>
                             </td>
                             <td className="w-40 border p-2">

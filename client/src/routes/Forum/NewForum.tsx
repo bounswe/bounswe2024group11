@@ -1,5 +1,5 @@
 import { Button } from "@ariakit/react";
-import { RiCamera2Fill, RiCloseFill } from "@remixicon/react";
+import { RiCloseFill, RiImage2Line } from "@remixicon/react";
 import { cva } from "cva";
 import { useEffect, useRef, useState } from "react";
 import { Form, useSearchParams } from "react-router-dom";
@@ -237,19 +237,19 @@ export const NewForum = () => {
                                             className="h-full w-full object-cover"
                                         />
                                     ) : (
-                                        <RiCamera2Fill className="h-8 w-8 text-slate-400" />
+                                        <RiImage2Line className="h-8 w-8 text-slate-400" />
                                     )}
                                 </div>
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
                                     <div className="rounded bg-black bg-opacity-50 p-1 text-xs text-white">
-                                        Change Photo
+                                        Select A Photo
                                     </div>
                                 </div>
                             </div>
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept="image/*"
+                                accept="image/png, image/jpeg"
                                 name="image_file"
                                 onChange={handleImageChange}
                                 className="hidden"
