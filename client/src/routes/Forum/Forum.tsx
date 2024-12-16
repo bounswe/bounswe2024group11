@@ -12,6 +12,7 @@ import { PageHead } from "../../components/page-head";
 import { RiAddFill, RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 import { radioOptionClass } from "../../components/radio-option";
 import TagSearch from "../../components/tag-search";
+import { snakeToTitle } from "../../utils";
 import { ForumLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
 import { forumLoader } from "./Forum.data";
@@ -110,8 +111,8 @@ export const Forum = () => {
                                                 {[
                                                     "newest",
                                                     "oldest",
-                                                    "popular",
-                                                    "most liked",
+                                                    "highest_rated",
+                                                    "most_popular",
                                                 ].map((option) => (
                                                     <label
                                                         key={option}
@@ -148,18 +149,9 @@ export const Forum = () => {
                                                                 },
                                                             )}
                                                         >
-                                                            {option ===
-                                                                "newest" &&
-                                                                "Newest"}
-                                                            {option ===
-                                                                "oldest" &&
-                                                                "Oldest"}
-                                                            {option ===
-                                                                "popular" &&
-                                                                "Most Popular"}
-                                                            {option ===
-                                                                "most liked" &&
-                                                                "Most Liked"}
+                                                            {snakeToTitle(
+                                                                option,
+                                                            )}
                                                         </span>
                                                     </label>
                                                 ))}

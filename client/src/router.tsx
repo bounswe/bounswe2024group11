@@ -14,7 +14,6 @@ import {
     forumCreateAction,
     forumCreateLoader,
     forumLoader,
-    forumShouldRevalidate,
 } from "./routes/Forum/Forum.data";
 import { NewForum } from "./routes/Forum/NewForum";
 import { ForumQuestion } from "./routes/Forum/Question";
@@ -96,7 +95,6 @@ export const routes: RouteObject[] = [
                         path: "forum",
                         element: <Forum />,
                         loader: forumLoader,
-                        shouldRevalidate: forumShouldRevalidate,
                     },
                     {
                         path: "forum/new",

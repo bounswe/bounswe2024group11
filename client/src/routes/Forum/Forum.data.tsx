@@ -1,9 +1,4 @@
-import {
-    ActionFunction,
-    LoaderFunction,
-    redirect,
-    ShouldRevalidateFunction,
-} from "react-router";
+import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import { defer } from "react-router-typesafe";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
@@ -15,30 +10,15 @@ import {
     forumSchema,
 } from "./Forum.schema";
 
-export const forumShouldRevalidate: ShouldRevalidateFunction = ({
-    currentUrl,
-    nextUrl,
-    formData,
-}) => {
-    const currentUrlParams = new URLSearchParams(currentUrl.search);
-    const nextUrlParams = new URLSearchParams(nextUrl.search);
-    return (
-        !!formData ||
-        currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
-        currentUrlParams.get("linked_data_id") !==
-            nextUrlParams.get("linked_data_id")
-    );
-};
-
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 1;
     const per_page = Number(url.searchParams.get("per_page")) || 10;
     const linked_data_id = url.searchParams.get("linked_data_id") || null;
+    const sort = url.searchParams.get("sort") || "newest";
     const forumDataPromise = apiClient
         .get("/forum-questions/", {
-            params: { page, per_page, linked_data_id },
+            params: { page, per_page, linked_data_id, sort_by: sort },
         })
         .then((response) => {
             const { output, success, issues } = safeParse(

@@ -16,6 +16,7 @@ import { PageHead } from "../../components/page-head";
 import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
 import { TagSearch } from "../../components/tag-search";
+import { snakeToTitle } from "../../utils";
 import { QuizLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
 import { quizzesLoader } from "./Quizzes.data";
@@ -97,8 +98,8 @@ export const Quizzes = () => {
                                                 {[
                                                     "newest",
                                                     "oldest",
-                                                    "popular",
-                                                    "most liked",
+                                                    "highest_rated",
+                                                    "most_popular",
                                                 ].map((option) => (
                                                     <label
                                                         key={option}
@@ -135,18 +136,9 @@ export const Quizzes = () => {
                                                                 },
                                                             )}
                                                         >
-                                                            {option ===
-                                                                "newest" &&
-                                                                "Newest"}
-                                                            {option ===
-                                                                "oldest" &&
-                                                                "Oldest"}
-                                                            {option ===
-                                                                "popular" &&
-                                                                "Most Popular"}
-                                                            {option ===
-                                                                "most liked" &&
-                                                                "Most Liked"}
+                                                            {snakeToTitle(
+                                                                option,
+                                                            )}
                                                         </span>
                                                     </label>
                                                 ))}
