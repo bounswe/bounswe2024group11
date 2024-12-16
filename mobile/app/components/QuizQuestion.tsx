@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Dimensions,
+  Image,
   Modal,
   StyleSheet,
   Text,
@@ -91,7 +92,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         visible={isDrawerOpen}
         onRequestClose={closeDrawer}
       >
-        <View style={[styles.drawer, { height: windowHeight * 0.35 }]}>
+        <View style={[styles.drawer, { height: windowHeight * 0.55 }]}>
           <View style={styles.drawerHeader}>
             <Text style={styles.drawerHeaderText}>A Hint for You!</Text>
             <TouchableOpacity
@@ -102,23 +103,48 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             </TouchableOpacity>
           </View>
 
-          <View style={styles.drawerBody} />
-          <Text style={styles.drawerBodyText}>
-            The{" "}
-            {question.hints?.[0]?.type == "synonym"
-              ? "synonym"
-              : question.hints?.[0]?.type == "sense"
-                ? "sense"
-                : question.hints?.[0]?.type == "image"
-                  ? "image"
-                  : "hint"}{" "}
-            for the word '{question.question_text}' is:
-          </Text>
-          <Text style={styles.drawerBodyHint}>{question.hints?.[0]?.text}</Text>
+          <View style={styles.drawerBody}>
+            <Text style={styles.drawerBodyText}>
+              The{" "}
+              {question.hints?.[0]?.type == "synonyms"
+                ? "synonym"
+                : question.hints?.[0]?.type == "senses"
+                  ? "sense"
+                  : question.hints?.[0]?.type == "examples"
+                    ? "example"
+                    : question.hints?.[0]?.type == "images"
+                      ? "image"
+                      : "hint"}{" "}
+              for the word '{question.question_text}':
+            </Text>
+            {question.hints?.[0]?.type == "images" ? (
+              <View style={styles.drawerBodyImageContainer}>
+                <Image
+                  source={{ uri: "question.hints?.[0]?.text" }}
+                  // source={{
+                  //   uri: "https://kagi.com/proxy/9qaykcndr9i41.gif?c=TklOzPjLPioJ5YMJT75bSnSkx7s3yTl97zNtZ0CJpKVNiAZxPxAG6Fi6u5CXmWWD",
+                  // }}
+                  onError={(e) =>
+                    console.error("Image load error:", e.nativeEvent.error)
+                  }
+                  style={{
+                    width: 100,
+                    height: 100,
+                    resizeMode: "contain",
+                    marginTop: 8,
+                  }}
+                />
+              </View>
+            ) : (
+              <Text style={styles.drawerBodyHint}>
+                {question.hints?.[0]?.text}
+              </Text>
+            )}
+          </View>
 
           <View style={styles.drawerFooter}>
             <Text style={styles.drawerFooterText}>
-              Using hints reduces the score you get for a question by 30%.
+              Using hints reduces the score you get for a question by 50%.
             </Text>
           </View>
 
@@ -188,6 +214,18 @@ const styles = StyleSheet.create({
     color: "#713f12",
     fontSize: 24,
     fontWeight: "bold",
+  },
+  drawerBodyImageContainer: {
+    width: "100%",
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  drawerBodyImageHint: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    marginTop: 8,
   },
   drawerFooter: {
     marginTop: 16,
