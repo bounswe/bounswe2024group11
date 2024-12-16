@@ -2,7 +2,7 @@ import { defer } from "react-router-typesafe";
 import { array, number, object, optional, safeParse, string } from "valibot";
 import apiClient from "../../api";
 import { USER } from "../../constants";
-import { userSchema } from "../../schemas";
+import { authorSchema, userSchema } from "../../schemas";
 import { forumQuestionSchema, tagSchema } from "../Forum/Forum.schema";
 import { profileSchema } from "../Profile/Profile.schema";
 import { quizDetailsSchema } from "../Quiz/Quiz.schema";
@@ -553,7 +553,7 @@ const feedSchema = object({
     quizzes_by_interests: array(quizDetailsSchema),
     related_tags_for_forum_questions: array(tagSchema),
     related_tags_for_quizzes: array(tagSchema),
-    users_to_follow: optional(array(userSchema)),
+    users_to_follow: optional(array(authorSchema)),
 });
 
 export const userLoader = () => {

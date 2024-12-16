@@ -56,7 +56,7 @@ export const AddInterestBlock = () => {
     return (
         <div className="flex w-full flex-col items-start gap-1 self-center pb-6 pt-2 text-center">
             <div className="mt-2 max-w-lg self-stretch">
-                <fieldset className="flex w-full flex-col items-stretch gap-2 text-start">
+                <fieldset className="mb-4 flex w-full flex-col items-stretch gap-2 text-start">
                     <label
                         className={labelClass({
                             className: "flex-1",
@@ -74,9 +74,9 @@ export const AddInterestBlock = () => {
                         />
                     </label>
                 </fieldset>
-                <div className="mt-4 h-64 overflow-auto rounded-2 bg-slate-100 ring ring-slate-200">
+                <div className="flex h-64 flex-row items-center justify-center overflow-auto rounded-2 bg-slate-100 ring ring-slate-200">
                     {!isLoading && idle && (
-                        <div className="flex h-full flex-col items-center justify-center gap-2">
+                        <div className="flex flex-col items-center justify-center gap-2">
                             <span className="flex flex-col items-center gap-2 text-sm text-slate-500">
                                 <RiEmotionHappyLine />
                                 We will show some cool tags once you start
@@ -85,7 +85,7 @@ export const AddInterestBlock = () => {
                         </div>
                     )}
                     {isLoading && (
-                        <div className="flex h-full flex-col items-center justify-center gap-2">
+                        <div className="flex flex-col items-center justify-center gap-2">
                             <Discuss
                                 wrapperClass="h-8 w-8 text-slate-500"
                                 colors={["#64748b", "#64748b"]}
@@ -93,7 +93,7 @@ export const AddInterestBlock = () => {
                         </div>
                     )}
                     {error && (
-                        <div className="flex h-full flex-col items-center justify-center gap-2 px-4">
+                        <div className="flex flex-col items-center justify-center gap-2 px-4">
                             <div className="p-2">
                                 <RiErrorWarningLine
                                     size={24}
@@ -108,7 +108,7 @@ export const AddInterestBlock = () => {
                         </div>
                     )}
                     {!isLoading && (
-                        <div className="flex flex-col items-stretch gap-4 px-4 py-4">
+                        <div className="flex h-full flex-col items-stretch gap-4 px-4 py-4">
                             {[
                                 { title: "Nouns", options: nounOptions },
                                 {

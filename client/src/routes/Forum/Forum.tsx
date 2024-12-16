@@ -168,7 +168,7 @@ export const Forum = () => {
                                     </div>
                                     <div className="flex flex-col justify-end">
                                         <Link
-                                            to="/quizzes/new"
+                                            to="/forum/new"
                                             className={buttonClass({
                                                 intent: "primary",
                                                 icon: "left",

@@ -13,6 +13,7 @@ import { HomeEmptyInterest } from "./Home.EmptyInterest";
 import { HomeEmptyNetwork } from "./Home.EmptyNetwork";
 import { AddInterestBlock } from "./HomeAddInterest";
 import { HomeForumFeed } from "./HomeForum";
+import { HomePeopleSuggestions } from "./HomePeopleSuggestions";
 import { HomeQuizFeed } from "./HomeQuiz";
 import { HomeStaticContent } from "./HomeStatic";
 import { RelatedTags } from "./HomeTags";
@@ -256,6 +257,10 @@ export const Home = () => {
                                                 feedData.quizzes_by_followed_users
                                             }
                                             title="Recent Quizzes"
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomePeopleSuggestions
+                                            people={feedData.users_to_follow}
                                         />
                                     </>
                                 )}
