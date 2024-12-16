@@ -206,11 +206,11 @@ export const deleteInterestAction = (async ({
                 linked_data_id,
             },
         });
-        return redirect("/profile");
     } catch (error) {
         logger.error("Error in deleteInterestAction", error);
         throw new Error("Failed to process delete interest action");
     }
+    return null;
 }) satisfies ActionFunction;
 
 export const addInterestAction = (async ({ request }: { request: Request }) => {

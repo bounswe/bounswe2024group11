@@ -83,40 +83,43 @@ export const Home = () => {
 
                         return (
                             <>
-                                <div className="flex flex-1 flex-col items-center gap-6 rounded-4 bg-slate-50 py-10">
-                                    <figure className="relative h-24 w-24">
-                                        <img
-                                            src={profileData?.avatar}
-                                            alt="Turquiz App Logo"
-                                            className="h-24 w-24 rounded-full object-cover"
-                                            height={96}
-                                            width={96}
-                                        />
-                                        <span className="absolute bottom-0 left-0 right-0 -mb-4 flex justify-center">
-                                            <span className="flex h-8 min-w-8 items-center justify-center rounded-full border-2 border-cyan-800 bg-cyan-900 px-2 text-center text-sm font-medium text-white ring-4 ring-cyan-900/20">
-                                                {score} TP
+                                {hasNoFollowings || hasNotInterests ? (
+                                    <div className="flex flex-1 flex-col items-center gap-6 rounded-4 bg-slate-50 py-10">
+                                        <figure className="relative h-24 w-24">
+                                            <img
+                                                src={profileData?.avatar}
+                                                alt="Turquiz App Logo"
+                                                className="h-24 w-24 rounded-full object-cover"
+                                                height={96}
+                                                width={96}
+                                            />
+                                            <span className="absolute bottom-0 left-0 right-0 -mb-4 flex justify-center">
+                                                <span className="flex h-8 min-w-8 items-center justify-center rounded-full border-2 border-cyan-800 bg-cyan-900 px-2 text-center text-sm font-medium text-white ring-4 ring-cyan-900/20">
+                                                    {score} TP
+                                                </span>
                                             </span>
-                                        </span>
-                                    </figure>
-                                    <div className="flex flex-1 flex-col items-center gap-1">
-                                        <h1 className="font-display text-4xl font-medium">
-                                            {title}
-                                        </h1>
-                                        <p className="max-w-2xl text-balance text-center text-base text-slate-500">
-                                            {hasNotInterests
-                                                ? "Hey, looks like you are new around here. Let's explore Turquiz together."
-                                                : description}
-                                        </p>
-                                        <div className="mt-3 flex flex-wrap gap-3">
-                                            {profileData.interests.map(
-                                                (tag) => (
-                                                    <InterestTag tag={tag} />
-                                                ),
-                                            )}
+                                        </figure>
+                                        <div className="flex flex-1 flex-col items-center gap-1">
+                                            <h1 className="font-display text-4xl font-medium">
+                                                {title}
+                                            </h1>
+                                            <p className="max-w-2xl text-balance text-center text-base text-slate-500">
+                                                {hasNotInterests
+                                                    ? "Hey, looks like you are new around here. Let's explore Turquiz together."
+                                                    : description}
+                                            </p>
+                                            <div className="mt-3 flex flex-wrap gap-3">
+                                                {profileData.interests.map(
+                                                    (tag) => (
+                                                        <InterestTag
+                                                            tag={tag}
+                                                        />
+                                                    ),
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                ) : null}
                                 <div className="mx-auto flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
                                     {availableFeedTypes.map((option) => (
                                         <label
