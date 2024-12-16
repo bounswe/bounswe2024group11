@@ -205,7 +205,7 @@ export const Register = () => {
                             >
                                 <option value={1}>Beginner (1-8)</option>
                                 <option value={2}>Intermediate (9-16)</option>
-                                <option value={3}>Advanced (16-25)</option>
+                                <option value={3}>Advanced (17-25)</option>
                             </select>
                         </label>
                         <Link

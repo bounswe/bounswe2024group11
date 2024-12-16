@@ -1,6 +1,7 @@
 import * as Ariakit from "@ariakit/react";
 import { RiCloseFill } from "@remixicon/react";
 import { useEffect, useState } from "react";
+import { Discuss } from "react-loader-spinner";
 import useSWR from "swr";
 import { useDebounce } from "use-debounce";
 import apiClient, { SWR_SETTINGS } from "../api";
@@ -146,7 +147,10 @@ export const TagSearch = ({
                     <Ariakit.ComboboxList className="flex flex-col gap-2 overflow-auto px-2 py-2">
                         {isLoading ? (
                             <div className="w-full px-4 py-2 text-sm text-slate-500">
-                                Loading...
+                                <Discuss
+                                    wrapperClass="h-12 w-12 text-slate-500"
+                                    colors={["#64748b", "#64748b"]}
+                                />
                             </div>
                         ) : suggestions.length === 0 && debouncedQuery ? (
                             <div className="px-4 py-2 text-sm text-slate-500">

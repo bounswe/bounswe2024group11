@@ -206,9 +206,21 @@ export const deleteInterestAction = (async ({
                 linked_data_id,
             },
         });
-        return redirect("/profile");
     } catch (error) {
         logger.error("Error in deleteInterestAction", error);
         throw new Error("Failed to process delete interest action");
     }
+    return null;
+}) satisfies ActionFunction;
+
+export const addInterestAction = (async ({ request }: { request: Request }) => {
+    if (!getUserOrRedirect()) return null;
+    try {
+        const formData = await request.formData();
+        await apiClient.post("/interests/", formData);
+    } catch (error) {
+        logger.error("Error in addInterestAction", error);
+        throw new Error("Failed to process add interest action");
+    }
+    return null;
 }) satisfies ActionFunction;

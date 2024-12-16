@@ -11,7 +11,9 @@ import { QuizLoading } from "../_loading";
 import { homeLoader, userLoader } from "./Home.data";
 import { HomeEmptyInterest } from "./Home.EmptyInterest";
 import { HomeEmptyNetwork } from "./Home.EmptyNetwork";
+import { AddInterestBlock } from "./HomeAddInterest";
 import { HomeForumFeed } from "./HomeForum";
+import { HomePeopleSuggestions } from "./HomePeopleSuggestions";
 import { HomeQuizFeed } from "./HomeQuiz";
 import { HomeStaticContent } from "./HomeStatic";
 import { RelatedTags } from "./HomeTags";
@@ -51,6 +53,54 @@ export const Home = () => {
         useRouteLoaderData<typeof userLoader>("home-main");
     const rawData = useLoaderData<typeof homeLoader>();
 
+    fakeUsers: [
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+        {
+            id: 1,
+            full_name: "John Doe",
+            username: "johndoe",
+            avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+            email: "asd@asd.asd",
+            is_followed: 0,
+            is_blocked: 0,
+        },
+    ];
+
     const [feedType, setFeedType] = useState<FeedType>("personal");
 
     if (rawData === null)
@@ -82,40 +132,48 @@ export const Home = () => {
 
                         return (
                             <>
-                                <div className="flex flex-1 flex-col items-center gap-6 rounded-4 bg-slate-50 py-10">
-                                    <figure className="relative h-24 w-24">
-                                        <img
-                                            src={profileData?.avatar}
-                                            alt="Turquiz App Logo"
-                                            className="h-24 w-24 rounded-full object-cover"
-                                            height={96}
-                                            width={96}
-                                        />
-                                        <span className="absolute bottom-0 left-0 right-0 -mb-4 flex justify-center">
-                                            <span className="flex h-8 min-w-8 items-center justify-center rounded-full border-2 border-cyan-800 bg-cyan-900 px-2 text-center text-sm font-medium text-white ring-4 ring-cyan-900/20">
-                                                {score} TP
+                                {hasNoFollowings || hasNotInterests ? (
+                                    <div className="flex flex-1 flex-col items-center gap-6 rounded-4 bg-slate-50 py-10">
+                                        <figure className="relative h-24 w-24">
+                                            <img
+                                                src={profileData?.avatar}
+                                                alt="Turquiz App Logo"
+                                                className="h-24 w-24 rounded-full object-cover"
+                                                height={96}
+                                                width={96}
+                                            />
+                                            <span className="absolute bottom-0 left-0 right-0 -mb-4 flex justify-center">
+                                                <span className="flex h-8 min-w-8 items-center justify-center rounded-full border-2 border-cyan-800 bg-cyan-900 px-2 text-center text-sm font-medium text-white ring-4 ring-cyan-900/20">
+                                                    {score} TP
+                                                </span>
                                             </span>
-                                        </span>
-                                    </figure>
-                                    <div className="flex flex-1 flex-col items-center gap-1">
-                                        <h1 className="font-display text-4xl font-medium">
-                                            {title}
-                                        </h1>
-                                        <p className="max-w-2xl text-balance text-center text-base text-slate-500">
-                                            {hasNotInterests
-                                                ? "Hey, looks like you are new around here. Let's explore Turquiz together."
-                                                : description}
-                                        </p>
-                                        <div className="mt-3 flex flex-wrap gap-3">
-                                            {profileData.interests.map(
-                                                (tag) => (
-                                                    <InterestTag tag={tag} />
-                                                ),
-                                            )}
+                                        </figure>
+                                        <div className="flex flex-1 flex-col items-center gap-1">
+                                            <h1 className="font-display text-4xl font-medium">
+                                                {title}
+                                            </h1>
+                                            <p className="max-w-2xl text-balance text-center text-base text-slate-500">
+                                                {hasNotInterests
+                                                    ? "Hey, looks like you are new around here. Let's explore Turquiz together."
+                                                    : description}
+                                            </p>
+                                            <div className="mt-3 flex flex-wrap gap-3">
+                                                {profileData.interests.map(
+                                                    (tag) => (
+                                                        <InterestTag
+                                                            tag={tag}
+                                                        />
+                                                    ),
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                ) : null}
+                                <span className="text-center text-xs uppercase tracking-widest text-slate-500">
+                                    {feedType === "personal"
+                                        ? "Based on your interests"
+                                        : "From the people you follow"}
+                                </span>
                                 <div className="mx-auto flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
                                     {availableFeedTypes.map((option) => (
                                         <label
@@ -146,25 +204,22 @@ export const Home = () => {
                                         </label>
                                     ))}
                                 </div>
-                                <span className="text-sm uppercase tracking-widest text-slate-600">
-                                    {feedType === "personal"
-                                        ? "Based on your interests"
-                                        : "From the people you follow"}
-                                </span>
-
-                                <Separator className="border-slate-200" />
 
                                 {feedType === "personal" && hasNotInterests && (
-                                    <HomeEmptyInterest />
+                                    <>
+                                        <HomeEmptyInterest />
+                                        <AddInterestBlock />
+                                    </>
                                 )}
 
                                 {feedType === "personal" &&
                                     !hasNotInterests && (
                                         <>
-                                            <RelatedTags
-                                                tags={
-                                                    feedData.related_tags_for_forum_questions
+                                            <HomeQuizFeed
+                                                quizzes={
+                                                    feedData.quizzes_by_interests
                                                 }
+                                                title="Quizzes For You"
                                             />
                                             <Separator className="border-slate-200" />
                                             <HomeForumFeed
@@ -174,12 +229,13 @@ export const Home = () => {
                                                 title="Forum Questions For You"
                                             />
                                             <Separator className="border-slate-200" />
-                                            <HomeQuizFeed
-                                                quizzes={
-                                                    feedData.quizzes_by_interests
-                                                }
-                                                title="Quizzes For You"
+                                            <RelatedTags
+                                                tags={[
+                                                    ...feedData.related_tags_for_quizzes,
+                                                    ...feedData.related_tags_for_forum_questions,
+                                                ]}
                                             />
+                                            <AddInterestBlock />
                                         </>
                                     )}
 
@@ -202,31 +258,14 @@ export const Home = () => {
                                             }
                                             title="Recent Quizzes"
                                         />
+                                        <Separator className="border-slate-200" />
+                                        <HomePeopleSuggestions
+                                            people={feedData.users_to_follow}
+                                        />
                                     </>
                                 )}
 
-                                {feedType === "forum" && (
-                                    <HomeForumFeed
-                                        forumQuestions={[
-                                            ...feedData.forum_questions_by_interests,
-                                            ...feedData.forum_questions_by_followed_users,
-                                        ]}
-                                        title="All Forums"
-                                    />
-                                )}
-
-                                {feedType === "quiz" && (
-                                    <HomeQuizFeed
-                                        quizzes={[
-                                            ...feedData.quizzes_by_interests,
-                                            ...feedData.quizzes_by_followed_users,
-                                        ]}
-                                        title="All Quizzes"
-                                    />
-                                )}
-
-                                <Separator className="border-slate-200" />
-                                <HomeStaticContent />
+                                {/* <HomeStaticContent /> */}
                                 <Separator className="border-slate-200" />
                             </>
                         );

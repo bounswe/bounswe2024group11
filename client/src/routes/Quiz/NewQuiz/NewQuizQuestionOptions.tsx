@@ -172,8 +172,6 @@ export const NewQuizQuestionOptions = ({
     const possibleAnswers = translationResponse.data?.translations || [];
 
     useEffect(() => {
-        console.log("setting correct answer and difficulty");
-
         if (
             possibleAnswers.length > 0 &&
             !currentQuestion.choices[0].choice_text

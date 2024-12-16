@@ -29,7 +29,7 @@ def get_users_to_follow(request):
         forum_answer_count=Count('forumanswer'),
         quiz_count=Count('quiz'),
         total_count=Count('forumquestion') + Count('forumanswer') + Count('quiz')
-    ).order_by('-total_count')[:5]
+    ).order_by('-total_count')[:6]
 
     serializer = UserInfoSerializer(users, many=True, context={'request': request})
     return Response(serializer.data)

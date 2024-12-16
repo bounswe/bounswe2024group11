@@ -35,6 +35,7 @@ import { Leaderboard } from "./routes/Leaderboard/Leaderboard";
 import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
 import { Profile } from "./routes/Profile/Profile";
 import {
+    addInterestAction,
     BlockAction,
     deleteInterestAction,
     FollowAction,
@@ -164,6 +165,10 @@ export const routes: RouteObject[] = [
                     {
                         path: "interest/delete/:linked_data_id/",
                         action: deleteInterestAction,
+                    },
+                    {
+                        path: "interest/add/:linked_data_id/",
+                        action: addInterestAction,
                     },
                     {
                         path: "profile/",
