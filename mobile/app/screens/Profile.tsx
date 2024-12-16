@@ -18,12 +18,13 @@ import QuizCard from "../components/QuizCard";
 import { Question } from "../types/forum";
 import { QuizOverview } from "../types/quiz";
 import { useAuth } from "../context/AuthContext";
+import API_URL_GLOBAL from "../../config";
 
 // API Endpoints
-const API_URL_BOOKMARKS = "http://138.68.97.90/api/v1/forum-bookmarks/";
-const API_URL_UPVOTES = "http://138.68.97.90/api/v1/forum-upvote/";
-const API_URL_FORUM_QUESTIONS = "http://138.68.97.90/api/v1/forum-questions/";
-const API_URL_QUIZZES = "http://138.68.97.90/api/v1/quizzes/";
+const API_URL_BOOKMARKS = `${API_URL_GLOBAL}forum-bookmarks/`;
+const API_URL_UPVOTES = `${API_URL_GLOBAL}forum-upvote/`;
+const API_URL_FORUM_QUESTIONS = `${API_URL_GLOBAL}forum-questions/`;
+const API_URL_QUIZZES = `${API_URL_GLOBAL}quizzes/`;
 
 type ProfileScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;

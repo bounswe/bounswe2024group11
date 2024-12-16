@@ -11,11 +11,9 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import ForumQuestionCard from "../components/ForumQuestionCard";
 import { Question } from "../types/forum";
-
-const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
-// const API_URL = "http://10.0.2.2:8000/api/v1/forum-questions/";
 
 type ForumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -29,7 +27,7 @@ const Forum: React.FC = () => {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const result = await axios.get(`${API_URL}`);
+      const result = await axios.get(`${API_URL_GLOBAL}forum-questions/`);
       setQuestions(result.data.results);
     } catch (error) {
       console.error("Error fetching questions", error);

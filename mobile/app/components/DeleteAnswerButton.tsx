@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import API_URL_GLOBAL from "../../config";
 
 interface DeleteAnswerButtonProps {
   questionId: number;
@@ -28,7 +29,7 @@ const DeleteAnswerButton: React.FC<DeleteAnswerButtonProps> = ({
           onPress: async () => {
             try {
               await axios.delete(
-                `http://138.68.97.90/api/v1/forum-questions/${questionId}/answers/${answerId}/`
+                `${API_URL_GLOBAL}forum-questions/${questionId}/answers/${answerId}/`
               );
               console.log("Answer deleted");
               onDelete(questionId, answerId); // Call onDelete to update the UI

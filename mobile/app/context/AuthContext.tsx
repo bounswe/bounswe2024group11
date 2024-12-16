@@ -2,6 +2,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState } from "react";
 import { LoggedinUser } from "../types/user";
+import API_URL_GLOBAL from "../../config";
 
 interface AuthProps {
   authState?: {
@@ -21,8 +22,8 @@ interface AuthProps {
 
 const TOKEN_KEY = "my-jwt";
 const USER_KEY = "loggedin-user";
-export const API_URL = "http://138.68.97.90//api/v1";
-// export const API_URL = "http://10.0.2.2:8000/api/v1";
+//export const API_URL = "http://138.68.97.90//api/v1";
+//export const API_URL = "http://10.0.2.2:8000/api/v1";
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -69,7 +70,7 @@ export const AuthProvider = ({ children }: any) => {
       `Registering username: '${username}', fullname:'${fullname}' email: '${email}' and password: '${password}'`
     );
     try {
-      return await axios.post(`${API_URL}/auth/register/`, {
+      return await axios.post(`${API_URL_GLOBAL}auth/register/`, {
         username,
         password,
         email,
@@ -82,7 +83,7 @@ export const AuthProvider = ({ children }: any) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const result = await axios.post(`${API_URL}/auth/login/`, {
+      const result = await axios.post(`${API_URL_GLOBAL}auth/login/`, {
         username,
         password,
       });

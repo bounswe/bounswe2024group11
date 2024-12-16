@@ -12,6 +12,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
 import { CreateQuizQuestionType } from "../types/quiz";
+import API_URL_GLOBAL from "../../config";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -31,7 +32,7 @@ const ReviewCreateQuiz: React.FC<Props> = ({ route }) => {
   const [editedQuestions, setEditedQuestions] =
     useState<CreateQuizQuestionType[]>(questions);
 
-  const API_URL = "http://138.68.97.90/api/v1";
+  const API_URL = `${API_URL_GLOBAL}`;
   // const API_URL = "http://10.0.2.2:8000/api/v1";
   const navigation = useNavigation<NavigationProp>();
 
@@ -58,7 +59,7 @@ const ReviewCreateQuiz: React.FC<Props> = ({ route }) => {
   };
 
   const createQuiz = async () => {
-    const ENDPOINT = `${API_URL}/quizzes/`;
+    const ENDPOINT = `${API_URL}quizzes/`;
 
     filterHints();
 

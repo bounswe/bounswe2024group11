@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import CreateQuizQuestionCore from "../components/CreateQuizQuestionCore";
 import CreateQuizQuestionFooter from "../components/CreateQuizQuestionFooter";
 import CreateQuizQuestionHeader from "../components/CreateQuizQuestionHeader";
@@ -56,8 +57,6 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const [allTranslations, setAllTranslations] = useState<string[][]>([[]]);
   const [allHints, setAllHints] = useState<SuggestedHintsType[]>([]);
 
-  const API_URL = "http://138.68.97.90/api/v1";
-  // const API_URL = "http://10.0.2.2:8000/api/v1";
   const source_lang = quiz_type === 2 ? "TR" : "EN";
   const navigation = useNavigation<NavigationProp>();
 
@@ -65,7 +64,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
     input: string,
     callback: (tags: TagSearchResult[]) => void
   ) => {
-    const ENDPOINT = `${API_URL}/tagging/?word=${input}&lang=${source_lang}`;
+    const ENDPOINT = `${API_URL_GLOBAL}tagging/?word=${input}&lang=${source_lang}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const combinedTags: TagSearchResult[] = [];
@@ -97,7 +96,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchTranslations = async (linked_data_id: string) => {
-    const ENDPOINT = `${API_URL}/get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
+    const ENDPOINT = `${API_URL_GLOBAL}get-translation/?type=type${quiz_type}&id=${linked_data_id.substring(3)}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const updatedAllTranslations = [...allTranslations];
@@ -130,7 +129,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   };
 
   const fetchDifficulty = async (keyword: string) => {
-    const ENDPOINT = `${API_URL}/get-difficulty/?keyword=${keyword}`;
+    const ENDPOINT = `${API_URL_GLOBAL}get-difficulty/?keyword=${keyword}`;
     try {
       const result = await axios.get(`${ENDPOINT}`);
       const point = result.data.question_point;
@@ -146,7 +145,7 @@ const CreateQuizQuestion: React.FC<Props> = ({ route }) => {
   const fetchHints = async () => {
     const linked_data_id = questionTags[currentQuestionIndex].linked_data_id;
     const word = questionTags[currentQuestionIndex].name;
-    const ENDPOINT = `${API_URL}/hint/?synset_id=${linked_data_id.substring(3)}&target_lang=${source_lang}&word=${word}`;
+    const ENDPOINT = `${API_URL_GLOBAL}hint/?synset_id=${linked_data_id.substring(3)}&target_lang=${source_lang}&word=${word}`;
 
     try {
       const result = await axios.get(`${ENDPOINT}`);
