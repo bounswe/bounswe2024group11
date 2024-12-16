@@ -224,3 +224,39 @@ export const addInterestAction = (async ({ request }: { request: Request }) => {
     }
     return null;
 }) satisfies ActionFunction;
+
+export const proficiencyChangeAction = async ({
+    request,
+}: {
+    request: Request;
+}) => {
+    if (!getUserOrRedirect()) return null;
+    const formData = await request.formData();
+    const proficiency = formData.get("proficiency");
+    const username = formData.get("username");
+    if (!proficiency) {
+        throw new Error("Proficiency is required.");
+    }
+    if (proficiency !== "1" && proficiency !== "2" && proficiency !== "3") {
+        throw new Error("Invalid proficiency.");
+    }
+    logger.log("proficiency", proficiency);
+
+    try {
+        await apiClient.patch(`/profile/${formData.get("username")}/`, {
+            proficiency,
+        });
+    } catch (error) {
+        logger.error("Error in proficiencyChangeAction", error);
+        throw new Error("Failed to process proficiency change action");
+    }
+    useToastStore.getState().add({
+        id: `proficiency-change-success`,
+        type: "success",
+        data: {
+            message: "Proficiency changed successfully",
+            description: "You've changed your proficiency level.",
+        },
+    });
+    return null;
+};

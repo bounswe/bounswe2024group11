@@ -40,6 +40,7 @@ import {
     deleteInterestAction,
     FollowAction,
     myProfileLoader,
+    proficiencyChangeAction,
     profileLoader,
     UnBlockAction,
     UnFollowAction,
@@ -195,6 +196,10 @@ export const routes: RouteObject[] = [
                             {
                                 path: "unfollow",
                                 action: UnFollowAction,
+                            },
+                            {
+                                path: "proficiency",
+                                action: proficiencyChangeAction,
                             },
                         ],
                     },
