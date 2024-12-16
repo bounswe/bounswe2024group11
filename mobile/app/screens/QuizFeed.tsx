@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import QuizCard from "../components/QuizCard";
 import { QuizOverview } from "../types/quiz";
-import API_URL_GLOBAL from "../../config";
 
 //const API_URL = "http://138.68.97.90/api/v1/quizzes/";
 const API_URL = `${API_URL_GLOBAL}quizzes/`;

@@ -6,6 +6,11 @@ export type rating = {
   count: number;
 };
 
+export type rateQuizType = {
+  stars: number;
+  comment: string;
+};
+
 export type QuizQuestionOptionType = {
   id: number;
   choice_text: string;
@@ -74,4 +79,26 @@ export type CreateQuizQuestionType = {
   choices: CreateQuizQuestionChoiceType[];
   hints: CreateQuizQuestionHintType[];
   point: number;
+};
+
+export type SubmittedAnswerType = {
+  id: number;
+  take_quiz: number;
+  question: number;
+  answer: number;
+  is_hint_used: boolean;
+};
+
+export type QuizResultType = {
+  id: number;
+  quiz: number;
+  answers: SubmittedAnswerType[];
+  correct_answer_count: number;
+  wrong_answer_count: number;
+  empty_answer_count: number;
+  score: number;
+  max_score: number;
+  achievement: number | null;
+  date: string;
+  user: number;
 };

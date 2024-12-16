@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RootStackParamList } from "../../App";
-import { CreateQuizQuestionType } from "../types/quiz";
 import API_URL_GLOBAL from "../../config";
+import { CreateQuizQuestionType } from "../types/quiz";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -69,7 +69,12 @@ const ReviewCreateQuiz: React.FC<Props> = ({ route }) => {
         description,
         tags,
         type: quiz_type,
-        questions: editedQuestions,
+        questions: editedQuestions.map((question) => ({
+          question_text: question.question_text,
+          choices: question.choices,
+          hints: question.hints,
+          question_point: question.point,
+        })),
       });
 
       navigation.navigate("QuizFeed");
