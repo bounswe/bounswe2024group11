@@ -46,9 +46,18 @@ const fakeInterests = [
 export const Home = () => {
     const { logged_in, user } =
         useRouteLoaderData<typeof userLoader>("home-main");
-    const { data } = useLoaderData<typeof homeLoader>();
+    const rawData = useLoaderData<typeof homeLoader>();
+
     const [feedType, setFeedType] = useState<FeedType>("personal");
 
+    if (rawData === null)
+        return (
+            <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
+                <HomeStaticContent />
+                <Separator className="border-slate-200" />
+            </div>
+        );
+    const { data } = rawData;
     const title = logged_in
         ? "Welcome " + user.full_name
         : "Welcome to Turquiz";

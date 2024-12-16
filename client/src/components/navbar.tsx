@@ -9,26 +9,32 @@ const routes = [
     {
         name: "Home",
         href: "/",
+        authenticated: false,
     },
     {
         name: "Quizzes",
         href: "/quizzes",
+        authenticated: false,
     },
     {
         name: "Forum",
         href: "/forum",
+        authenticated: false,
     },
     {
         name: "Achievements",
         href: "/achievements",
+        authenticated: false,
     },
     {
         name: "Leaderboard",
         href: "/leaderboard",
+        authenticated: false,
     },
     {
         name: "Profile",
         href: "/profile",
+        authenticated: true,
     },
 ];
 
@@ -46,21 +52,24 @@ export const Navbar = ({ user }: NavbarProps) => {
 
     const NavLinks = () => (
         <ul className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-1">
-            {routes.map((route, i) => (
-                <li key={i} className="w-full md:w-auto">
-                    <Link
-                        to={route.href}
-                        className={buttonClass({
-                            intent: "tertiary",
-                            size: "medium",
-                            className:
-                                "w-full justify-start hover:bg-cyan-900/10 md:w-auto md:justify-center",
-                        })}
-                    >
-                        {route.name}
-                    </Link>
-                </li>
-            ))}
+            {routes.map((route, i) => {
+                if (route.authenticated && !user) return null;
+                return (
+                    <li key={i} className="w-full md:w-auto">
+                        <Link
+                            to={route.href}
+                            className={buttonClass({
+                                intent: "tertiary",
+                                size: "medium",
+                                className:
+                                    "w-full justify-start hover:bg-cyan-900/10 md:w-auto md:justify-center",
+                            })}
+                        >
+                            {route.name}
+                        </Link>
+                    </li>
+                );
+            })}
         </ul>
     );
 

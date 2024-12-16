@@ -567,6 +567,9 @@ export const userLoader = () => {
 
 export const homeLoader = () => {
     const user = sessionStorage.getObject(USER) || localStorage.getObject(USER);
+    if (!user) {
+        return Promise.resolve(null);
+    }
 
     const feedPromise = apiClient.get(`/feed/`).then((res) => {
         const { output, success, issues } = safeParse(feedSchema, res.data);
@@ -576,22 +579,19 @@ export const homeLoader = () => {
         return output;
     });
 
-    const profilePromise = user.username
-        ? apiClient.get(`/profile/${user.username}/`).then((res) => {
-              const { output, success, issues } = safeParse(
-                  profileSchema,
-                  res.data,
-              );
-              if (!success) {
-                  throw new Error(
-                      `Failed to parse profile response: ${issues}`,
-                  );
-              }
-              return output;
-          })
-        : Promise.resolve(null);
+    const profilePromise = apiClient
+        .get(`/profile/${user.username}/`)
+        .then((res) => {
+            const { output, success, issues } = safeParse(
+                profileSchema,
+                res.data,
+            );
+            if (!success) {
+                throw new Error(`Failed to parse profile response: ${issues}`);
+            }
+            return output;
+        });
 
-    // Defer the Promise.all instead of individual promises
     return defer({
         data: Promise.all([feedPromise, profilePromise]).then(
             ([feed, profile]) => ({
