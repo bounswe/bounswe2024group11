@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Sum
 from faker import Faker
 from rest_framework import serializers
 
@@ -22,11 +23,12 @@ class TakeQuizSerializer(serializers.ModelSerializer):
     correct_answer_count = serializers.SerializerMethodField()
     wrong_answer_count = serializers.SerializerMethodField()
     empty_answer_count = serializers.SerializerMethodField()
+    max_score = serializers.SerializerMethodField()
 
     class Meta:
         model = TakeQuiz
-        fields = ['id', 'quiz', 'user', 'date', 'answers', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count']
-        read_only_fields = ['user', 'date', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count']
+        fields = ['id', 'quiz', 'user', 'date', 'answers', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count', 'max_score']
+        read_only_fields = ['user', 'date', 'score', 'correct_answer_count', 'wrong_answer_count', 'empty_answer_count', 'max_score']
     
     def calculate_score(self, obj):
         correct_answers = 0
@@ -47,6 +49,10 @@ class TakeQuizSerializer(serializers.ModelSerializer):
     #             else:
     #                 correct_answers += answer.question.question_point
     #     return correct_answers
+
+
+    def get_max_score(self, obj):
+        return obj.quiz.questions.aggregate(total_score=Sum('question_point'))['total_score']
 
     
     def get_correct_answer_count(self, obj):
