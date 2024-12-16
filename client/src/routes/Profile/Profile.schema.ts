@@ -1,4 +1,5 @@
 import { array, InferInput, nullable, number, object, string } from "valibot";
+import { authorSchema } from "../../schemas";
 import { UserAchievement } from "../Achievements/Achievement.schema";
 import { forumQuestionSchema } from "../Forum/Forum.schema";
 import { quizDetailsSchema } from "../Quiz/Quiz.schema";
@@ -6,7 +7,7 @@ import { quizDetailsSchema } from "../Quiz/Quiz.schema";
 const InterestTag = object({
     id: number(),
     name: string(),
-    linked_dat_id: string(),
+    linked_data_id: string(),
     description: string(),
 });
 
@@ -30,8 +31,8 @@ export const profileSchema = object({
     interests: array(InterestTag),
     is_following: nullable(number()),
     is_blocked: nullable(number()),
-    // followings: string(),
-    // followers: string(),
+    followings: array(authorSchema),
+    followers: array(authorSchema),
     blockings: array(blockingsSchema),
 });
 

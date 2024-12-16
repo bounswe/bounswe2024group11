@@ -8,6 +8,8 @@ import {
 import { radioOptionClass } from "../../components/radio-option";
 import { QuizLoading } from "../_loading";
 import { homeLoader, userLoader } from "./Home.data";
+import { HomeEmptyInterest } from "./Home.EmptyInterest";
+import { HomeEmptyNetwork } from "./Home.EmptyNetwork";
 import { HomeForumFeed } from "./HomeForum";
 import { HomeQuizFeed } from "./HomeQuiz";
 import { HomeStaticContent } from "./HomeStatic";
@@ -72,6 +74,10 @@ export const Home = () => {
                     resolve={data}
                     children={({ feedData, profileData }) => {
                         const score = profileData?.score;
+                        const hasNotInterests =
+                            profileData.interests.length === 0;
+                        const hasNoFollowings =
+                            profileData.followings.length === 0;
 
                         return (
                             <>
@@ -94,18 +100,22 @@ export const Home = () => {
                                         <h1 className="font-display text-4xl font-medium">
                                             {title}
                                         </h1>
-                                        <p className="max-w-xl text-balance text-lg text-slate-500">
-                                            {description}
+                                        <p className="max-w-2xl text-balance text-center text-lg text-slate-500">
+                                            {hasNotInterests
+                                                ? "Hey, looks like you are new around here. Let's explore Turquiz together."
+                                                : description}
                                         </p>
                                         <div className="mt-3 flex flex-wrap gap-3">
-                                            {fakeInterests.map((tag) => (
-                                                <Button
-                                                    key={tag.linked_data_id}
-                                                    className="rounded-1 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-800 ring ring-slate-200 transition-colors hover:bg-slate-200"
-                                                >
-                                                    <span>{tag.name}</span>
-                                                </Button>
-                                            ))}
+                                            {profileData.interests.map(
+                                                (tag) => (
+                                                    <Button
+                                                        key={tag.linked_data_id}
+                                                        className="rounded-1 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-800 ring ring-slate-200 transition-colors hover:bg-slate-200"
+                                                    >
+                                                        <span>{tag.name}</span>
+                                                    </Button>
+                                                ),
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -143,31 +153,40 @@ export const Home = () => {
 
                                 <Separator className="border-slate-200" />
 
-                                {feedType === "personal" && (
-                                    <>
-                                        <RelatedTags
-                                            tags={
-                                                feedData.related_tags_for_forum_questions
-                                            }
-                                        />
-                                        <Separator className="border-slate-200" />
-                                        <HomeForumFeed
-                                            forumQuestions={
-                                                feedData.forum_questions_by_interests
-                                            }
-                                            title="Forums Based on Your Interests"
-                                        />
-                                        <Separator className="border-slate-200" />
-                                        <HomeQuizFeed
-                                            quizzes={
-                                                feedData.quizzes_by_interests
-                                            }
-                                            title="Quizzes Based on Your Interests"
-                                        />
-                                    </>
+                                {feedType === "personal" &&
+                                    !hasNotInterests && (
+                                        <>
+                                            <RelatedTags
+                                                tags={
+                                                    feedData.related_tags_for_forum_questions
+                                                }
+                                            />
+                                            <Separator className="border-slate-200" />
+                                            <HomeForumFeed
+                                                forumQuestions={
+                                                    feedData.forum_questions_by_interests
+                                                }
+                                                title="Forums Based on Your Interests"
+                                            />
+                                            <Separator className="border-slate-200" />
+                                            <HomeQuizFeed
+                                                quizzes={
+                                                    feedData.quizzes_by_interests
+                                                }
+                                                title="Quizzes Based on Your Interests"
+                                            />
+                                        </>
+                                    )}
+
+                                {feedType === "network" && hasNoFollowings && (
+                                    <HomeEmptyNetwork />
                                 )}
 
-                                {feedType === "network" && (
+                                {feedType === "personal" && hasNotInterests && (
+                                    <HomeEmptyInterest />
+                                )}
+
+                                {feedType === "network" && !hasNoFollowings && (
                                     <>
                                         <HomeForumFeed
                                             forumQuestions={

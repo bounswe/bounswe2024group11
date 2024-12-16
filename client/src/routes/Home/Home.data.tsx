@@ -1,5 +1,5 @@
-import { defer } from "react-router-typesafe";
-import { array, object, safeParse } from "valibot";
+import { ActionFunction, defer } from "react-router-typesafe";
+import { array, number, object, safeParse, string } from "valibot";
 import apiClient from "../../api";
 import { USER } from "../../constants";
 import { userSchema } from "../../schemas";
@@ -601,3 +601,28 @@ export const homeLoader = () => {
         ),
     });
 };
+
+export const interestSchema = object({
+    id: number(),
+    interest: string(),
+});
+
+export const interestAction = (async ({ request }) => {
+    const formData = await request.formData();
+
+    try {
+        const response = await apiClient.post(`/interests/`, formData, {
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const { issues, success } = safeParse(interestSchema, response.data);
+
+        if (!success) {
+            throw new Error("Failed to parse interest response");
+        }
+
+        return { success: true, data: response.data };
+    } catch (error) {
+        throw new Error("Failed to process interest action");
+    }
+}) satisfies ActionFunction;

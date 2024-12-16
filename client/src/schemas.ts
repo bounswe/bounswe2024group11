@@ -1,5 +1,4 @@
-import * as v from "valibot";
-import { object, string } from "valibot";
+import { InferInput, nullable, number, object, string } from "valibot";
 
 export const userSchema = object({
     full_name: string(),
@@ -8,11 +7,13 @@ export const userSchema = object({
 });
 
 export const authorSchema = object({
-    id: v.number(),
+    id: number(),
     full_name: string(),
     username: string(),
-    avatar: v.nullable(string()),
+    avatar: nullable(string()),
     email: string(),
+    is_followed: nullable(number()),
+    is_blocked: nullable(number()),
 });
 
-export type User = v.InferInput<typeof userSchema>;
+export type User = InferInput<typeof userSchema>;
