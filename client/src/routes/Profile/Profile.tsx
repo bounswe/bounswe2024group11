@@ -121,7 +121,7 @@ export const Profile = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    {isMe ? (
+                                    {!isMe && (
                                         <>
                                             {!is_blocked ? (
                                                 <blockFetcher.Form
@@ -268,7 +268,7 @@ export const Profile = () => {
                                                 </followFetcher.Form>
                                             )}
                                         </>
-                                    ) : null}
+                                    )}
                                 </div>
                                 <div className="flex items-start gap-2 text-sm">
                                     <span className="rounded-1 bg-slate-800 px-2 py-1 font-medium text-slate-100 ring ring-slate-600">
