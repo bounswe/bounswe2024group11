@@ -9,13 +9,13 @@ import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
 import { LeaderboardLoading } from "../_loading";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { leaderboardLoader } from "./Leaderboard.data";
 
 export const Leaderboard = () => {
     const { leaderboardData } = useLoaderData<typeof leaderboardLoader>();
 
-    const { logged_in } = useRouteLoaderData<typeof homeLoader>("home-main");
+    const { logged_in } = useRouteLoaderData<typeof userLoader>("home-main");
 
     const description = logged_in
         ? "Hey mate, let's see where you stand. Why are you lazy? Go and do some exercise."

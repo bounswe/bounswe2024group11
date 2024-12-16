@@ -12,11 +12,11 @@ import {
 import { cva } from "cva";
 import { Link } from "react-router-dom";
 import { buttonClass, buttonInnerRing } from "../components/button";
-import { Quiz } from "../routes/Quiz/Quiz.schema";
+import { QuizDetails } from "../routes/Quiz/Quiz.schema";
 import { getRelativeTime } from "../utils";
 
 type QuizCardProps = {
-    quiz: Quiz;
+    quiz: QuizDetails;
     onTagClick: (tag: string) => void;
     quiz_key: string;
 };

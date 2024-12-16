@@ -2,10 +2,10 @@ import { Outlet } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { Navbar } from "../../components/navbar";
 import { useGlobalCommandMenu } from "../../hooks/command-menu";
-import { homeLoader } from "./Home.data";
+import { userLoader } from "./Home.data";
 
 export const HomeMain = () => {
-    const { user } = useLoaderData<typeof homeLoader>();
+    const { user } = useLoaderData<typeof userLoader>();
     useGlobalCommandMenu();
 
     return (

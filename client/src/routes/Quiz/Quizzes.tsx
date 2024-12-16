@@ -17,7 +17,7 @@ import { QuizCard } from "../../components/quiz-card";
 import { radioOptionClass } from "../../components/radio-option";
 import { TagSearch } from "../../components/tag-search";
 import { QuizLoading } from "../_loading";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { quizzesLoader } from "./Quizzes.data";
 
 export const Quizzes = () => {
@@ -28,7 +28,7 @@ export const Quizzes = () => {
     const sortBy = searchParams.get("sort") || "newest";
 
     const { user, logged_in } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
@@ -47,7 +47,7 @@ export const Quizzes = () => {
                     {(data) => {
                         const totalPages = Math.ceil(data.count / perPage);
                         const description = logged_in
-                            ? `This is your time to shine, ${user.full_name}`
+                            ? `Your turn to shine, ${user.full_name}`
                             : "Test your knowledge of various topics. Log in to track your progress.";
 
                         return (
@@ -190,28 +190,34 @@ export const Quizzes = () => {
                                                 onTagClick={() => {}}
                                             />
                                         ))}
-                                    <div className="flex w-full items-center gap-6 bg-slate-100 px-6 py-2">
-                                        {data.results.length === 0 && (
+                                    {data.results.length === 0 && (
+                                        <div className="flex w-full items-center gap-6 bg-slate-100 px-6 py-2">
                                             <div className="py-2 text-slate-500">
                                                 No quizzes found
                                             </div>
-                                        )}
-                                        {searchParams.get("linked_data_id") && (
-                                            <>
-                                                <Link
-                                                    to="/quizzes"
-                                                    className={buttonClass({
-                                                        intent: "ghost",
-                                                        size: "medium",
-                                                        icon: "right",
-                                                    })}
-                                                >
-                                                    <span>Clear search</span>
-                                                    <RiCloseFill size={16} />
-                                                </Link>
-                                            </>
-                                        )}
-                                    </div>
+                                            {searchParams.get(
+                                                "linked_data_id",
+                                            ) && (
+                                                <>
+                                                    <Link
+                                                        to="/quizzes"
+                                                        className={buttonClass({
+                                                            intent: "ghost",
+                                                            size: "medium",
+                                                            icon: "right",
+                                                        })}
+                                                    >
+                                                        <span>
+                                                            Clear search
+                                                        </span>
+                                                        <RiCloseFill
+                                                            size={16}
+                                                        />
+                                                    </Link>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
                                 </main>
                                 {totalPages > 1 && (
                                     <>

@@ -102,11 +102,52 @@
         animation: skeleton-loading 2s infinite ease-in-out;
     }
 
+    .rotating-logo {
+        animation: rotating-logo 10s infinite linear;
+        animation-timing-function: cubic-bezier(0.6, 0.6, 0, 1)
+    }
+
+    @keyframes rotating-logo {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        10% {
+            transform: rotate(90deg);
+        }
+
+        25% {
+            transform: rotate(90deg);
+        }
+
+        35% {
+            transform: rotate(180deg);
+        }
+
+        50% {
+            transform: rotate(180deg);
+        }
+
+        60% {
+            transform: rotate(270deg);
+        }
+
+        75% {
+            transform: rotate(270deg);
+        }
+
+        85% {
+            transform: rotate(360deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
     .touch-hitbox {
         position: relative;
     }
-
-
 
     .touch-hitbox::before {
         content: "";

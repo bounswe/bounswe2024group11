@@ -1,8 +1,8 @@
 import { Button } from "@ariakit/react";
 import { useState } from "react";
-import { ForumQuestion } from "../routes/Forum/Forum.schema";
-import { buttonClass } from "./button";
-import { ForumQuestionCard } from "./forum-card";
+import { buttonClass } from "../../components/button";
+import { ForumQuestionCard } from "../../components/forum-card";
+import { ForumQuestion } from "../Forum/Forum.schema";
 
 const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_COUNT = 6;

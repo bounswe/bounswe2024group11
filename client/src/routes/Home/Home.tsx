@@ -1,435 +1,209 @@
-import { Separator } from "@ariakit/react";
+import { Button, Separator } from "@ariakit/react";
+import { Suspense, useState } from "react";
 import {
-    RiArrowDownSLine,
-    RiArrowUpSLine,
-    RiBookReadLine,
-    RiCodeLine,
-    RiTranslate2,
-} from "@remixicon/react";
-import { ReactNode, useState } from "react";
-import { useRouteLoaderData } from "react-router-typesafe";
-import { PageHead } from "../../components/page-head";
-import { homeLoader } from "./Home.data";
+    Await,
+    useLoaderData,
+    useRouteLoaderData,
+} from "react-router-typesafe";
+import { radioOptionClass } from "../../components/radio-option";
+import { QuizLoading } from "../_loading";
+import { homeLoader, userLoader } from "./Home.data";
+import { HomeForumFeed } from "./HomeForum";
+import { HomeQuizFeed } from "./HomeQuiz";
+import { HomeStaticContent } from "./HomeStatic";
+import { RelatedTags } from "./HomeTags";
 
-const ExpandableItem = ({
-    title,
-    children,
-}: {
-    title: string;
-    children: ReactNode;
-}) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    return (
-        <div className="py-1">
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="flex w-full items-center justify-between rounded-1 bg-white px-3 py-3 text-left font-medium transition-colors hover:bg-slate-100"
-            >
-                {title}
-                {isExpanded ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
-            </button>
-            {isExpanded && <div className="py-2 pl-4">{children}</div>}
-        </div>
-    );
-};
+export const INITIAL_DISPLAY_COUNT = 6;
+export const LOAD_MORE_COUNT = 6;
 
-const confusedWordsData = [
+type FeedType = "personal" | "network" | "forum" | "quiz";
+const availableFeedTypes: FeedType[] = ["personal", "network", "forum", "quiz"];
+
+const fakeInterests = [
     {
-        title: "Affect vs. Effect",
-        content: [
-            {
-                label: "Affect (verb):",
-                description: "To influence or make a difference to.",
-                partOfSpeech: "verb",
-            },
-            {
-                label: "Affect (noun):",
-                description: "An emotion or desire as influencing behavior.",
-                partOfSpeech: "noun",
-            },
-            {
-                label: "Effect (noun):",
-                description: "A result or consequence.",
-                partOfSpeech: "noun",
-            },
-            {
-                label: "Effect (verb):",
-                description: "To bring about or cause to happen.",
-                partOfSpeech: "verb",
-            },
-            {
-                example:
-                    "The weather affects my mood. / The effect of the weather on my mood is noticeable.",
-            },
-            {
-                example:
-                    "The medication may affect your coordination. / The side effects of the medication include drowsiness.",
-            },
-        ],
+        id: 1,
+        name: "Technology",
+        linked_data_id: "bn:00030858n",
+        description:
+            "The practical application of science to commerce or industry",
     },
     {
-        title: "Their vs. There vs. They're",
-        content: [
-            {
-                label: "Their:",
-                description: "Possessive pronoun",
-                partOfSpeech: "pronoun",
-            },
-            {
-                label: "There:",
-                description: "Indicating location or existence",
-                partOfSpeech: "adverb",
-            },
-            {
-                label: "They're:",
-                description: 'Contraction of "they are"',
-                partOfSpeech: "contraction",
-            },
-            { example: "They're going to their house over there." },
-            {
-                example:
-                    "Their car is parked over there. They're planning to sell it soon.",
-            },
-        ],
+        id: 2,
+        name: "Art",
+        linked_data_id: "bn:00030858n",
+        description:
+            "The practical application of science to commerce or industry",
     },
     {
-        title: "Its vs. It's",
-        content: [
-            {
-                label: "Its:",
-                description: "Possessive pronoun",
-                partOfSpeech: "pronoun",
-            },
-            {
-                label: "It's:",
-                description: 'Contraction of "it is" or "it has"',
-                partOfSpeech: "contraction",
-            },
-            { example: "It's important to know its meaning." },
-            {
-                example:
-                    "The dog wagged its tail. It's been a long day for the pup.",
-            },
-        ],
-    },
-    {
-        title: "Your vs. You're",
-        content: [
-            {
-                label: "Your:",
-                description: "Possessive pronoun",
-                partOfSpeech: "pronoun",
-            },
-            {
-                label: "You're:",
-                description: 'Contraction of "you are"',
-                partOfSpeech: "contraction",
-            },
-            {
-                example:
-                    "Your book is on the table. You're going to need it for class.",
-            },
-            { example: "You're responsible for your own actions." },
-        ],
-    },
-    {
-        title: "To vs. Too vs. Two",
-        content: [
-            {
-                label: "To:",
-                description: "Preposition indicating direction or recipient",
-                partOfSpeech: "preposition",
-            },
-            {
-                label: "Too:",
-                description: "Also or excessively",
-                partOfSpeech: "adverb",
-            },
-            {
-                label: "Two:",
-                description: "The number 2",
-                partOfSpeech: "noun",
-            },
-            {
-                example:
-                    "I'm going to the store to buy two apples. Do you want to come too?",
-            },
-            { example: "The coffee is too hot to drink right now." },
-        ],
-    },
-    {
-        title: "Then vs. Than",
-        content: [
-            {
-                label: "Then:",
-                description: "At that time or next in order",
-                partOfSpeech: "adverb",
-            },
-            {
-                label: "Than:",
-                description:
-                    "Used to introduce the second element in a comparison",
-                partOfSpeech: "conjunction",
-            },
-            {
-                example: "I'll see you then. I'd rather have tea than coffee.",
-            },
-        ],
-    },
-    {
-        title: "Accept vs. Except vs. Expect",
-        content: [
-            {
-                label: "Accept:",
-                description: "To receive or agree to",
-                partOfSpeech: "verb",
-            },
-            {
-                label: "Except:",
-                description: "Not including or other than",
-                partOfSpeech: "preposition",
-            },
-            {
-                label: "Expect:",
-                description: "To regard something as likely to happen",
-                partOfSpeech: "verb",
-            },
-            {
-                example: "She accepted the award graciously.",
-            },
-            {
-                example: "Everyone except John is coming to the party.",
-            },
-            {
-                example: "I expect the package to arrive tomorrow.",
-            },
-        ],
+        id: 3,
+        name: "Sports",
+        linked_data_id: "bn:00030858n",
+        description:
+            "The practical application of science to commerce or industry",
     },
 ];
 
-const dailyWordSuggestionsData = [
-    {
-        title: "Hery",
-        definition: "To worship or praise",
-        turkish: "Övmek",
-        example: "The ancient text heried the deeds of the hero.",
-        partOfSpeech: "verb",
-        etymology:
-            "From Middle English herien, from Old English herian, herġan ('to praise, glorify').",
-    },
-    {
-        title: "Hallow",
-        definition: "To make holy or sacred",
-        turkish: "Kutsallaştırmak",
-        example: "The ground was hallowed by the ceremony.",
-        partOfSpeech: "verb",
-        etymology:
-            "From Middle English halwen, from Old English hālgian ('to make holy').",
-    },
-    {
-        title: "Fiend",
-        definition: "An evil spirit or demon",
-        turkish: "Şeytan",
-        example: "The story depicted a fiend terrorizing the village.",
-        partOfSpeech: "noun",
-        etymology:
-            "From Middle English feend, from Old English fēond ('enemy, devil, demon').",
-    },
-    {
-        title: "Ephemeral",
-        definition: "Lasting for a very short time",
-        turkish: "Geçici",
-        example:
-            "The beauty of cherry blossoms is ephemeral, lasting only a few days.",
-        partOfSpeech: "adjective",
-        etymology:
-            "From Greek ephēmeros ('lasting only one day, short-lived').",
-    },
-    {
-        title: "Serendipity",
-        definition:
-            "The occurrence of events by chance in a happy or beneficial way",
-        turkish: "Şans eseri",
-        example: "Finding his lost wallet was a moment of serendipity.",
-        partOfSpeech: "noun",
-        etymology:
-            "Coined by Horace Walpole in 1754 based on the Persian fairy tale 'The Three Princes of Serendip'.",
-    },
-    {
-        title: "Sonder",
-        definition:
-            "The realization that each passerby has a life as vivid and complex as your own",
-        turkish: "Başkalarının da hayatları olduğunu fark etme",
-        example:
-            "The feeling of sonder struck him as he walked through the crowded streets.",
-    },
-    {
-        title: "Slumber",
-        definition: "To sleep lightly or peacefully",
-        turkish: "Uyuklamak",
-        example: "The baby slumbered in her mother's arms.",
-    },
-];
-
-const technicalDefinitionsData = [
-    {
-        title: "API",
-        fullForm: "Application Programming Interface",
-        definition:
-            "A set of protocols and tools for building software applications",
-        example:
-            "The weather app uses an API to fetch current temperature data.",
-        categories: ["Software Development", "Web Development"],
-        relatedTerms: ["REST", "SOAP", "GraphQL"],
-    },
-    {
-        title: "ORM",
-        fullForm: "Object-Relational Mapping",
-        definition:
-            "A technique for converting data between incompatible type systems in databases and object-oriented programming languages",
-        example:
-            "Using an ORM can simplify database operations in your application.",
-        categories: ["Database", "Software Development"],
-        relatedTerms: ["SQL", "Database Schema", "Hibernate"],
-    },
-    {
-        title: "JWT",
-        fullForm: "JSON Web Token",
-        definition:
-            "A compact, URL-safe means of representing claims to be transferred between two parties",
-        example:
-            "JWTs are commonly used for authentication in web applications.",
-        categories: ["Web Security", "Authentication"],
-        relatedTerms: ["OAuth", "Bearer Token", "JSON"],
-    },
-    {
-        title: "DNS",
-        fullForm: "Domain Name System",
-        definition:
-            "A hierarchical and decentralized naming system for computers, services, or other resources connected to the Internet or a private network",
-        example: "DNS translates human-readable domain names to IP addresses.",
-        categories: ["Networking", "Internet Infrastructure"],
-        relatedTerms: ["IP Address", "ICANN", "Domain Registrar"],
-    },
-    {
-        title: "CORS",
-        fullForm: "Cross-Origin Resource Sharing",
-        definition:
-            "A mechanism that allows restricted resources on a web page to be requested from another domain outside the domain from which the first resource was served",
-        example:
-            "CORS policies help prevent unauthorized access to APIs from different domains.",
-        categories: ["Web Security", "Web Development"],
-        relatedTerms: [
-            "Same-Origin Policy",
-            "Preflight Request",
-            "XMLHttpRequest",
-        ],
-    },
-    {
-        title: "Midcourse Intervention",
-        fullForm: "Midcourse Intervention",
-        definition:
-            "A corrective action or adjustment made during the execution of a project or process to address issues, ensuring the final outcome meets the desired goals.",
-        example:
-            "During the implementation phase, the backend team fell behind the schedule, and a midcourse intervention to transfer new members to the team was done to meet the project deadline.",
-        categories: ["Project Management", "Project Development"],
-        relatedTerms: ["Course Correction", "Intervention"],
-    },
-    {
-        title: "Definition of Done",
-        fullForm: "Definition of Done",
-        definition:
-            "The definiton of the criteria that must be met for an artifact to be considered complete and ready",
-        example:
-            "We need to define the Definition of Done to avoid the sentence 'almost complete' which hinders the progress of the project.",
-        categories: ["Agile Development", "Software Development"],
-        relatedTerms: ["Acceptance Criteria", "Sprint Goal"],
-    },
-];
 export const Home = () => {
     const { logged_in, user } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
+    const { data } = useLoaderData<typeof homeLoader>();
+    const [feedType, setFeedType] = useState<FeedType>("personal");
+
     const title = logged_in
         ? "Welcome " + user.full_name
         : "Welcome to Turquiz";
-
     const description = logged_in
-        ? `Good to see you back buddy. Let's get started!`
+        ? `Look what we found for you! Fresh content, just for you`
         : "Turquiz is a platform that helps you to get prolific in English. You can take quizzes and use forums to improve your English.";
+
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <PageHead title={title} description={description} />
-            <main className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
-                    <h2 className="mb-4 flex items-center text-xl font-medium text-cyan-800">
-                        <RiBookReadLine size={20} className="mr-2" />
-                        Frequently Confused Words
-                    </h2>
-                    <Separator className="pb-4" />
-                    {confusedWordsData.map((item, index) => (
-                        <ExpandableItem key={index} title={item.title}>
-                            {item.content.map((contentItem, contentIndex) => (
-                                <p
-                                    key={contentIndex}
-                                    className={
-                                        contentItem.example
-                                            ? "mt-3 text-slate-600"
-                                            : ""
-                                    }
-                                >
-                                    {contentItem.label && (
-                                        <strong>{contentItem.label}</strong>
-                                    )}{" "}
-                                    {contentItem.description}
-                                    {contentItem.example && (
-                                        <>{contentItem.example}</>
-                                    )}
-                                </p>
-                            ))}
-                        </ExpandableItem>
-                    ))}
-                </section>
-                <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
-                    <h2 className="mb-4 flex items-center text-xl font-medium text-cyan-800">
-                        <RiTranslate2 size={20} className="mr-2" />
-                        Daily Word Suggestions
-                    </h2>
-                    <Separator className="pb-4" />
-                    {dailyWordSuggestionsData.map((item, index) => (
-                        <ExpandableItem key={index} title={item.title}>
-                            <p>
-                                <strong>Definition:</strong> {item.definition}
-                            </p>
-                            <p>
-                                <strong>Turkish:</strong> {item.turkish}
-                            </p>
-                            <p className="mt-3 text-slate-600">
-                                {item.example}
-                            </p>
-                        </ExpandableItem>
-                    ))}
-                </section>
-                <section className="rounded-lg rounded-2 p-6 ring-1 ring-slate-200">
-                    <h2 className="mb-4 flex items-center text-xl font-medium text-cyan-800">
-                        <RiCodeLine size={20} className="mr-2" />
-                        Technical Definitions
-                    </h2>
-                    <Separator className="pb-4" />
-                    {technicalDefinitionsData.map((item, index) => (
-                        <ExpandableItem key={index} title={item.title}>
-                            <p>
-                                <strong>Full form:</strong> {item.fullForm}
-                            </p>
-                            <p>
-                                <strong>Definition:</strong> {item.definition}
-                            </p>
-                            <p className="mt-3 text-slate-600">
-                                {item.example}
-                            </p>
-                        </ExpandableItem>
-                    ))}
-                </section>
-            </main>
+            <Suspense fallback={<QuizLoading />}>
+                <Await
+                    resolve={data}
+                    children={({ feedData, profileData }) => {
+                        const score = profileData?.score;
+
+                        return (
+                            <>
+                                <div className="flex flex-1 flex-col items-center gap-6 rounded-4 bg-slate-50 py-10">
+                                    <figure className="relative h-24 w-24">
+                                        <img
+                                            src={profileData?.avatar}
+                                            alt="Turquiz App Logo"
+                                            className="h-24 w-24 rounded-full object-cover"
+                                            height={96}
+                                            width={96}
+                                        />
+                                        <span className="absolute bottom-0 left-0 right-0 -mb-4 flex justify-center">
+                                            <span className="flex h-8 min-w-8 items-center justify-center rounded-full border-2 border-cyan-800 bg-cyan-900 px-2 text-center text-sm font-medium text-white ring-4 ring-cyan-900/20">
+                                                {score} TP
+                                            </span>
+                                        </span>
+                                    </figure>
+                                    <div className="flex flex-1 flex-col items-center gap-1">
+                                        <h1 className="font-display text-4xl font-medium">
+                                            {title}
+                                        </h1>
+                                        <p className="max-w-xl text-balance text-lg text-slate-500">
+                                            {description}
+                                        </p>
+                                        <div className="mt-3 flex flex-wrap gap-3">
+                                            {fakeInterests.map((tag) => (
+                                                <Button
+                                                    key={tag.linked_data_id}
+                                                    className="rounded-1 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-800 ring ring-slate-200 transition-colors hover:bg-slate-200"
+                                                >
+                                                    <span>{tag.name}</span>
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mx-auto flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
+                                    {availableFeedTypes.map((option) => (
+                                        <label
+                                            key={option}
+                                            className="flex cursor-pointer items-center gap-2"
+                                        >
+                                            <input
+                                                type="radio"
+                                                value={option}
+                                                checked={feedType === option}
+                                                onChange={(e) =>
+                                                    setFeedType(
+                                                        e.target
+                                                            .value as FeedType,
+                                                    )
+                                                }
+                                                className="sr-only"
+                                            />
+                                            <span
+                                                className={radioOptionClass({
+                                                    selected:
+                                                        feedType === option,
+                                                    className: "min-w-32",
+                                                })}
+                                            >
+                                                {option}
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
+
+                                <Separator className="border-slate-200" />
+
+                                {feedType === "personal" && (
+                                    <>
+                                        <RelatedTags
+                                            tags={
+                                                feedData.related_tags_for_forum_questions
+                                            }
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomeForumFeed
+                                            forumQuestions={
+                                                feedData.forum_questions_by_interests
+                                            }
+                                            title="Forums Based on Your Interests"
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomeQuizFeed
+                                            quizzes={
+                                                feedData.quizzes_by_interests
+                                            }
+                                            title="Quizzes Based on Your Interests"
+                                        />
+                                    </>
+                                )}
+
+                                {feedType === "network" && (
+                                    <>
+                                        <HomeForumFeed
+                                            forumQuestions={
+                                                feedData.forum_questions_by_followed_users
+                                            }
+                                            title="Forums from People You Follow"
+                                        />
+                                        <Separator className="border-slate-200" />
+                                        <HomeQuizFeed
+                                            quizzes={
+                                                feedData.quizzes_by_followed_users
+                                            }
+                                            title="Quizzes from People You Follow"
+                                        />
+                                    </>
+                                )}
+
+                                {feedType === "forum" && (
+                                    <HomeForumFeed
+                                        forumQuestions={[
+                                            ...feedData.forum_questions_by_interests,
+                                            ...feedData.forum_questions_by_followed_users,
+                                        ]}
+                                        title="All Forums"
+                                    />
+                                )}
+
+                                {feedType === "quiz" && (
+                                    <HomeQuizFeed
+                                        quizzes={[
+                                            ...feedData.quizzes_by_interests,
+                                            ...feedData.quizzes_by_followed_users,
+                                        ]}
+                                        title="All Quizzes"
+                                    />
+                                )}
+
+                                <Separator className="border-slate-200" />
+                                <HomeStaticContent />
+                                <Separator className="border-slate-200" />
+                            </>
+                        );
+                    }}
+                />
+            </Suspense>
         </div>
     );
 };

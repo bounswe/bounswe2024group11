@@ -14,7 +14,7 @@ import { RiAddFill, RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 import { radioOptionClass } from "../../components/radio-option";
 import TagSearch from "../../components/tag-search";
 import { ForumLoading } from "../_loading";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { forumLoader } from "./Forum.data";
 
 export const Forum = () => {
@@ -26,7 +26,7 @@ export const Forum = () => {
     );
 
     const { user, logged_in } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
 
     const currentPage = parseInt(searchParams.get("page") || "1");
     const perPage = parseInt(searchParams.get("per_page") || "10");
@@ -61,7 +61,7 @@ export const Forum = () => {
                     {(data) => {
                         const totalPages = Math.ceil(data.count / perPage);
                         const description = logged_in
-                            ? `There you engage with community, ${user.full_name}`
+                            ? `Where the magic happens - jump into the conversation ${user.full_name}!`
                             : "Engage with the community, ask questions, and get help from other people.";
 
                         return (

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useRouteLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
-import { homeLoader } from "../Home/Home.data";
+import { userLoader } from "../Home/Home.data";
 import { FailIllustration, SuccessIllustration } from "./Quiz.Illustration";
 
 export const EndQuiz = ({
@@ -15,7 +15,7 @@ export const EndQuiz = ({
 }) => {
     const successful = correctAnswers >= totalQuestions * 0.7;
     const { logged_in, user } =
-        useRouteLoaderData<typeof homeLoader>("home-main");
+        useRouteLoaderData<typeof userLoader>("home-main");
     return (
         <div className="flex flex-col items-center gap-4">
             {successful ? <SuccessIllustration /> : <FailIllustration />}
@@ -26,7 +26,7 @@ export const EndQuiz = ({
                 <h2 className="max-w-lg text-balance text-center font-display text-3xl font-medium text-slate-900">
                     {successful
                         ? `Great job ${logged_in ? user.full_name : "buddy"}!`
-                        : `Quiz Completed!`}
+                        : `Well, that could've gone better! Ready for another shot?`}
                 </h2>
                 <p className="text-lg text-slate-600">
                     {successful
