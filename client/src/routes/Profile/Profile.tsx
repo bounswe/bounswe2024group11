@@ -9,6 +9,7 @@ import {
     useRouteLoaderData,
 } from "react-router-typesafe";
 import { Avatar } from "../../components/avatar";
+import { BlockingModal } from "../../components/blockings-modal";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
@@ -46,6 +47,7 @@ export const Profile = () => {
                     quizzes_taken,
                     is_blocked,
                     is_following,
+                    blockings,
                     id,
                 }) => {
                     const author = {
@@ -79,7 +81,7 @@ export const Profile = () => {
                                         @{username}
                                     </p>
                                 </div>
-                                {user?.username !== username && logged_in && (
+                                {user?.username !== username && logged_in ? (
                                     <>
                                         {!is_blocked ? (
                                             <blockFetcher.Form
@@ -192,6 +194,8 @@ export const Profile = () => {
                                             </followFetcher.Form>
                                         )}
                                     </>
+                                ) : (
+                                    <BlockingModal blockings={blockings} />
                                 )}
                             </header>
                             <section className="z-20 flex w-full flex-row items-center justify-between">

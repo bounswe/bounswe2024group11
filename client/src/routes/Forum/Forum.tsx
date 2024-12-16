@@ -7,17 +7,12 @@ import {
 } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { ForumQuestionCard } from "../../components/forum-card";
-import { inputClass } from "../../components/input";
 import { PageHead } from "../../components/page-head";
 
-import { Button, Portal } from "@ariakit/react";
-import {
-    RiAddFill,
-    RiArrowLeftLine,
-    RiArrowRightLine,
-    RiCloseFill,
-} from "@remixicon/react";
+import { Portal } from "@ariakit/react";
+import { RiAddFill, RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 import { radioOptionClass } from "../../components/radio-option";
+import TagSearch from "../../components/tag-search";
 import { ForumLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
 import { forumLoader } from "./Forum.data";
@@ -79,44 +74,28 @@ export const Forum = () => {
                                     <div className="flex flex-col gap-4">
                                         <div className="flex flex-col gap-4 sm:flex-row">
                                             <div className="flex flex-grow items-center gap-2">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Search by title, description, or tag"
-                                                    className={inputClass({
-                                                        className:
-                                                            "w-full max-w-sm",
-                                                    })}
-                                                    ref={searchInputRef}
-                                                    onChange={(e) =>
-                                                        setSearchTerm(
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    value={searchTerm}
-                                                />
-                                                <Button
-                                                    className={buttonClass({
-                                                        intent: "tertiary",
-                                                        size: "icon",
-                                                        icon: "only",
-                                                    })}
-                                                    onClick={() => {
-                                                        searchInputRef.current?.focus();
+                                                <TagSearch
+                                                    onTagSelect={(tag) => {
+                                                        const newParams =
+                                                            new URLSearchParams(
+                                                                searchParams,
+                                                            );
+                                                        if (tag) {
+                                                            newParams.set(
+                                                                "linked_data_id",
+                                                                tag.id,
+                                                            );
+                                                        } else {
+                                                            newParams.delete(
+                                                                "linked_data_id",
+                                                            );
+                                                        }
                                                         setSearchParams(
-                                                            (prev) => {
-                                                                prev.delete(
-                                                                    "search",
-                                                                );
-                                                                setSearchTerm(
-                                                                    "",
-                                                                );
-                                                                return prev;
-                                                            },
+                                                            newParams,
                                                         );
                                                     }}
-                                                >
-                                                    <RiCloseFill size={20} />
-                                                </Button>
+                                                    inputRef={searchInputRef}
+                                                />
                                             </div>
                                             <div></div>
                                         </div>

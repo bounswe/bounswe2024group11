@@ -8,6 +8,7 @@ import {
 import { Avatar } from "../../components/avatar";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { PageHead } from "../../components/page-head";
+import { LeaderboardLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
 import { leaderboardLoader } from "./Leaderboard.data";
 
@@ -22,7 +23,7 @@ export const Leaderboard = () => {
 
     return (
         <div className="container flex max-w-screen-xl flex-col items-stretch gap-8 py-12">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LeaderboardLoading></LeaderboardLoading>}>
                 <Await
                     resolve={leaderboardData}
                     children={(data) => {
