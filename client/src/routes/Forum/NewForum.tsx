@@ -2,7 +2,7 @@ import { Button } from "@ariakit/react";
 import { RiCloseFill, RiImage2Line } from "@remixicon/react";
 import { cva } from "cva";
 import { useEffect, useRef, useState } from "react";
-import { Form, useSearchParams } from "react-router-dom";
+import { useFetcher, useSearchParams } from "react-router-dom";
 import { useLoaderData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass, labelClass } from "../../components/input";
@@ -83,6 +83,14 @@ export const NewForum = () => {
         }) || [];
 
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [isPostDisabled, setIsPostDisabled] = useState(false);
+    const postFetcher = useFetcher();
+
+    useEffect(() => {
+        if (postFetcher.state === "idle") {
+            setIsPostDisabled(false);
+        }
+    }, [postFetcher.state]);
 
     const handleTagClick = (tag: Tag) => {
         const isSelected = selectedTags.some(
@@ -174,13 +182,14 @@ export const NewForum = () => {
         >
             <main className="flex flex-col items-center gap-12">
                 <NewForumHead />
-                <Form
+                <postFetcher.Form
                     aria-labelledby="page-title"
                     aria-describedby="page-description"
                     className="flex w-full max-w-screen-sm flex-col gap-4"
                     method="POST"
                     role="form"
                     encType="multipart/form-data"
+                    onSubmit={() => setIsPostDisabled(true)}
                 >
                     <input
                         hidden
@@ -434,6 +443,7 @@ export const NewForum = () => {
                             type="submit"
                             className={buttonClass({ intent: "primary" })}
                             aria-label="Create forum post"
+                            disabled={isPostDisabled}
                         >
                             <div
                                 className={buttonInnerRing({
@@ -444,7 +454,7 @@ export const NewForum = () => {
                             <span>Post</span>
                         </button>
                     </div>
-                </Form>
+                </postFetcher.Form>
             </main>
         </div>
     );

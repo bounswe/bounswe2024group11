@@ -1,7 +1,7 @@
 import { RiExternalLinkLine, RiImage2Line } from "@remixicon/react";
 import { cva } from "cva";
 import { useEffect, useRef, useState } from "react";
-import { Form, Link } from "react-router-dom";
+import { Link, useFetcher } from "react-router-dom";
 import { useActionData } from "react-router-typesafe";
 import { buttonClass, buttonInnerRing } from "../../components/button";
 import { inputClass, labelClass } from "../../components/input";
@@ -29,12 +29,20 @@ export const Register = () => {
     const passwordRef = useRef<HTMLInputElement>(null);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isRegisterDisabled, setIsRegisterDisabled] = useState(false);
+    const registerFetcher = useFetcher();
 
     useEffect(() => {
         if (mismatchedPasswords) {
             passwordRef.current?.focus();
         }
     }, [mismatchedPasswords]);
+
+    useEffect(() => {
+        if (registerFetcher.state === "idle") {
+            setIsRegisterDisabled(false);
+        }
+    }, [registerFetcher.state]);
 
     const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -72,11 +80,12 @@ export const Register = () => {
                     </div>
                 </div>
                 <hr className="border-slate-100" />
-                <Form
+                <registerFetcher.Form
                     className="flex w-full flex-col gap-6"
                     method="POST"
                     action="/register"
                     encType="multipart/form-data"
+                    onSubmit={() => setIsRegisterDisabled(true)}
                 >
                     <div className="flex flex-col items-center gap-2">
                         <div
@@ -227,6 +236,7 @@ export const Register = () => {
                         <button
                             type="submit"
                             className={buttonClass({ intent: "secondary" })}
+                            disabled={isRegisterDisabled}
                         >
                             <div
                                 className={buttonInnerRing({
@@ -244,7 +254,7 @@ export const Register = () => {
                             <span className="text-slate-900">Login</span>
                         </Link>
                     </div>
-                </Form>
+                </registerFetcher.Form>
             </div>
             <div className="rounded-2xl flex w-full max-w-md flex-col items-center gap-0 px-6">
                 <span className="text-slate-500">Just looking around?</span>
