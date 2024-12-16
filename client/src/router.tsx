@@ -36,6 +36,7 @@ import { leaderboardLoader } from "./routes/Leaderboard/Leaderboard.data";
 import { Profile } from "./routes/Profile/Profile";
 import {
     BlockAction,
+    deleteInterestAction,
     FollowAction,
     myProfileLoader,
     profileLoader,
@@ -159,6 +160,10 @@ export const routes: RouteObject[] = [
                         path: "quizzes/:quizId/review",
                         element: <QuizReview />,
                         loader: quizLoader,
+                    },
+                    {
+                        path: "interest/delete/:linked_data_id/",
+                        action: deleteInterestAction,
                     },
                     {
                         path: "profile/",

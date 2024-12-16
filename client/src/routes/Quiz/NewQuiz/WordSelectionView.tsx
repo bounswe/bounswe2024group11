@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Discuss } from "react-loader-spinner";
 import { InfoBox } from "../../../components/info-box";
 import { inputClass, labelClass } from "../../../components/input";
-import { useTaggingSearch } from "../../../hooks/tagging";
+import { useQuizTaggingSearch } from "../../../hooks/tagging";
 import { Tag } from "../../Forum/Forum.schema";
 import { tagOptionClass } from "../../Forum/NewForum";
 import { getPlaceholder } from "./NewQuiz-utils";
@@ -21,7 +21,7 @@ export const WordSelectionView = ({
 }: WordSelectionViewProps) => {
     const [search, setSearch] = useState("");
     const { quiz, updateQuestion, setCorrectAnswer } = useQuizStore();
-    const { data, error, isLoading, debouncedSearch } = useTaggingSearch(
+    const { data, error, isLoading, debouncedSearch } = useQuizTaggingSearch(
         search,
         quiz,
     );

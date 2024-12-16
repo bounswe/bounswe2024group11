@@ -188,3 +188,27 @@ export const UnFollowAction = (async ({ request }: { request: Request }) => {
         throw new Error("Failed to process unfollow action");
     }
 }) satisfies ActionFunction;
+
+export const deleteInterestAction = (async ({
+    request,
+}: {
+    request: Request;
+}) => {
+    if (!getUserOrRedirect()) return null;
+    try {
+        const formData = await request.formData();
+        const linked_data_id = formData.get("linked_data_id");
+        if (!linked_data_id) {
+            throw new Error("Missing linked_data_id in form data");
+        }
+        await apiClient.delete("/interests/", {
+            params: {
+                linked_data_id,
+            },
+        });
+        return redirect("/profile");
+    } catch (error) {
+        logger.error("Error in deleteInterestAction", error);
+        throw new Error("Failed to process delete interest action");
+    }
+}) satisfies ActionFunction;

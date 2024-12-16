@@ -33,7 +33,7 @@ export const TagSearch = ({
     const [isOpen, setIsOpen] = useState(false);
 
     const { data, isLoading } = useSWR(
-        debouncedQuery && !selectedTag ? `tagging-${debouncedQuery}` : null,
+        !selectedTag ? `tagging-${debouncedQuery}` : null,
         () =>
             apiClient
                 .get("/tagging/", {
