@@ -10,7 +10,13 @@ import { ForumQuestionCard } from "../../components/forum-card";
 import { PageHead } from "../../components/page-head";
 
 import { Separator } from "@ariakit/react";
-import { RiAddFill, RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
+import {
+    RiAddFill,
+    RiArrowLeftLine,
+    RiArrowRightLine,
+    RiCloseFill,
+    RiSearchLine,
+} from "@remixicon/react";
 import { radioOptionClass } from "../../components/radio-option";
 import TagSearch from "../../components/tag-search";
 import { snakeToTitle } from "../../utils";
@@ -151,6 +157,43 @@ export const Forum = () => {
                                             />
                                         ))}
                                     </div>
+                                    {data.results.length === 0 && (
+                                        <div className="col-span-3 flex w-full flex-col items-center gap-6 px-6 py-2">
+                                            <div className="flex flex-col items-center gap-4 py-20">
+                                                <div className="rounded-full bg-slate-50 p-5 text-slate-400">
+                                                    <RiSearchLine size={24} />
+                                                </div>
+                                                <span className="max-w-lg text-balance text-center text-sm text-slate-500">
+                                                    We did our best, but we
+                                                    couldn't find any forum
+                                                    questions for your search.
+                                                </span>
+                                                {searchParams.get(
+                                                    "linked_data_id",
+                                                ) && (
+                                                    <>
+                                                        <Link
+                                                            to="/forum"
+                                                            className={buttonClass(
+                                                                {
+                                                                    intent: "ghost",
+                                                                    size: "medium",
+                                                                    icon: "right",
+                                                                },
+                                                            )}
+                                                        >
+                                                            <span>
+                                                                Clear search
+                                                            </span>
+                                                            <RiCloseFill
+                                                                size={16}
+                                                            />
+                                                        </Link>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </main>
                                 <hr />
                                 <div className="flex flex-col gap-4">

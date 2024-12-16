@@ -155,50 +155,50 @@ export const TagSearch = ({
                     </div>
 
                     <Ariakit.ComboboxPopover
-                        gutter={4}
                         sameWidth
                         className="absolute top-full z-50 mt-1 max-h-64 w-full overflow-auto rounded-2 bg-white shadow-lg ring-1 ring-slate-200"
                     >
-                        <Ariakit.ComboboxList className="p-2">
-                            {isLoading ? (
-                                <div className="flex items-center justify-center p-4">
-                                    <Discuss
-                                        wrapperClass="h-8 w-8"
-                                        colors={["#64748b", "#64748b"]}
-                                    />
+                        {isLoading ? (
+                            <div className="flex items-center justify-center p-4">
+                                <Discuss
+                                    wrapperClass="h-8 w-8"
+                                    colors={["#64748b", "#64748b"]}
+                                />
+                            </div>
+                        ) : suggestions.length === 0 && debouncedQuery ? (
+                            <div className="flex flex-col items-center gap-4 py-8">
+                                <div className="rounded-full bg-slate-50 p-5 text-slate-400">
+                                    <RiSearchLine size={24} />
                                 </div>
-                            ) : suggestions.length === 0 && debouncedQuery ? (
-                                <div className="flex flex-col items-center gap-4 py-8">
-                                    <div className="rounded-full bg-slate-50 p-5 text-slate-400">
-                                        <RiSearchLine size={24} />
-                                    </div>
-                                    <span className="max-w-72 text-balance text-center text-sm text-slate-500">
-                                        We did our best, but we couldn't find
-                                        any results for your search.
-                                    </span>
-                                </div>
-                            ) : (
-                                suggestions.map((item) => (
+                                <span className="max-w-72 text-balance text-center text-sm text-slate-500">
+                                    We did our best, but we couldn't find any
+                                    results for your search.
+                                </span>
+                            </div>
+                        ) : suggestions.length === 0 &&
+                          !debouncedQuery ? null : (
+                            <Ariakit.ComboboxList className="p-2">
+                                {suggestions.map((item) => (
                                     <Ariakit.ComboboxItem
                                         key={item.id}
-                                        className="rounded group flex cursor-pointer items-center gap-3 rounded-1 p-3 text-sm hover:bg-slate-100"
+                                        className="rounded group flex cursor-pointer items-center gap-3 rounded-1 p-2 text-sm hover:bg-slate-100"
                                         onClick={() => handleSelect(item)}
                                     >
-                                        <span className="rounded w-12 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+                                        <span className="rounded w-12 rounded-1 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 ring ring-slate-200">
                                             {item.type}
                                         </span>
                                         <div className="flex flex-1 flex-col">
                                             <span className="text-base font-medium text-slate-800">
-                                                {debouncedQuery}
+                                                {item.word}
                                             </span>
-                                            <span className="line-clamp-2 text-slate-500">
+                                            <span className="line-clamp-2 text-xs text-slate-500">
                                                 {item.description}
                                             </span>
                                         </div>
                                     </Ariakit.ComboboxItem>
-                                ))
-                            )}
-                        </Ariakit.ComboboxList>
+                                ))}
+                            </Ariakit.ComboboxList>
+                        )}
                     </Ariakit.ComboboxPopover>
                 </div>
             </Ariakit.ComboboxProvider>
