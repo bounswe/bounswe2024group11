@@ -4,9 +4,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import QuizQuestion from "../components/QuizQuestion";
 import { QuizAnswerType, QuizQuestionType } from "../types/quiz";
-
 type ViewQuizScreenRouteProp = RouteProp<RootStackParamList, "ViewQuiz">;
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 
 type QuizResultNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const API_URL = "http://138.68.97.90/api/v1";
+const API_URL = `${API_URL_GLOBAL}`;
 // const API_URL = "http://10.0.2.2:8000/api/v1";
 
 const ViewQuiz: React.FC<Props> = ({ route }) => {
@@ -34,7 +34,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const result = await axios.get(`${API_URL}/quizzes/${id}`);
+        const result = await axios.get(`${API_URL}quizzes/${id}`);
         setQuestions(result.data.questions);
         setSelectedOptions(new Array(questions.length).fill(null));
         setHintUsages(new Array(questions.length).fill(false));
@@ -98,7 +98,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       is_hint_used: hintUsages[index],
     }));
 
-    const result = await axios.post(`${API_URL}/take-quiz/`, {
+    const result = await axios.post(`${API_URL}take-quiz/`, {
       quiz: id,
       answers,
     });

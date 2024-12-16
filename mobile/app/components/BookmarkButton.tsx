@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import API_URL_GLOBAL from "../../config";
 
 interface BookmarkButtonProps {
   initialBookmarkState: number | null;
@@ -20,16 +21,16 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
     try {
       if (isBookmarked) {
         await axios.delete(
-          `http://138.68.97.90/api/v1/forum-bookmarks/${isBookmarked}/`
-          // `http://10.0.2.2:8000/api/v1/forum-bookmarks/${isBookmarked}/`
+          //`http://138.68.97.90/api/v1/forum-bookmarks/${isBookmarked}/`
+          `${API_URL_GLOBAL}forum-bookmarks/${isBookmarked}/`
         );
         console.log("Bookmark removed");
         setIsBookmarked(null);
         onBookmarkChange(null);
       } else {
         const response = await axios.post(
-          `http://138.68.97.90/api/v1/forum-bookmarks/`,
-          // `http://10.0.2.2:8000/api/v1/forum-bookmarks/`,
+          //`http://138.68.97.90/api/v1/forum-bookmarks/`,
+          `${API_URL_GLOBAL}forum-bookmarks/`,
           {
             forum_question: questionId,
           }

@@ -1,4 +1,4 @@
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -11,10 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Tag, TagSearchResult } from "../types/tag";
 import { RootStackParamList } from "../../App";
-
-const API_URL = "http://138.68.97.90/api/v1/forum-questions/";
+import API_URL_GLOBAL from "../../config";
+import { Tag, TagSearchResult } from "../types/tag";
 
 const EditQuestion: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -32,7 +31,9 @@ const EditQuestion: React.FC = () => {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const response = await axios.get(`${API_URL}${questionId}/`);
+        const response = await axios.get(
+          `${API_URL_GLOBAL}forum-questions/${questionId}/`
+        );
         const { title, question, tags } = response.data;
         setTitle(title);
         setQuestion(question);
@@ -47,7 +48,7 @@ const EditQuestion: React.FC = () => {
   }, [questionId]);
 
   const fetchTagSuggestions = async (input: string) => {
-    const API_URL = `http://138.68.97.90/api/v1/tagging/?word=${input}&lang=EN`;
+    const API_URL = `${API_URL_GLOBAL}tagging/?word=${input}&lang=EN`;
     try {
       const result = await axios.get(`${API_URL}`);
       const combinedTags: TagSearchResult[] = [];
@@ -109,7 +110,7 @@ const EditQuestion: React.FC = () => {
 
     try {
       const response = await axios.put(
-        `${API_URL}${questionId}/`,
+        `${API_URL_GLOBAL}forum-questions/${questionId}/`,
         updatedQuestion
       );
       console.log("Success:", response.data);

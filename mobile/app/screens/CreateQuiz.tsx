@@ -12,10 +12,8 @@ import {
   View,
 } from "react-native";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import { Tag, TagSearchResult } from "../types/tag";
-
-const API_URL = "http://138.68.97.90/api/v1";
-// const API_URL = "http://10.0.2.2:8000/api/v1";
 
 type CreateQuizScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -35,7 +33,7 @@ const CreateQuiz: React.FC = () => {
       return;
     }
 
-    const ENDPOINT = `${API_URL}/tagging/?word=${input}&lang=EN`;
+    const ENDPOINT = `${API_URL_GLOBAL}tagging/?word=${input}&lang=EN`;
 
     try {
       const result = await axios.get(`${ENDPOINT}`);
