@@ -272,14 +272,6 @@ export const NewQuizQuestionOptions = ({
                                 )}
                         </div>
                     </div>
-
-                    {showConfusion && (
-                        <InfoBox
-                            show={showConfusion}
-                            onClose={handleConfusionClose}
-                            message="We recommend avoiding words that can function as multiple parts of speech, as this may cause confusion."
-                        />
-                    )}
                 </div>
                 {possibleAnswers.length === 0 && (
                     <div className="flex flex-col gap-2">

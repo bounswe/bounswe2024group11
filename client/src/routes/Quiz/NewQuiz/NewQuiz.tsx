@@ -15,7 +15,7 @@ export const getQuestionType = (type: number) => {
         case 2:
             return "Turkish to English";
         case 3:
-            return "English word to part of speech";
+            return "English word to sense";
         default:
             return "Unknown";
     }

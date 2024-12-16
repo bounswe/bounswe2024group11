@@ -146,7 +146,7 @@ export const Hints = ({
 
                         return (
                             <div className="flex flex-col gap-2" key={key}>
-                                <h3 className="text-sm uppercase tracking-widest text-slate-600">
+                                <h3 className="text-xs font-medium uppercase leading-6 tracking-widest text-slate-500">
                                     {hintKeyToTitle[hintType]}
                                 </h3>
                                 <ul className="flex max-w-full flex-col gap-1">

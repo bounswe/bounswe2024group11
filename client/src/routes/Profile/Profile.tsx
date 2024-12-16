@@ -1,7 +1,7 @@
 import * as Ariakit from "@ariakit/react";
 import { Button } from "@ariakit/react";
 import { RiArrowRightLine } from "@remixicon/react";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, useFetcher, useParams } from "react-router-dom";
 import {
     Await,
@@ -34,6 +34,35 @@ export const Profile = () => {
     const { user, logged_in } =
         useRouteLoaderData<typeof userLoader>("home-main");
     const [dialogOpen, setDialogOpen] = useState(false);
+
+    const [isBlockDisabled, setIsBlockDisabled] = useState(false);
+    const [isUnblockDisabled, setIsUnblockDisabled] = useState(false);
+    const [isFollowDisabled, setIsFollowDisabled] = useState(false);
+    const [isUnfollowDisabled, setIsUnfollowDisabled] = useState(false);
+
+    useEffect(() => {
+        if (blockFetcher.state === "idle") {
+            setIsBlockDisabled(false);
+        }
+    }, [blockFetcher.state]);
+
+    useEffect(() => {
+        if (unblockFetcher.state === "idle") {
+            setIsUnblockDisabled(false);
+        }
+    }, [unblockFetcher.state]);
+
+    useEffect(() => {
+        if (followFetcher.state === "idle") {
+            setIsFollowDisabled(false);
+        }
+    }, [followFetcher.state]);
+
+    useEffect(() => {
+        if (unfollowFetcher.state === "idle") {
+            setIsUnfollowDisabled(false);
+        }
+    }, [unfollowFetcher.state]);
 
     return (
         <Suspense fallback={<ProfileLoading />}>
@@ -87,13 +116,18 @@ export const Profile = () => {
                                             <blockFetcher.Form
                                                 method="POST"
                                                 action={`block/`}
+                                                onSubmit={() =>
+                                                    setIsBlockDisabled(true)
+                                                }
                                             >
                                                 <Button
                                                     className={buttonClass({
                                                         intent: "destructive",
                                                         size: "medium",
+                                                        className: "w-20",
                                                     })}
                                                     type="submit"
+                                                    disabled={isBlockDisabled}
                                                 >
                                                     <span
                                                         className={buttonInnerRing(
@@ -114,13 +148,18 @@ export const Profile = () => {
                                             <unblockFetcher.Form
                                                 method="POST"
                                                 action={`unblock/`}
+                                                onSubmit={() =>
+                                                    setIsUnblockDisabled(true)
+                                                }
                                             >
                                                 <Button
                                                     className={buttonClass({
                                                         intent: "tertiary",
                                                         size: "medium",
+                                                        className: "w-20",
                                                     })}
                                                     type="submit"
+                                                    disabled={isUnblockDisabled}
                                                 >
                                                     <span
                                                         className={buttonInnerRing(
@@ -142,13 +181,20 @@ export const Profile = () => {
                                             <unfollowFetcher.Form
                                                 method="POST"
                                                 action={`unfollow/`}
+                                                onSubmit={() =>
+                                                    setIsUnfollowDisabled(true)
+                                                }
                                             >
                                                 <Button
                                                     className={buttonClass({
                                                         intent: "destructive",
                                                         size: "medium",
+                                                        className: "w-20",
                                                     })}
                                                     type="submit"
+                                                    disabled={
+                                                        isUnfollowDisabled
+                                                    }
                                                 >
                                                     <span
                                                         className={buttonInnerRing(
@@ -169,13 +215,18 @@ export const Profile = () => {
                                             <followFetcher.Form
                                                 method="POST"
                                                 action={`follow/`}
+                                                onSubmit={() =>
+                                                    setIsFollowDisabled(true)
+                                                }
                                             >
                                                 <Button
                                                     className={buttonClass({
                                                         intent: "secondary",
                                                         size: "medium",
+                                                        className: "w-20",
                                                     })}
                                                     type="submit"
+                                                    disabled={isFollowDisabled}
                                                 >
                                                     <span
                                                         className={buttonInnerRing(
