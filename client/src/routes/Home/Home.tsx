@@ -19,7 +19,7 @@ export const INITIAL_DISPLAY_COUNT = 6;
 export const LOAD_MORE_COUNT = 6;
 
 type FeedType = "personal" | "network" | "forum" | "quiz";
-const availableFeedTypes: FeedType[] = ["personal", "network", "forum", "quiz"];
+const availableFeedTypes: FeedType[] = ["personal", "network"];
 
 const fakeInterests = [
     {
@@ -153,6 +153,10 @@ export const Home = () => {
 
                                 <Separator className="border-slate-200" />
 
+                                {feedType === "personal" && hasNotInterests && (
+                                    <HomeEmptyInterest />
+                                )}
+
                                 {feedType === "personal" &&
                                     !hasNotInterests && (
                                         <>
@@ -166,14 +170,14 @@ export const Home = () => {
                                                 forumQuestions={
                                                     feedData.forum_questions_by_interests
                                                 }
-                                                title="Forums Based on Your Interests"
+                                                title="Forum Questions For You"
                                             />
                                             <Separator className="border-slate-200" />
                                             <HomeQuizFeed
                                                 quizzes={
                                                     feedData.quizzes_by_interests
                                                 }
-                                                title="Quizzes Based on Your Interests"
+                                                title="Quizzes For You"
                                             />
                                         </>
                                     )}
@@ -182,24 +186,20 @@ export const Home = () => {
                                     <HomeEmptyNetwork />
                                 )}
 
-                                {feedType === "personal" && hasNotInterests && (
-                                    <HomeEmptyInterest />
-                                )}
-
                                 {feedType === "network" && !hasNoFollowings && (
                                     <>
                                         <HomeForumFeed
                                             forumQuestions={
                                                 feedData.forum_questions_by_followed_users
                                             }
-                                            title="Forums from People You Follow"
+                                            title="Recent Forum Questions"
                                         />
                                         <Separator className="border-slate-200" />
                                         <HomeQuizFeed
                                             quizzes={
                                                 feedData.quizzes_by_followed_users
                                             }
-                                            title="Quizzes from People You Follow"
+                                            title="Recent Quizzes"
                                         />
                                     </>
                                 )}

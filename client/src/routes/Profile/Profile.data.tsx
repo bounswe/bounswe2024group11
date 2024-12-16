@@ -56,7 +56,7 @@ export const BlockAction = (async ({ request }: { request: Request }) => {
         );
         if (!success) {
             useToastStore.getState().add({
-                id: `block-error-${Date.now()}`,
+                id: `block-error}`,
                 type: "error",
                 data: {
                     message: "Oops, that didn't work! 🤦‍♂️",
@@ -67,7 +67,7 @@ export const BlockAction = (async ({ request }: { request: Request }) => {
             throw new Error("Failed to parse block response");
         } else {
             useToastStore.getState().add({
-                id: `block-success-${Date.now()}`,
+                id: `block-success`,
                 type: "success",
                 data: {
                     message: "Mission accomplished! 🎯",
@@ -91,7 +91,7 @@ export const UnBlockAction = (async ({ request }: { request: Request }) => {
             headers: { "Content-Type": "application/json" },
         });
         useToastStore.getState().add({
-            id: `unblock-success-${Date.now()}`,
+            id: `unblock-success`,
             type: "success",
             data: {
                 message: "Welcome back! 🤝",
@@ -102,7 +102,7 @@ export const UnBlockAction = (async ({ request }: { request: Request }) => {
         return null;
     } catch (error) {
         useToastStore.getState().add({
-            id: `unblock-failure-${Date.now()}`,
+            id: `unblock-failure`,
             type: "error",
             data: {
                 message: "Well, this is awkward... 😅",
@@ -131,7 +131,7 @@ export const FollowAction = (async ({ request }: { request: Request }) => {
         );
         if (!success) {
             useToastStore.getState().add({
-                id: `follow-error-${Date.now()}`,
+                id: `follow-error`,
                 type: "error",
                 data: {
                     message: "Whoopsie! 🫂",
@@ -142,7 +142,7 @@ export const FollowAction = (async ({ request }: { request: Request }) => {
             throw new Error("Failed to parse follow response");
         } else {
             useToastStore.getState().add({
-                id: `follow-success-${Date.now()}`,
+                id: `follow-success`,
                 type: "success",
                 data: {
                     message: "You're all set! 🌟",
@@ -166,7 +166,7 @@ export const UnFollowAction = (async ({ request }: { request: Request }) => {
             headers: { "Content-Type": "application/json" },
         });
         useToastStore.getState().add({
-            id: `unfollow-success-${Date.now()}`,
+            id: `unfollow-success`,
             type: "success",
             data: {
                 message: "All done! 👋",
@@ -176,7 +176,7 @@ export const UnFollowAction = (async ({ request }: { request: Request }) => {
         return null;
     } catch (error) {
         useToastStore.getState().add({
-            id: `unfollow-failure-${Date.now()}`,
+            id: `unfollow-failure`,
             type: "error",
             data: {
                 message: "Not so fast! 🏃‍♂️",

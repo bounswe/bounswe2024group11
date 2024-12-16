@@ -66,8 +66,8 @@ export const NewQuizHead = () => {
                         Create a new quiz
                     </h1>
                     <p className="text-slate-500" id="page-description">
-                        Create a new quiz to challenge the Turquiz community and
-                        help them learn new words.
+                        Share your knowledge and help others level up! Create
+                        something fun.
                     </p>
                 </div>
             </div>

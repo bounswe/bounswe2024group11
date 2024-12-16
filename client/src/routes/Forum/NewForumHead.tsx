@@ -66,8 +66,8 @@ export const NewForumHead = () => {
                         Create a new forum question
                     </h1>
                     <p className="text-slate-500" id="page-description">
-                        Create a new forum question to discuss topics and engage
-                        with the community.
+                        Got something on your mind? Start a discussion and see
+                        what others think!
                     </p>
                 </div>
             </div>

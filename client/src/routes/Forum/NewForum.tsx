@@ -241,7 +241,7 @@ export const NewForum = () => {
                                     )}
                                 </div>
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                                    <div className="rounded bg-black bg-opacity-50 p-1 text-xs text-white">
+                                    <div className="rounded rounded-1 bg-slate-950/50 p-1 py-1 text-xs font-medium text-white">
                                         Select A Photo
                                     </div>
                                 </div>
