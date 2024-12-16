@@ -212,3 +212,15 @@ export const deleteInterestAction = (async ({
         throw new Error("Failed to process delete interest action");
     }
 }) satisfies ActionFunction;
+
+export const addInterestAction = (async ({ request }: { request: Request }) => {
+    if (!getUserOrRedirect()) return null;
+    try {
+        const formData = await request.formData();
+        await apiClient.post("/interests/", formData);
+    } catch (error) {
+        logger.error("Error in addInterestAction", error);
+        throw new Error("Failed to process add interest action");
+    }
+    return null;
+}) satisfies ActionFunction;

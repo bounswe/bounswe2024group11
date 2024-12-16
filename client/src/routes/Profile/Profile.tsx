@@ -14,7 +14,6 @@ import { buttonClass, buttonInnerRing } from "../../components/button";
 import { InterestTag } from "../../components/interest-tag";
 import { ProfileLoading } from "../_loading";
 import { AchievementBadge } from "../Achievements/Badge";
-import { fakeInterests } from "../Home/Home";
 import { userLoader } from "../Home/Home.data";
 import { BookmarkedForum } from "./BookmarkedForumQuestions";
 import {
@@ -254,7 +253,7 @@ export const Profile = () => {
                             </header>
                             <section>
                                 <div className="mt-3 flex flex-wrap gap-3">
-                                    {fakeInterests.map((tag) => (
+                                    {interests.map((tag) => (
                                         <InterestTag tag={tag} />
                                     ))}
                                 </div>

@@ -11,6 +11,7 @@ import { QuizLoading } from "../_loading";
 import { homeLoader, userLoader } from "./Home.data";
 import { HomeEmptyInterest } from "./Home.EmptyInterest";
 import { HomeEmptyNetwork } from "./Home.EmptyNetwork";
+import { AddInterestBlock } from "./HomeAddInterest";
 import { HomeForumFeed } from "./HomeForum";
 import { HomeQuizFeed } from "./HomeQuiz";
 import { HomeStaticContent } from "./HomeStatic";
@@ -155,7 +156,10 @@ export const Home = () => {
                                 <Separator className="border-slate-200" />
 
                                 {feedType === "personal" && hasNotInterests && (
-                                    <HomeEmptyInterest />
+                                    <>
+                                        <HomeEmptyInterest />
+                                        <AddInterestBlock />
+                                    </>
                                 )}
 
                                 {feedType === "personal" &&
