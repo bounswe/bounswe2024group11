@@ -164,7 +164,21 @@ class ForumQuestionSerializer(serializers.ModelSerializer):
         return forum_question
     
     def update(self, instance, validated_data):
-        tags_data = json.loads(validated_data.pop('tags_string', None))
+        tags_string = validated_data.pop('tags_string', None)
+        tags = validated_data.pop('tags', None)
+        if tags and tags_string:
+            raise serializers.ValidationError({"tags": "You cannot provide both tags and tags_string"})
+
+        # Check if tags_string is a string or JSON
+        if isinstance(tags_string, str):
+            try:
+                if tags_string:
+                    tags_data = json.loads(tags_string)
+            except json.JSONDecodeError:
+                tags_data = []
+        else:
+            tags_data = tags if tags else None
+
         image_file = validated_data.get('image_file', None)
 
         instance.title = validated_data.get('title', instance.title)
