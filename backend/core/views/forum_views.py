@@ -44,7 +44,6 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         elif sort_by == 'most_liked':
             return queryset.order_by('upvotes', '-created_at')
         
-        # return queryset.order_by('-created_at')
     
     def get_parsers(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -84,13 +83,11 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         else:
             queryset = self.filter_queryset(self.get_queryset())
 
-        # Apply pagination
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        # Fallback: If pagination is not applied, return the full dataset
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -100,7 +97,7 @@ class ForumQuestionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def get_permissions(self):
-        if self.action == 'list':  # If listing, allow anyone
+        if self.action == 'list':
             return [permissions.AllowAny()]
         return super().get_permissions()
     
@@ -113,16 +110,14 @@ class ForumAnswerViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_authenticated:
             blocked_users = Block.objects.filter(blocker=user).values_list('blocking', flat=True)
-            # Filter answers by the question ID and blocked users
             return ForumAnswer.objects.filter(forum_question_id=self.kwargs['forum_question_pk']).exclude(author__in=blocked_users).order_by('created_at')
         return ForumAnswer.objects.filter(forum_question_id=self.kwargs['forum_question_pk']).order_by('created_at')
     
     def perform_create(self, serializer):
-        # Set the author to the current authenticated user
         serializer.save(author=self.request.user, forum_question_id=self.kwargs['forum_question_pk'])
    
     def get_permissions(self):
-        if self.action == 'list':  # If listing, allow anyone
+        if self.action == 'list': 
             return [permissions.AllowAny()]
         return super().get_permissions()
 
