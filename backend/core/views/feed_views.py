@@ -18,7 +18,9 @@ def get_users_to_follow(request):
         followed_by_following = Follow.objects.filter(follower__in=following).values_list('following', flat=True)
         # Exclude the current user, blocked users, and users the current user already follows
         blocked_users = Block.objects.filter(blocker=user).values_list('blocking', flat=True)
-        users = CustomUser.objects.filter(id__in=followed_by_following).exclude(id__in=blocked_users).exclude(id__in=following).exclude(id=user.id)
+        users = CustomUser.objects.filter(id__in=followed_by_following).exclude(id__in=blocked_users).exclude(id__in=following).exclude(username=user.username)
+        if len(users) == 0:
+            users = CustomUser.objects.exclude(id__in=blocked_users).exclude(username=user.username)
     else:
         users = CustomUser.objects.all()
 
