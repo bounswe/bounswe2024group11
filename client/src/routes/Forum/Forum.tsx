@@ -15,7 +15,7 @@ import TagSearch from "../../components/tag-search";
 import { snakeToTitle } from "../../utils";
 import { ForumLoading } from "../_loading";
 import { userLoader } from "../Home/Home.data";
-import { forumLoader } from "./Forum.data";
+import { forumLoader, forumSortOptions } from "./Forum.data";
 
 export const Forum = () => {
     const { forumData } = useLoaderData<typeof forumLoader>();
@@ -108,53 +108,50 @@ export const Forum = () => {
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">
-                                                {[
-                                                    "newest",
-                                                    "oldest",
-                                                    "highest_rated",
-                                                    "most_popular",
-                                                ].map((option) => (
-                                                    <label
-                                                        key={option}
-                                                        className="flex cursor-pointer items-center gap-2"
-                                                    >
-                                                        <input
-                                                            type="radio"
-                                                            value={option}
-                                                            checked={
-                                                                sortBy ===
-                                                                option
-                                                            }
-                                                            onChange={() => {
-                                                                const newParams =
-                                                                    new URLSearchParams(
-                                                                        searchParams,
-                                                                    );
-                                                                newParams.set(
-                                                                    "sort",
-                                                                    option,
-                                                                );
-                                                                setSearchParams(
-                                                                    newParams,
-                                                                );
-                                                            }}
-                                                            className="sr-only"
-                                                        />
-                                                        <span
-                                                            className={radioOptionClass(
-                                                                {
-                                                                    selected:
-                                                                        sortBy ===
-                                                                        option,
-                                                                },
-                                                            )}
+                                                {forumSortOptions.map(
+                                                    (option) => (
+                                                        <label
+                                                            key={option}
+                                                            className="flex cursor-pointer items-center gap-2"
                                                         >
-                                                            {snakeToTitle(
-                                                                option,
-                                                            )}
-                                                        </span>
-                                                    </label>
-                                                ))}
+                                                            <input
+                                                                type="radio"
+                                                                value={option}
+                                                                checked={
+                                                                    sortBy ===
+                                                                    option
+                                                                }
+                                                                onChange={() => {
+                                                                    const newParams =
+                                                                        new URLSearchParams(
+                                                                            searchParams,
+                                                                        );
+                                                                    newParams.set(
+                                                                        "sort",
+                                                                        option,
+                                                                    );
+                                                                    setSearchParams(
+                                                                        newParams,
+                                                                    );
+                                                                }}
+                                                                className="sr-only"
+                                                            />
+                                                            <span
+                                                                className={radioOptionClass(
+                                                                    {
+                                                                        selected:
+                                                                            sortBy ===
+                                                                            option,
+                                                                    },
+                                                                )}
+                                                            >
+                                                                {snakeToTitle(
+                                                                    option,
+                                                                )}
+                                                            </span>
+                                                        </label>
+                                                    ),
+                                                )}
                                             </div>
                                         </aside>
                                     </div>

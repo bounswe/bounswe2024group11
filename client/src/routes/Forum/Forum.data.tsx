@@ -10,6 +10,13 @@ import {
     forumSchema,
 } from "./Forum.schema";
 
+export const forumSortOptions = [
+    "newest",
+    "oldest",
+    "most_popular",
+    "most_liked",
+];
+
 export const forumLoader = (async ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page")) || 1;
@@ -18,7 +25,14 @@ export const forumLoader = (async ({ request }) => {
     const sort = url.searchParams.get("sort") || "newest";
     const forumDataPromise = apiClient
         .get("/forum-questions/", {
-            params: { page, per_page, linked_data_id, sort_by: sort },
+            params: {
+                page,
+                per_page,
+                linked_data_id,
+                sort_by: forumSortOptions.includes(sort)
+                    ? sort
+                    : forumSortOptions[0],
+            },
         })
         .then((response) => {
             const { output, success, issues } = safeParse(
