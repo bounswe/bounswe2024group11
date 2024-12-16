@@ -9,13 +9,15 @@ SELF_ACHIEVEMENT_CONDITIONS = {
     "quiz-creator": lambda user: Quiz.objects.filter(author=user).exists(),
     "quiz-fan": lambda user: TakeQuiz.objects.filter(user=user).count() >= 10,
     "quiz-champion": lambda user: TakeQuiz.objects.filter(user=user).count() >= 25,
-    "perfect-scorer": lambda user: TakeQuiz.objects.filter(user=user).filter(
-        models.Q(answers__is_hint_used=False) & models.Q(answers__answer__is_correct=True)
-    ).annotate(
-        total_questions=models.Count('quiz__questions')
-    ).filter(
-        total_questions=models.F('quiz__questions__count')
-    ).distinct().count() >= 5,
+    # "perfect-scorer": lambda user: TakeQuiz.objects.filter(
+    #     user=user,
+    #     answers__is_hint_used=False,
+    #     answers__answer__is_correct=True
+    # ).annotate(
+    #     total_questions=models.Count('quiz__questions')
+    # ).filter(
+    #     total_questions=models.F('quiz__questions__count')
+    # ).distinct().count() >= 5,
     "quiz-expert": lambda user: Quiz.objects.filter(author=user).count() >= 10,
     "active-questioner": lambda user: ForumQuestion.objects.filter(author=user).count() >= 10,
     "question-expert": lambda user: ForumAnswer.objects.filter(author=user).count() >= 25,
