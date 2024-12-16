@@ -4,9 +4,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../App";
+import API_URL_GLOBAL from "../../config";
 import QuizQuestion from "../components/QuizQuestion";
 import { QuizAnswerType, QuizQuestionType } from "../types/quiz";
-import API_URL_GLOBAL from "../../config";
 type ViewQuizScreenRouteProp = RouteProp<RootStackParamList, "ViewQuiz">;
 
 type Props = {
@@ -98,7 +98,7 @@ const ViewQuiz: React.FC<Props> = ({ route }) => {
       is_hint_used: hintUsages[index],
     }));
 
-    const result = await axios.post(`${API_URL}/take-quiz/`, {
+    const result = await axios.post(`${API_URL}take-quiz/`, {
       quiz: id,
       answers,
     });
