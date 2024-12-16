@@ -24,7 +24,6 @@ from django.contrib import admin
 from .views.achievement_views import AchievementListView
 from .views.interest_views import InterestView
 from .views import leaderboard_views
-from .views.user_list import UserListView
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -80,7 +79,6 @@ urlpatterns = [
     path('achievements/', AchievementListView.as_view(), name='achievement-list'),
     path('interests/', InterestView.as_view(), name='interests'),
     path('leaderboard/', leaderboard_views.LeaderboardView.as_view(), name='leaderboard'),
-    path('users-list-feed/', UserListView.as_view(), name='user-list'),
 ]   
 
 urlpatterns += router.urls
