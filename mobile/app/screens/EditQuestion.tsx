@@ -109,7 +109,7 @@ const EditQuestion: React.FC = () => {
     };
 
     try {
-      const response = await axios.put(
+      const response = await axios.patch(
         `${API_URL_GLOBAL}forum-questions/${questionId}/`,
         updatedQuestion
       );
