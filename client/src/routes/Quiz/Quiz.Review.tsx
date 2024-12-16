@@ -36,10 +36,7 @@ const QuizCard = ({
                         intent: "secondary",
                         icon: "left",
                     })}
-                    to={`/forum/new?qid=${question.id}&title=Help+needed:+"${questionTypeToQuestion(
-                        quizType,
-                        question.question_text,
-                    )}&quiz_question=${question.id}"`}
+                    to={`/forum/new?qid=${question.id}&title=Elaboration+for+a+quiz+question&quiz_question=${question.id}"`}
                 >
                     <span
                         className={buttonInnerRing({ intent: "secondary" })}
