@@ -17,10 +17,11 @@ export const quizzesLoader = (async ({ request }) => {
     const page = Number(url.searchParams.get("page")) || 1;
     const per_page = Number(url.searchParams.get("per_page")) || 10;
     const linked_data_id = url.searchParams.get("linked_data_id") || null;
+    const sort = url.searchParams.get("sort") || "newest";
 
     const quizzesPromise = apiClient
         .get("/quizzes/", {
-            params: { page, per_page, linked_data_id },
+            params: { page, per_page, linked_data_id, sort_by: sort },
         })
         .then((response) => {
             const { output, issues, success } = safeParse(

@@ -1,30 +1,8 @@
-import {
-    ActionFunction,
-    LoaderFunction,
-    redirect,
-    ShouldRevalidateFunction,
-} from "react-router";
+import { ActionFunction, LoaderFunction, redirect } from "react-router";
 import { safeParse } from "valibot";
 import apiClient, { getUserOrRedirect } from "../../api";
 import { logger } from "../../utils";
 import { completedQuizSchema, quizDetailsSchema } from "./Quiz.schema";
-
-export const quizShouldRevalidate: ShouldRevalidateFunction = ({
-    currentUrl,
-    nextUrl,
-    formData,
-}) => {
-    const currentUrlParams = new URLSearchParams(currentUrl.search);
-    const nextUrlParams = new URLSearchParams(nextUrl.search);
-
-    return (
-        !!formData ||
-        currentUrlParams.get("page") !== nextUrlParams.get("page") ||
-        currentUrlParams.get("per_page") !== nextUrlParams.get("per_page") ||
-        currentUrlParams.get("linked_data_id") !==
-            nextUrlParams.get("linked_data_id")
-    );
-};
 
 export const quizLoader = (async ({ params }) => {
     const { quizId } = params;
@@ -65,16 +43,11 @@ export const takeQuizAction = (async ({ request }) => {
         const answers = formData.get("answers") as string;
         const quizId = formData.get("quizId");
 
-        // Store answers in localStorage as backup
-        localStorage.setItem("quiz_answer" + String(quizId), answers);
-
-        // Submit quiz and wait for response
         const response = await apiClient.post(`/take-quiz/`, {
             quiz: Number(quizId),
             answers: JSON.parse(answers),
         });
 
-        // Parse and validate the response
         const { output, issues, success } = safeParse(
             completedQuizSchema,
             response.data,
@@ -85,10 +58,8 @@ export const takeQuizAction = (async ({ request }) => {
             throw new Error(`We couldn't submit your quiz.`);
         }
 
-        // Return the parsed quiz submission data directly
         return { success: true, data: output };
     } catch (error) {
-        // Log the error with more details
         logger.error("Failed to submit quiz:", error);
 
         throw new Error(
