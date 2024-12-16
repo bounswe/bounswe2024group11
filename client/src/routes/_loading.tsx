@@ -1,22 +1,14 @@
+import { Separator } from "@ariakit/react";
 import { PageHead } from "../components/page-head";
 
 export const QuizLoading = () => {
     return (
-        <div className="relative flex max-w-screen-xl flex-col items-stretch gap-16 py-12 pl-0 pr-0">
-            <div className="grid grid-cols-3 items-stretch justify-stretch gap-4">
-                {Array.from({ length: 3 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className="skeleton-loading h-8 w-1/2 rounded-2 bg-slate-200"
-                        style={{ animationDelay: `${i * 0.1}s` }}
-                    ></div>
-                ))}
-            </div>
-            <div className="grid grid-cols-1 items-stretch justify-stretch gap-4 md:grid-cols-3">
+        <div className="relative flex max-w-screen-xl flex-col items-stretch gap-16 pl-0 pr-0">
+            <div className="grid grid-cols-1 items-stretch justify-stretch gap-6 md:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
                     <div
                         key={i}
-                        className="skeleton-loading h-64 w-full rounded-2 bg-slate-200"
+                        className="skeleton-loading h-72 w-full rounded-2 bg-slate-200 ring ring-slate-200"
                         style={{ animationDelay: `-${i * 0.1}s` }}
                     ></div>
                 ))}
@@ -27,21 +19,12 @@ export const QuizLoading = () => {
 
 export const ForumLoading = () => {
     return (
-        <div className="relative flex max-w-screen-xl flex-col items-stretch gap-16 py-12 pl-0 pr-0">
-            <div className="grid grid-cols-3 items-stretch justify-stretch gap-4">
-                {Array.from({ length: 3 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className="skeleton-loading h-8 w-1/2 rounded-2 bg-slate-200"
-                        style={{ animationDelay: `${i * 0.1}s` }}
-                    ></div>
-                ))}
-            </div>
-            <div className="grid grid-cols-1 items-stretch justify-stretch gap-4 md:grid-cols-2">
+        <div className="relative flex max-w-screen-xl flex-col items-stretch gap-16 pl-0 pr-0">
+            <div className="grid grid-cols-1 items-stretch justify-stretch gap-10 md:grid-cols-2">
                 {Array.from({ length: 4 }).map((_, i) => (
                     <div
                         key={i}
-                        className="skeleton-loading h-64 w-full rounded-2 bg-slate-200"
+                        className="skeleton-loading h-64 w-full rounded-2 bg-slate-200 ring ring-slate-200"
                         style={{ animationDelay: `-${i * 0.1}s` }}
                     ></div>
                 ))}
@@ -173,6 +156,30 @@ export const LeaderboardLoading = () => {
                     ))}
                 </tbody>
             </table>
+        </>
+    );
+};
+
+export const HomeLoading = () => {
+    return (
+        <>
+            <span className="mx-auto h-6 w-24 rounded-full bg-slate-200"></span>
+            <div className="mx-auto flex gap-1 self-start rounded-full bg-slate-50 p-1 ring ring-slate-200">
+                {Array.from({ length: 2 }).map((_, i) => (
+                    <div className="h-10 w-32 rounded-full bg-slate-200"></div>
+                ))}
+            </div>
+
+            {Array.from({ length: 4 }).map((_, i) => (
+                <div
+                    key={i}
+                    className="skeleton-loading h-64 w-full rounded-2 bg-slate-200 ring ring-slate-200"
+                    style={{ animationDelay: `-${i * 0.1}s` }}
+                ></div>
+            ))}
+
+            {/* <HomeStaticContent /> */}
+            <Separator className="border-slate-200" />
         </>
     );
 };
