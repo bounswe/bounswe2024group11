@@ -286,12 +286,14 @@ export const Profile = () => {
                                         )}
                                     </span>
                                 </div>
-                                <div>
-                                    <ProficiencyChange
-                                        proficiency={proficiency}
-                                        username={username}
-                                    />
-                                </div>
+                                {isMe && (
+                                    <div>
+                                        <ProficiencyChange
+                                            proficiency={proficiency}
+                                            username={username}
+                                        />
+                                    </div>
+                                )}
                             </header>
                             <Ariakit.Separator className="ring-slate-200" />
 
