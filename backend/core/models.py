@@ -112,7 +112,7 @@ class QuizQuestionChoice(models.Model):
 
 class TakeQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='takes')
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='taken_quizzes')
     date = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
 
