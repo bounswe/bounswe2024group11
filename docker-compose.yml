@@ -42,8 +42,8 @@ services:
       context: ./client
     ports:
       - "3310:3310"
-    volumes:
-      - ./client:/home/app/client
+    # volumes:
+    #   - ./client:/home/app/client
     container_name: client
     command: >
       sh -c "serve -s dist -l 3310"
