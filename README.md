@@ -41,7 +41,12 @@ cp ./backend/.env.example ./backend/.env
 cp ./client/.env.example ./client/.env
 ```
 
-- You don't need to make any changes in environment variables since `.env.example` files since they are configured for local deployment.
+- If you want to use/test image uploading feature, please fill in the `TINIFY_API_KEY` environment variable's value in the `./backend/.env` file with your API key from [TinyPNG](https://tinypng.com/).
+- If you don't have a `TINIFY_API_KEY`, you can use our sample API key.
+
+```bash
+TINIFY_API_KEY=KJNsyVSbRs0xRCpbbhBjr5PfPDbWS5K6
+```
 
 #### Build & Run Using `docker-compose`
 
